@@ -20,7 +20,8 @@ HistogramManager::HistogramManager(TDirectory *dir) {
   saved->cd();
 }
 
-/*bool HistogramManager::CheckValue(ROOT::Internal::TTreeReaderValueBase *value) {
+/*bool HistogramManager::CheckValue(ROOT::Internal::TTreeReaderValueBase *value)
+{
   if (value->GetSetupStatus() < 0) {
     std::cerr << "Error " << value->GetSetupStatus() << "setting up reader for "
               << value->GetBranchName() << '\n';

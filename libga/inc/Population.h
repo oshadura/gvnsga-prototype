@@ -21,7 +21,7 @@ class Population : public Genes {
 public:
   Population() : fFront(0), fPopulation(0), fCrowdingObj(1), fNGen(1) {}
   Population(Int_t fSizePop)
-      : fFront(0), fPopulation(fSizePop), fCrowdingObj(1), fNGen(1) {
+      : fFront(0), fPopulation(), fCrowdingObj(1), fNGen(1) {
     fPopulation.reserve(fSizePop);
   }
   virtual ~Population() {}
@@ -33,7 +33,10 @@ public:
   void PushGenes(const Genes &value) { fPopulation.push_back(value); }
   Int_t GetGenerationNumber() { return fNGen; }
   void SetGenerationNumber(Int_t gen) { fNGen = gen; }
-  void SetPopulationSize(Int_t s) { fSizePop = s; }
+  void SetPopulationSize(Int_t s) {
+    fSizePop = s;
+    fPopulation.resize(s);
+  }
   Int_t GetPopulationSize() const { return fPopulation.size(); }
   std::vector<Genes> &GetIndividuals() { return fPopulation; }
   std::vector<Genes> GetFront() { return fFront; }
