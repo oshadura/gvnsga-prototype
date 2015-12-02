@@ -13,12 +13,15 @@ class AlgorithmNSGA;
 
 class Genes : public TObject {
 public:
+  // Constructor
   Genes();
-  Genes(const Genes &copy) { ; }   // Copy operator for vector of Individual
+  // Copy Constructor
+  Genes(const Genes &copy) {} // Copy operator for vector of Individual
+  // Parametrized constructor
   Genes(std::vector<Double_t> &f); // Vector of parameters = individual
-  virtual ~Genes() { ; }
-
-
+  // Destructor
+  virtual ~Genes() {}
+  // Function building Genes
   void Set(/*Double_t fAllev, Double_t fBuffev, Double_t fThread,
            Double_t fPriority, Double_t fSteps, Double_t fVector*/);
   void SetIt(Int_t i);
@@ -45,22 +48,18 @@ public:
     return fDominated.at(i);
   } // 1 Dominated individual
   Int_t SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
-
   // Double_t GetGene(Int_t i) const { return fGenes.at(i); }
   const Genes &SetGene(Int_t i, Double_t value) {
     fGenes.emplace(fGenes.begin() + i, value);
     return fGenes;
   }
-
   std::vector<Double_t> GetFitness() const {
     return fFitness;
   } // Get a vector of fTime and fMemory
   Double_t GetFitness(Int_t i) const {
     return fFitness.at(i);
   } // Get Fitness at i position
-  void SetFitness(std::vector<Double_t> fitness) {
-    fFitness = fitness;
-  } 
+  void SetFitness(std::vector<Double_t> fitness) { fFitness = fitness; }
   Int_t GetNObjectives() const { return fNObjectives; }
   Double_t GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(Double_t dist) { fCrowdingDistance = dist; }
@@ -73,7 +72,6 @@ public:
 
   void SetEpsilonC(Double_t epsc) { fEpsilonC = epsc; }
   Double_t GetEpsilonC() const { return fEpsilonC; }
-  void EvaluateGene();
 
   Int_t size() const { return fGenes.size(); }
   ////// Horrible /////
@@ -88,7 +86,6 @@ public:
   }
 
   virtual const Double_t operator[](Int_t i) const { return fGenes.at(i); }
-
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
 
@@ -105,17 +102,18 @@ public:
 private:
   ///////////////////////////////////////////////////
   // Individual parts (Genes)
-  Double_t fAllev;  // All events (after will be translated in GeantV namespace)
-  Double_t fBuffev; // Buffered events (after will be translated in GeantV
-                    // namespace)
-  Double_t fThread; // Number of threads (after will be translated in GeantV
-                    // namespace)
+  Double_t
+      fAllev; // All events (after will be translated in GeantV namespace) #0
+  Double_t fBuffev;   // Buffered events (after will be translated in GeantV
+                      // namespace) #1
+  Double_t fThread;   // Number of threads (after will be translated in GeantV
+                      // namespace) #3
   Double_t fPriority; // Priority value (after will be translated in GeantV
-                      // namespace)
+                      // namespace) #4
   Double_t fSteps;    // Number of steps (after will be translated in GeantV
-                      // namespace)
+                      // namespace) #5
   Double_t fVector;   // Vector size (after will be translated in GeantV
-                      // namespace)
+                      // namespace) #6
   //////////////////////////////////////////////////
   // Parts of fitness vector
   Double_t fTime;   // RT from GeantV (after will be translated in GeantV
@@ -132,7 +130,7 @@ private:
   Double_t fCrowdingDistance;     // Crowding distance per individual
   Bool_t fEvaluated;              // Evaluated or not
   std::vector<Double_t> fDominated; // Vector of dominanted individuals
-  Double_t ConstViol;               // Violation of constrains
+  Double_t ConstViol;               // Violation of constraints
   std::vector<Double_t> fGenes;
   Double_t fEpsilonC;
 

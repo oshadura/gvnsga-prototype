@@ -19,7 +19,7 @@
 
 ClassImp(Genes)
 
-Genes::Genes()
+    Genes::Genes()
     : TObject(), fFitness(0), fNObjectives(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(0), fDominated(0), ConstViol(0),
       fGenes(0), fEpsilonC(0) {}
@@ -43,8 +43,7 @@ Genes &Genes::operator=(const Genes &gen) {
   return *this;
 }
 
-void Genes::Set(/*Double_t fAllev, Double_t fBuffev, Double_t fThread,
-                Double_t fPriority, Double_t fSteps, Double_t fVector*/) {
+void Genes::Set() {
   TRandom3 rand;
   std::vector<Double_t> *Genes = &fGenes;
   // Random numbers without limits per each parameter
@@ -189,5 +188,3 @@ void Genes::ReadGenesTree(Genes &ind, Population &pop, const char *file) {
   tree->SetBranchAddress("Population", &pop);
   Int_t entries = (Int_t)(tree->GetEntries());
 }
-
-void Genes::EvaluateGene() {}

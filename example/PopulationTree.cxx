@@ -143,7 +143,6 @@ int main() {
          nsga2->GetEtaCross());
   printf("Probability  for mutation = %g\n", nsga2->GetPMut());
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
-
   // Setup population initialization
   Population *fNsgaPop;
 
@@ -151,7 +150,7 @@ int main() {
   // fNsgaPop->WritePopulationTree(*fNsgaPop, "Population");
   // fNsgaPop->PrintTree("Population", "Population");
   fNsgaPop->Build();
-
+  /////////////////////////////////////+++++++++///////////////////////
   // Algorithm run
   nsga2->Initialize();
   nsga2->Evolution();

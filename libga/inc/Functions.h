@@ -11,7 +11,7 @@ class Genes;
 
 class Functions {
 
-  typedef std::function<void(Genes&)> Function;
+  typedef std::function<void(Genes &)> Function;
 
 public:
   /**
@@ -38,21 +38,21 @@ public:
    * pairs of vectors
    */
   Functions(Int_t nparam,
-            const std::vector<std::pair<Double_t, Double_t> > limits)
+            const std::vector<std::pair<Double_t, Double_t>> limits)
       : fNParam(nparam), fInterval(limits), fConstraines(),
         PopulationFunction(), fNCons(0) {}
   /**
    * @brief Simple constructor
    */
   Functions(Int_t nparam, Int_t nconst,
-            const std::vector<std::pair<Double_t, Double_t> > limits,
+            const std::vector<std::pair<Double_t, Double_t>> limits,
             const std::vector<Double_t> constr)
       : fNParam(nparam), fInterval(limits), fConstraines(constr),
         fNCons(nconst) {}
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param nparam [description]
    * @param n [description]
    * @param fFunction [description]
@@ -62,16 +62,16 @@ public:
    * @param s [description]
    */
   Functions(Int_t nparam, Int_t nconst,
-            const std::vector<std::pair<Double_t, Double_t> > limits,
+            const std::vector<std::pair<Double_t, Double_t>> limits,
             const std::vector<Double_t> constr,
-            std::function<void(Genes&)> fFunction)
+            std::function<void(Genes &)> fFunction)
       : fNParam(nparam), fInterval(limits), fConstraines(constr),
         PopulationFunction(fFunction), fNCons(nconst) {}
 
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param func [description]
    */
   Functions(const Functions &func);
@@ -83,7 +83,7 @@ public:
   virtual ~Functions() {}
 
   ///////// Intervals definition //////////////
-  std::vector<std::pair<Double_t, Double_t> > GetInterval() const {
+  std::vector<std::pair<Double_t, Double_t>> GetInterval() const {
     return fInterval;
   }
   std::pair<Double_t, Double_t> GetIntervalLimit(Int_t i) const {
@@ -98,7 +98,7 @@ public:
 
   //////// Function definition ///////////////
   void SetFunction(void (*fFunction)());
-  void SetFunctionGenes(void (*fFunction)(Genes&), Genes& Individual);
+  void SetFunctionGenes(void (*fFunction)(Genes &), Genes &Individual);
 
   //////// Constrains definition //////////////
   Int_t GetNCons() const { return fNCons; }
@@ -107,18 +107,17 @@ public:
   void SetNCons(Int_t ncon) { ncon = fNCons; }
 
   /////////////////////////////////////////////
-  static Functions *Instance(); 
+  static Functions *Instance();
 
 private:
   Int_t fNParam; // Number of parameterxs
-  mutable std::vector<std::pair<Double_t, Double_t> > fInterval; // Interval
-                                                                 // settings for
-                                                                 // genes in
-                                                                 // cromosome ->
-                                                                 // inheritance
-                                                                 // from
-                                                                 // function
-  Int_t fNBins; // Number of bins for statistics proposes
+  mutable std::vector<std::pair<Double_t, Double_t>> fInterval; // Interval
+                                                                // settings for
+                                                                // genes in
+                                                                // cromosome ->
+                                                                // inheritance
+                                                                // from
+                                                                // function
   mutable std::vector<Double_t> fConstraines; // Vector of constraines for NSGA
                                               // constrain based
   Function PopulationFunction; // type function to be passed from GeantV
