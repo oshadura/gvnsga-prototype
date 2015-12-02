@@ -9,7 +9,7 @@ find_package(GeantV REQUIRED)
 find_package(VecGeom REQUIRED)
 find_package(Vc REQUIRED)
 find_package(HepMC REQUIRED)
-include_directories(${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${Vc_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR})
+include_directories(${Vc_INCLUDE_DIR} ${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
 include(${ROOT_USE_FILE})
 #----------------------------------------------------------------------------
@@ -21,5 +21,5 @@ message(STATUS "VECGEOM_INCLUDE_DIR is -${VECGEOM_INCLUDE_DIR}-")
 
 #----------------------------------------------------------------------------
 add_executable(PopulationTree ${CMAKE_SOURCE_DIR}/example/PopulationTree.cxx)
-target_link_libraries(PopulationTree GA ${VECGEOM_LIBRARIES} ${GEANTV_LIBRARIES} ${HEPMC3_LIBRARIES} ${ROOT_LIBRARIES} Hist RIO Tree Gui)
+target_link_libraries(PopulationTree GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${VECGEOM_LIBRARIES} ${HEPMC3_LIBRARIES} ${GEANTV_LIBRARIES})
 install(TARGETS PopulationTree DESTINATION ${CMAKE_BINARY_DIR})
