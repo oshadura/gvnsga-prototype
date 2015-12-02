@@ -21,7 +21,9 @@ class Population : public Genes {
 public:
   Population() : fFront(0), fPopulation(0), fCrowdingObj(1), fNGen(1) {}
   Population(Int_t fSizePop)
-      : fFront(0), fPopulation(fSizePop), fCrowdingObj(1), fNGen(1) {}
+      : fFront(0), fPopulation(fSizePop), fCrowdingObj(1), fNGen(1) {
+    fPopulation.reserve(fSizePop);
+  }
   virtual ~Population() {}
 
   Genes &GetGenes(Int_t i) { return fPopulation.at(i); }
