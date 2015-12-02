@@ -129,13 +129,13 @@ int main() {
 
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = AlgorithmNSGA::Instance();
-  nsga2->SetPopulationSize(5);
+  //nsga2->SetPopulationSize(5);
   nsga2->SetPCross(0.5);
   nsga2->SetEtaCross(0.7);
   nsga2->SetEtaMut(0.3);
   nsga2->SetPMut(0.5);
-  printf("Population size (presetuped) = %d\n",
-         nsga2->GetPopulationSetupSize());
+  //printf("Population size (presetuped) = %d\n",
+  //       nsga2->GetPopulationSetupSize());
   printf("Probability of crossover = %g\n", nsga2->GetPCross());
   printf("Eta values for crossover (crossover rate) = %g\n",
          nsga2->GetEtaCross());
