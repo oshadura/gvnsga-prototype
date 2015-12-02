@@ -37,8 +37,7 @@ void Population::Build() {
   TRandom3 rand;
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
     for (Int_t i = 1; i <= Functions::Instance()->GetNParam(); ++i) {
-      for (const std::pair<Double_t, Double_t> &limit :
-           (Functions::Instance()->GetInterval())) {
+      for (const std::pair<Double_t, Double_t> &limit : (Functions::Instance()->GetInterval())) {
         Double_t value = rand.Uniform(limit.first, limit.second);
         Int_t position = std::distance(GetIndividuals().begin(), it);
         SetGenes(position, Genes::SetGene(i, value));

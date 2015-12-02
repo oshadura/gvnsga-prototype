@@ -120,6 +120,7 @@ int main() {
   Functions *geantv = Functions::Instance();
   geantv->SetNCons(0);
   geantv->SetNParams(6);
+  geantv->SetInterval();
 
   // Setup limits for generation parameters
 
@@ -154,7 +155,6 @@ int main() {
   // Algorithm run
   nsga2->Initialize();
   nsga2->Evolution();
-
   // Missing logging process...
   return 0;
 }

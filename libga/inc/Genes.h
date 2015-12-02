@@ -49,7 +49,7 @@ public:
   } // 1 Dominated individual
   Int_t SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   // Double_t GetGene(Int_t i) const { return fGenes.at(i); }
-  const Genes &SetGene(Int_t i, Double_t value) {
+  const Genes SetGene(Int_t i, Double_t value) {
     fGenes.emplace(fGenes.begin() + i, value);
     return fGenes;
   }
@@ -102,17 +102,16 @@ public:
 private:
   ///////////////////////////////////////////////////
   // Individual parts (Genes)
-  Double_t
-      fAllev; // All events (after will be translated in GeantV namespace) #0
-  Double_t fBuffev;   // Buffered events (after will be translated in GeantV
-                      // namespace) #1
-  Double_t fThread;   // Number of threads (after will be translated in GeantV
-                      // namespace) #3
+  Int_t fAllev;  // All events (after will be translated in GeantV namespace) #0
+  Int_t fBuffev; // Buffered events (after will be translated in GeantV
+                 // namespace) #1
+  Int_t fThread; // Number of threads (after will be translated in GeantV
+                 // namespace) #3
   Double_t fPriority; // Priority value (after will be translated in GeantV
                       // namespace) #4
-  Double_t fSteps;    // Number of steps (after will be translated in GeantV
+  Int_t fSteps;       // Number of steps (after will be translated in GeantV
                       // namespace) #5
-  Double_t fVector;   // Vector size (after will be translated in GeantV
+  Int_t fVector;      // Vector size (after will be translated in GeantV
                       // namespace) #6
   //////////////////////////////////////////////////
   // Parts of fitness vector

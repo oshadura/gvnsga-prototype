@@ -2,6 +2,7 @@
 #include <ostream>
 #include <string>
 #include <utility>
+#include <random>
 
 #include "TRandom3.h"
 #include "TFile.h"
@@ -43,6 +44,7 @@ Genes &Genes::operator=(const Genes &gen) {
   return *this;
 }
 
+/*
 void Genes::Set() {
   TRandom3 rand;
   std::vector<Double_t> *Genes = &fGenes;
@@ -53,6 +55,7 @@ void Genes::Set() {
                              Functions::Instance()->GetIntervalLimit(i).second);
   }
 }
+*/
 
 /*
 void Genes::SetIt(Int_t i){

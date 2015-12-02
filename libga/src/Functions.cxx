@@ -13,7 +13,7 @@ using namespace std::placeholders;
 
 ClassImp(Functions)
 
-Functions::Functions(const Functions &func)
+    Functions::Functions(const Functions &func)
     : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval),
       fConstraines(func.fConstraines) {
   /*fConstraines.clear();
@@ -38,12 +38,10 @@ Functions *Functions::Instance() {
 
 void Functions::SetInterval() {
   for (Int_t i = 0; i < GetNParam(); ++i) {
-    return;
+    SetIntervalLimit(i, 1, 100);
   }
 }
-
 // Implementation that doesnt allow to change number of parameters
-
 void Functions::SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax) {
   auto value = std::make_pair(fMin, fMax);
   fInterval.emplace(fInterval.begin() + i, value);
@@ -55,7 +53,6 @@ void Functions::SetConstrain(Int_t i, Double_t value) {
 
 void SetFunction(void (*fFunction)()) { std::function<void()> f = fFunction; }
 
-void SetFunctionGenes(void (*fFunction)(Genes&), Genes& Individual) {
+void SetFunctionGenes(void (*fFunction)(Genes &), Genes &Individual) {
   auto f = std::bind(fFunction, Individual);
 }
-
