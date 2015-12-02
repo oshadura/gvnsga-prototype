@@ -58,17 +58,6 @@ public:
   Functions(const Functions &func);
   virtual ~Functions() {}
 
-  ////////// Parameters definition /////////////
-  Int_t GetNParam() const { return fNParam; }
-  Double_t GetAllev() const { return fAllev; }
-  Double_t GetBuffer() const { return fBuffev; }
-  Double_t GetThread() const { return fThread; }
-  Double_t GetPriority() const { return fPriority; }
-  Double_t GetSteps() const { return fSteps; }
-  Double_t GetVector() const { return fVector; }
-  Double_t GetTime() const { return fTime; }
-  Double_t GetMemory() const { return fMemory; }
-
   ///////// Intervals definition //////////////
   std::vector<std::pair<Double_t, Double_t> > GetInterval() const {
     return fInterval;
@@ -76,6 +65,7 @@ public:
   std::pair<Double_t, Double_t> GetIntervalLimit(Int_t i) const {
     return fInterval.at(i);
   }
+  Int_t GetNParam() const { return fNParam; }
   void SetInterval();
   void SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax);
   void SetFunction(void (*run)());
@@ -105,26 +95,6 @@ private:
                                               // constrain based
   Function PopulationFunction; // type function to be passed from GeantV
   Int_t fNCons;                // Number of constrains
-
-  ///////////////////////////////////////////////////
-  // Individual parts (Genes)
-  Double_t fAllev;  // All events (after will be translated in GeantV namespace)
-  Double_t fBuffev; // Buffered events (after will be translated in GeantV
-                    // namespace)
-  Double_t fThread; // Number of threads (after will be translated in GeantV
-                    // namespace)
-  Double_t fPriority; // Priority value (after will be translated in GeantV
-                      // namespace)
-  Double_t fSteps;    // Number of steps (after will be translated in GeantV
-                      // namespace)
-  Double_t fVector;   // Vector size (after will be translated in GeantV
-                      // namespace)
-  //////////////////////////////////////////////////
-  // Parts of fitness vector
-  Double_t fTime;   // RT from GeantV (after will be translated in GeantV
-                    // namespace)
-  Double_t fMemory; // RT from GeantV (after will be translated in GeantV
-                    // namespace)
 
   ClassDef(Functions, 1)
 };

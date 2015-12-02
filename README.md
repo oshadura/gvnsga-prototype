@@ -15,5 +15,5 @@ How to run:
 
 -> geantbuild.cern.ch
 
-cmake ../ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DVc_DIR=/home/geant/Install/VC1.0/lib/cmake/Vc/ -DHEPMC_ROOT_DIR=/afs/cern.ch/work/g/geant/jenkins/workspace/olwork21-gcc491-geant/HepMC/ -DCMAKE_CXX_FLAGS="-fabi-version=6"
+cmake ../ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DVc_DIR=/home/geant/Install/VC1.0/lib/cmake/Vc/ -DHEPMC_ROOT_DIR=/afs/cern.ch/work/g/geant/jenkins/workspace/olwork21-gcc491-geant/HepMC/ -DCMAKE_CXX_FLAGS="-fabi-version=6 -fdiagnostics-color"
 

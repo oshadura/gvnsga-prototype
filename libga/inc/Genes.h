@@ -17,6 +17,8 @@ public:
   Genes(const Genes &copy) { ; }   // Copy operator for vector of Individual
   Genes(std::vector<Double_t> &f); // Vector of parameters = individual
   virtual ~Genes() { ; }
+
+
   void Set(/*Double_t fAllev, Double_t fBuffev, Double_t fThread,
            Double_t fPriority, Double_t fSteps, Double_t fVector*/);
   void SetIt(Int_t i);
@@ -58,7 +60,7 @@ public:
   } // Get Fitness at i position
   void SetFitness(std::vector<Double_t> fitness) {
     fFitness = fitness;
-  } // How to add two fTime and fMemory in Vector
+  } 
   Int_t GetNObjectives() const { return fNObjectives; }
   Double_t GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(Double_t dist) { fCrowdingDistance = dist; }
@@ -90,7 +92,37 @@ public:
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
 
+  ////////// Parameters definition /////////////
+  Double_t GetAllev() const { return fAllev; }
+  Double_t GetBuffer() const { return fBuffev; }
+  Double_t GetThread() const { return fThread; }
+  Double_t GetPriority() const { return fPriority; }
+  Double_t GetSteps() const { return fSteps; }
+  Double_t GetVector() const { return fVector; }
+  Double_t GetTime() const { return fTime; }
+  Double_t GetMemory() const { return fMemory; }
+
 private:
+  ///////////////////////////////////////////////////
+  // Individual parts (Genes)
+  Double_t fAllev;  // All events (after will be translated in GeantV namespace)
+  Double_t fBuffev; // Buffered events (after will be translated in GeantV
+                    // namespace)
+  Double_t fThread; // Number of threads (after will be translated in GeantV
+                    // namespace)
+  Double_t fPriority; // Priority value (after will be translated in GeantV
+                      // namespace)
+  Double_t fSteps;    // Number of steps (after will be translated in GeantV
+                      // namespace)
+  Double_t fVector;   // Vector size (after will be translated in GeantV
+                      // namespace)
+  //////////////////////////////////////////////////
+  // Parts of fitness vector
+  Double_t fTime;   // RT from GeantV (after will be translated in GeantV
+                    // namespace)
+  Double_t fMemory; // RT from GeantV (after will be translated in GeantV
+                    // namespace)
+  ///////////////////////////////////////////////////
   std::vector<Double_t> fFitness; // Vector of values of different fitness
                                   // function (objectives)
   Int_t fNObjectives;             // Number of fitness values (objectives)

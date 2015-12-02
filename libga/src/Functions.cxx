@@ -59,6 +59,4 @@ void SetFunction(void (*fFunction)()) { std::function<void()> f = fFunction; }
 void SetFunctionOpt(void (*fFunction)(Int_t), Int_t args) {
   auto f = std::bind(fFunction, args);
 }
-// !!!
-// Templated implementation allow to change numbewr of variables using variadic
-// templates
+

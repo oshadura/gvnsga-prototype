@@ -23,7 +23,6 @@ public:
   Genes &Tournament(Genes &ind1, Genes &ind2) const;
   void Crossover(const Genes &parent1, const Genes &parent2, Genes &child1,
                  Genes &child2);
-  // void NextStep();
   void NextStep();
   static void Evolution();
   Int_t GetPopulationSetupSize() const { return fPopulationSize; }
