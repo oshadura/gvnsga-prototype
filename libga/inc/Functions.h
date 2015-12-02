@@ -7,9 +7,11 @@
 #include <limits>
 #include <functional>
 
+class Genes;
+
 class Functions {
 
-  typedef std::function<void(void)> Function;
+  typedef std::function<void(Genes&)> Function;
 
 public:
   /**
@@ -47,15 +49,37 @@ public:
             const std::vector<Double_t> constr)
       : fNParam(nparam), fInterval(limits), fConstraines(constr),
         fNCons(nconst) {}
-
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param nparam [description]
+   * @param n [description]
+   * @param fFunction [description]
+   * @param l [description]
+   * @param s [description]
+   * @param n [description]
+   * @param s [description]
+   */
   Functions(Int_t nparam, Int_t nconst,
             const std::vector<std::pair<Double_t, Double_t> > limits,
             const std::vector<Double_t> constr,
-            std::function<void(void)> fFunction)
+            std::function<void(Genes&)> fFunction)
       : fNParam(nparam), fInterval(limits), fConstraines(constr),
         PopulationFunction(fFunction), fNCons(nconst) {}
 
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param func [description]
+   */
   Functions(const Functions &func);
+
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   */
   virtual ~Functions() {}
 
   ///////// Intervals definition //////////////
@@ -65,21 +89,25 @@ public:
   std::pair<Double_t, Double_t> GetIntervalLimit(Int_t i) const {
     return fInterval.at(i);
   }
-  Int_t GetNParam() const { return fNParam; }
   void SetInterval();
   void SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax);
-  void SetFunction(void (*run)());
-  void SetFunctionOpt(void (*run)(Int_t), Int_t i);
+
+  ///////// Parameter definition //////////////
+  Int_t GetNParam() const { return fNParam; }
+  void SetNParams(Int_t nparam) { nparam = fNParam; }
+
+  //////// Function definition ///////////////
+  void SetFunction(void (*fFunction)());
+  void SetFunctionGenes(void (*fFunction)(Genes&), Genes& Individual);
 
   //////// Constrains definition //////////////
   Int_t GetNCons() const { return fNCons; }
   void SetConstrain(Int_t i, Double_t value);
   std::vector<Double_t> GetConstraines() const { return fConstraines; }
-
   void SetNCons(Int_t ncon) { ncon = fNCons; }
-  void SetNParams(Int_t nparam) { nparam = fNParam; }
+
   /////////////////////////////////////////////
-  static Functions *Instance(); // ?????????
+  static Functions *Instance(); 
 
 private:
   Int_t fNParam; // Number of parameterxs

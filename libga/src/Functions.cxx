@@ -55,8 +55,7 @@ void Functions::SetConstrain(Int_t i, Double_t value) {
 
 void SetFunction(void (*fFunction)()) { std::function<void()> f = fFunction; }
 
-// Very bad : just not to forget
-void SetFunctionOpt(void (*fFunction)(Int_t), Int_t args) {
-  auto f = std::bind(fFunction, args);
+void SetFunctionGenes(void (*fFunction)(Genes&), Genes& Individual) {
+  auto f = std::bind(fFunction, Individual);
 }
 

@@ -4,7 +4,6 @@
 #include "Genes.h"
 #include "AlgorithmNSGA.h"
 
-
 #include "Rtypes.h"
 #include "TGeoManager.h"
 
@@ -22,7 +21,7 @@
 #endif
 
 void CMSApp(Genes* individual){
-  ///////////////////// Old part from counters experiments ////////////////////
+  ///////////////////// Old part from counters experiments 
 
   //const Events events {
   //  hwcounters::cache::L1::DCA,
@@ -31,21 +30,22 @@ void CMSApp(Genes* individual){
   //auto counter = PerfStat(events);
   //counter.start();
 
-  ///////////////////// Values from original function (runCMS.C) ////////////////////
-
+  ///////////////////// Values from original function (runCMS.C) 
   bool performance=true;
   const char *geomfile="cms2015.root";
   const char *xsec="xsec_FTFP_BERT_G496p02_1mev.root";
   const char *fstate="fstate_FTFP_BERT_G496p02_1mev.root";
   bool coprocessor = COPROCESSOR_REQUEST;
-
-  ///////////////////// Original macros /////////////////////
+  
+  ///////////////////// Values should be taken from [Genes, map(Genes,Limits)] 
+  ///////////////////// Original macros 
   //
-  //Commenting line for compilation purposes, after we will get value from individual vector 
-  //int nthreads = ncputhreads;
+  // Commenting line for compilation purposes, after we will get value from individual vector 
+  // int nthreads = ncputhreads;
   int nthreads = 4;
-
+   // Value from individual vector 
    int ntotal   = 10; // Number of events to be transported
+   // Value from individual vector 
    int nbuffered  = 5; // Number of buffered events (tunable [1,ntotal])
    TGeoManager::Import(geomfile); 
    TaskBroker *broker = nullptr;
@@ -70,9 +70,12 @@ void CMSApp(Genes* individual){
    prop->SetMonitored(GeantPropagator::kMonTracksPerEvent, false & (!performance));
    prop->SetMonitored(GeantPropagator::kMonTracks,         false & (!performance));
    bool graphics = (prop->GetMonFeatures()) ? true : false;
-   prop->fUseMonitoring = graphics;   
+   prop->fUseMonitoring = graphics;
+   // Value from individual vector   
    prop->fPriorityThr = 0.1;
+   // Value from individual vector   
    prop->fNperBasket = 16;   // Initial vector size (tunable)
+   // Value from individual vector   
    prop->fMaxPerBasket = 64;   // Maximum vector size (tunable)
    prop->fMaxRes = 4000;
    if (performance) prop->fMaxRes = 0;
@@ -81,6 +84,7 @@ void CMSApp(Genes* individual){
    prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
    std::string s = "pp14TeVminbias.root";
    prop->fPrimaryGenerator = new HepMCGenerator(s);
+   // Value from individual vector 
    prop->fLearnSteps = 100000;
    if (performance) prop->fLearnSteps = 0;
    CMSApplication *app = new CMSApplication();
@@ -96,8 +100,8 @@ void CMSApp(Genes* individual){
    prop->fUseMonitoring = graphics;
    prop->PropagatorGeom(geomfile, nthreads, graphics);
    delete prop;
-   /////////////////////////////////////////
    //counter.stop;
+   //////////////////// Write a Fitness [vector, map(FitnessValue,Constraint)] 
 }
 
 int main() {
@@ -110,9 +114,7 @@ int main() {
 
   // Setup constraint = 0
 
-  //Setup Function
-  //geantv->SetFunction(*(Run));
-  //geantv->SetFunctionOpt(*(RunC),4);
+  // Setup Function
 
   // Setup genes generation
 
