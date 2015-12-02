@@ -19,7 +19,9 @@ class Genes;
 
 class Population : public Genes {
 public:
-  Population() : fFront(), fPopulation(), fCrowdingObj(1), fNGen(1) {}
+  Population() : fFront(0), fPopulation(0), fCrowdingObj(1), fNGen(1) {}
+  Population(Int_t fSizePop)
+      : fFront(0), fPopulation(fSizePop), fCrowdingObj(1), fNGen(1) {}
   virtual ~Population() {}
 
   Genes &GetGenes(Int_t i) { return fPopulation.at(i); }
@@ -29,15 +31,12 @@ public:
   void PushGenes(const Genes &value) { fPopulation.push_back(value); }
   Int_t GetGenerationNumber() { return fNGen; }
   void SetGenerationNumber(Int_t gen) { fNGen = gen; }
+  void SetPopulationSize(Int_t s) { fSizePop = s; }
   Int_t GetPopulationSize() const { return fPopulation.size(); }
   std::vector<Genes> &GetIndividuals() { return fPopulation; }
-  // std::vector<std::vector<Double_t> > GetFront() { return fFront;} //
-  // std::vector<Genes>
-  // std::vector<Double_t> GetFront(Int_t i) { return fFront.at(i); } // Genes
   std::vector<Genes> GetFront() { return fFront; }
   Genes GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
-
   std::vector<Genes> operator=(std::vector<Genes> fPopulation) {
     return fPopulation;
   }
@@ -69,6 +68,7 @@ private:
   // std::vector<std::vector<Double_t> > fFront; // std::vector<Genes>
   std::vector<Genes> fFront;
   std::vector<Genes> fPopulation;
+  Int_t fSizePop;
   Int_t fNGen;
   TH1F *fH;
 

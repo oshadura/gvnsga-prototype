@@ -46,7 +46,7 @@ void Population::Build() {
       }
     }
   }
-  WritePopulationTree(*this, "NSGA.root");
+  // WritePopulationTree(*this, "NSGA.root");
 }
 
 void Population::CrowdingDistanceAll() {

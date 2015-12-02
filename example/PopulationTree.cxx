@@ -121,9 +121,6 @@ int main() {
   geantv->SetNCons(0);
   geantv->SetNParams(6);
   geantv->SetInterval();
-
-  // Setup limits for generation parameters
-
   // Setup constraint = 0
 
   // Setup Function
@@ -146,11 +143,11 @@ int main() {
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
   // Setup population initialization
   Population *fNsgaPop;
-
+  fNsgaPop->SetPopulationSize(20);
   // Testing function
-  // fNsgaPop->WritePopulationTree(*fNsgaPop, "Population");
-  // fNsgaPop->PrintTree("Population", "Population");
   fNsgaPop->Build();
+  fNsgaPop->WritePopulationTree(*fNsgaPop, "Population");
+  fNsgaPop->PrintTree("Population", "Population");
   /////////////////////////////////////+++++++++///////////////////////
   // Algorithm run
   nsga2->Initialize();

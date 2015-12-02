@@ -25,21 +25,18 @@ public:
                  Genes &child2);
   void NextStep();
   static void Evolution();
-  Int_t GetPopulationSetupSize() const { return fPopulationSize; }
   Double_t GetPCross() const { return fPCross; }
   Double_t GetEtaCross() const { return fEtaCross; }
   Double_t GetPMut() const { return fPMut; }
   Double_t GetEtaMut() const { return fEtaMut; }
   static AlgorithmNSGA *Instance();
 
-  void SetPopulationSize(Int_t n) { fPopulationSize = n; }
   void SetPCross(Double_t pcross) { fPCross = pcross; }
   void SetEtaCross(Double_t etacross) { fEtaCross = etacross; }
   void SetEtaMut(Double_t etamut) { fEtaMut = etamut; }
   void SetPMut(Double_t pmut) { fPMut = pmut; }
 
 private:
-  Int_t fPopulationSize; // Always should be a multiple of 4
   Double_t fPCross;
   Double_t fEtaCross;
   Double_t fPMut;
