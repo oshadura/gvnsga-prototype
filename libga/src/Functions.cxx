@@ -32,7 +32,8 @@ ClassImp(Functions)
 }
 
 Functions *Functions::Instance() {
-  Functions *fgFunction = new Functions();
+  if (!fgFunction)
+    Functions *fgFunction = new Functions();
   return fgFunction;
 }
 

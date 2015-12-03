@@ -11,6 +11,7 @@
 #include <ostream>
 #include <string>
 #include <utility>
+#include <memory>
 
 #define EPS 1e-14
 #define INF 1e+14
@@ -19,9 +20,9 @@ class Genes;
 
 class Population : public Genes {
 public:
-  Population() : fFront(0), fPopulation(0), fCrowdingObj(1), fNGen(1) {}
-  Population(Int_t fSizePop)
-      : fFront(0), fPopulation(), fCrowdingObj(1), fNGen(1) {
+  Population() : fFront(0), fPopulation(0), fCrowdingObj(1),fGen(0),fSizePop(0) {}
+  Population(Int_t size)
+      : fFront(0), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(size){
     fPopulation.reserve(fSizePop);
   }
   virtual ~Population() {}
@@ -31,13 +32,12 @@ public:
     fPopulation.emplace(fPopulation.begin() + i, value);
   }
   void PushGenes(const Genes &value) { fPopulation.push_back(value); }
-  Int_t GetGenerationNumber() { return fNGen; }
-  void SetGenerationNumber(Int_t gen) { fNGen = gen; }
   void SetPopulationSize(Int_t s) {
-    fSizePop = s;
-    fPopulation.resize(s);
+    std::unique_ptr<Population> pop(new Population());
+    pop->fPopulation.resize(s);
   }
   Int_t GetPopulationSize() const { return fPopulation.size(); }
+  Int_t GetPopulationSetupSize() const {return fSizePop;}
   std::vector<Genes> &GetIndividuals() { return fPopulation; }
   std::vector<Genes> GetFront() { return fFront; }
   Genes GetFront(Int_t i) { return fFront.at(i); }
@@ -45,12 +45,11 @@ public:
   std::vector<Genes> operator=(std::vector<Genes> fPopulation) {
     return fPopulation;
   }
-  void SetCrowdingObj();
+  //void SetCrowdingObj();
   void Build();
   void CrowdingDistanceAll();
   void CrowdingDistanceFront(Int_t i);
   void FastNonDominantSorting();
-  void Evaluation() { ; }
   void Merge(const Population &population1,
              const Population &population2); // Merging two populations
   void Clear(Option_t *option = "");         // Clear function
@@ -65,6 +64,8 @@ public:
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
   void Evaluate();
+  void SetGenNumber(Int_t i){ fGen = i;}
+  Int_t GetGenNumber() const {return fGen;}
 
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default) false:
@@ -74,7 +75,7 @@ private:
   std::vector<Genes> fFront;
   std::vector<Genes> fPopulation;
   Int_t fSizePop;
-  Int_t fNGen;
+  Int_t fGen; //Generation counter
   TH1F *fH;
 
   ClassDef(Population, 1)

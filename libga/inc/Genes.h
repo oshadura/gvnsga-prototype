@@ -21,10 +21,11 @@ public:
   Genes(std::vector<Double_t> &f); // Vector of parameters = individual
   // Destructor
   virtual ~Genes() {}
-  // Function building Genes
-  void Set(/*Double_t fAllev, Double_t fBuffev, Double_t fThread,
-           Double_t fPriority, Double_t fSteps, Double_t fVector*/);
+  // Function building Genes (meved in Population and Functions)
+  /*
+  void Set();
   void SetIt(Int_t i);
+  */
 
   void Clear(Option_t *option = "");
   Double_t CheckDominance(const Genes *ind2);

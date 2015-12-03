@@ -10,7 +10,6 @@
 #pragma link C++ class Genes + ;
 #pragma link C++ class AlgorithmNSGA + ;
 #pragma link C++ class Functions + ;
-#pragma link C++ class PerfInstrument + ;
 
 #pragma link C++ class vector < Double_t > +;
 #pragma link C++ class std::vector < std::vector < Double_t >> +;

@@ -193,4 +193,9 @@ Int_t Population::PrintTree(const char *file, const char *name) {
   }
 }
 
-void Population::Evaluate() {}
+void Population::Evaluate() {
+  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it)
+  {
+    //Functions::Instance()->SetFunctionGenes(Functions::Instance(), it); 
+  }
+}

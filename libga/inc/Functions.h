@@ -12,7 +12,6 @@ class Genes;
 class Functions {
 
   typedef std::function<void(Genes &)> Function;
-
 public:
   /**
    * @brief Simple constructor
@@ -48,7 +47,7 @@ public:
             const std::vector<std::pair<Double_t, Double_t>> limits,
             const std::vector<Double_t> constr)
       : fNParam(nparam), fInterval(limits), fConstraines(constr),
-        fNCons(nconst) {}
+        fNCons(nconst), PopulationFunction() {}
   /**
    * @brief [brief description]
    * @details [long description]
@@ -122,6 +121,8 @@ private:
                                               // constrain based
   Function PopulationFunction; // type function to be passed from GeantV
   Int_t fNCons;                // Number of constrains
+  static Functions *fgFunction;
+
 
   ClassDef(Functions, 1)
 };

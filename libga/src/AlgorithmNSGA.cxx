@@ -27,7 +27,8 @@ struct Sort {
 };
 
 AlgorithmNSGA::AlgorithmNSGA()
-    : fPCross(0), fEtaCross(0), fPMut(0), fEtaMut(0), fNCross(0), fNMut(0) {}
+    : fPCross(0), fEtaCross(0), fPMut(0), fEtaMut(0), fNCross(0), fNMut(0), fNGen(0) {
+    }
 
 AlgorithmNSGA::~AlgorithmNSGA() {
   delete fChildPop;
@@ -36,14 +37,15 @@ AlgorithmNSGA::~AlgorithmNSGA() {
 }
 
 AlgorithmNSGA *AlgorithmNSGA::Instance() {
-  AlgorithmNSGA *fgNSGA2 = new AlgorithmNSGA();
+  if(!fgNSGA2)
+    AlgorithmNSGA *fgNSGA2 = new AlgorithmNSGA();
   return fgNSGA2;
 }
 
-/// TBD
 void AlgorithmNSGA::Initialize() {
-  //..
-  Int_t fGen = 1;
+  fChildPop->SetGenNumber(1);
+  fParentPop->SetGenNumber(1);
+  fMixedPop->SetGenNumber(1);
 }
 
 void AlgorithmNSGA::Selection(Population &oldpop, Population &newpop) {
@@ -71,7 +73,6 @@ void AlgorithmNSGA::Selection(Population &oldpop, Population &newpop) {
 }
 
 Genes &AlgorithmNSGA::Tournament(Genes &ind1, Genes &ind2) const {
-
   static TRandom rnd;
   Int_t fFlag = ind1.CheckDominance(&ind2);
   if (fFlag == 1) // Yes
@@ -150,20 +151,18 @@ void AlgorithmNSGA::Crossover(const Genes &parent1, const Genes &parent2,
 void AlgorithmNSGA::NextStep() {
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate();
-  fChildPop->SetGenerationNumber(fGen + 1);
+  fChildPop->SetGenNumber((fChildPop->GetGenNumber())+1);
   fChildPop->Evaluate();
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
-  fMixedPop->SetGenerationNumber(fGen + 1);
   fMixedPop->FastNonDominantSorting();
   fParentPop->Clear();
   // until |Pt+1| + |Fi| <= N, until parent population is filled
   Int_t i = 0;
-  /*  while (fParentPop->GetPopulationSize() + (fMixedPop->GetFront(i)).size() <
-    GetPopulationSetupSize()) {
+  while (fParentPop->GetPopulationSize() + (fMixedPop->GetFront(i)).size() <
+    fMixedPop->GetPopulationSetupSize()) {
       Genes Fi = fMixedPop->GetFront(i);
-      fMixedPop->CrowdingDistanceFront(i);            // calculate crowding in
-    Fi
+      fMixedPop->CrowdingDistanceFront(i); // calculate crowding in Fi
       for (Int_t j = 0; (Double_t)j < Fi.size(); ++j) // Pt+1 = Pt+1 U Fi
         fParentPop->GetIndividuals().push_back(fMixedPop->GetFront(j));
       i += 1;
@@ -171,21 +170,17 @@ void AlgorithmNSGA::NextStep() {
     fMixedPop->CrowdingDistanceFront(i); // calculate crowding in F
     std::sort(fMixedPop->GetFront(i).begin(), fMixedPop->GetFront(i).end(),
               Sort(*fMixedPop));
-    const int extra = GetPopulationSetupSize() -
+    const int extra = fParentPop->GetPopulationSetupSize() -
     fParentPop->GetPopulationSize();
     for (int j = 0; j < extra; ++j) // Pt+1 = Pt+1 U Fi[1:N-|Pt+1|]
       fParentPop->GetIndividuals().push_back(fMixedPop->GetFront(j));
-    fGen += 1;
-    fParentPop->SetGenerationNumber(fGen);
-    */
+    fParentPop->SetGenNumber((fParentPop->GetGenNumber())+1);
 }
 
-/// TBD
-void AlgorithmNSGA::Evolution() { // Function that control evolution process of
-                                  // GA
-  // while (fGen < (fMixedPop->GetGenerationNumber())) {
-  //   NextStep();
-  //} // Check through population object
+void AlgorithmNSGA::Evolution() { 
+  while ((fParentPop->GetGenNumber()) <= (Instance()->GetGenTotalNumber())) {
+    NextStep();
+    } // Check through population object
 }
 
 ClassImp(AlgorithmNSGA)

@@ -55,9 +55,6 @@ void Genes::Set() {
                              Functions::Instance()->GetIntervalLimit(i).second);
   }
 }
-*/
-
-/*
 void Genes::SetIt(Int_t i){
   TRandom3 rand;
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
