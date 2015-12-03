@@ -21,13 +21,13 @@
 ClassImp(Genes)
 
     Genes::Genes()
-    : TObject(), fFitness(0), fNObjectives(0), fRank(0), fDominationCounter(0),
-      fCrowdingDistance(0), fEvaluated(0), fDominated(0), ConstViol(0),
-      fGenes(0), fEpsilonC(0) {}
+    : TObject(), fFitness(), fNObjectives(0), fRank(0), fDominationCounter(0),
+      fCrowdingDistance(0), fEvaluated(0), fDominated(), ConstViol(0),
+      fGenes(), fEpsilonC(0) {}
 
 Genes::Genes(std::vector<Double_t> &f)
-    : TObject(), fFitness(0), fNObjectives(f.size()), fRank(0),
-      fDominationCounter(0), fCrowdingDistance(0), fEvaluated(0), fDominated(0),
+    : TObject(), fFitness(), fNObjectives(f.size()), fRank(0),
+      fDominationCounter(0), fCrowdingDistance(0), fEvaluated(0), fDominated(),
       ConstViol(0), fGenes(f), fEpsilonC(0) {
   fFitness.reserve(fNObjectives);
 }
@@ -35,11 +35,16 @@ Genes::Genes(std::vector<Double_t> &f)
 Genes &Genes::operator=(const Genes &gen) {
   // comparison operator
   if (this != &gen) {
+    fNObjectives = gen.fNObjectives;
     fGenes = gen.fGenes;
     fRank = gen.fRank;
     fDominationCounter = gen.fDominationCounter;
     fEvaluated = gen.fEvaluated;
     fFitness = gen.fFitness;
+    fCrowdingDistance = gen.fCrowdingDistance;
+    fDominated = gen.fDominated;
+    ConstViol = gen.ConstViol;
+    fEpsilonC = gen.fEpsilonC;
   }
   return *this;
 }
@@ -67,7 +72,18 @@ void Genes::SetIt(Int_t i){
   }
 }
 */
-void Genes::Clear(Option_t * /*option*/) { TObject::Clear(); }
+void Genes::Clear(Option_t * /*option*/) { TObject::Clear();
+    fNObjectives = 0;
+    fGenes.clear();
+    fRank = 0;
+    fDominationCounter = 0.;
+    fEvaluated = 0;
+    fFitness.clear();
+    fCrowdingDistance = 0;
+    fDominated.clear();
+    ConstViol = 0.;
+    fEpsilonC = 0.;
+}
 
 Double_t Genes::CheckDominance(const Genes *ind2) {
   if (ConstViol < 0 && ind2->ConstViol < 0) {

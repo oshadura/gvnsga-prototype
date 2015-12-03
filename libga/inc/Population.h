@@ -20,9 +20,9 @@ class Genes;
 
 class Population : public Genes {
 public:
-  Population() : fFront(0), fPopulation(0), fCrowdingObj(1),fGen(0),fSizePop(0) {}
+  Population() : fFront(), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(0) {}
   Population(Int_t size)
-      : fFront(0), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(size){
+      : fFront(), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(size){
     fPopulation.reserve(fSizePop);
   }
   virtual ~Population() {}
@@ -38,7 +38,7 @@ public:
   }
   Int_t GetPopulationSize() const { return fPopulation.size(); }
   Int_t GetPopulationSetupSize() const {return fSizePop;}
-  std::vector<Genes> &GetIndividuals() { return fPopulation; }
+  std::vector<Genes> GetIndividuals() { return fPopulation; }
   std::vector<Genes> GetFront() { return fFront; }
   Genes GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }

@@ -11,7 +11,7 @@
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 
-AlgorithmNSGA* AlgorithmNSGA::fgNSGA2;
+AlgorithmNSGA* AlgorithmNSGA::fgNSGA2 = 0;
 
 
 struct Sort {
@@ -30,7 +30,8 @@ struct Sort {
 };
 
 AlgorithmNSGA::AlgorithmNSGA()
-    : fPCross(0), fEtaCross(0), fPMut(0), fEtaMut(0), fNCross(0), fNMut(0), fNGen(0) {
+    : fPCross(0), fEtaCross(0), fPMut(0), fEtaMut(0), fNCross(0), fNMut(0), fNGen(0), fParentPop(), fChildPop(), fMixedPop() {
+      fgNSGA2 = this;
     }
 
 AlgorithmNSGA::~AlgorithmNSGA() {

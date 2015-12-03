@@ -74,7 +74,7 @@ public:
   void SetEpsilonC(Double_t epsc) { fEpsilonC = epsc; }
   Double_t GetEpsilonC() const { return fEpsilonC; }
 
-  Int_t size() const { return fGenes.size(); }
+  Int_t size() { return fGenes.size(); }
   ////// Horrible /////
   std::vector<Double_t>::iterator begin() {
     std::vector<Double_t>::iterator it = fGenes.begin();

@@ -22,50 +22,38 @@ public:
    * @param fConstrains Vector of constraines
    */
   Functions()
-      : fNParam(0), fInterval(), fConstraines(), PopulationFunction(),
-        fNCons(0) {}
+      : fNParam(0), fInterval(), fConstraines(),
+        fNCons(0) {
+          fgFunction = this;
+        }
 
   /**
    * @brief Simple constructor with known number of parameters to be observed
    */
   Functions(Int_t nparam)
-      : fNParam(nparam), fInterval(), fConstraines(), PopulationFunction(),
-        fNCons(0) {}
-
+      : fNParam(nparam), fInterval(), fConstraines(),
+        fNCons(0) {
+          fgFunction = this;
+        }
   /**
-   * @brief Simple constructor with known number of parameters and pre-setuped
-   * pairs of vectors
-   */
   Functions(Int_t nparam,
             const std::vector<std::pair<Double_t, Double_t>> limits)
       : fNParam(nparam), fInterval(limits), fConstraines(),
         PopulationFunction(), fNCons(0) {}
-  /**
-   * @brief Simple constructor
-   */
+  
   Functions(Int_t nparam, Int_t nconst,
             const std::vector<std::pair<Double_t, Double_t>> limits,
             const std::vector<Double_t> constr)
       : fNParam(nparam), fInterval(limits), fConstraines(constr),
         fNCons(nconst), PopulationFunction() {}
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   *
-   * @param nparam [description]
-   * @param n [description]
-   * @param fFunction [description]
-   * @param l [description]
-   * @param s [description]
-   * @param n [description]
-   * @param s [description]
-   */
+
   Functions(Int_t nparam, Int_t nconst,
             const std::vector<std::pair<Double_t, Double_t>> limits,
             const std::vector<Double_t> constr,
             std::function<void(Genes &)> fFunction)
       : fNParam(nparam), fInterval(limits), fConstraines(constr),
         PopulationFunction(fFunction), fNCons(nconst) {}
+  */
 
   /**
    * @brief [brief description]
@@ -79,7 +67,9 @@ public:
    * @brief [brief description]
    * @details [long description]
    */
-  virtual ~Functions() {}
+  virtual ~Functions() {
+    fgFunction = 0;
+  }
 
   ///////// Intervals definition //////////////
   std::vector<std::pair<Double_t, Double_t>> GetInterval() const {
@@ -119,7 +109,6 @@ private:
                                                                 // function
   mutable std::vector<Double_t> fConstraines; // Vector of constraines for NSGA
                                               // constrain based
-  Function PopulationFunction; // type function to be passed from GeantV
   Int_t fNCons;                // Number of constrains
   static Functions *fgFunction;
 

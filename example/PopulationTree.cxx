@@ -118,7 +118,7 @@ void CMSApp(Genes *individual) {
 int main() {
   // Function
   Functions *geantv = Functions::Instance();
-  geantv->SetNCons(0);
+  geantv->SetNCons(2);
   geantv->SetNParams(6);
   geantv->SetInterval();
   // Setup constraint = 0

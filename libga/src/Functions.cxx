@@ -10,7 +10,7 @@
 #include <utility>
 
 using namespace std::placeholders;
-Functions* Functions::fgFunction;
+Functions* Functions::fgFunction = 0;
 
 
 ClassImp(Functions)
