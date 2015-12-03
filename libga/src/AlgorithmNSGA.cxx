@@ -11,6 +11,9 @@
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 
+AlgorithmNSGA* AlgorithmNSGA::fgNSGA2;
+
+
 struct Sort {
   Population &pop;
   Sort(Population &population) : pop(population){};

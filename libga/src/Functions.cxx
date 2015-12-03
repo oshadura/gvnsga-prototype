@@ -10,6 +10,8 @@
 #include <utility>
 
 using namespace std::placeholders;
+Functions* Functions::fgFunction;
+
 
 ClassImp(Functions)
 
