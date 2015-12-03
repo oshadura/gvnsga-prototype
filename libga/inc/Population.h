@@ -20,9 +20,11 @@ class Genes;
 
 class Population : public Genes {
 public:
-  Population() : fFront(), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(0) {}
+  Population() : fFront(), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(0) {
+  }
   Population(Int_t size)
       : fFront(), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(size){
+    fPopulation.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
   virtual ~Population() {}
@@ -33,8 +35,8 @@ public:
   }
   void PushGenes(const Genes &value) { fPopulation.push_back(value); }
   void SetPopulationSize(Int_t s) {
-    std::unique_ptr<Population> pop(new Population());
-    pop->fPopulation.resize(s);
+    //std::unique_ptr<Population> pop(new Population());
+    fPopulation.resize(s);
   }
   Int_t GetPopulationSize() const { return fPopulation.size(); }
   Int_t GetPopulationSetupSize() const {return fSizePop;}

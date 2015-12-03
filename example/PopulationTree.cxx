@@ -142,12 +142,12 @@ int main() {
   printf("Probability  for mutation = %g\n", nsga2->GetPMut());
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
   // Setup population initialization
-  Population *fNsgaPop;
+  Population *fNsgaPop = new Population();
   fNsgaPop->SetPopulationSize(20);
   // Testing function
   fNsgaPop->Build();
-  fNsgaPop->WritePopulationTree(*fNsgaPop, "Population");
-  fNsgaPop->PrintTree("Population", "Population");
+  fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
+  fNsgaPop->PrintTree("Population.root", "Population");
   /////////////////////////////////////+++++++++///////////////////////
   // Algorithm run
   nsga2->Initialize();
