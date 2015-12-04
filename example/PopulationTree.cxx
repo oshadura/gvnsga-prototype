@@ -121,36 +121,32 @@ int main() {
   geantv->SetNCons(2);
   geantv->SetNParams(6);
   geantv->SetInterval();
-  // Setup constraint = 0
-
-  // Setup Function
-
-  // Setup genes generation
-
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = AlgorithmNSGA::Instance();
-  // nsga2->SetPopulationSize(5);
   nsga2->SetPCross(0.5);
   nsga2->SetEtaCross(0.7);
   nsga2->SetEtaMut(0.3);
   nsga2->SetPMut(0.5);
-  // printf("Population size (presetuped) = %d\n",
-  //       nsga2->GetPopulationSetupSize());
+  nsga2->SetGenTotalNumber(5);
+  printf("Number of generations = %d\n",
+         nsga2->GetGenTotalNumber());
   printf("Probability of crossover = %g\n", nsga2->GetPCross());
   printf("Eta values for crossover (crossover rate) = %g\n",
          nsga2->GetEtaCross());
   printf("Probability  for mutation = %g\n", nsga2->GetPMut());
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
-  // Setup population initialization
+  // Test population initialization
+  /////////////////////////////////
   Population *fNsgaPop = new Population();
   fNsgaPop->SetPopulationSize(20);
-  // Testing function
+  //Testing building population function
   fNsgaPop->Build();
-  fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
-  fNsgaPop->PrintTree("Population.root", "Population");
-  /////////////////////////////////////+++++++++///////////////////////
+  //fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
+  //fNsgaPop->PrintTree("Population.root", "Population");
+  /////////////////////////////////
   // Algorithm run
   nsga2->Initialize();
+  //nsga2->NextStep();
   nsga2->Evolution();
   // Missing logging process...
   return 0;

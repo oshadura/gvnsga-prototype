@@ -40,6 +40,7 @@ public:
   Genes &operator=(const Genes &gen);
   // virtual const std::vector<Genes>&  operator[] ( Int_t i ) const { return
   // fGenes.at(i); }
+  void Set();
 
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<Double_t> GetDominated() {
@@ -49,7 +50,7 @@ public:
     return fDominated.at(i);
   } // 1 Dominated individual
   Int_t SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
-  // Double_t GetGene(Int_t i) const { return fGenes.at(i); }
+  Double_t GetGene(Int_t i) const { return fGenes.at(i); }
   const Genes SetGene(Int_t i, Double_t value) {
     fGenes.emplace(fGenes.begin() + i, value);
     return fGenes;
@@ -92,17 +93,52 @@ public:
 
   ////////// Parameters definition /////////////
   Double_t GetAllev() const { return fAllev; }
-  Double_t GetBuffer() const { return fBuffev; }
+  Double_t GetBuffev() const { return fBuffev; }
   Double_t GetThread() const { return fThread; }
   Double_t GetPriority() const { return fPriority; }
   Double_t GetSteps() const { return fSteps; }
   Double_t GetVector() const { return fVector; }
   Double_t GetTime() const { return fTime; }
   Double_t GetMemory() const { return fMemory; }
+  /////////////////////////////////////////////
+
+  Double_t GetAllev(Genes &ind) const{
+    return  ind.GetGene(0);
+  }
+
+  Double_t GetBuffev(Genes &ind) const{
+    return  ind.GetGene(1);
+  }
+
+    Double_t GetThread(Genes &ind) const{
+    return  ind.GetGene(2);
+  }
+
+    Double_t GetPriority(Genes &ind) const{
+    return  ind.GetGene(3);
+  }
+
+    Double_t GetSteps(Genes &ind) const{
+    return  ind.GetGene(4);
+  }
+
+    Double_t GetVector(Genes &ind) const{
+    return  ind.GetGene(5);
+  }
+
+   Double_t GetTime(Genes &ind) const{
+    return  ind.GetFitness(0);
+  }
+
+    Double_t GetMemory(Genes &ind) const{
+    return  ind.GetFitness(1);
+  }
+
 
 private:
   ///////////////////////////////////////////////////
   // Individual parts (Genes)
+
   Int_t fAllev;  // All events (after will be translated in GeantV namespace) #0
   Int_t fBuffev; // Buffered events (after will be translated in GeantV
                  // namespace) #1
@@ -114,13 +150,16 @@ private:
                       // namespace) #5
   Int_t fVector;      // Vector size (after will be translated in GeantV
                       // namespace) #6
+
   //////////////////////////////////////////////////
   // Parts of fitness vector
   Double_t fTime;   // RT from GeantV (after will be translated in GeantV
                     // namespace)
   Double_t fMemory; // RT from GeantV (after will be translated in GeantV
                     // namespace)
+
   ///////////////////////////////////////////////////
+
   std::vector<Double_t> fFitness; // Vector of values of different fitness
                                   // function (objectives)
   Int_t fNObjectives;             // Number of fitness values (objectives)
@@ -133,6 +172,14 @@ private:
   Double_t ConstViol;               // Violation of constraints
   std::vector<Double_t> fGenes;
   Double_t fEpsilonC;
+
+  ///////////////////////////////////////////////////
+
+  // Should we write a map to be sure about connection between Limits[] and Genes[] || Fitmess[] and Constraint[]?
+  // Usefull for main body using in 
+
+  //static std::multimap<Genes,Limits> fInputMap;
+  //static std::multimap<Genes,Constraint> fOutputMap;  
 
   ClassDef(Genes, 1)
 };

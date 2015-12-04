@@ -33,13 +33,11 @@ public:
   void SetPMut(Double_t pmut) { fPMut = pmut; }
   //////////////////////////////////////////////////
   Int_t GetGenTotalNumber() const {return fNGen;}
+  void SetGenTotalNumber(Int_t gen) {fNGen = gen;}
   /////////////////////////////////////////////////
   static AlgorithmNSGA *Instance();
 
 private:
-  Population *fParentPop;
-  Population *fChildPop;
-  Population *fMixedPop;
   Double_t fPCross;
   Double_t fEtaCross;
   Double_t fPMut;
@@ -47,8 +45,12 @@ private:
   Int_t fNCross;
   Int_t fNMut;
   Int_t fNGen;
-
   static AlgorithmNSGA* fgNSGA2;
+
+public:
+  Population *fParentPop;
+  Population *fChildPop;
+  Population *fMixedPop;
 
   ClassDef(AlgorithmNSGA, 1)
 };

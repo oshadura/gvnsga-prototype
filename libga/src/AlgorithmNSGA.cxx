@@ -47,9 +47,16 @@ AlgorithmNSGA *AlgorithmNSGA::Instance() {
 }
 
 void AlgorithmNSGA::Initialize() {
-  fChildPop->SetGenNumber(1);
+  fChildPop = new Population();
+  fParentPop = new Population();
+  fMixedPop = new Population();
+
+  fParentPop->Build();
+  fParentPop-> Evaluate();
+  fParentPop->FastNonDominantSorting();
+  fParentPop->CrowdingDistanceAll();
   fParentPop->SetGenNumber(1);
-  fMixedPop->SetGenNumber(1);
+
 }
 
 void AlgorithmNSGA::Selection(Population &oldpop, Population &newpop) {

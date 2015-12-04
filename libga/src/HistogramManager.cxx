@@ -6,6 +6,8 @@
 #include "HistogramManager.h"
 #include "TDirectory.h"
 
+ClassImp(HistogramManager)
+
 HistogramManager::HistogramManager(TDirectory *dir) {
   TDirectory *saved = gDirectory;
   dir->cd();
@@ -20,7 +22,7 @@ HistogramManager::HistogramManager(TDirectory *dir) {
   saved->cd();
 }
 
-/*bool HistogramManager::CheckValue(ROOT::Internal::TTreeReaderValueBase *value)
+bool HistogramManager::CheckValue(ROOT::TTreeReaderValueBase *value)
 {
   if (value->GetSetupStatus() < 0) {
     std::cerr << "Error " << value->GetSetupStatus() << "setting up reader for "
@@ -30,11 +32,9 @@ HistogramManager::HistogramManager(TDirectory *dir) {
   return true;
 }
 
-*/
-HistogramManager::~HistogramManager() {}
+/*HistogramManager::~HistogramManager() {}
 
 void HistogramManager::HFill(Population *pop, char *file) {
-  /*
   TFile* ga = TFile::Open(file);
   TTreeReader reader("Genetic Algorithm TTree", ga);
   TTreeReaderValue<std::vector<Genes>> Population(reader, "Population");
@@ -54,24 +54,20 @@ void HistogramManager::HFill(Population *pop, char *file) {
           std::cerr << "Error: TTreeReader has not loaded any data yet!\n";
           break;
         kEntryNoTree:
-          std::cerr << "Error: TTreeReader cannot find a tree names \"Genetic
-Algorithm TTree\"!\n";
+          std::cerr << "Error: TTreeReader cannot find a tree names \"Genetic Algorithm TTree\"!\n";
           break;
         kEntryNotFound:
           // Can't really happen as TTreeReader::Next() knows when to stop.
           std::cerr << "Error: The entry number doe not exist\n";
           break;
         kEntryChainSetupError:
-          std::cerr << "Error: TTreeReader cannot access a chain element, e.g.
-file without the tree\n";
+          std::cerr << "Error: TTreeReader cannot access a chain element, e.g. file without the tree\n";
           break;
         kEntryChainFileError:
-          std::cerr << "Error: TTreeReader cannot open a chain element, e.g.
-missing file\n";
+          std::cerr << "Error: TTreeReader cannot open a chain element, e.g. missing file\n";
           break;
         kEntryDictionaryError:
-          std::cerr << "Error: TTreeReader cannot find the dictionary for some
-data\n";
+          std::cerr << "Error: TTreeReader cannot find the dictionary for some data\n";
            break;
          }
       return false;
@@ -87,7 +83,5 @@ if (!Genes.IsEmpty()) {
             hist->Fill([iGene].fVector(), hVector);
          }
       }
-      */
 }
-
-ClassImp(HistogramManager)
+*/

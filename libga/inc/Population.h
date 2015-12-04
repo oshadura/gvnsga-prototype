@@ -73,7 +73,6 @@ public:
   Bool_t fCrowdingObj; // true: crowding over objective (default) false:
                        // crowding over real variable
 private:
-  // std::vector<std::vector<Double_t> > fFront; // std::vector<Genes>
   std::vector<Genes> fFront;
   std::vector<Genes> fPopulation;
   Int_t fSizePop;

@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <random>
+#include <map>
 
 #include "TRandom3.h"
 #include "TFile.h"
@@ -23,12 +24,16 @@ ClassImp(Genes)
     Genes::Genes()
     : TObject(), fFitness(), fNObjectives(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(0), fDominated(), ConstViol(0),
-      fGenes(), fEpsilonC(0) {}
+      fGenes(), fEpsilonC(0),
+      fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
+      fTime(0), fMemory(0) {}
 
 Genes::Genes(std::vector<Double_t> &f)
     : TObject(), fFitness(), fNObjectives(f.size()), fRank(0),
       fDominationCounter(0), fCrowdingDistance(0), fEvaluated(0), fDominated(),
-      ConstViol(0), fGenes(f), fEpsilonC(0) {
+      ConstViol(0), fGenes(f), fEpsilonC(0),
+      fAllev(f[0]), fBuffev(f[1]), fThread(f[2]), fPriority(f[3]), fSteps(f[4]), fVector(f[5]), 
+      fTime(0), fMemory(0) {
   fFitness.reserve(fNObjectives);
 }
 
@@ -49,7 +54,6 @@ Genes &Genes::operator=(const Genes &gen) {
   return *this;
 }
 
-/*
 void Genes::Set() {
   TRandom3 rand;
   std::vector<Double_t> *Genes = &fGenes;
@@ -58,20 +62,10 @@ void Genes::Set() {
   for (Int_t i = 0; i < nparam; ++i) {
     fGenes[i] = rand.Uniform(Functions::Instance()->GetIntervalLimit(i).first,
                              Functions::Instance()->GetIntervalLimit(i).second);
+
   }
 }
-void Genes::SetIt(Int_t i){
-  TRandom3 rand;
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    for (const std::pair<Double_t, Double_t> &limit :
-(Functions::Instance()->GetInterval())) {
-      Double_t value = rand.Uniform(limit.first, limit.second);
-      position = std::distance(GetIndividuals().begin(), it);
-      SetGenes(position,Genes::SetGene(i,value));
-    }
-  }
-}
-*/
+
 void Genes::Clear(Option_t * /*option*/) { TObject::Clear();
     fNObjectives = 0;
     fGenes.clear();
