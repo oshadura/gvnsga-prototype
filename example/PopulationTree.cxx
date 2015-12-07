@@ -1,4 +1,9 @@
 #include <cmath>
+#include <iostream>     // std::cout
+#include <iterator>     // std::ostream_iterator
+#include <vector>       // std::vector
+#include <algorithm>    // std::copy
+
 
 #include "Population.h"
 #include "Functions.h"
@@ -137,16 +142,16 @@ int main() {
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
   // Test population initialization
   /////////////////////////////////
-  Population *fNsgaPop = new Population();
-  fNsgaPop->SetPopulationSize(20);
+  Population fNsgaPop = new Population();
+  fNsgaPop.SetPopulationSize(20);
   //Testing building population function
-  fNsgaPop->Build();
+  fNsgaPop.Build();
+  std::cout << fNsgaPop << std::endl;
   //fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
   //fNsgaPop->PrintTree("Population.root", "Population");
   /////////////////////////////////
   // Algorithm run
   nsga2->Initialize();
-  //nsga2->NextStep();
   nsga2->Evolution();
   // Missing logging process...
   return 0;

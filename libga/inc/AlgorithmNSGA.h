@@ -21,7 +21,7 @@ public:
                  Genes &child2);
   void NextStep();
   void Evolution();
- ////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////
   Double_t GetPCross() const { return fPCross; }
   Double_t GetEtaCross() const { return fEtaCross; }
   Double_t GetPMut() const { return fPMut; }
@@ -32,8 +32,8 @@ public:
   void SetEtaMut(Double_t etamut) { fEtaMut = etamut; }
   void SetPMut(Double_t pmut) { fPMut = pmut; }
   //////////////////////////////////////////////////
-  Int_t GetGenTotalNumber() const {return fNGen;}
-  void SetGenTotalNumber(Int_t gen) {fNGen = gen;}
+  Int_t GetGenTotalNumber() const { return fNGen; }
+  void SetGenTotalNumber(Int_t gen) { fNGen = gen; }
   /////////////////////////////////////////////////
   static AlgorithmNSGA *Instance();
 
@@ -45,7 +45,7 @@ private:
   Int_t fNCross;
   Int_t fNMut;
   Int_t fNGen;
-  static AlgorithmNSGA* fgNSGA2;
+  static AlgorithmNSGA *fgNSGA2;
 
 public:
   Population *fParentPop;

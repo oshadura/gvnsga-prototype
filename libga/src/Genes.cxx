@@ -198,3 +198,9 @@ void Genes::ReadGenesTree(Genes &ind, Population &pop, const char *file) {
   tree->SetBranchAddress("Population", &pop);
   Int_t entries = (Int_t)(tree->GetEntries());
 }
+
+template<typename T>
+std::ostream &operator <<(std::ostream &os, Genes& g) {
+   std::copy(g.begin(), g.end(), std::ostream_iterator<T>(os, "\n"));
+   return os;
+}

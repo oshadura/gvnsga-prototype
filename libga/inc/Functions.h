@@ -12,6 +12,7 @@ class Genes;
 class Functions {
 
   typedef std::function<void(Genes &)> Function;
+
 public:
   /**
    * @brief Simple constructor
@@ -21,26 +22,23 @@ public:
    * @param fInterval vectors of itervals for parameters
    * @param fConstrains Vector of constraines
    */
-  Functions()
-      : fNParam(0), fInterval(), fConstraines(),
-        fNCons(0) {
-          fgFunction = this;
-        }
+  Functions() : fNParam(0), fInterval(), fConstraines(), fNCons(0) {
+    fgFunction = this;
+  }
 
   /**
    * @brief Simple constructor with known number of parameters to be observed
    */
   Functions(Int_t nparam)
-      : fNParam(nparam), fInterval(), fConstraines(),
-        fNCons(0) {
-          fgFunction = this;
-        }
+      : fNParam(nparam), fInterval(), fConstraines(), fNCons(0) {
+    fgFunction = this;
+  }
   /**
   Functions(Int_t nparam,
             const std::vector<std::pair<Double_t, Double_t>> limits)
       : fNParam(nparam), fInterval(limits), fConstraines(),
         PopulationFunction(), fNCons(0) {}
-  
+
   Functions(Int_t nparam, Int_t nconst,
             const std::vector<std::pair<Double_t, Double_t>> limits,
             const std::vector<Double_t> constr)
@@ -67,12 +65,10 @@ public:
    * @brief [brief description]
    * @details [long description]
    */
-  virtual ~Functions() {
-    fgFunction = 0;
-  }
+  virtual ~Functions() { fgFunction = 0; }
 
   ///////// Intervals definition //////////////
-  std::vector<std::pair<Double_t, Double_t>> GetInterval() const {
+  std::vector<std::pair<Double_t, Double_t> > GetInterval() const {
     return fInterval;
   }
   std::pair<Double_t, Double_t> GetIntervalLimit(Int_t i) const {
@@ -100,18 +96,17 @@ public:
 
 private:
   Int_t fNParam; // Number of parameterxs
-  mutable std::vector<std::pair<Double_t, Double_t>> fInterval; // Interval
-                                                                // settings for
-                                                                // genes in
-                                                                // cromosome ->
-                                                                // inheritance
-                                                                // from
-                                                                // function
+  mutable std::vector<std::pair<Double_t, Double_t> > fInterval; // Interval
+                                                                 // settings for
+                                                                 // genes in
+                                                                 // cromosome ->
+                                                                 // inheritance
+                                                                 // from
+                                                                 // function
   mutable std::vector<Double_t> fConstraines; // Vector of constraines for NSGA
                                               // constrain based
-  Int_t fNCons;                // Number of constrains
+  Int_t fNCons;                               // Number of constrains
   static Functions *fgFunction;
-
 
   ClassDef(Functions, 1)
 };

@@ -20,11 +20,12 @@ class Genes;
 
 class Population : public Genes {
 public:
-  Population() : fFront(), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(0) {
-  }
+  Population()
+      : fFront(), fPopulation(), fCrowdingObj(1), fSizePop(0), fGen(0), fH() {}
   Population(Int_t size)
-      : fFront(), fPopulation(), fCrowdingObj(1),fGen(0),fSizePop(size){
-    fPopulation.reserve(fSizePop);
+      : fFront(), fPopulation(), fCrowdingObj(1), fSizePop(size), fGen(0),
+        fH() {
+    fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
   virtual ~Population() {}
@@ -35,19 +36,19 @@ public:
   }
   void PushGenes(const Genes &value) { fPopulation.push_back(value); }
   void SetPopulationSize(Int_t s) {
-    //std::unique_ptr<Population> pop(new Population());
+    // std::unique_ptr<Population> pop(new Population());
     fPopulation.resize(s);
   }
   Int_t GetPopulationSize() const { return fPopulation.size(); }
-  Int_t GetPopulationSetupSize() const {return fSizePop;}
-  std::vector<Genes> GetIndividuals() { return fPopulation; }
-  std::vector<Genes> GetFront() { return fFront; }
+  Int_t GetPopulationSetupSize() const { return fSizePop; }
+  std::vector<Genes> GetIndividuals() const { return fPopulation; }
+  std::vector<Genes> GetFront() const { return fFront; }
   Genes GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
   std::vector<Genes> operator=(std::vector<Genes> fPopulation) {
     return fPopulation;
   }
-  //void SetCrowdingObj();
+  // void SetCrowdingObj();
   void Build();
   void CrowdingDistanceAll();
   void CrowdingDistanceFront(Int_t i);
@@ -61,13 +62,18 @@ public:
     fH = 0;
   } // Function that reset histogram pointer
   TH1F *GetHistogram() const { return fH; } // Returns historgrames
+  //////////////////////////////// Playing with ROOT files
+  ///////////////////////////////
   void WritePopulationTree(Population &pop, const char *file);
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
+  ////////////////////////////////////////////////////////////
   void Evaluate();
-  void SetGenNumber(Int_t i){ fGen = i;}
-  Int_t GetGenNumber() const {return fGen;}
+  void SetGenNumber(Int_t i) { fGen = i; }
+  Int_t GetGenNumber() const { return fGen; }
+  ///////////////////////////////////////////////////////////
+  friend std::ostream &operator<<(std::ostream &os, Population &pop);
 
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default) false:
@@ -76,7 +82,7 @@ private:
   std::vector<Genes> fFront;
   std::vector<Genes> fPopulation;
   Int_t fSizePop;
-  Int_t fGen; //Generation counter
+  Int_t fGen; // Generation counter
   TH1F *fH;
 
   ClassDef(Population, 1)

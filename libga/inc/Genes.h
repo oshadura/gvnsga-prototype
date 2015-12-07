@@ -15,8 +15,8 @@ class Genes : public TObject {
 public:
   // Constructor
   Genes();
-  // Copy Constructor
-  Genes(const Genes &copy) {} // Copy operator for vector of Individual
+  // Copy constructor
+  Genes(const Genes &copy); // Copy operator for vector of Individual
   // Parametrized constructor
   Genes(std::vector<Double_t> &f); // Vector of parameters = individual
   // Destructor
@@ -76,7 +76,7 @@ public:
   Double_t GetEpsilonC() const { return fEpsilonC; }
 
   Int_t size() { return fGenes.size(); }
-  ////// Horrible /////
+
   std::vector<Double_t>::iterator begin() {
     std::vector<Double_t>::iterator it = fGenes.begin();
     return it;
@@ -87,7 +87,7 @@ public:
     return it;
   }
 
-  virtual const Double_t operator[](Int_t i) const { return fGenes.at(i); }
+  Double_t operator[](Int_t i) const { return fGenes.at(i); }
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
 
@@ -102,38 +102,23 @@ public:
   Double_t GetMemory() const { return fMemory; }
   /////////////////////////////////////////////
 
-  Double_t GetAllev(Genes &ind) const{
-    return  ind.GetGene(0);
-  }
+  Double_t GetAllev(Genes &ind) const { return ind.GetGene(0); }
 
-  Double_t GetBuffev(Genes &ind) const{
-    return  ind.GetGene(1);
-  }
+  Double_t GetBuffev(Genes &ind) const { return ind.GetGene(1); }
 
-    Double_t GetThread(Genes &ind) const{
-    return  ind.GetGene(2);
-  }
+  Double_t GetThread(Genes &ind) const { return ind.GetGene(2); }
 
-    Double_t GetPriority(Genes &ind) const{
-    return  ind.GetGene(3);
-  }
+  Double_t GetPriority(Genes &ind) const { return ind.GetGene(3); }
 
-    Double_t GetSteps(Genes &ind) const{
-    return  ind.GetGene(4);
-  }
+  Double_t GetSteps(Genes &ind) const { return ind.GetGene(4); }
 
-    Double_t GetVector(Genes &ind) const{
-    return  ind.GetGene(5);
-  }
+  Double_t GetVector(Genes &ind) const { return ind.GetGene(5); }
 
-   Double_t GetTime(Genes &ind) const{
-    return  ind.GetFitness(0);
-  }
+  Double_t GetTime(Genes &ind) const { return ind.GetFitness(0); }
 
-    Double_t GetMemory(Genes &ind) const{
-    return  ind.GetFitness(1);
-  }
+  Double_t GetMemory(Genes &ind) const { return ind.GetFitness(1); }
 
+  friend std::ostream &operator<<(std::ostream &os, Genes &g);
 
 private:
   ///////////////////////////////////////////////////
@@ -163,9 +148,9 @@ private:
   std::vector<Double_t> fFitness; // Vector of values of different fitness
                                   // function (objectives)
   Int_t fNObjectives;             // Number of fitness values (objectives)
-  Int_t fRank;                    // Rank of Individual
   Int_t fDominationCounter;       // Domination counter for individual (used in
                                   // Non-Dominant sorting)
+  Int_t fRank;                    // Rank of Individual
   Double_t fCrowdingDistance;     // Crowding distance per individual
   Bool_t fEvaluated;              // Evaluated or not
   std::vector<Double_t> fDominated; // Vector of dominanted individuals
@@ -175,11 +160,12 @@ private:
 
   ///////////////////////////////////////////////////
 
-  // Should we write a map to be sure about connection between Limits[] and Genes[] || Fitmess[] and Constraint[]?
-  // Usefull for main body using in 
+  // Should we write a map to be sure about connection between Limits[] and
+  // Genes[] || Fitmess[] and Constraint[]?
+  // Usefull for main body using in
 
-  //static std::multimap<Genes,Limits> fInputMap;
-  //static std::multimap<Genes,Constraint> fOutputMap;  
+  // static std::multimap<Genes,Limits> fInputMap;
+  // static std::multimap<Genes,Constraint> fOutputMap;
 
   ClassDef(Genes, 1)
 };

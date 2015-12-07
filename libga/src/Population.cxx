@@ -1,8 +1,10 @@
 #include <vector>
 #include <ostream>
 #include <string>
-#include <algorithm>
 #include <utility>
+#include <iostream>     // std::cout
+#include <iterator>     // std::ostream_iterator
+#include <algorithm>    // std::copy
 
 #include "TRandom.h"
 #include "TRandom3.h"
@@ -46,7 +48,7 @@ void Population::Build() {
       }
     }
   }
-  WritePopulationTree(*this, "NSGA.root");
+  //WritePopulationTree(*this, "NSGA.root");
 }
 
 void Population::CrowdingDistanceAll() {
@@ -198,4 +200,15 @@ void Population::Evaluate() {
   {
     //Functions::Instance()->SetFunctionGenes(Functions::Instance(), it); 
   }
+}
+
+template<typename T> std::ostream& operator<<(std::ostream& os, Population& pop)
+{
+  //std::ostream_iterator<T> fGenesOutIt (os,"\n");
+  //copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(), fGenesOutIt);
+  //return os;
+
+  for(Int_t i = 0 ; i < pop.GetPopulationSize(); ++i)
+    os << "Genes = " << pop.GetGenes(i);
+  return os;
 }

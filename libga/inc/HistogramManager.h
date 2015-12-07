@@ -22,7 +22,7 @@ private:
 
 public:
   HistogramManager(TDirectory *dir);
-  virtual ~HistogramManager(){}
+  virtual ~HistogramManager() {}
   void HFill(Population *pop, char *file);
   bool CheckValue(ROOT::TTreeReaderValueBase *value);
 
