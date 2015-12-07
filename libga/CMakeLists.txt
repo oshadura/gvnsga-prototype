@@ -68,7 +68,7 @@ include_directories(inc)
 #-----------------------------------------------------------------------------
 
 file(GLOB sources src/*.cxx)
-file(GLOB headers inc/Functions.h inc/Genes.h inc/Population.h inc/AlgorithmNSGA.h inc/HistogramManager.h)
+file(GLOB headers inc/Functions.h inc/TGenes.h inc/Population.h inc/AlgorithmNSGA.h inc/HistogramManager.h)
 #----------------------------------------------------------------------------
 # Generate the Dictionary
 
