@@ -5,8 +5,8 @@
 #include "Functions.h"
 #include <vector>
 
-class Population;
-class Genes;
+template<class T> class Population;
+template<class T> class Genes;
 class Functions;
 
 class AlgorithmNSGA {
@@ -15,10 +15,10 @@ public:
   virtual ~AlgorithmNSGA();
   ////////////////////////////////////////////////////
   void Initialize();
-  void Selection(Population &oldpop, Population &newpop);
-  Genes &Tournament(Genes &ind1, Genes &ind2) const;
-  void Crossover(const Genes &parent1, const Genes &parent2, Genes &child1,
-                 Genes &child2);
+  void Selection(Population<Double_t> &oldpop, Population<Double_t> &newpop);
+  Genes<Double_t> &Tournament(Genes<Double_t> &ind1, Genes<Double_t> &ind2) const;
+  void Crossover(const Genes<Double_t> &parent1, const Genes<Double_t> &parent2, Genes<Double_t> &child1,
+                 Genes<Double_t> &child2);
   void NextStep();
   void Evolution();
   ////////////////////////////////////////////////////
@@ -48,9 +48,9 @@ private:
   static AlgorithmNSGA *fgNSGA2;
 
 public:
-  Population *fParentPop;
-  Population *fChildPop;
-  Population *fMixedPop;
+  Population<Double_t> *fParentPop;
+  Population<Double_t> *fChildPop;
+  Population<Double_t> *fMixedPop;
 
   ClassDef(AlgorithmNSGA, 1)
 };

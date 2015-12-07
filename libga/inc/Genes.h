@@ -16,7 +16,7 @@ public:
   // Constructor
   Genes();
   // Copy constructor
-  Genes(const Genes &copy); // Copy operator for vector of Individual
+  Genes(const Genes &copy){} // Copy operator for vector of Individual
   // Parametrized constructor
   Genes(std::vector<Double_t> &f); // Vector of parameters = individual
   // Destructor
@@ -55,7 +55,7 @@ public:
     fGenes.emplace(fGenes.begin() + i, value);
     return fGenes;
   }
-  std::vector<Double_t> GetFitness() const {
+  std::vector<Double_t> GetFitnessVector() const {
     return fFitness;
   } // Get a vector of fTime and fMemory
   Double_t GetFitness(Int_t i) const {
@@ -90,7 +90,6 @@ public:
   Double_t operator[](Int_t i) const { return fGenes.at(i); }
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
-
   ////////// Parameters definition /////////////
   Double_t GetAllev() const { return fAllev; }
   Double_t GetBuffev() const { return fBuffev; }
@@ -118,7 +117,8 @@ public:
 
   Double_t GetMemory(Genes &ind) const { return ind.GetFitness(1); }
 
-  friend std::ostream &operator<<(std::ostream &os, Genes &g);
+  //friend std::ostream &operator<<(std::ostream &os, Genes &g);
+  friend std::ostream &operator<<(std::ostream &os, std::vector<Double_t> &g);
 
 private:
   ///////////////////////////////////////////////////

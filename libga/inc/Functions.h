@@ -1,17 +1,17 @@
 #ifndef __FUNCTIONS__
 #define __FUNCTIONS__
 
-#include "Genes.h"
+#include "TGenes.h"
 
 #include <vector>
 #include <limits>
 #include <functional>
 
-class Genes;
+template<class T> class Genes;
 
 class Functions {
 
-  typedef std::function<void(Genes &)> Function;
+  typedef std::function<void(Genes<Double_t> &)> Function;
 
 public:
   /**
@@ -83,7 +83,7 @@ public:
 
   //////// Function definition ///////////////
   void SetFunction(void (*fFunction)());
-  void SetFunctionGenes(void (*fFunction)(Genes &), Genes &Individual);
+  void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &), Genes<Double_t> &Individual);
 
   //////// Constrains definition //////////////
   Int_t GetNCons() const { return fNCons; }

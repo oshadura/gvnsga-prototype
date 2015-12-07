@@ -11,22 +11,22 @@
 #include "TFile.h"
 #include "TTree.h"
 
-#include "Genes.h"
+#include "TGenes.h"
 #include "Functions.h"
 #include "Population.h"
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 
-ClassImp(Population)
+//ClassImp(Population<T>)
     /**
      * @brief Struct that is it crowding over objectives of
      variables though boolean comparing operator "<" on population for
      two individuals with different indexes and objectives/variables with index
      m
      */
-    struct Comparing {
-  Comparing(Population &p, Int_t indx) : pop(p), m(indx){};
-  Population &pop;
+   template <typename T> struct Comparing {
+  Comparing(Population<T> &p, Int_t indx) : pop(p), m(indx){};
+  Population<T> &pop;
   Int_t m;
   Bool_t operator()(Int_t i, Int_t j) {
     return pop.fCrowdingObj
@@ -35,7 +35,8 @@ ClassImp(Population)
   };
 };
 
-void Population::Build() {
+template <class T>
+void Population<T>::Build() {
   TRandom3 rand;
   rand.SetSeed(time(NULL));
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
@@ -44,20 +45,22 @@ void Population::Build() {
            (Functions::Instance()->GetInterval())) {
         Double_t value = rand.Uniform(limit.first, limit.second);
         Int_t position = std::distance(GetIndividuals().begin(), it);
-        SetGenes(position, Genes::SetGene(i, value));
+        SetGenes(position, Genes<T>::SetGene(i, value));
       }
     }
   }
   //WritePopulationTree(*this, "NSGA.root");
 }
 
-void Population::CrowdingDistanceAll() {
+template <class T>
+void Population<T>::CrowdingDistanceAll() {
   for (Int_t i = 0; (ULong_t)i < fFront.size(); ++i)
     CrowdingDistanceFront(i);
 }
 
-void Population::CrowdingDistanceFront(Int_t i) {
-  Genes &F = fFront[i]; // Genes
+template <class T>
+void Population<T>::CrowdingDistanceFront(Int_t i) {
+  Genes<T> &F = fFront[i]; // Genes
   if (F.size() == 0)
     return;
   const Int_t l = F.size();
@@ -66,7 +69,7 @@ void Population::CrowdingDistanceFront(Int_t i) {
   const Int_t limit =
       fCrowdingObj ? GetNObjectives() : Functions::Instance()->GetNParam();
   for (Int_t m = 0; m < limit; ++m) {
-    std::sort(F.begin(), F.end(), Comparing(*this, m));
+    std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
     GetGenes(F[0]).SetCrowdingDistance(INF);
     if (l > 1)
       GetGenes(F[l - i]).SetCrowdingDistance(INF);
@@ -90,16 +93,17 @@ void Population::CrowdingDistanceFront(Int_t i) {
   }
 }
 
-void Population::FastNonDominantSorting() {
+template <class T>
+void Population<T>::FastNonDominantSorting() {
   fFront.resize(1);
   fFront[0].clear();
   for (int i = 0; i < (ULong_t)fPopulation.size(); ++i) {
     std::vector<Double_t> fDom;
     Int_t fDomCount = 0;
-    Genes &p = fPopulation[i];
+    Genes<T> &p = fPopulation[i];
     for (Int_t j = 0; (ULong_t)j < fPopulation.size(); ++j) {
-      Genes &q = fPopulation[j];
-      Int_t compare = p.Genes::CheckDominance(&q);
+      Genes<T> &q = fPopulation[j];
+      Int_t compare = p.Genes<T>::CheckDominance(&q);
       if (compare == 1) {
         fDom.push_back(j);
       } else if (compare == -1) {
@@ -117,12 +121,12 @@ void Population::FastNonDominantSorting() {
   std::sort(fFront[0].begin(), fFront[0].end());
   int fi = 1;
   while (fFront[fi - 1].size() > 0) {
-    Genes &fronti = fFront[fi - 1];
+    Genes<T> &fronti = fFront[fi - 1];
     std::vector<Double_t> Q;
     for (Int_t i = 0; (ULong_t)i < fronti.size(); ++i) {
-      Genes &p = fPopulation[fronti[i]];
+      Genes<T> &p = fPopulation[fronti[i]];
       for (Int_t j = 0; (ULong_t)j < p.GetDominated().size(); ++j) {
-        Genes &q = fPopulation[p.GetDominated(j)];
+        Genes<T> &q = fPopulation[p.GetDominated(j)];
         q.SetDominatedCounter(-1); // -= 1;
         if (q.GetDominatedCounter() == 0) {
           q.SetRank(fi + 1);
@@ -135,17 +139,20 @@ void Population::FastNonDominantSorting() {
   }
 }
 
-void Population::Merge(const Population &population1,
-                       const Population &population2) {
+template <class T>
+void Population<T>::Merge(const Population<T> &population1,
+                       const Population<T> &population2) {
   std::copy(population1.fPopulation.begin(), population1.fPopulation.end(),
             fPopulation.begin());
   std::copy(population2.fPopulation.begin(), population2.fPopulation.end(),
             fPopulation.begin() + population1.GetPopulationSize());
 }
 
-void Population::Clear(Option_t * /*option*/) { ; } // Clear function
+template <class T>
+void Population<T>::Clear(Option_t * /*option*/) { ; } // Clear function
 
-void Population::WritePopulationTree(Population &pop, const char *file) {
+template <class T>
+void Population<T>::WritePopulationTree(Population &pop, const char *file) {
   if (!file) {
     TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
@@ -160,7 +167,8 @@ void Population::WritePopulationTree(Population &pop, const char *file) {
   }
 }
 
-void Population::UpdatePopulationTree(Population &pop, const char *file) {
+template <class T>
+void Population<T>::UpdatePopulationTree(Population<T> &pop, const char *file) {
   // Looks it is not possible update existing events, lets update the tree
   TFile *f = TFile::Open(file, "RECREATE");
   if (!f) {
@@ -173,7 +181,8 @@ void Population::UpdatePopulationTree(Population &pop, const char *file) {
   f->Write();
 }
 
-void Population::ReadPopulationTree(Population &pop, const char *file) {
+template <class T>
+void Population<T>::ReadPopulationTree(Population<T> &pop, const char *file) {
 
   TFile *f = TFile::Open(file, "RECREATE");
   TTree *tree = (TTree *)f->Get("gvga");
@@ -182,7 +191,8 @@ void Population::ReadPopulationTree(Population &pop, const char *file) {
 }
 
 // Testing work of stupid tree (could be deleted after)
-Int_t Population::PrintTree(const char *file, const char *name) {
+template <class T>
+Int_t Population<T>::PrintTree(const char *file, const char *name) {
   TFile *f = TFile::Open(file, "RECREATE");
   TTree *tree = 0;
   f->GetObject(name, tree);
@@ -195,20 +205,13 @@ Int_t Population::PrintTree(const char *file, const char *name) {
   }
 }
 
-void Population::Evaluate() {
+template <class T>
+void Population<T>::Evaluate() {
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it)
   {
     //Functions::Instance()->SetFunctionGenes(Functions::Instance(), it); 
   }
 }
 
-template<typename T> std::ostream& operator<<(std::ostream& os, Population& pop)
-{
-  //std::ostream_iterator<T> fGenesOutIt (os,"\n");
-  //copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(), fGenesOutIt);
-  //return os;
-
-  for(Int_t i = 0 ; i < pop.GetPopulationSize(); ++i)
-    os << "Genes = " << pop.GetGenes(i);
-  return os;
-}
+//Ugly instantiating
+template class Population<Double_t>;

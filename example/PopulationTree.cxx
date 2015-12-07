@@ -8,7 +8,7 @@
 #include "Population.h"
 #include "Functions.h"
 #include "HistogramManager.h"
-#include "Genes.h"
+#include "TGenes.h"
 #include "AlgorithmNSGA.h"
 
 #include "Rtypes.h"
@@ -26,7 +26,7 @@
 #define COPROCESSOR_REQUEST false
 #endif
 
-void CMSApp(Genes *individual) {
+void CMSApp(Genes<Double_t> *individual) {
   ///////////////////// Old part from counters experiments
 
   // const Events events {
@@ -142,11 +142,13 @@ int main() {
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
   // Test population initialization
   /////////////////////////////////
-  Population fNsgaPop = new Population();
+  //Population<Double_t> fNsgaPop = new Population();
+  Population<Double_t> fNsgaPop;
   fNsgaPop.SetPopulationSize(20);
   //Testing building population function
   fNsgaPop.Build();
-  std::cout << fNsgaPop << std::endl;
+  //std::cout << fNsgaPop << std::endl;
+  
   //fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
   //fNsgaPop->PrintTree("Population.root", "Population");
   /////////////////////////////////

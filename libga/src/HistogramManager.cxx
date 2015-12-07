@@ -1,6 +1,6 @@
 #include <vector>
 
-#include "Genes.h"
+#include "TGenes.h"
 #include "Population.h"
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"

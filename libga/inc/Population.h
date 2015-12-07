@@ -2,6 +2,7 @@
 #define __POPULATION__
 
 #include "AlgorithmNSGA.h"
+#include "TGenes.h"
 
 #include "TH1.h"
 #include "TFile.h"
@@ -16,9 +17,12 @@
 #define EPS 1e-14
 #define INF 1e+14
 
-class Genes;
+//template<class T> class Genes;
 
-class Population : public Genes {
+template<class T> class Population : public Genes<T> {
+
+  typedef Genes<T> Individual;
+
 public:
   Population()
       : fFront(), fPopulation(), fCrowdingObj(1), fSizePop(0), fGen(0), fH() {}
@@ -30,22 +34,22 @@ public:
   }
   virtual ~Population() {}
 
-  Genes &GetGenes(Int_t i) { return fPopulation.at(i); }
-  void SetGenes(Int_t i, const Genes &value) {
+  Individual &GetGenes(Int_t i) { return fPopulation.at(i); }
+  void SetGenes(Int_t i, const Genes<T> &value) {
     fPopulation.emplace(fPopulation.begin() + i, value);
   }
-  void PushGenes(const Genes &value) { fPopulation.push_back(value); }
+  void PushGenes(const Genes<T> &value) { fPopulation.push_back(value); }
   void SetPopulationSize(Int_t s) {
     // std::unique_ptr<Population> pop(new Population());
     fPopulation.resize(s);
   }
   Int_t GetPopulationSize() const { return fPopulation.size(); }
   Int_t GetPopulationSetupSize() const { return fSizePop; }
-  std::vector<Genes> GetIndividuals() const { return fPopulation; }
-  std::vector<Genes> GetFront() const { return fFront; }
-  Genes GetFront(Int_t i) { return fFront.at(i); }
+  std::vector<Individual> GetIndividuals() const { return fPopulation; }
+  std::vector<Individual> GetFront() const { return fFront; }
+  Individual GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
-  std::vector<Genes> operator=(std::vector<Genes> fPopulation) {
+  std::vector<Individual> operator=(Population<T> pop) {
     return fPopulation;
   }
   // void SetCrowdingObj();
@@ -73,14 +77,18 @@ public:
   void SetGenNumber(Int_t i) { fGen = i; }
   Int_t GetGenNumber() const { return fGen; }
   ///////////////////////////////////////////////////////////
-  friend std::ostream &operator<<(std::ostream &os, Population &pop);
+  friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
+      std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
+  copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(), fGenesOutIt);
+  return os;
+  }
 
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default) false:
                        // crowding over real variable
 private:
-  std::vector<Genes> fFront;
-  std::vector<Genes> fPopulation;
+  std::vector<Individual> fFront;
+  std::vector<Individual> fPopulation;
   Int_t fSizePop;
   Int_t fGen; // Generation counter
   TH1F *fH;

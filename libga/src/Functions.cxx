@@ -1,4 +1,4 @@
-#include "Genes.h"
+#include "TGenes.h"
 #include "Population.h"
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
@@ -56,6 +56,6 @@ void Functions::SetConstrain(Int_t i, Double_t value) {
 
 void SetFunction(void (*fFunction)()) { std::function<void()> f = fFunction; }
 
-void SetFunctionGenes(void (*fFunction)(Genes &), Genes &Individual) {
+void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &), Genes<Double_t> &Individual) {
   auto f = std::bind(fFunction, Individual);
 }
