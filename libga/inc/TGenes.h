@@ -10,14 +10,14 @@
 class Functions;
 class AlgorithmNSGA;
 
-template<class T> class Population;
+template <class T> class Population;
 
-template<class T> class Genes : public TObject {
+template <class T> class Genes : public TObject {
 public:
   // Constructor
   Genes();
   // Copy constructor
-  Genes(const Genes<T> &copy){} // Copy operator for vector of Individual
+  Genes(const Genes<T> &copy) {} // Copy operator for vector of Individual
   // Parametrized constructor
   Genes(std::vector<T> &f); // Vector of parameters = individual
   // Destructor
@@ -47,9 +47,7 @@ public:
   std::vector<T> GetDominated() {
     return fDominated;
   } // Vector of dominanted individuals
-  T GetDominated(Int_t i) {
-    return fDominated.at(i);
-  } // 1 Dominated individual
+  T GetDominated(Int_t i) { return fDominated.at(i); } // 1 Dominated individual
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
   const Genes<T> SetGene(Int_t i, T value) {
@@ -63,7 +61,6 @@ public:
     return fFitness.at(i);
   } // Get Fitness at i position
   void SetFitness(std::vector<T> fitness) { fFitness = fitness; }
-  Int_t GetNObjectives() const { return fNObjectives; }
   T GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(T dist) { fCrowdingDistance = dist; }
   Int_t GetRank() const { return fRank; }
@@ -78,13 +75,13 @@ public:
 
   Int_t size() { return fGenes.size(); }
 
-   typename std::vector<T>::iterator begin() {
+  typename std::vector<T>::iterator begin() {
     typename std::vector<T>::iterator it = fGenes.begin();
     return it;
   }
 
   typename std::vector<T>::iterator end() {
-     typename std::vector<T>::iterator it = fGenes.end();
+    typename std::vector<T>::iterator it = fGenes.end();
     return it;
   }
 
@@ -126,44 +123,44 @@ public:
   */
   /*
   void printGene(const Genes<T>& g) {
-    std::copy(g.begin(), g.end(), std::ostream_iterator<typename T::value_type>(std::cout, ", "));
+    std::copy(g.begin(), g.end(), std::ostream_iterator<typename
+T::value_type>(std::cout, ", "));
 }
 */
 private:
   ///////////////////////////////////////////////////
   // Individual parts (Genes)
 
-  T fAllev;  // All events (after will be translated in GeantV namespace) #0
-  T fBuffev; // Buffered events (after will be translated in GeantV
-                 // namespace) #1
-  T fThread; // Number of threads (after will be translated in GeantV
-                 // namespace) #3
+  T fAllev;    // All events (after will be translated in GeantV namespace) #0
+  T fBuffev;   // Buffered events (after will be translated in GeantV
+               // namespace) #1
+  T fThread;   // Number of threads (after will be translated in GeantV
+               // namespace) #3
   T fPriority; // Priority value (after will be translated in GeantV
-                      // namespace) #4
-  T fSteps;       // Number of steps (after will be translated in GeantV
-                      // namespace) #5
-  T fVector;      // Vector size (after will be translated in GeantV
-                      // namespace) #6
+               // namespace) #4
+  T fSteps;    // Number of steps (after will be translated in GeantV
+               // namespace) #5
+  T fVector;   // Vector size (after will be translated in GeantV
+               // namespace) #6
 
   //////////////////////////////////////////////////
   // Parts of fitness vector
   T fTime;   // RT from GeantV (after will be translated in GeantV
-                    // namespace)
+             // namespace)
   T fMemory; // RT from GeantV (after will be translated in GeantV
-                    // namespace)
+             // namespace)
 
   ///////////////////////////////////////////////////
 
-  std::vector<T> fFitness; // Vector of values of different fitness
-                                  // function (objectives)
-  Int_t fNObjectives;             // Number of fitness values (objectives)
-  Int_t fDominationCounter;       // Domination counter for individual (used in
-                                  // Non-Dominant sorting)
-  Int_t fRank;                    // Rank of Individual
-  Double_t fCrowdingDistance;     // Crowding distance per individual
-  Bool_t fEvaluated;              // Evaluated or not
-  std::vector<T> fDominated; // Vector of dominanted individuals
-  Double_t ConstViol;               // Violation of constraints
+  std::vector<T> fFitness;    // Vector of values of different fitness
+                              // function (objectives)
+  Int_t fDominationCounter;   // Domination counter for individual (used in
+                              // Non-Dominant sorting)
+  Int_t fRank;                // Rank of Individual
+  Double_t fCrowdingDistance; // Crowding distance per individual
+  Bool_t fEvaluated;          // Evaluated or not
+  std::vector<T> fDominated;  // Vector of dominanted individuals
+  Double_t ConstViol;         // Violation of constraints
   std::vector<T> fGenes;
   Double_t fEpsilonC;
 

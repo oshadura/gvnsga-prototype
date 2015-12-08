@@ -72,6 +72,7 @@ public:
   void Evaluate(Functions &func);
   void SetGenNumber(Int_t i) { fGen = i; }
   Int_t GetGenNumber() const { return fGen; }
+
   ///////////////////////////////////////////////////////////
   /*
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
