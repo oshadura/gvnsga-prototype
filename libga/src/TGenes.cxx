@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <random>
+#include <algorithm>
 #include <map>
 
 #include "TRandom3.h"

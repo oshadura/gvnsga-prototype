@@ -13,6 +13,7 @@
 #include <string>
 #include <utility>
 #include <memory>
+#include <algorithm>
 
 #define EPS 1e-14
 #define INF 1e+14
@@ -77,15 +78,18 @@ public:
   void SetGenNumber(Int_t i) { fGen = i; }
   Int_t GetGenNumber() const { return fGen; }
   ///////////////////////////////////////////////////////////
+  /*
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
-      std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
-  copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(), fGenesOutIt);
-  return os;
+    std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
+    std::copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(), fGenesOutIt);
+    return os;
   }
+  */
+  //void printPopulation(const Population<T>& p);
 
 public:
-  Bool_t fCrowdingObj; // true: crowding over objective (default) false:
-                       // crowding over real variable
+  Bool_t fCrowdingObj; // true: crowding over objective (default)
+                       // false: crowding over real variable
 private:
   std::vector<Individual> fFront;
   std::vector<Individual> fPopulation;

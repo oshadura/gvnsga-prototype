@@ -2,6 +2,9 @@
 #define __FUNCTIONS__
 
 #include "TGenes.h"
+#include "invoke_cpp11.hpp"
+
+
 
 #include <vector>
 #include <limits>
@@ -11,7 +14,7 @@ template<class T> class Genes;
 
 class Functions {
 
-  typedef std::function<void(Genes<Double_t> &)> Function;
+  typedef std::function<void(Genes<Double_t> &)> fFunction;
 
 public:
   /**
@@ -82,6 +85,7 @@ public:
   void SetNParams(Int_t nparam) { nparam = fNParam; }
 
   //////// Function definition ///////////////
+  //Ugly instantiation
   void SetFunction(void (*fFunction)());
   void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &), Genes<Double_t> &Individual);
 

@@ -48,6 +48,7 @@ private:
   static AlgorithmNSGA *fgNSGA2;
 
 public:
+  //Ugly instantiation
   Population<Double_t> *fParentPop;
   Population<Double_t> *fChildPop;
   Population<Double_t> *fMixedPop;

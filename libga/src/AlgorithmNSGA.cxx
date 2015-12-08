@@ -47,15 +47,17 @@ AlgorithmNSGA *AlgorithmNSGA::Instance() {
 }
 
 void AlgorithmNSGA::Initialize() {
-  fChildPop = new Population<Double_t>();
-  fParentPop = new Population<Double_t>();
-  fMixedPop = new Population<Double_t>();
+  Population<Double_t> fChildPop = new Population<Double_t>();
+  Population<Double_t> fParentPop = new Population<Double_t>();
+  Population<Double_t> fMixedPop = new Population<Double_t>();
 
-  fParentPop->Build();
-  fParentPop-> Evaluate();
-  fParentPop->FastNonDominantSorting();
-  fParentPop->CrowdingDistanceAll();
-  fParentPop->SetGenNumber(1);
+  fParentPop.Build();
+  fParentPop.Evaluate();
+  fParentPop.FastNonDominantSorting();
+  fParentPop.CrowdingDistanceAll();
+  fParentPop.SetGenNumber(1);
+  fChildPop.SetGenNumber(1);
+  fMixedPop.SetGenNumber(1);
 
 }
 
@@ -160,6 +162,8 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1, const Genes<Double
 }
 
 void AlgorithmNSGA::NextStep() {
+  int ngen = (fChildPop->GetGenNumber())+1;
+  std::cout << "New generetion #" << ngen << std::endl;
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate();
   fChildPop->SetGenNumber((fChildPop->GetGenNumber())+1);

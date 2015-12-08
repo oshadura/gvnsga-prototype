@@ -142,13 +142,12 @@ int main() {
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
   // Test population initialization
   /////////////////////////////////
-  //Population<Double_t> fNsgaPop = new Population();
-  Population<Double_t> fNsgaPop;
-  fNsgaPop.SetPopulationSize(20);
+  //Population<Double_t> fNsgaPop = new Population<Double_t>();
+  //fNsgaPop.SetPopulationSize(20);
   //Testing building population function
-  fNsgaPop.Build();
+  //fNsgaPop.Build();
   //std::cout << fNsgaPop << std::endl;
-  
+
   //fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
   //fNsgaPop->PrintTree("Population.root", "Population");
   /////////////////////////////////

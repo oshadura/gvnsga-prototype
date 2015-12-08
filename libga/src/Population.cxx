@@ -10,6 +10,8 @@
 #include "TRandom3.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TStopwatch.h"
+
 
 #include "TGenes.h"
 #include "Functions.h"
@@ -151,19 +153,25 @@ void Population<T>::Merge(const Population<T> &population1,
 template <class T>
 void Population<T>::Clear(Option_t * /*option*/) { ; } // Clear function
 
+
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
+  TStopwatch Timer;
   if (!file) {
     TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
     tree->Branch("Population", &pop);
     f->Write();
+    tree->Fill();
+    tree->Print();
   } else {
     TFile *f = TFile::Open(file, "RECREATE");
     TTree *tree = (TTree *)f->Get("gvga");
     TTree *tr_c = new TTree("gvga_1", "Genetic Algorithm friend Tree");
     tree->AddFriend("gvga_1", f);
     f->Write();
+    tree->Fill();
+    tree->Print();
   }
 }
 
@@ -207,11 +215,19 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
 
 template <class T>
 void Population<T>::Evaluate() {
+  Functions func;
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it)
   {
-    //Functions::Instance()->SetFunctionGenes(Functions::Instance(), it); 
+    Functions::SetFunctionGenes(func, it); 
   }
 }
 
-//Ugly instantiating
+/*
+  template<class T>
+  void Population<T>::printPopulation(const Population<T>& p) {
+    std::for_each(p.begin(), p.end(), Genes<T>::printGene<class T::value_type>);
+  }
+*/
+
+//Ugly instantiation
 template class Population<Double_t>;
