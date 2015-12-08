@@ -208,9 +208,9 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
   }
 }
 
-template <class T> void Population<T>::Evaluate(Functions &func) {
+template <class T> void Population<T>::Evaluate(Functions func) {
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    Functions::Instance()->SetFunctionGenes(func, it);
+    Functions::Instance()->SetFunctionGenes(func, *it);
   }
 }
 

@@ -23,26 +23,24 @@
 //ClassImp(Genes<T>)
 
 template <class T>  Genes<T>::Genes()
-    : TObject(), fFitness(), fNObjectives(0), fRank(0), fDominationCounter(0),
+    : TObject(), fFitness(), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(0), fDominated(), ConstViol(0),
       fGenes(), fEpsilonC(0),
       fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
       fTime(0), fMemory(0) {}
 
 template <class T> Genes<T>::Genes(std::vector<T> &f)
-    : TObject(), fFitness(), fNObjectives(f.size()), fRank(0),
+    : TObject(), fFitness(), fRank(0),
       fDominationCounter(0), fCrowdingDistance(0), fEvaluated(0), fDominated(),
       ConstViol(0), fGenes(f), fEpsilonC(0),
       fAllev(f[0]), fBuffev(f[1]), fThread(f[2]), fPriority(f[3]), fSteps(f[4]), fVector(f[5]), 
       fTime(0), fMemory(0) {
-  fFitness.reserve(fNObjectives);
 }
 
 template <class T>
 Genes<T>& Genes<T>::operator=(const Genes<T> &gen) {
   // comparison operator
   if (this != &gen) {
-    fNObjectives = gen.fNObjectives;
     fGenes = gen.fGenes;
     fRank = gen.fRank;
     fDominationCounter = gen.fDominationCounter;
@@ -72,7 +70,6 @@ void Genes<T>::Set() {
 template <class T>
 void Genes<T>::Clear(Option_t * /*option*/) { 
     TObject::Clear();
-    fNObjectives = 0;
     fGenes.clear();
     fRank = 0;
     fDominationCounter = 0.;
@@ -101,8 +98,8 @@ T Genes<T>::CheckDominance(const Genes<T> *ind2) {
     return 1;
   } else {
     Int_t fFlag1, fFlag2;
-    for (Int_t i = 0; i < ind2->GetNObjectives(); ++i) {
-      if (ind2->GetNObjectives() > 1) {
+    for (Int_t i = 0; i < Functions::Instance()->GetNObjectives(); ++i) {
+      if (Functions::Instance()->GetNObjectives() > 1) {
         if (GetFitness(i) < ind2->GetFitness(i)) {
           fFlag1 = 1;
         } else if (GetFitness(i) > ind2->GetFitness(i)) {

@@ -54,7 +54,7 @@ void Functions::SetConstrain(Int_t i, Double_t value) {
   fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
-void SetFunction(void (*fFunction)()) { std::function<void()> f = fFunction; }
+void SetFunction(void (*fFunction)()) { std::function<void()> f = Function; }
 
 void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &),
                       Genes<Double_t> &ind) {

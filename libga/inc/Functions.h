@@ -84,9 +84,8 @@ public:
 
   //////// Function definition ///////////////
   // Ugly instantiation
-  void SetFunction(void (*fFunction)());
-  void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &),
-                        Genes<Double_t> &Individual);
+  void SetFunctionGenes(void (*Function)(Genes<Double_t> &),
+                        Genes<Double_t> &ind);
 
   //////// Constrains definition //////////////
   Int_t GetNCons() const { return fNCons; }

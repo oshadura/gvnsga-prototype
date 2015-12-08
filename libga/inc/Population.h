@@ -22,15 +22,16 @@ template <class T> class Genes;
 template <class T> class Population : public Genes<T>, public Functions {
 
   typedef Genes<T> Individual;
+  template <typename ...Args> using myType = std::function<void(Args...)>;
 
 protected:
 public:
   Population()
       : fFront(), fPopulation(), fCrowdingObj(1), fSizePop(0), fGen(0), fH(),
-        fFunc() {}
+        fFunction() {}
   Population(Int_t size)
       : fFront(), fPopulation(), fCrowdingObj(1), fSizePop(size), fGen(0), fH(),
-        fFunc() {
+        fFunction() {
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
@@ -69,7 +70,7 @@ public:
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
   ////////////////////////////////////////////////////////////
-  void Evaluate(Functions &func);
+  void Evaluate(Functions func);
   void SetGenNumber(Int_t i) { fGen = i; }
   Int_t GetGenNumber() const { return fGen; }
 
@@ -88,7 +89,7 @@ public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
                        // false: crowding over real variable
 private:
-  Functions fFunc;
+  Functions fFunction;
   std::vector<Individual> fFront;
   std::vector<Individual> fPopulation;
   Int_t fSizePop;
