@@ -11,8 +11,7 @@
 #include <utility>
 
 using namespace std::placeholders;
-Functions* Functions::fgFunction = 0;
-
+Functions *Functions::fgFunction = 0;
 
 ClassImp(Functions)
 
@@ -57,7 +56,8 @@ void Functions::SetConstrain(Int_t i, Double_t value) {
 
 void SetFunction(void (*fFunction)()) { std::function<void()> f = fFunction; }
 
-void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &), Genes<Double_t> &ind) {
+void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &),
+                      Genes<Double_t> &ind) {
   auto f = std::bind(fFunction, ind);
-  functional::cpp11::invoke(fFunction,ind);
+  functional::cpp11::invoke(fFunction, ind);
 }

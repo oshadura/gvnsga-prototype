@@ -4,13 +4,11 @@
 #include "TGenes.h"
 #include "invoke_cpp11.hpp"
 
-
-
 #include <vector>
 #include <limits>
 #include <functional>
 
-template<class T> class Genes;
+template <class T> class Genes;
 
 class Functions {
 
@@ -71,7 +69,7 @@ public:
   virtual ~Functions() { fgFunction = 0; }
 
   ///////// Intervals definition //////////////
-  std::vector<std::pair<Double_t, Double_t> > GetInterval() const {
+  std::vector<std::pair<Double_t, Double_t>> GetInterval() const {
     return fInterval;
   }
   std::pair<Double_t, Double_t> GetIntervalLimit(Int_t i) const {
@@ -85,31 +83,34 @@ public:
   void SetNParams(Int_t nparam) { nparam = fNParam; }
 
   //////// Function definition ///////////////
-  //Ugly instantiation
+  // Ugly instantiation
   void SetFunction(void (*fFunction)());
-  void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &), Genes<Double_t> &Individual);
+  void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &),
+                        Genes<Double_t> &Individual);
 
   //////// Constrains definition //////////////
   Int_t GetNCons() const { return fNCons; }
   void SetConstrain(Int_t i, Double_t value);
   std::vector<Double_t> GetConstraines() const { return fConstraines; }
   void SetNCons(Int_t ncon) { ncon = fNCons; }
+  Int_t GetNObjectives() const { return fNObjectives; }
 
   /////////////////////////////////////////////
   static Functions *Instance();
 
 private:
   Int_t fNParam; // Number of parameterxs
-  mutable std::vector<std::pair<Double_t, Double_t> > fInterval; // Interval
-                                                                 // settings for
-                                                                 // genes in
-                                                                 // cromosome ->
-                                                                 // inheritance
-                                                                 // from
-                                                                 // function
+  mutable std::vector<std::pair<Double_t, Double_t>> fInterval; // Interval
+                                                                // settings for
+                                                                // genes in
+                                                                // cromosome ->
+                                                                // inheritance
+                                                                // from
+                                                                // function
   mutable std::vector<Double_t> fConstraines; // Vector of constraines for NSGA
                                               // constrain based
   Int_t fNCons;                               // Number of constrains
+  Int_t fNObjectives; // Number of fitness values (objectives)
   static Functions *fgFunction;
 
   ClassDef(Functions, 1)

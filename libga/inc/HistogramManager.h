@@ -24,7 +24,7 @@ public:
   HistogramManager(TDirectory *dir);
   virtual ~HistogramManager() {}
   void HFill(Population<Double_t> *pop, char *file);
-  bool CheckValue(ROOT::TTreeReaderValueBase *value);
+  // bool CheckValue(ROOT::Internal::TTreeReaderValueBase *value);
 
   ClassDef(HistogramManager, 1)
 };

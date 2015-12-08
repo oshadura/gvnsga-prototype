@@ -2,9 +2,9 @@
 #include <ostream>
 #include <string>
 #include <utility>
-#include <iostream>     // std::cout
-#include <iterator>     // std::ostream_iterator
-#include <algorithm>    // std::copy
+#include <iostream>  // std::cout
+#include <iterator>  // std::ostream_iterator
+#include <algorithm> // std::copy
 
 #include "TRandom.h"
 #include "TRandom3.h"
@@ -12,21 +12,20 @@
 #include "TTree.h"
 #include "TStopwatch.h"
 
-
 #include "TGenes.h"
 #include "Functions.h"
 #include "Population.h"
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 
-//ClassImp(Population<T>)
-    /**
-     * @brief Struct that is it crowding over objectives of
-     variables though boolean comparing operator "<" on population for
-     two individuals with different indexes and objectives/variables with index
-     m
-     */
-   template <typename T> struct Comparing {
+// ClassImp(Population<T>)
+/**
+ * @brief Struct that is it crowding over objectives of
+ variables though boolean comparing operator "<" on population for
+ two individuals with different indexes and objectives/variables with index
+ m
+ */
+template <typename T> struct Comparing {
   Comparing(Population<T> &p, Int_t indx) : pop(p), m(indx){};
   Population<T> &pop;
   Int_t m;
@@ -37,8 +36,7 @@
   };
 };
 
-template <class T>
-void Population<T>::Build() {
+template <class T> void Population<T>::Build() {
   TRandom3 rand;
   rand.SetSeed(time(NULL));
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
@@ -51,25 +49,23 @@ void Population<T>::Build() {
       }
     }
   }
-  //WritePopulationTree(*this, "NSGA.root");
+  // WritePopulationTree(*this, "NSGA.root");
 }
 
-template <class T>
-void Population<T>::CrowdingDistanceAll() {
+template <class T> void Population<T>::CrowdingDistanceAll() {
   for (Int_t i = 0; (ULong_t)i < fFront.size(); ++i)
     CrowdingDistanceFront(i);
 }
 
-template <class T>
-void Population<T>::CrowdingDistanceFront(Int_t i) {
+template <class T> void Population<T>::CrowdingDistanceFront(Int_t i) {
   Genes<T> &F = fFront[i]; // Genes
   if (F.size() == 0)
     return;
-  const Int_t l = F.size();
+  Int_t l = F.size();
   for (Int_t i = 0; i < l; ++i)
     GetGenes(F[i]).SetCrowdingDistance(0);
-  const Int_t limit =
-      fCrowdingObj ? GetNObjectives() : Functions::Instance()->GetNParam();
+  Int_t limit = fCrowdingObj ? Functions::Instance()->GetNObjectives()
+                             : Functions::Instance()->GetNParam();
   for (Int_t m = 0; m < limit; ++m) {
     std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
     GetGenes(F[0]).SetCrowdingDistance(INF);
@@ -95,8 +91,7 @@ void Population<T>::CrowdingDistanceFront(Int_t i) {
   }
 }
 
-template <class T>
-void Population<T>::FastNonDominantSorting() {
+template <class T> void Population<T>::FastNonDominantSorting() {
   fFront.resize(1);
   fFront[0].clear();
   for (int i = 0; i < (ULong_t)fPopulation.size(); ++i) {
@@ -143,16 +138,16 @@ void Population<T>::FastNonDominantSorting() {
 
 template <class T>
 void Population<T>::Merge(const Population<T> &population1,
-                       const Population<T> &population2) {
+                          const Population<T> &population2) {
   std::copy(population1.fPopulation.begin(), population1.fPopulation.end(),
             fPopulation.begin());
   std::copy(population2.fPopulation.begin(), population2.fPopulation.end(),
             fPopulation.begin() + population1.GetPopulationSize());
 }
 
-template <class T>
-void Population<T>::Clear(Option_t * /*option*/) { ; } // Clear function
-
+template <class T> void Population<T>::Clear(Option_t * /*option*/) {
+  ;
+} // Clear function
 
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
@@ -213,12 +208,9 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
   }
 }
 
-template <class T>
-void Population<T>::Evaluate() {
-  Functions func;
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it)
-  {
-    Functions::SetFunctionGenes(func, it); 
+template <class T> void Population<T>::Evaluate(Functions &func) {
+  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
+    Functions::Instance()->SetFunctionGenes(func, it);
   }
 }
 
@@ -229,5 +221,5 @@ void Population<T>::Evaluate() {
   }
 */
 
-//Ugly instantiation
+// Ugly instantiation
 template class Population<Double_t>;

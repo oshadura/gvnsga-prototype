@@ -1,9 +1,8 @@
 #include <cmath>
-#include <iostream>     // std::cout
-#include <iterator>     // std::ostream_iterator
-#include <vector>       // std::vector
-#include <algorithm>    // std::copy
-
+#include <iostream>  // std::cout
+#include <iterator>  // std::ostream_iterator
+#include <vector>    // std::vector
+#include <algorithm> // std::copy
 
 #include "Population.h"
 #include "Functions.h"
@@ -133,8 +132,7 @@ int main() {
   nsga2->SetEtaMut(0.3);
   nsga2->SetPMut(0.5);
   nsga2->SetGenTotalNumber(5);
-  printf("Number of generations = %d\n",
-         nsga2->GetGenTotalNumber());
+  printf("Number of generations = %d\n", nsga2->GetGenTotalNumber());
   printf("Probability of crossover = %g\n", nsga2->GetPCross());
   printf("Eta values for crossover (crossover rate) = %g\n",
          nsga2->GetEtaCross());
@@ -142,14 +140,13 @@ int main() {
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
   // Test population initialization
   /////////////////////////////////
-  //Population<Double_t> fNsgaPop = new Population<Double_t>();
-  //fNsgaPop.SetPopulationSize(20);
-  //Testing building population function
-  //fNsgaPop.Build();
-  //std::cout << fNsgaPop << std::endl;
-
-  //fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
-  //fNsgaPop->PrintTree("Population.root", "Population");
+  // Population<Double_t> fNsgaPop = new Population<Double_t>();
+  // fNsgaPop.SetPopulationSize(20);
+  // Testing building population function
+  // fNsgaPop.Build();
+  // std::cout << fNsgaPop << std::endl;
+  // fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
+  // fNsgaPop->PrintTree("Population.root", "Population");
   /////////////////////////////////
   // Algorithm run
   nsga2->Initialize();
