@@ -73,7 +73,7 @@ template <class T> void Population<T>::Build() {
       }
     }
   }
-  // WritePopulationTree(*this, "NSGA.root");
+  WritePopulationTree(*this, "NSGA.root");
 }
 
 template <class T> void Population<T>::CrowdingDistanceAll() {

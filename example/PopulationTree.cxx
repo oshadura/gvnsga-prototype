@@ -122,16 +122,19 @@ void CMSApp(Genes<Double_t> *individual) {
 int main() {
   // Function
   Functions *geantv = Functions::Instance();
-  geantv->SetNCons(0); // First version will be constrainless
-  geantv->SetNParam(6); // blablabla - see Genes.h
-  geantv->SetNObjectives(2); // Memory, Time
-  geantv->SetInterval(); // Testing intervals between [0,100]
   // Algorithm  definition
-  AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
+  AlgorithmNSGA *nsga2;
   nsga2->SetPCross(0.5);
   nsga2->SetEtaCross(0.7);
   nsga2->SetGenTotalNumber(5);
-
+  nsga2->SetNCons(0); // First version will be constrainless
+  nsga2->SetNParam(6); // blablabla - see Genes.h
+  nsga2->SetNObjectives(2); // Memory, Time
+  //nsga2->SetInterval(); // Testing intervals between [0,100]
+  nsga2->SetPopulationSize(5);
+  nsga2->SetPMut(0.7);
+  nsga2->SetEtaMut(0.7);
+  nsga2->SetEpsilonC(0.7);
   printf("Number of generations = %d\n", nsga2->GetGenTotalNumber());
   printf("Probability of crossover = %g\n", nsga2->GetPCross());
   printf("Eta values for crossover (crossover rate) = %g\n",
@@ -141,11 +144,10 @@ int main() {
   nsga2->Evolution();
   // Test population initialization
   /////////////////////////////////
-  Population<Double_t> fNsgaPop = new Population<Double_t>();
-  fNsgaPop.SetPopulationSize(20);
-  // Testing building population function
-  fNsgaPop.Build();
-  std::cout << fNsgaPop << std::endl;
+  //Population<Double_t> fNsgaPop = new Population<Double_t>();
+  //fNsgaPop.SetPopulationSize(20);
+  //fNsgaPop.Build();
+  //std::cout << fNsgaPop << std::endl;
   // fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
   // fNsgaPop->PrintTree("Population.root", "Population");
   /////////////////////////////////

@@ -2,6 +2,7 @@
 #define __POPULATION__
 
 #include "TGenes.h"
+#include "ExceptionMessenger.h"
 
 #include "TH1.h"
 #include "TFile.h"
@@ -24,9 +25,9 @@ template <class T> class Population : public Genes<T>, public Functions {
 protected:
 public:
   Population()
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fGen(1), fH(0), fPopFunction(NULL), setupPop() {}
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fH(0), fPopFunction(NULL), setupPop() {}
   Population(Int_t size)
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fGen(1), fH(0), fPopFunction(NULL), setupPop() {
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fH(0), fPopFunction(NULL), setupPop() {
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
@@ -58,7 +59,7 @@ public:
   Individual GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
   std::vector<Individual> operator=(Population<T> pop) { return fPopulation; }
-  // void SetCrowdingObj();
+  void SetCrowdingObj(Bool_t co){fCrowdingObj = co;}
   void Build();
   void CrowdingDistanceAll();
   void CrowdingDistanceFront(Int_t i);
@@ -72,8 +73,8 @@ public:
   void SetPopFunction(Functions::popfunctype f){
     fPopFunction = f;
   }
-  void SetGenNumber(Int_t i) { fGen = i; }
-  Int_t GetGenNumber() const { return fGen; }
+  //void SetGenNumber(Int_t i) { fGen = i; }
+  //Int_t GetGenNumber() const { return fGen; }
 
   void ResetHistogramPointer() {
     fH = 0;
@@ -100,7 +101,7 @@ public:
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
                        // false: crowding over real variable
-  Int_t fGen; // Generation counter for populations
+  Int_t GenCounter;
 
 private:
   Functions setupPop;
@@ -110,6 +111,7 @@ private:
   Int_t fSizePop;
   TH1F *fH;
 
+  //Counter
   ClassDef(Population, 1)
 };
 

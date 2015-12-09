@@ -17,7 +17,6 @@
 #include "Functions.h"
 #include "TGenes.h"
 #include "Population.h"
-//#include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 
 //ClassImp(Genes<T>)
