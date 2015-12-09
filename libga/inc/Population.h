@@ -30,17 +30,20 @@ public:
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
+
   Population(const Int_t fSizePop,
     const Int_t fNParam,
-    const Int_t fInterval,
     const Int_t fNCons,
     const Int_t fNObjectives,
     const Double_t fEpsilonC,
     const Double_t fPMut,
     const Double_t fEtaMut,
-    const std::vector<std::pair<Double_t, Double_t>> fInt,
-    Functions::functype func):fCrowdingObj(true), fPopFunction(NULL), setupPop(){}
-  virtual ~Population(){}
+    const std::vector<std::pair<Double_t, Double_t>> fInterval,
+    Functions::functype func) 
+  throw (ExceptionMessenger);
+
+  virtual ~Population(){
+  }
 
   Individual &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {

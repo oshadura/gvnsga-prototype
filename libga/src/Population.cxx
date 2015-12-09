@@ -18,6 +18,32 @@
 #include "HistogramManager.h"
 
 // ClassImp(Population<T>)
+
+  template <class T> Population<T>::Population(const Int_t fSizePop,
+    const Int_t fNParam,
+    const Int_t fNCons,
+    const Int_t fNObjectives,
+    const Double_t fEpsilonC,
+    const Double_t fPMut,
+    const Double_t fEtaMut,
+    const std::vector<std::pair<Double_t, Double_t>> fInterval,
+    Functions::functype func) 
+  throw (ExceptionMessenger) : fCrowdingObj(true), fPopFunction(NULL), setupPop(){
+
+    setupPop.fNParam = fNParam;
+    setupPop.fInterval = fInterval;
+    setupPop.fNCons = fNCons;
+    setupPop.fNObjectives = fNObjectives;
+    setupPop.fEpsilonC = fEpsilonC;
+    setupPop.fPMut = fPMut;
+    setupPop.fEtaMut = fEtaMut;
+
+    for (int i = 0; i < GetPopulationSize(); ++i)
+    {
+      fPopulation.push_back(Genes<T>(setupPop));
+    }
+  }
+
 /**
  * @brief Struct that is it crowding over objectives of
  variables though boolean comparing operator "<" on population for
