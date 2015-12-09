@@ -16,21 +16,7 @@ Functions *Functions::fgFunction = 0;
 ClassImp(Functions)
 
     Functions::Functions(const Functions &func)
-    : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval),
-      fConstraines(func.fConstraines) {
-  /*fConstraines.clear();
-  for (std::vector<Double_t*>::const_iterator it = fConstraines.begin(),
-  itEnd = (fConstraines.end() - GetNParam()); it != itEnd; ++it){
-          Double_t value=*(*it);
-          fConstraines.push_back(value);
-          ++it;}
-  fInterval.clear();
-  for (std::vector<Double_t*>::const_iterator it = fInterval.begin(),
-  itEnd = fInterval.end() - GetNParam(); it != itEnd; ++it){
-          Double_t value=*(*it);
-          fInterval.push_back(value);
-          ++it;}
-          */
+    : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval), fNObjectives(func.fNObjectives) {
 }
 
 Functions *Functions::Instance() {
@@ -48,10 +34,6 @@ void Functions::SetInterval() {
 void Functions::SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax) {
   auto value = std::make_pair(fMin, fMax);
   fInterval.emplace(fInterval.begin() + i, value);
-}
-
-void Functions::SetConstrain(Int_t i, Double_t value) {
-  fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
 /*

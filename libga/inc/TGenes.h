@@ -22,6 +22,7 @@ template <class T> class Genes : public TObject {
 public:
   // Constructor
   Genes();
+  Genes(const Functions& config) throw (ExceptionMessenger);
   // Copy constructor
   Genes(const Genes<T> &copy) {} // Copy operator for vector of Individual
   // Parametrized constructor
@@ -73,6 +74,9 @@ public:
 
   void SetEpsilonC(T epsc) { fEpsilonC = epsc; }
   T GetEpsilonC() const { return fEpsilonC; }
+
+  void SetConstrain(Int_t i, T value);
+  std::vector<Double_t> GetConstraines() const { return fConstraines; }
 
   Int_t size() { return fGenes.size(); }
 
@@ -164,7 +168,11 @@ private:
   Double_t ConstViol;         // Violation of constraints
   std::vector<T> fGenes;
   Double_t fEpsilonC;
+  std::vector<T> fConstraines; // Vector of constraines for NSGA2
 
+
+  /////// Trial for Genes() constructor ///////////////
+  const Functions* setup;
   ///////////////////////////////////////////////////
 
   // Should we write a map to be sure about connection between Limits[] and

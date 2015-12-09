@@ -122,9 +122,10 @@ void CMSApp(Genes<Double_t> *individual) {
 int main() {
   // Function
   Functions *geantv = Functions::Instance();
-  geantv->SetNCons(0);
-  geantv->SetNParams(6);
-  geantv->SetInterval();
+  geantv->SetNCons(0); // First version will be constrainless
+  geantv->SetNParam(6); // blablabla - see Genes.h
+  geantv->SetNObjectives(2); // Memory, Time
+  geantv->SetInterval(); // Testing intervals between [0,100]
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = AlgorithmNSGA::Instance();
   nsga2->SetPCross(0.5);
@@ -132,6 +133,7 @@ int main() {
   nsga2->SetEtaMut(0.3);
   nsga2->SetPMut(0.5);
   nsga2->SetGenTotalNumber(5);
+
   printf("Number of generations = %d\n", nsga2->GetGenTotalNumber());
   printf("Probability of crossover = %g\n", nsga2->GetPCross());
   printf("Eta values for crossover (crossover rate) = %g\n",
@@ -139,6 +141,8 @@ int main() {
   printf("Probability  for mutation = %g\n", nsga2->GetPMut());
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
   nsga2->SetFunction(&CMSApp);
+  nsga2->Initialize();
+  nsga2->Evolution();
   // Test population initialization
   /////////////////////////////////
   // Population<Double_t> fNsgaPop = new Population<Double_t>();
@@ -149,9 +153,5 @@ int main() {
   // fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
   // fNsgaPop->PrintTree("Population.root", "Population");
   /////////////////////////////////
-  // Algorithm run
-  nsga2->Initialize();
-  nsga2->Evolution();
-  // Missing logging process...
   return 0;
 }

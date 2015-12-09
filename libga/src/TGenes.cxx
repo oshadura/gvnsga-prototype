@@ -27,15 +27,24 @@ template <class T>  Genes<T>::Genes()
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fEpsilonC(EPS),
       fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
-      fTime(0), fMemory(0) {}
+      fTime(0), fMemory(0), setup(0) {}
+
+template <class T> Genes<T>::Genes(const Functions& config) throw (ExceptionMessenger):
+      TObject(), fFitness(), fRank(0), fDominationCounter(0),
+      fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
+      fGenes(), fEpsilonC(EPS),
+      fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
+      fTime(0), fMemory(0), setup(&config){
+        fGenes.resize(setup->GetNParam());
+        fFitness.resize(setup->GetNObjectives());
+      }
 
 template <class T> Genes<T>::Genes(std::vector<T> &f)
     : TObject(), fFitness(), fRank(0),
       fDominationCounter(0), fCrowdingDistance(0), fEvaluated(false), fDominated(),
       ConstViol(0), fGenes(f), fEpsilonC(EPS),
       fAllev(f[0]), fBuffev(f[1]), fThread(f[2]), fPriority(f[3]), fSteps(f[4]), fVector(f[5]), 
-      fTime(0), fMemory(0) {
-}
+      fTime(0), fMemory(0) {}
 
 template <class T>
 Genes<T>& Genes<T>::operator=(const Genes<T> &gen) {
@@ -65,6 +74,10 @@ void Genes<T>::Set() {
                              Functions::Instance()->GetIntervalLimit(i).second);
 
   }
+}
+
+template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
+  fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
 template <class T> void Genes<T>::Evaluate(Genes<T> &ind){
