@@ -208,10 +208,18 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
   }
 }
 
-template <class T> void Population<T>::Evaluate(Functions func) {
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    Functions::Instance()->SetFunctionGenes(func, *it);
+template <class T> void Population<T>::Evaluate() {
+#ifdef USE_OPENMP
+#pragma omp parrallel for
+  for (int i = 0; i < GetPopulationSize(); ++i) {
+    auto ind = GetGenes(i);
+    Genes<T>::Evaluate(ind);
   }
+#else
+  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
+    Genes<T>::Evaluate(*it);
+  }
+#endif
 }
 
 /*

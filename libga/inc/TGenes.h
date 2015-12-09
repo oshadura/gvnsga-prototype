@@ -7,6 +7,9 @@
 #include <vector>
 #include "Functions.h"
 
+#define EPS 1e-14
+#define INF 1e+14
+
 class Functions;
 class AlgorithmNSGA;
 
@@ -22,12 +25,7 @@ public:
   Genes(std::vector<T> &f); // Vector of parameters = individual
   // Destructor
   virtual ~Genes() {}
-  // Function building Genes (meved in Population and Functions)
-  /*
-  void Set();
-  void SetIt(Int_t i);
-  */
-
+  // Function building Genes (moved in Population and Functions)
   void Clear(Option_t *option = "");
   T CheckDominance(const Genes<T> *ind2);
   T Mutate();
@@ -42,7 +40,7 @@ public:
   // virtual const std::vector<Genes>&  operator[] ( Int_t i ) const { return
   // fGenes.at(i); }
   void Set();
-
+  void Evaluate(Genes<T> &ind);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<T> GetDominated() {
     return fDominated;
@@ -152,6 +150,7 @@ private:
 
   ///////////////////////////////////////////////////
 
+  //const Functions* f;
   std::vector<T> fFitness;    // Vector of values of different fitness
                               // function (objectives)
   Int_t fDominationCounter;   // Domination counter for individual (used in

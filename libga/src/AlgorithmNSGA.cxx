@@ -29,15 +29,26 @@ struct Sort {
 };
 
 AlgorithmNSGA::AlgorithmNSGA()
-    : fPCross(0), fEtaCross(0), fPMut(0), fEtaMut(0), fNCross(0), fNMut(0),
+    : function(0),popfunction(0), fPCross(0), fEtaCross(0), fPMut(0), fEtaMut(0), fNCross(0), fNMut(0),
       fNGen(0), fParentPop(), fChildPop(), fMixedPop() {
   fgNSGA2 = this;
 }
 
 AlgorithmNSGA::~AlgorithmNSGA() {
-  delete fChildPop;
-  delete fParentPop;
-  delete fMixedPop;
+  if (fChildPop)
+  {
+    delete fChildPop;
+    fChildPop = 0;
+  }
+  if (fParentPop)
+  {
+    delete fParentPop;
+    fParentPop = 0;
+  }
+  if (fMixedPop){
+    delete fMixedPop;
+    fMixedPop = 0;
+  }
 }
 
 AlgorithmNSGA *AlgorithmNSGA::Instance() {
@@ -50,6 +61,12 @@ void AlgorithmNSGA::Initialize() {
   Population<Double_t> *fChildPop = new Population<Double_t>();
   Population<Double_t> *fParentPop = new Population<Double_t>();
   Population<Double_t> *fMixedPop = new Population<Double_t>();
+  //Missing check of input variables and creation of population with them 
+
+  if(popfunction)
+    fParentPop->SetPopFunction(popfunction);
+    fChildPop->SetPopFunction(popfunction);
+    fMixedPop->SetPopFunction(popfunction);
 
   fParentPop->Build();
   fParentPop->Evaluate();

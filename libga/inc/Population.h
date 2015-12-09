@@ -15,22 +15,20 @@
 #include <memory>
 #include <algorithm>
 
-#define EPS 1e-14
-#define INF 1e+14
-
 template <class T> class Genes;
 template <class T> class Population : public Genes<T>, public Functions {
 
   typedef Genes<T> Individual;
-  template <typename ...Args> using myType = std::function<void(Args...)>;
+  // To be used after
+  //template <typename ...Args> using myType = std::function<void(Args...)>;
 
 protected:
 public:
   Population()
-      : fFront(), fPopulation(), fCrowdingObj(1), fSizePop(0), fGen(0), fH(),
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fGen(0), fH(),
         fFunction() {}
   Population(Int_t size)
-      : fFront(), fPopulation(), fCrowdingObj(1), fSizePop(size), fGen(0), fH(),
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fGen(0), fH(),
         fFunction() {
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
@@ -59,6 +57,12 @@ public:
              const Population &population2); // Merging two populations
   void Clear(Option_t *option = "");         // Clear function
   static void Reset(Option_t *option = "");  // Reset function
+  void Evaluate();
+  void SetPopFunction(Functions::popfunctype f){
+    fPopFunction = f;
+  }
+  void SetGenNumber(Int_t i) { fGen = i; }
+  Int_t GetGenNumber() const { return fGen; }
 
   void ResetHistogramPointer() {
     fH = 0;
@@ -69,11 +73,6 @@ public:
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
-  ////////////////////////////////////////////////////////////
-  void Evaluate(Functions func);
-  void SetGenNumber(Int_t i) { fGen = i; }
-  Int_t GetGenNumber() const { return fGen; }
-
   ///////////////////////////////////////////////////////////
   /*
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
@@ -89,7 +88,8 @@ public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
                        // false: crowding over real variable
 private:
-  Functions fFunction;
+  Functions::functype fFunction;
+  Functions::popfunctype fPopFunction;
   std::vector<Individual> fFront;
   std::vector<Individual> fPopulation;
   Int_t fSizePop;

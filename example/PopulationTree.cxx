@@ -122,7 +122,7 @@ void CMSApp(Genes<Double_t> *individual) {
 int main() {
   // Function
   Functions *geantv = Functions::Instance();
-  geantv->SetNCons(2);
+  geantv->SetNCons(0);
   geantv->SetNParams(6);
   geantv->SetInterval();
   // Algorithm  definition
@@ -138,6 +138,7 @@ int main() {
          nsga2->GetEtaCross());
   printf("Probability  for mutation = %g\n", nsga2->GetPMut());
   printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
+  nsga2->SetFunction(&CMSApp);
   // Test population initialization
   /////////////////////////////////
   // Population<Double_t> fNsgaPop = new Population<Double_t>();

@@ -35,10 +35,18 @@ public:
   //////////////////////////////////////////////////
   Int_t GetGenTotalNumber() const { return fNGen; }
   void SetGenTotalNumber(Int_t gen) { fNGen = gen; }
+  void SetFunction( Functions::functype f){
+    this->function = f;
+  }
+  void SetPopFunction(Functions::popfunctype f){
+    this->popfunction = f;
+  }
   /////////////////////////////////////////////////
   static AlgorithmNSGA *Instance();
 
 private:
+  Functions::functype function;
+  Functions::popfunctype popfunction;
   Double_t fPCross;
   Double_t fEtaCross;
   Double_t fPMut;
@@ -49,7 +57,6 @@ private:
   static AlgorithmNSGA *fgNSGA2;
 
 public:
-  // Ugly instantiation
   Population<Double_t> *fParentPop;
   Population<Double_t> *fChildPop;
   Population<Double_t> *fMixedPop;

@@ -8,11 +8,10 @@
 #include <limits>
 #include <functional>
 
-template <class T> class Genes;
+template<class T> class Genes;
+template<class T> class Population;
 
 class Functions {
-
-  typedef std::function<void(Genes<Double_t> &)> fFunction;
 
 public:
   /**
@@ -84,8 +83,7 @@ public:
 
   //////// Function definition ///////////////
   // Ugly instantiation
-  void SetFunctionGenes(void (*Function)(Genes<Double_t> &),
-                        Genes<Double_t> &ind);
+  //void SetFunctionGenes(void (*Function)(Genes<Double_t> &),Genes<Double_t> &ind);
 
   //////// Constrains definition //////////////
   Int_t GetNCons() const { return fNCons; }
@@ -98,19 +96,26 @@ public:
   static Functions *Instance();
 
 private:
-  Int_t fNParam; // Number of parameterxs
+  Int_t fNParam; // Number of parameters
   mutable std::vector<std::pair<Double_t, Double_t>> fInterval; // Interval
                                                                 // settings for
                                                                 // genes in
                                                                 // cromosome ->
-                                                                // inheritance
+                                                                // inheritance (?)
                                                                 // from
                                                                 // function
-  mutable std::vector<Double_t> fConstraines; // Vector of constraines for NSGA
+  mutable std::vector<Double_t> fConstraines; // Vector of constraines for NSGA2
                                               // constrain based
   Int_t fNCons;                               // Number of constrains
   Int_t fNObjectives; // Number of fitness values (objectives)
   static Functions *fgFunction;
+
+public:
+    //typedef std::function<void(Genes<Double_t> &)> fFunction;
+  typedef void (*functype)(Genes<Double_t> *); // still dont know
+  typedef void (*popfunctype)(Population<Double_t>&); // still dont know
+
+  functype evfunc;
 
   ClassDef(Functions, 1)
 };

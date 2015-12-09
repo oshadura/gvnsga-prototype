@@ -24,15 +24,15 @@
 
 template <class T>  Genes<T>::Genes()
     : TObject(), fFitness(), fRank(0), fDominationCounter(0),
-      fCrowdingDistance(0), fEvaluated(0), fDominated(), ConstViol(0),
-      fGenes(), fEpsilonC(0),
+      fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
+      fGenes(), fEpsilonC(EPS),
       fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
       fTime(0), fMemory(0) {}
 
 template <class T> Genes<T>::Genes(std::vector<T> &f)
     : TObject(), fFitness(), fRank(0),
-      fDominationCounter(0), fCrowdingDistance(0), fEvaluated(0), fDominated(),
-      ConstViol(0), fGenes(f), fEpsilonC(0),
+      fDominationCounter(0), fCrowdingDistance(0), fEvaluated(false), fDominated(),
+      ConstViol(0), fGenes(f), fEpsilonC(EPS),
       fAllev(f[0]), fBuffev(f[1]), fThread(f[2]), fPriority(f[3]), fSteps(f[4]), fVector(f[5]), 
       fTime(0), fMemory(0) {
 }
@@ -67,6 +67,21 @@ void Genes<T>::Set() {
   }
 }
 
+template <class T> void Genes<T>::Evaluate(Genes<T> &ind){
+  (Functions::Instance()->evfunc)(&ind);
+  if(Functions::Instance()->GetNCons()){
+    ConstViol = 0;
+    /*for (int i = 0; i < (Functions->fNCons); ++i)
+    {
+      ConstViol += fConstraines[i];
+    }
+  else {
+    ConstViol = 0;
+    */
+  }
+  fEvaluated = true;
+}
+
 template <class T>
 void Genes<T>::Clear(Option_t * /*option*/) { 
     TObject::Clear();
@@ -78,7 +93,7 @@ void Genes<T>::Clear(Option_t * /*option*/) {
     fCrowdingDistance = 0;
     fDominated.clear();
     ConstViol = 0.;
-    fEpsilonC = 0.;
+    fEpsilonC = EPS;
 }
 
 template <class T>
