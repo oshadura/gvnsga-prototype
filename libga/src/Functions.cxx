@@ -16,7 +16,8 @@ Functions *Functions::fgFunction = 0;
 ClassImp(Functions)
 
     Functions::Functions(const Functions &func)
-    : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval), fNObjectives(func.fNObjectives) {
+    : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval),
+     fNObjectives(func.fNObjectives), fPMut(func.fPMut), fEtaMut(func.fPMut) {
 }
 
 Functions *Functions::Instance() {
@@ -37,11 +38,9 @@ void Functions::SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax) {
 }
 
 /*
-void SetFunction(void (*fFunction)()) { std::function<void()> f = Function; }
-
-void SetFunctionGenes(void (*fFunction)(Genes<Double_t> &),
+void SetFunctionGenes(void (*xxx)(Genes<Double_t> &),
                       Genes<Double_t> &ind) {
-  auto f = std::bind(fFunction, ind);
-  functional::cpp11::invoke(fFunction, ind);
+  auto f = std::bind(xxx, ind);
+  functional::cpp11::invoke(xxx, ind);
 }
 */

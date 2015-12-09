@@ -127,19 +127,15 @@ int main() {
   geantv->SetNObjectives(2); // Memory, Time
   geantv->SetInterval(); // Testing intervals between [0,100]
   // Algorithm  definition
-  AlgorithmNSGA *nsga2 = AlgorithmNSGA::Instance();
+  AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
   nsga2->SetEtaCross(0.7);
-  nsga2->SetEtaMut(0.3);
-  nsga2->SetPMut(0.5);
   nsga2->SetGenTotalNumber(5);
 
   printf("Number of generations = %d\n", nsga2->GetGenTotalNumber());
   printf("Probability of crossover = %g\n", nsga2->GetPCross());
   printf("Eta values for crossover (crossover rate) = %g\n",
          nsga2->GetEtaCross());
-  printf("Probability  for mutation = %g\n", nsga2->GetPMut());
-  printf("Eta values for mutation (mutation rate)= %g\n", nsga2->GetEtaMut());
   nsga2->SetFunction(&CMSApp);
   nsga2->Initialize();
   nsga2->Evolution();

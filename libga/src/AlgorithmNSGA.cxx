@@ -11,7 +11,7 @@
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 
-AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
+//AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
 
 struct Sort {
   Population<Double_t> &pop;
@@ -29,9 +29,8 @@ struct Sort {
 };
 
 AlgorithmNSGA::AlgorithmNSGA()
-    : function(0),popfunction(0), fPCross(0), fEtaCross(0), fPMut(0), fEtaMut(0), fNCross(0), fNMut(0),
+    : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0), fNMut(0),
       fNGen(0), fParentPop(), fChildPop(), fMixedPop() {
-  fgNSGA2 = this;
 }
 
 AlgorithmNSGA::~AlgorithmNSGA() {
@@ -50,12 +49,13 @@ AlgorithmNSGA::~AlgorithmNSGA() {
     fMixedPop = 0;
   }
 }
-
+/*
 AlgorithmNSGA *AlgorithmNSGA::Instance() {
   if (!fgNSGA2)
     AlgorithmNSGA *fgNSGA2 = new AlgorithmNSGA();
   return fgNSGA2;
 }
+*/
 
 void AlgorithmNSGA::Initialize() {
   std::cout << "Let's check NSGA2 configuration:"<< std::endl;
@@ -215,7 +215,7 @@ void AlgorithmNSGA::NextStep() {
 }
 
 void AlgorithmNSGA::Evolution() {
-  while (fNGen <= (Instance()->GetGenTotalNumber())) {
+  while (fNGen <= GetGenTotalNumber()) {
     NextStep();
   } // Check through population object
 }

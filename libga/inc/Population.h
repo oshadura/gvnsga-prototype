@@ -1,7 +1,6 @@
 #ifndef __POPULATION__
 #define __POPULATION__
 
-#include "AlgorithmNSGA.h"
 #include "TGenes.h"
 
 #include "TH1.h"
@@ -25,16 +24,23 @@ template <class T> class Population : public Genes<T>, public Functions {
 protected:
 public:
   Population()
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fGen(1), fH(0),
-        fFunction(NULL) {}
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fGen(1), fH(0), fPopFunction(NULL), setupPop() {}
   Population(Int_t size)
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fGen(1), fH(0),
-        fFunction(NULL) {
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fGen(1), fH(0), fPopFunction(NULL), setupPop() {
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
-
-  virtual ~Population() {}
+  Population(const Int_t fSizePop,
+    const Int_t fNParam,
+    const Int_t fInterval,
+    const Int_t fNCons,
+    const Int_t fNObjectives,
+    const Double_t fEpsilonC,
+    const Double_t fPMut,
+    const Double_t fEtaMut,
+    const std::vector<std::pair<Double_t, Double_t>> fInt,
+    Functions::functype func):fCrowdingObj(true), fPopFunction(NULL), setupPop(){}
+  virtual ~Population(){}
 
   Individual &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
@@ -94,7 +100,7 @@ public:
   Int_t fGen; // Generation counter for populations
 
 private:
-  Functions::functype fFunction;
+  Functions setupPop;
   Functions::popfunctype fPopFunction;
   std::vector<Individual> fFront;
   std::vector<Individual> fPopulation;

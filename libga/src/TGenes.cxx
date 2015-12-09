@@ -17,7 +17,7 @@
 #include "Functions.h"
 #include "TGenes.h"
 #include "Population.h"
-#include "AlgorithmNSGA.h"
+//#include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 
 //ClassImp(Genes<T>)
@@ -25,15 +25,14 @@
 template <class T>  Genes<T>::Genes()
     : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
-      fGenes(), fEpsilonC(EPS),
+      fGenes(),
       fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
       fTime(0), fMemory(0), setup(0), fConstraines(0) {}
 
 template <class T> Genes<T>::Genes(const Functions& config) throw (ExceptionMessenger):
       TObject(), fFitness(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
-      fGenes(), fEpsilonC(EPS),
-      fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
+      fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
       fTime(0), fMemory(0), setup(&config), fConstraines(0){
         fGenes.resize(setup->GetNParam());
         fFitness.resize(setup->GetNObjectives());
@@ -43,8 +42,7 @@ template <class T> Genes<T>::Genes(const Functions& config) throw (ExceptionMess
 template <class T> Genes<T>::Genes(std::vector<T> &f)
     : TObject(), fFitness(), fRank(0),
       fDominationCounter(0), fCrowdingDistance(0), fEvaluated(false), fDominated(),
-      ConstViol(0), fGenes(f), fEpsilonC(EPS),
-      fAllev(f[0]), fBuffev(f[1]), fThread(f[2]), fPriority(f[3]), fSteps(f[4]), fVector(f[5]), 
+      ConstViol(0), fGenes(f), fAllev(f[0]), fBuffev(f[1]), fThread(f[2]), fPriority(f[3]), fSteps(f[4]), fVector(f[5]), 
       fTime(0), fMemory(0) {}
 
 template <class T>
@@ -59,7 +57,6 @@ Genes<T>& Genes<T>::operator=(const Genes<T> &gen) {
     fCrowdingDistance = gen.fCrowdingDistance;
     fDominated = gen.fDominated;
     ConstViol = gen.ConstViol;
-    fEpsilonC = gen.fEpsilonC;
   }
   return *this;
 }
@@ -85,13 +82,6 @@ template <class T> void Genes<T>::Evaluate(Genes<T> &ind){
   (Functions::Instance()->evfunc)(&ind);
   if(Functions::Instance()->GetNCons()){
     ConstViol = 0;
-    /*for (int i = 0; i < (Functions->fNCons); ++i)
-    {
-      ConstViol += fConstraines[i];
-    }
-  else {
-    ConstViol = 0;
-    */
   }
   fEvaluated = true;
 }
@@ -107,7 +97,6 @@ void Genes<T>::Clear(Option_t * /*option*/) {
     fCrowdingDistance = 0;
     fDominated.clear();
     ConstViol = 0.;
-    fEpsilonC = EPS;
 }
 
 template <class T>
@@ -136,10 +125,10 @@ T Genes<T>::CheckDominance(const Genes<T> *ind2) {
         }
       } else {
         if (GetFitness(i) < ind2->GetFitness(i) &&
-            fabs(GetFitness(i) - ind2->GetFitness(i)) > GetEpsilonC()) {
+            fabs(GetFitness(i) - ind2->GetFitness(i)) > Functions::Instance()->GetEpsilonC()) {
           fFlag1 = 1;
         } else if (GetFitness(i) > ind2->GetFitness(i) &&
-                   fabs(GetFitness(i) - ind2->GetFitness(i)) > GetEpsilonC()) {
+                   fabs(GetFitness(i) - ind2->GetFitness(i)) > Functions::Instance()->GetEpsilonC()) {
           fFlag2 = 1;
         }
       }
@@ -162,25 +151,25 @@ Int_t Genes<T>::Mutate() {
   Double_t y, yl, yu, xy;
   Int_t fNMut = 0;
   for (Int_t j = 0; j < Functions::Instance()->GetNParam(); ++j) {
-    if (rand.Rndm() <= AlgorithmNSGA::Instance()->GetPMut()) {
+    if (rand.Rndm() <= Functions::Instance()->GetPMut()) {
       y = fGenes[j];
       yl = Functions::Instance()->GetIntervalLimit(j).first;
       yu = Functions::Instance()->GetIntervalLimit(j).second;
       fDelta1 = (y - yl) / (yu - yl);
       fDelta2 = (yu - y) / (yu - yl);
       fRrnd = rand.Rndm();
-      fMutPow = 1.0 / (AlgorithmNSGA::Instance()->GetEtaMut() + 1.0);
+      fMutPow = 1.0 / (Functions::Instance()->GetEtaMut() + 1.0);
       if (fRrnd <= 0.5) {
         xy = 1.0 - fDelta1;
         fValue = 2.0 * fRrnd +
                  (1.0 - 2.0 * fRrnd) *
-                     (pow(xy, (AlgorithmNSGA::Instance()->GetEtaMut() + 1.0)));
+                     (pow(xy, (Functions::Instance()->GetEtaMut() + 1.0)));
         fDelta = pow(fValue, fMutPow) - 1.0;
       } else {
         xy = 1.0 - fDelta2;
         fValue = 2.0 * (1.0 - fRrnd) +
                  2.0 * (fRrnd - 0.5) *
-                     (pow(xy, (AlgorithmNSGA::Instance()->GetEtaMut() + 1.0)));
+                     (pow(xy, (Functions::Instance()->GetEtaMut() + 1.0)));
         fDelta = 1.0 - (pow(fValue, fMutPow));
       }
       y = y + fDelta * (yu - yl);

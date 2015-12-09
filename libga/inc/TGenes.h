@@ -10,12 +10,7 @@
 #include "Functions.h"
 #include "ExceptionMessenger.h"
 
-#define EPS 1e-14
-#define INF 1e+14
-
 class Functions;
-class AlgorithmNSGA;
-
 template <class T> class Population;
 
 template <class T> class Genes : public TObject {
@@ -71,9 +66,6 @@ public:
   void UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2, Population<T> &pop,
                        const char *file);
   void ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
-
-  void SetEpsilonC(T epsc) { fEpsilonC = epsc; }
-  T GetEpsilonC() const { return fEpsilonC; }
 
   void SetConstrain(Int_t i, T value);
   std::vector<Double_t> GetConstraines() const { return fConstraines; }
@@ -184,7 +176,6 @@ private:
   std::vector<T> fDominated;  // Vector of dominanted individuals
   Double_t ConstViol;         // Violation of constraints
   std::vector<T> fGenes;
-  Double_t fEpsilonC;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
 
 

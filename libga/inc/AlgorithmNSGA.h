@@ -25,42 +25,34 @@ public:
   ////////////////////////////////////////////////////
   Double_t GetPCross() const { return fPCross; }
   Double_t GetEtaCross() const { return fEtaCross; }
-  Double_t GetPMut() const { return fPMut; }
-  Double_t GetEtaMut() const { return fEtaMut; }
   //////////////////////////////////////////////////
   void SetPCross(Double_t pcross) { fPCross = pcross; }
   void SetEtaCross(Double_t etacross) { fEtaCross = etacross; }
-  void SetEtaMut(Double_t etamut) { fEtaMut = etamut; }
-  void SetPMut(Double_t pmut) { fPMut = pmut; }
   //////////////////////////////////////////////////
   Int_t GetGenTotalNumber() const { return fNGen; }
   void SetGenTotalNumber(Int_t gen) { fNGen = gen; }
-  void SetFunction( Functions::functype f){
+  void SetFunction(Functions::functype f){
     this->function = f;
   }
   void SetPopFunction(Functions::popfunctype f){
     this->popfunction = f;
   }
-  /////////////////////////////////////////////////
-  static AlgorithmNSGA *Instance();
+  //static AlgorithmNSGA *Instance();
 
 private:
   Functions::functype function;
   Functions::popfunctype popfunction;
   Double_t fPCross;
   Double_t fEtaCross;
-  Double_t fPMut;
-  Double_t fEtaMut;
   Int_t fNCross;
   Int_t fNMut;
   Int_t fNGen;
-  static AlgorithmNSGA *fgNSGA2;
 
 public:
   Population<Double_t> *fParentPop;
   Population<Double_t> *fChildPop;
   Population<Double_t> *fMixedPop;
-   
+
   ClassDef(AlgorithmNSGA, 1)
 };
 
