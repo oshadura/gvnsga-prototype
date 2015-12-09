@@ -25,14 +25,15 @@ template <class T> class Population : public Genes<T>, public Functions {
 protected:
 public:
   Population()
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fGen(0), fH(0),
-        fFunction() {}
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fGen(1), fH(0),
+        fFunction(NULL) {}
   Population(Int_t size)
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fGen(0), fH(0),
-        fFunction() {
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fGen(1), fH(0),
+        fFunction(NULL) {
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
+
   virtual ~Population() {}
 
   Individual &GetGenes(Int_t i) { return fPopulation.at(i); }
@@ -76,12 +77,13 @@ public:
   Int_t PrintTree(const char *file, const char *name);
   ///////////////////////////////////////////////////////////
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
-    os << "Population: {\n";
+    os << "Population: [\n";
     //std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
     //std::copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(),fGenesOutIt);
     for(auto it = pop.begin(); it != pop.end(); ++it){
       os << *it;
     }
+    os << "]";
     return os;
   }
   // void printPopulation(const Population<T>& p);

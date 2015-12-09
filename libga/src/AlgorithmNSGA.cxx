@@ -58,6 +58,9 @@ AlgorithmNSGA *AlgorithmNSGA::Instance() {
 }
 
 void AlgorithmNSGA::Initialize() {
+  std::cout << "Let's check NSGA2 configuration:"<< std::endl;
+
+
   Population<Double_t> *fChildPop = new Population<Double_t>();
   Population<Double_t> *fParentPop = new Population<Double_t>();
   Population<Double_t> *fMixedPop = new Population<Double_t>();

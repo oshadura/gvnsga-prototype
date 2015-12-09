@@ -94,6 +94,7 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t i) {
 template <class T> void Population<T>::FastNonDominantSorting() {
   fFront.resize(1);
   fFront[0].clear();
+#pragma omp parallel for
   for (int i = 0; i < (ULong_t)fPopulation.size(); ++i) {
     std::vector<Double_t> fDom;
     Int_t fDomCount = 0;
@@ -107,13 +108,15 @@ template <class T> void Population<T>::FastNonDominantSorting() {
         fDomCount += 1;
       }
     }
+#pragma omp critical
+    {
     p.SetDominatedCounter(fDomCount);
     p.GetDominated().clear();
     p.GetDominated() = fDom;
     if (p.GetDominatedCounter() == 0) {
       p.SetRank(1);
       fFront[0].push_back(i);
-    }
+    }}
   }
   std::sort(fFront[0].begin(), fFront[0].end());
   int fi = 1;
@@ -218,7 +221,7 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
 }
 
 template <class T> void Population<T>::Evaluate() {
-#ifdef USE_OPENMP
+#ifdef ENABLE_OPENMP
 #pragma omp parrallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
     auto ind = GetGenes(i);
