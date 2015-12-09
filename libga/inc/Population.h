@@ -75,14 +75,12 @@ public:
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
   ///////////////////////////////////////////////////////////
-  /*
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
     std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
     std::copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(),
   fGenesOutIt);
     return os;
   }
-  */
   // void printPopulation(const Population<T>& p);
 
 public:

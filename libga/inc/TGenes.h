@@ -120,12 +120,11 @@ public:
 
   T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
 
-  /*
   friend std::ostream &operator<<(std::ostream &os, Genes<T> &g){
        std::copy(g.begin(), g.end(), std::ostream_iterator<T>(os, "\n"));
        return os;
   }
-  */
+  
   /*
   void printGene(const Genes<T>& g) {
     std::copy(g.begin(), g.end(), std::ostream_iterator<typename
