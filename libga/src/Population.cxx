@@ -30,14 +30,13 @@
     Functions::functype func) 
   throw (ExceptionMessenger) : fCrowdingObj(true), fPopFunction(NULL), setupPop(){
 
-    setupPop.fNParam = fNParam;
-    setupPop.fInterval = fInterval;
-    setupPop.fNCons = fNCons;
-    setupPop.fNObjectives = fNObjectives;
-    setupPop.fEpsilonC = fEpsilonC;
-    setupPop.fPMut = fPMut;
-    setupPop.fEtaMut = fEtaMut;
-
+    setupPop.SetNParam(fNParam);
+    setupPop.SetInterval(fInterval);
+    setupPop.SetNCons(fNCons);
+    setupPop.SetNObjectives(fNObjectives);
+    setupPop.SetEpsilonC(fEpsilonC);
+    setupPop.SetPMut(fPMut);
+    setupPop.SetEtaMut(fEtaMut);
     for (int i = 0; i < GetPopulationSize(); ++i)
     {
       fPopulation.push_back(Genes<T>(setupPop));
@@ -204,7 +203,7 @@ template <class T> Int_t Population<T>::Mutate(){
   {
     tmp += it-> Genes<T>::Mutate();
   }
-
+  return tmp;
 }
 
 template <class T>

@@ -57,6 +57,7 @@ public:
   }
   void SetInterval();
   void SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax);
+  void SetInterval(std::vector<std::pair<Double_t, Double_t>> l){ l = fInterval; }
   ///////// Parameter definition //////////////
   Int_t GetNParam() const { return fNParam; }
   void SetNParam(Int_t nparam) { nparam = fNParam; }
