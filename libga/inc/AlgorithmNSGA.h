@@ -60,7 +60,7 @@ public:
   Population<Double_t> *fParentPop;
   Population<Double_t> *fChildPop;
   Population<Double_t> *fMixedPop;
-
+   
   ClassDef(AlgorithmNSGA, 1)
 };
 

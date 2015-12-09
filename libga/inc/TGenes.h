@@ -4,8 +4,11 @@
 #include "TObject.h"
 #include "TTreeReader.h"
 #include "TTreeReaderArray.h"
+
 #include <vector>
+
 #include "Functions.h"
+#include "ExceptionMessenger.h"
 
 #define EPS 1e-14
 #define INF 1e+14
@@ -150,7 +153,6 @@ private:
 
   ///////////////////////////////////////////////////
 
-  //const Functions* f;
   std::vector<T> fFitness;    // Vector of values of different fitness
                               // function (objectives)
   Int_t fDominationCounter;   // Domination counter for individual (used in

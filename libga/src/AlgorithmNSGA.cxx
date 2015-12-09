@@ -72,9 +72,6 @@ void AlgorithmNSGA::Initialize() {
   fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
-  fParentPop->SetGenNumber(1);
-  fChildPop->SetGenNumber(1);
-  fMixedPop->SetGenNumber(1);
 }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
@@ -184,14 +181,14 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
 }
 
 void AlgorithmNSGA::NextStep() {
-  int ngen = (fChildPop->GetGenNumber()) + 1;
-  std::cout << "New generetion #" << ngen << std::endl;
+  std::cout << "New generetion #" << (fParentPop->GetGenNumber()) + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
-  fNMut = fChildPop->Mutate();
+  fNMut = fChildPop->Mutate(); //not a std::pair (?)
   fChildPop->SetGenNumber((fChildPop->GetGenNumber()) + 1);
   fChildPop->Evaluate();
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
+  fMixedPop->SetGenNumber((fMixedPop->GetGenNumber()) + 1);
   fMixedPop->FastNonDominantSorting();
   fParentPop->Clear();
   // until |Pt+1| + |Fi| <= N, until parent population is filled
@@ -215,7 +212,7 @@ void AlgorithmNSGA::NextStep() {
 }
 
 void AlgorithmNSGA::Evolution() {
-  while ((fParentPop->GetGenNumber()) <= (Instance()->GetGenTotalNumber())) {
+  while (fNGen <= (Instance()->GetGenTotalNumber())) {
     NextStep();
   } // Check through population object
 }

@@ -25,10 +25,10 @@ template <class T> class Population : public Genes<T>, public Functions {
 protected:
 public:
   Population()
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fGen(0), fH(),
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fGen(0), fH(0),
         fFunction() {}
   Population(Int_t size)
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fGen(0), fH(),
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fGen(0), fH(0),
         fFunction() {
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
@@ -87,13 +87,14 @@ public:
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
                        // false: crowding over real variable
+  Int_t fGen; // Generation counter for populations
+
 private:
   Functions::functype fFunction;
   Functions::popfunctype fPopFunction;
   std::vector<Individual> fFront;
   std::vector<Individual> fPopulation;
   Int_t fSizePop;
-  Int_t fGen; // Generation counter
   TH1F *fH;
 
   ClassDef(Population, 1)
