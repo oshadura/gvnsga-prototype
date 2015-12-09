@@ -145,11 +145,11 @@ int main() {
   nsga2->Evolution();
   // Test population initialization
   /////////////////////////////////
-  // Population<Double_t> fNsgaPop = new Population<Double_t>();
-  // fNsgaPop.SetPopulationSize(20);
+  Population<Double_t> fNsgaPop = new Population<Double_t>();
+  fNsgaPop.SetPopulationSize(20);
   // Testing building population function
-  // fNsgaPop.Build();
-  // std::cout << fNsgaPop << std::endl;
+  fNsgaPop.Build();
+  std::cout << fNsgaPop << std::endl;
   // fNsgaPop->WritePopulationTree(*fNsgaPop, "Population.root");
   // fNsgaPop->PrintTree("Population.root", "Population");
   /////////////////////////////////

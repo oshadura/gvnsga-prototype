@@ -68,7 +68,7 @@ public:
   void ResetHistogramPointer() {
     fH = 0;
   } // Function that reset histogram pointer
-  TH1F *GetHistogram() const { return fH; } // Returns histosgrames
+  TH1F *GetHistogram() const { return fH; } // Return histosgrames
   //////////////////// Playing with ROOT files///////////////
   void WritePopulationTree(Population &pop, const char *file);
   void UpdatePopulationTree(Population &pop, const char *file);
@@ -76,9 +76,12 @@ public:
   Int_t PrintTree(const char *file, const char *name);
   ///////////////////////////////////////////////////////////
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
-    std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
-    std::copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(),
-  fGenesOutIt);
+    os << "Population: {\n";
+    //std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
+    //std::copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(),fGenesOutIt);
+    for(auto it = pop.begin(); it != pop.end(); ++it){
+      os << *it;
+    }
     return os;
   }
   // void printPopulation(const Population<T>& p);
