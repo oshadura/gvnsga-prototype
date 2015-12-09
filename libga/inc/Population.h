@@ -55,6 +55,7 @@ public:
   void FastNonDominantSorting();
   void Merge(const Population &population1,
              const Population &population2); // Merging two populations
+  Int_t Mutate();
   void Clear(Option_t *option = "");         // Clear function
   static void Reset(Option_t *option = "");  // Reset function
   void Evaluate();

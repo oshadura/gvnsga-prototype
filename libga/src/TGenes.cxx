@@ -23,20 +23,21 @@
 //ClassImp(Genes<T>)
 
 template <class T>  Genes<T>::Genes()
-    : TObject(), fFitness(), fRank(0), fDominationCounter(0),
+    : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fEpsilonC(EPS),
       fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
-      fTime(0), fMemory(0), setup(0) {}
+      fTime(0), fMemory(0), setup(0), fConstraines(0) {}
 
 template <class T> Genes<T>::Genes(const Functions& config) throw (ExceptionMessenger):
-      TObject(), fFitness(), fRank(0), fDominationCounter(0),
+      TObject(), fFitness(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fEpsilonC(EPS),
       fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
-      fTime(0), fMemory(0), setup(&config){
+      fTime(0), fMemory(0), setup(&config), fConstraines(0){
         fGenes.resize(setup->GetNParam());
         fFitness.resize(setup->GetNObjectives());
+        fConstraines.resize(setup->GetNCons());
       }
 
 template <class T> Genes<T>::Genes(std::vector<T> &f)
@@ -155,7 +156,7 @@ T Genes<T>::CheckDominance(const Genes<T> *ind2) {
 
 // Polynomial mutation
 template <class T>
-T Genes<T>::Mutate() {
+Int_t Genes<T>::Mutate() {
   TRandom rand;
   Double_t fRrnd, fDelta1, fDelta2, fMutPow, fDelta, fValue;
   Double_t y, yl, yu, xy;

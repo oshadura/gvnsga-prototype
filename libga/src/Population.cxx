@@ -170,6 +170,15 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
   }
 }
 
+template <class T> Int_t Population<T>::Mutate(){
+   Int_t tmp;
+  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it)
+  {
+    tmp += it-> Genes<T>::Mutate();
+  }
+
+}
+
 template <class T>
 void Population<T>::UpdatePopulationTree(Population<T> &pop, const char *file) {
   // Looks it is not possible update existing events, lets update the tree

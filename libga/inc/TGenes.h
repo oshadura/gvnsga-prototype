@@ -32,7 +32,7 @@ public:
   // Function building Genes (moved in Population and Functions)
   void Clear(Option_t *option = "");
   T CheckDominance(const Genes<T> *ind2);
-  T Mutate();
+  Int_t Mutate();
   void StoreGenesTree(Genes<T> *ind);
   /*operators of comparision = <  > */
 
@@ -177,7 +177,6 @@ private:
 
   // Should we write a map to be sure about connection between Limits[] and
   // Genes[] || Fitmess[] and Constraint[]?
-  // Usefull for main body using in
 
   // static std::multimap<Genes,Limits> fInputMap;
   // static std::multimap<Genes,Constraint> fOutputMap;
