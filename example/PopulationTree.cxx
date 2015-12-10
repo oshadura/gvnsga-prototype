@@ -125,8 +125,8 @@ int main() {
   //geantv->SetInterval(); // don't work because we initialize fNparam after...
   geantv->fInterval.push_back(make_pair(1,10));
   geantv->fInterval.push_back(make_pair(1,10));
-  //std::vector<std::pair<Double_t,Double_t>> Interval = geantv->fInterval;
-  std::cout << "Check what we create as a limit vector: [" << &(geantv->fInterval) << "]"<< std::endl;
+  std::vector<std::pair<Double_t,Double_t>> Interval = geantv->fInterval;
+  std::cout << "Check what we create as a limit vector: [" << &Interval << "]"<< std::endl;
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);

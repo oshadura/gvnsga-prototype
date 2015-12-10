@@ -172,10 +172,10 @@ public:
    */
   static Functions *Instance();
 
-  friend std::ostream& operator<<(std::ostream& os, const std::vector<std::pair<Double_t,Double_t>> &limit){
-    for (std::vector<std::pair<Double_t,Double_t>>::const_iterator pos = limit.begin(); pos != limit.end(); ++pos){
-      os <<"["<< "Min " << pos->first << "Max: " << pos->second <<"]";
-    }
+  friend std::ostream& operator<<(std::ostream& os, std::vector<std::pair<Double_t,Double_t>> &limit){
+  for(auto &x:limit){
+    os << x.first << ":"<< x.second;
+  }
     return os;
   }
 
