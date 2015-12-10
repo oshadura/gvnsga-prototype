@@ -61,8 +61,11 @@ Genes<T>& Genes<T>::operator=(const Genes<T> &gen) {
 }
 
 template <class T>
-void Genes<T>::Set() {
+void Genes<T>::Set() throw (ExceptionMessenger){
+  if (!setup)
+    throw ExceptionMessenger("Do something with individual generation");
   TRandom3 rand;
+  rand.SetSeed(time(NULL));
   std::vector<T> *Genes = &fGenes;
   // Random numbers without limits per each parameter
   Int_t nparam = Functions::Instance()->GetNParam();

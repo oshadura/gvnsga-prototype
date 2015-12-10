@@ -60,6 +60,7 @@ template <typename T> struct Comparing {
   };
 };
 
+/*
 template <class T> void Population<T>::Build() {
   TRandom3 rand;
   rand.SetSeed(time(NULL));
@@ -74,6 +75,14 @@ template <class T> void Population<T>::Build() {
     }
   }
   WritePopulationTree(*this, "NSGA.root");
+}
+*/
+
+template <class T> void Population<T>::Build() {
+  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
+    it->Genes<T>::Set();
+    }
+  //WritePopulationTree(*this, "NSGA.root");
 }
 
 template <class T> void Population<T>::CrowdingDistanceAll() {

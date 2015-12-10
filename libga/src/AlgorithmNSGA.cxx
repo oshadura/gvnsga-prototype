@@ -30,7 +30,8 @@ struct Sort {
 
 AlgorithmNSGA::AlgorithmNSGA()
     : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0), fNMut(0),
-      fNGen(0), fParentPop(), fChildPop(), fMixedPop() {
+      fNGen(0), fParentPop(), fChildPop(), fMixedPop(),fSizePop(0), fNParam(0),fInterval(0),fNCons(0), fNObjectives(0),fPMut(0),
+      fEtaMut(0), fEpsilonC(0),fCrowdingObj(true){
 }
 
 AlgorithmNSGA::~AlgorithmNSGA() {
@@ -105,7 +106,7 @@ void AlgorithmNSGA::Initialize() throw (ExceptionMessenger) {
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
                               Population<Double_t> &newpop) {
   static TRandom3 rand;
-  const Int_t N = oldpop.GetPopulationSize();
+  const Int_t N = oldpop.GetPopulationSetupSize();
   std::vector<Int_t> a1(N), a2(N);
   for (Int_t i = 0; i < N; ++i) {
     a1[i] = a2[i] = i;

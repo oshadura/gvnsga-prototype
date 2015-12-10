@@ -172,15 +172,15 @@ public:
    */
   static Functions *Instance();
 
+  friend std::ostream& operator<<(std::ostream& os, const std::vector<std::pair<Double_t,Double_t>> &limit){
+    for (std::vector<std::pair<Double_t,Double_t>>::const_iterator pos = limit.begin(); pos != limit.end(); ++pos){
+      os <<"["<< "Min " << pos->first << "Max: " << pos->second <<"]";
+    }
+    return os;
+  }
+
 private:
   Int_t fNParam; // Number of parameters
-  std::vector<std::pair<Double_t, Double_t>> fInterval; // Interval
-                                                        // settings for
-                                                        // genes in
-                                                        // cromosome ->
-                                                        // inheritance (?)
-                                                        // from
-                                                        // function
   Int_t fNCons;          
   Int_t fNObjectives; // Number of fitness values (objectives)
   Double_t fPMut;
@@ -193,6 +193,13 @@ public:
   typedef void (*popfunctype)(Population<Double_t>&); // still dont know
   //////////////////////////////////////////////////////////////
   functype evfunc;
+  std::vector<std::pair<Double_t, Double_t>> fInterval; // Interval
+                                                        // settings for
+                                                        // genes in
+                                                        // cromosome ->
+                                                        // inheritance (?)
+                                                        // from
+                                                        // function
 
   ClassDef(Functions, 1)
 };

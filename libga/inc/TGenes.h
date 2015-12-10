@@ -38,7 +38,7 @@ public:
   Genes<T> &operator=(const Genes<T> &gen);
   // virtual const std::vector<Genes>&  operator[] ( Int_t i ) const { return
   // fGenes.at(i); }
-  void Set();
+  void Set() throw (ExceptionMessenger);
   void Evaluate(Genes<T> &ind);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<T> GetDominated() {
