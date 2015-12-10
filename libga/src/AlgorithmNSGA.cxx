@@ -57,13 +57,35 @@ AlgorithmNSGA *AlgorithmNSGA::Instance() {
 }
 */
 
-void AlgorithmNSGA::Initialize() {
+void AlgorithmNSGA::Initialize() throw (ExceptionMessenger) {
+
   std::cout << "Let's check NSGA2 configuration:"<< std::endl;
 
+  if (fSizePop < 0)
+    throw ExceptionMessenger("You didn't enter size of Population");
+  if (fNParam < 0)
+    throw ExceptionMessenger("And what is about number of parameters?");
+  if (fNCons < 0)
+    throw ExceptionMessenger("Don't forget to put number constraints (at least 0)");
+  if (fNObjectives <= 0)
+    throw ExceptionMessenger("What is about number of objectives? How you plan to measure things?");
+  if (fEpsilonC <= 0)
+    throw ExceptionMessenger("EpsilonC is not known for me!");
+  if (fPMut <= 0)
+    throw ExceptionMessenger("Are you joking? Put probability of mutation as fast as possible..");
+  if (fEtaMut < 0)
+    throw ExceptionMessenger("Are you joking? Put eta value of mutation as fast as possible.");
+  if (fInterval.size() !=  fNParam)
+    throw ExceptionMessenger("Interval for generation individuals is not setuped at all!");
+  if (function == 0)
+    throw ExceptionMessenger("Here I will not talk anymore  with you: no function - no job");
 
-  Population<Double_t> *fChildPop = new Population<Double_t>();
-  Population<Double_t> *fParentPop = new Population<Double_t>();
-  Population<Double_t> *fMixedPop = new Population<Double_t>();
+  Population<Double_t> *fChildPop = new Population<Double_t>(fSizePop,
+    fNParam,fNCons,fNObjectives,fEpsilonC,fPMut,fEtaMut,fInterval, function);
+  Population<Double_t> *fParentPop = new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
+    fEpsilonC, fPMut, fEtaMut, fInterval, function);
+  Population<Double_t> *fMixedPop = new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
+    fEpsilonC, fPMut, fEtaMut, fInterval, function);
   //Missing check of input variables and creation of population with them 
 
   if(popfunction){

@@ -122,6 +122,7 @@ void CMSApp(Genes<Double_t> *individual) {
 int main() {
   // Function
   Functions *geantv = Functions::Instance();
+  geantv->SetInterval();
   // Algorithm  definition
   AlgorithmNSGA *nsga2;
   nsga2->SetPCross(0.5);
@@ -135,10 +136,6 @@ int main() {
   nsga2->SetPMut(0.7);
   nsga2->SetEtaMut(0.7);
   nsga2->SetEpsilonC(0.7);
-  printf("Number of generations = %d\n", nsga2->GetGenTotalNumber());
-  printf("Probability of crossover = %g\n", nsga2->GetPCross());
-  printf("Eta values for crossover (crossover rate) = %g\n",
-         nsga2->GetEtaCross());
   nsga2->SetFunction(&CMSApp);
   nsga2->Initialize();
   nsga2->Evolution();

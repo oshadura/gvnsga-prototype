@@ -48,33 +48,128 @@ public:
    * @details [long description]
    */
   virtual ~Functions() { fgFunction = 0; }
-  ///////// Intervals definition //////////////
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * @return [description]
+   */
   std::vector<std::pair<Double_t, Double_t>> GetInterval() const {
     return fInterval;
   }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param i [description]
+   * @return [description]
+   */
   std::pair<Double_t, Double_t> GetIntervalLimit(Int_t i) const {
     return fInterval.at(i);
   }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   */
   void SetInterval();
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param i [description]
+   * @param fMin [description]
+   * @param fMax [description]
+   */
   void SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax);
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param l [description]
+   */
   void SetInterval(std::vector<std::pair<Double_t, Double_t>> l){ l = fInterval; }
-  ///////// Parameter definition //////////////
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * @return [description]
+   */
   Int_t GetNParam() const { return fNParam; }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param nparam [description]
+   */
   void SetNParam(Int_t nparam) { nparam = fNParam; }
-  //////// Constrains definition //////////////
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * @return [description]
+   */
   Int_t GetNCons() const { return fNCons; }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param ncon [description]
+   */
   void SetNCons(Int_t ncon) { ncon = fNCons; }
-  /////////////////////////////////////////////
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * @return [description]
+   */
   Int_t GetNObjectives() const { return fNObjectives; }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param nobj [description]
+   */
   void SetNObjectives(Int_t nobj) { nobj = fNObjectives; }
-  /////////////////////////////////////////////
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param etamut [description]
+   */
   void SetEtaMut(Double_t etamut) { fEtaMut = etamut; }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param pmut [description]
+   */
   void SetPMut(Double_t pmut) { fPMut = pmut; }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * @return [description]
+   */
   Double_t GetPMut() const { return fPMut; }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * @return [description]
+   */
   Double_t GetEtaMut() const { return fEtaMut; }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * 
+   * @param epsc [description]
+   */
   void SetEpsilonC(Double_t epsc) { fEpsilonC = epsc; }
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * @return [description]
+   */
   Double_t GetEpsilonC() const { return fEpsilonC; }
-  ////////////////////////////////////////////
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   * @return [description]
+   */
   static Functions *Instance();
 
 private:
