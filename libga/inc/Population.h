@@ -43,6 +43,22 @@ public:
     Functions::functype func) 
   throw (ExceptionMessenger);
 
+  Population(const Population& pop){}
+
+  Population<T> &operator=(const Population<T> &pop){
+    // comparison operator
+    if (this != &pop) {
+      genes = pop.genes;
+      setupPop = pop.setupPop;
+      fPopFunction = pop.fPopFunction;
+      fFront = pop.fFront;
+      fPopulation = pop.fPopulation;
+      fSizePop = pop.fSizePop;
+      fH = pop.fH;
+    }
+    return *this;
+  }
+
   virtual ~Population(){
   }
 
@@ -60,7 +76,7 @@ public:
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
   std::vector<Individual> operator=(Population<T> pop) { return fPopulation; }
   void SetCrowdingObj(Bool_t co){fCrowdingObj = co;}
-  void Build();
+  void Build() throw (ExceptionMessenger);
   void CrowdingDistanceAll();
   void CrowdingDistanceFront(Int_t i);
   void FastNonDominantSorting();
@@ -85,7 +101,7 @@ public:
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
-  ///////////////////////////////////////////////////////////
+  /*
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
     os << "Population: [\n";
     //std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
@@ -96,7 +112,13 @@ public:
     os << "]";
     return os;
   }
-  // void printPopulation(const Population<T>& p);
+  */
+  void printPopulation(const Population<T>& pop){
+    std::cout << "Population: [\n";
+    for(auto it = pop.begin(); it != pop.end(); ++it){
+      std::cout << *it <<std::endl;
+    }
+  }
 
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
@@ -104,7 +126,8 @@ public:
   Int_t GenCounter;
 
 private:
-  Functions setupPop;
+  Genes<T> genes;
+  const Functions setupPop;
   Functions::popfunctype fPopFunction;
   std::vector<Individual> fFront;
   std::vector<Individual> fPopulation;

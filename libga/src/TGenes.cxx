@@ -38,15 +38,10 @@ template <class T> Genes<T>::Genes(const Functions& config) throw (ExceptionMess
         fConstraines.resize(setup->GetNCons());
       }
 
-template <class T> Genes<T>::Genes(std::vector<T> &f)
-    : TObject(), fFitness(), fRank(0),
-      fDominationCounter(0), fCrowdingDistance(0), fEvaluated(false), fDominated(),
-      ConstViol(0), fGenes(f), fAllev(f[0]), fBuffev(f[1]), fThread(f[2]), fPriority(f[3]), fSteps(f[4]), fVector(f[5]), 
-      fTime(0), fMemory(0) {}
+template <class T> Genes<T>::Genes(Genes &f){}
 
 template <class T>
 Genes<T>& Genes<T>::operator=(const Genes<T> &gen) {
-  // comparison operator
   if (this != &gen) {
     fGenes = gen.fGenes;
     fRank = gen.fRank;
@@ -63,16 +58,16 @@ Genes<T>& Genes<T>::operator=(const Genes<T> &gen) {
 template <class T>
 void Genes<T>::Set() throw (ExceptionMessenger){
   if (!setup)
-    throw ExceptionMessenger("Do something with individual generation");
+    throw ExceptionMessenger("Do something with individual generation!");
   TRandom3 rand;
   rand.SetSeed(time(NULL));
-  std::vector<T> *Genes = &fGenes;
+  //std::vector<T> *Genes = &fGenes;
   // Random numbers without limits per each parameter
-  Int_t nparam = Functions::Instance()->GetNParam();
+  Int_t nparam = Functions::Instance()->GetNParam(); // or singletone ?
+  std::cout << "Number of parameters used for generation individual in function Set() is " << nparam << std::endl; 
   for (Int_t i = 0; i < nparam; ++i) {
     fGenes[i] = rand.Uniform(Functions::Instance()->GetIntervalLimit(i).first,
                              Functions::Instance()->GetIntervalLimit(i).second);
-
   }
 }
 

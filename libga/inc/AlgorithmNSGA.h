@@ -41,7 +41,7 @@ public:
   void SetCrowdingObj(Bool_t s){
     this->fCrowdingObj = s;
   }
-  void SetNParam(Double_t p){
+  void SetNParam(Int_t p){
     this->fNParam = p;
   }
   void SetNCons(Double_t nc){
@@ -62,7 +62,9 @@ public:
   void SetEpsilonC(Double_t ec){
     this->fEpsilonC = ec;
   }
-
+  void SetLimit(std::vector<std::pair<Double_t,Double_t>> lim){
+    this->fInterval = lim;
+  }
   //static AlgorithmNSGA *Instance();
   private:
   Functions::functype function;
@@ -74,7 +76,6 @@ public:
   Int_t fNCross;
   Int_t fNMut;
   Int_t fNGen;
-  //================= User defined parameters ================//
   Int_t fSizePop;
   Int_t fNParam; 
   std::vector<std::pair<Double_t, Double_t>> fInterval; 

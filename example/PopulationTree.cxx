@@ -125,8 +125,9 @@ int main() {
   //geantv->SetInterval(); // don't work because we initialize fNparam after...
   geantv->fInterval.push_back(make_pair(1,10));
   geantv->fInterval.push_back(make_pair(1,10));
-  std::vector<std::pair<Double_t,Double_t>> Interval = geantv->fInterval;
-  std::cout << "Check what we create as a limit vector: [" << &Interval << "]"<< std::endl;
+  //std::vector<std::pair<Double_t,Double_t>> Interval = geantv->fInterval;
+  //std::cout << "Check what we create as a limit vector: [" << &Interval << "]"<< std::endl;
+  geantv->PrintLimit(geantv->fInterval);
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
@@ -136,7 +137,7 @@ int main() {
   nsga2->SetNParam(2); // blablabla - see Genes.h
   nsga2->SetNObjectives(2); // Memory, Time
   //nsga2->SetInterval(); // Testing intervals between [0,100]
-  nsga2->SetPopulationSize(5);
+  nsga2->SetPopulationSize(4);
   nsga2->SetPMut(0.7);
   nsga2->SetEtaMut(0.7);
   nsga2->SetEpsilonC(0.7);

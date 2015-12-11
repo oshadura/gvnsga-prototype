@@ -21,7 +21,7 @@ public:
   // Copy constructor
   Genes(const Genes<T> &copy) {} // Copy operator for vector of Individual
   // Parametrized constructor
-  Genes(std::vector<T> &f); // Vector of parameters = individual
+  Genes(Genes &f); // Vector of parameters = individual
   // Destructor
   virtual ~Genes() {}
   // Function building Genes (moved in Population and Functions)
@@ -30,11 +30,9 @@ public:
   Int_t Mutate();
   void StoreGenesTree(Genes<T> *ind);
   /*operators of comparision = <  > */
-
   // Double_t *operator[](Int_t i) { return fGenes[i]; }
   // Bool_t *operator<(Genes& ind1, Genes& ind2) {return ind1.fFitness <
   // ind2.fFitness;}
-
   Genes<T> &operator=(const Genes<T> &gen);
   // virtual const std::vector<Genes>&  operator[] ( Int_t i ) const { return
   // fGenes.at(i); }
@@ -112,9 +110,8 @@ public:
 
   T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
   //////////////////////////////////////////////////////////////
-
+  /*
   friend std::ostream &operator<<(std::ostream &os, Genes<T> &g){
-  //std::copy(g.begin(), g.end(), std::ostream_iterator<T>(os, "\n"));
     os << "Individual rank =" << g.GetRank()
     << "\n Available constraint violations"
     << g.GetConsViol();
@@ -134,13 +131,28 @@ public:
     os << "fCrowdingDistance =" << g.GetCrowdingDistance();
     return os;
   }
+  */
 
-  /*
-  void printGene(const Genes<T>& g) {
-    std::copy(g.begin(), g.end(), std::ostream_iterator<typename
-T::value_type>(std::cout, ", "));
-}
-*/
+  void printGenes(Genes<T>& g){
+    std::cout << "Individual rank =" << g.GetRank() << std::endl; 
+    //<< "\n Available constraint violations"
+    //<< g.GetConsViol()<< std::endl;
+
+    std::cout << "Gene<T> = [";
+      for(auto it = g.begin(); it != g.end(); ++it){
+      std::cout << *it << std::endl;
+          }
+    //std::cout << "Fitness<T> = [";
+    //  for(auto it = GetFitness(g).begin; it != g.GetFitness(g).end(); ++it){
+    //  std::cout << *it << std::endl;
+    //}
+    std::cout << "Constraint<T> = [";
+      for(auto it = g.GetConstraines().begin(); it != g.GetConstraines().end(); ++it){
+      std::cout << *it << std::endl;
+    }
+    std::cout << "fCrowdingDistance =" << g.GetCrowdingDistance() << std::endl;
+  }
+
 private:
   ///////////////////////////////////////////////////
   // Individual parts (Genes)

@@ -171,12 +171,21 @@ public:
    * @return [description]
    */
   static Functions *Instance();
-
+  /**
   friend std::ostream& operator<<(std::ostream& os, std::vector<std::pair<Double_t,Double_t>> &limit){
   for(auto &x:limit){
     os << x.first << ":"<< x.second;
   }
     return os;
+  }
+  */
+
+  void PrintLimit( std::vector<std::pair<Double_t,Double_t>> &limit){
+  std::cout << "Check what we create as a limit vector: [";
+  for(auto &x:limit){
+    std::cout << x.first << ":"<< x.second<<" ";
+  }
+  std::cout << "]"<< std::endl;
   }
 
 private:

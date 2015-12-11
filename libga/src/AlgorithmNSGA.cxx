@@ -60,7 +60,7 @@ AlgorithmNSGA *AlgorithmNSGA::Instance() {
 
 void AlgorithmNSGA::Initialize() throw (ExceptionMessenger) {
 
-  std::cout << "Let's check NSGA2 configuration:"<< std::endl;
+  std::cout << "Let's check NSGA2 configuration..."<< std::endl;
 
   if (fSizePop < 0)
     throw ExceptionMessenger("You didn't enter size of Population");
@@ -76,10 +76,10 @@ void AlgorithmNSGA::Initialize() throw (ExceptionMessenger) {
     throw ExceptionMessenger("Are you joking? Put probability of mutation as fast as possible..");
   if (fEtaMut < 0)
     throw ExceptionMessenger("Are you joking? Put eta value of mutation as fast as possible.");
-  if (fInterval.size() !=  fNParam)
-    throw ExceptionMessenger("Interval for generation individuals is not setuped at all!");
+  //if (fInterval.size() !=  fNParam)
+  //  throw ExceptionMessenger("Interval for generation individuals is not setuped at all!");
   if (function == 0)
-    throw ExceptionMessenger("Here I will not talk anymore  with you: no function - no job");
+    throw ExceptionMessenger("Here I will not talk anymore with you: no function - no job");
 
   Population<Double_t> *fChildPop = new Population<Double_t>(fSizePop,
     fNParam,fNCons,fNObjectives,fEpsilonC,fPMut,fEtaMut,fInterval, function);
@@ -100,13 +100,14 @@ void AlgorithmNSGA::Initialize() throw (ExceptionMessenger) {
   fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
-
+  fParentPop->printPopulation(fParentPop);
 }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
                               Population<Double_t> &newpop) {
   static TRandom3 rand;
-  const Int_t N = oldpop.GetPopulationSetupSize();
+  //const Int_t N = oldpop.GetPopulationSetupSize();
+  const Int_t N = 4;
   std::vector<Int_t> a1(N), a2(N);
   for (Int_t i = 0; i < N; ++i) {
     a1[i] = a2[i] = i;
@@ -210,6 +211,7 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
 }
 
 void AlgorithmNSGA::NextStep() {
+
   std::cout << "New generetion #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate(); //not a std::pair (?)
