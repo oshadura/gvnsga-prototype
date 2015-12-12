@@ -17,7 +17,7 @@ template <class T> class Genes : public TObject {
 public:
   // Constructor
   Genes();
-  Genes(const Functions& config) throw (ExceptionMessenger);
+  Genes(const Functions &config) throw(ExceptionMessenger);
   // Copy constructor
   Genes(const Genes<T> &copy) {} // Copy operator for vector of Individual
   // Parametrized constructor
@@ -36,7 +36,7 @@ public:
   Genes<T> &operator=(const Genes<T> &gen);
   // virtual const std::vector<Genes>&  operator[] ( Int_t i ) const { return
   // fGenes.at(i); }
-  void Set() throw (ExceptionMessenger);
+  void Set() throw(ExceptionMessenger);
   void Evaluate(Genes<T> &ind);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<T> GetDominated() {
@@ -45,9 +45,9 @@ public:
   T GetDominated(Int_t i) { return fDominated.at(i); } // 1 Dominated individual
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
-  const Genes<T> SetGene(Int_t i, T value) {
+  Genes<T> SetGene(Int_t i, T value) {
     fGenes.emplace(fGenes.begin() + i, value);
-    return fGenes;
+    //    return fGenes;
   }
   std::vector<T> GetFitnessVector() const {
     return fFitness;
@@ -125,7 +125,8 @@ public:
       os << *it;
     }
     os << "Constraint<T> = [";
-      for(auto it = g.GetConstraines().begin(); it != g.GetConstraines().end(); ++it){
+      for(auto it = g.GetConstraines().begin(); it != g.GetConstraines().end();
+  ++it){
       os << *it;
     }
     os << "fCrowdingDistance =" << g.GetCrowdingDistance();
@@ -133,21 +134,22 @@ public:
   }
   */
 
-  void printGenes(Genes<T>& g){
-    std::cout << "Individual rank =" << g.GetRank() << std::endl; 
+  void printGenes(Genes<T> &g) {
+    std::cout << "Individual rank =" << g.GetRank() << std::endl;
     //<< "\n Available constraint violations"
     //<< g.GetConsViol()<< std::endl;
 
     std::cout << "Gene<T> = [";
-      for(auto it = g.begin(); it != g.end(); ++it){
+    for (auto it = g.begin(); it != g.end(); ++it) {
       std::cout << *it << std::endl;
-          }
-    //std::cout << "Fitness<T> = [";
+    }
+    // std::cout << "Fitness<T> = [";
     //  for(auto it = GetFitness(g).begin; it != g.GetFitness(g).end(); ++it){
     //  std::cout << *it << std::endl;
     //}
     std::cout << "Constraint<T> = [";
-      for(auto it = g.GetConstraines().begin(); it != g.GetConstraines().end(); ++it){
+    for (auto it = g.GetConstraines().begin(); it != g.GetConstraines().end();
+         ++it) {
       std::cout << *it << std::endl;
     }
     std::cout << "fCrowdingDistance =" << g.GetCrowdingDistance() << std::endl;
@@ -190,9 +192,8 @@ private:
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
 
-
   /////// Trial for Genes() constructor ///////////////
-  const Functions* setup;
+  Functions *setup;
   ///////////////////////////////////////////////////
 
   // Should we write a map to be sure about connection between Limits[] and

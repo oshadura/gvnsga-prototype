@@ -11,7 +11,7 @@
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 
-//AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
+// AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
 
 struct Sort {
   Population<Double_t> &pop;
@@ -29,23 +29,21 @@ struct Sort {
 };
 
 AlgorithmNSGA::AlgorithmNSGA()
-    : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0), fNMut(0),
-      fNGen(0), fParentPop(), fChildPop(), fMixedPop(),fSizePop(0), fNParam(0),fInterval(0),fNCons(0), fNObjectives(0),fPMut(0),
-      fEtaMut(0), fEpsilonC(0),fCrowdingObj(true){
-}
+    : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0),
+      fNMut(0), fNGen(0), fParentPop(), fChildPop(), fMixedPop(), fSizePop(0),
+      fNParam(0), fInterval(0), fNCons(0), fNObjectives(0), fPMut(0),
+      fEtaMut(0), fEpsilonC(0), fCrowdingObj(true) {}
 
 AlgorithmNSGA::~AlgorithmNSGA() {
-  if (fChildPop)
-  {
+  if (fChildPop) {
     delete fChildPop;
     fChildPop = 0;
   }
-  if (fParentPop)
-  {
+  if (fParentPop) {
     delete fParentPop;
     fParentPop = 0;
   }
-  if (fMixedPop){
+  if (fMixedPop) {
     delete fMixedPop;
     fMixedPop = 0;
   }
@@ -58,38 +56,47 @@ AlgorithmNSGA *AlgorithmNSGA::Instance() {
 }
 */
 
-void AlgorithmNSGA::Initialize() throw (ExceptionMessenger) {
+void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 
-  std::cout << "Let's check NSGA2 configuration..."<< std::endl;
+  std::cout << "Let's check NSGA2 configuration..." << std::endl;
 
   if (fSizePop < 0)
     throw ExceptionMessenger("You didn't enter size of Population");
   if (fNParam < 0)
     throw ExceptionMessenger("And what is about number of parameters?");
   if (fNCons < 0)
-    throw ExceptionMessenger("Don't forget to put number constraints (at least 0)");
+    throw ExceptionMessenger(
+        "Don't forget to put number constraints (at least 0)");
   if (fNObjectives <= 0)
-    throw ExceptionMessenger("What is about number of objectives? How you plan to measure things?");
+    throw ExceptionMessenger(
+        "What is about number of objectives? How you plan to measure things?");
   if (fEpsilonC <= 0)
     throw ExceptionMessenger("EpsilonC is not known for me!");
   if (fPMut <= 0)
-    throw ExceptionMessenger("Are you joking? Put probability of mutation as fast as possible..");
+    throw ExceptionMessenger(
+        "Are you joking? Put probability of mutation as fast as possible..");
   if (fEtaMut < 0)
-    throw ExceptionMessenger("Are you joking? Put eta value of mutation as fast as possible.");
-  //if (fInterval.size() !=  fNParam)
-  //  throw ExceptionMessenger("Interval for generation individuals is not setuped at all!");
+    throw ExceptionMessenger(
+        "Are you joking? Put eta value of mutation as fast as possible.");
+  // if (fInterval.size() !=  fNParam)
+  //  throw ExceptionMessenger("Interval for generation individuals is not
+  //  setuped at all!");
   if (function == 0)
-    throw ExceptionMessenger("Here I will not talk anymore with you: no function - no job");
+    throw ExceptionMessenger(
+        "Here I will not talk anymore with you: no function - no job");
 
-  Population<Double_t> *fChildPop = new Population<Double_t>(fSizePop,
-    fNParam,fNCons,fNObjectives,fEpsilonC,fPMut,fEtaMut,fInterval, function);
-  Population<Double_t> *fParentPop = new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
-    fEpsilonC, fPMut, fEtaMut, fInterval, function);
-  Population<Double_t> *fMixedPop = new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
-    fEpsilonC, fPMut, fEtaMut, fInterval, function);
-  //Missing check of input variables and creation of population with them 
+  Population<Double_t> *fChildPop =
+      new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
+                               fEpsilonC, fPMut, fEtaMut, fInterval, function);
+  Population<Double_t> *fParentPop =
+      new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
+                               fEpsilonC, fPMut, fEtaMut, fInterval, function);
+  Population<Double_t> *fMixedPop =
+      new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
+                               fEpsilonC, fPMut, fEtaMut, fInterval, function);
+  // Missing check of input variables and creation of population with them
 
-  if(popfunction){
+  if (popfunction) {
     fParentPop->SetPopFunction(popfunction);
     fChildPop->SetPopFunction(popfunction);
     fMixedPop->SetPopFunction(popfunction);
@@ -106,7 +113,7 @@ void AlgorithmNSGA::Initialize() throw (ExceptionMessenger) {
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
                               Population<Double_t> &newpop) {
   static TRandom3 rand;
-  //const Int_t N = oldpop.GetPopulationSetupSize();
+  // const Int_t N = oldpop.GetPopulationSetupSize();
   const Int_t N = 4;
   std::vector<Int_t> a1(N), a2(N);
   for (Int_t i = 0; i < N; ++i) {
@@ -214,12 +221,12 @@ void AlgorithmNSGA::NextStep() {
 
   std::cout << "New generetion #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
-  fNMut = fChildPop->Mutate(); //not a std::pair (?)
-  fChildPop->GenCounter = fNGen +1;
+  fNMut = fChildPop->Mutate(); // not a std::pair (?)
+  fChildPop->GenCounter = fNGen + 1;
   fChildPop->Evaluate();
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
-  fMixedPop->GenCounter = fGen+1;
+  fMixedPop->GenCounter = fGen + 1;
   fMixedPop->FastNonDominantSorting();
   fParentPop->Clear();
   // until |Pt+1| + |Fi| <= N, until parent population is filled
@@ -239,7 +246,7 @@ void AlgorithmNSGA::NextStep() {
       fParentPop->GetPopulationSetupSize() - fParentPop->GetPopulationSize();
   for (int j = 0; j < extra; ++j) // Pt+1 = Pt+1 U Fi[1:N-|Pt+1|]
     fParentPop->GetIndividuals().push_back(fMixedPop->GetFront(j));
-  fParentPop->GenCounter = fGen+1;
+  fParentPop->GenCounter = fGen + 1;
 }
 
 void AlgorithmNSGA::Evolution() {

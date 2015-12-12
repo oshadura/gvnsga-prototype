@@ -8,8 +8,8 @@
 #include <limits>
 #include <functional>
 
-template<class T> class Genes;
-template<class T> class Population;
+template <class T> class Genes;
+template <class T> class Population;
 
 #define EPS 1e-14
 #define INF 1e+14
@@ -25,7 +25,9 @@ public:
    * @param fInterval vectors of itervals for parameters
    * @param fConstrains Vector of constraines
    */
-  Functions() : fNParam(0), fInterval(), fNCons(0), fNObjectives(0),fPMut(0), fEtaMut(0),fEpsilonC(EPS) {
+  Functions()
+      : fNParam(0), fInterval(), fNCons(0), fNObjectives(0), fPMut(0),
+        fEtaMut(0), fEpsilonC(EPS) {
     fgFunction = this;
   }
 
@@ -33,7 +35,8 @@ public:
    * @brief Simple constructor with known number of parameters to be observed
    */
   Functions(Int_t nparam)
-      : fNParam(nparam), fInterval(), fNCons(0), fNObjectives(0),fPMut(0), fEtaMut(0), fEpsilonC(EPS){
+      : fNParam(nparam), fInterval(), fNCons(0), fNObjectives(0), fPMut(0),
+        fEtaMut(0), fEpsilonC(EPS) {
     fgFunction = this;
   }
   /**
@@ -59,7 +62,7 @@ public:
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param i [description]
    * @return [description]
    */
@@ -74,7 +77,7 @@ public:
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param i [description]
    * @param fMin [description]
    * @param fMax [description]
@@ -83,10 +86,12 @@ public:
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param l [description]
    */
-  void SetInterval(std::vector<std::pair<Double_t, Double_t>> l){ l = fInterval; }
+  void SetInterval(std::vector<std::pair<Double_t, Double_t>> l) {
+    l = fInterval;
+  }
   /**
    * @brief [brief description]
    * @details [long description]
@@ -96,7 +101,7 @@ public:
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param nparam [description]
    */
   void SetNParam(Int_t nparam) { nparam = fNParam; }
@@ -109,7 +114,7 @@ public:
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param ncon [description]
    */
   void SetNCons(Int_t ncon) { ncon = fNCons; }
@@ -122,21 +127,21 @@ public:
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param nobj [description]
    */
   void SetNObjectives(Int_t nobj) { nobj = fNObjectives; }
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param etamut [description]
    */
   void SetEtaMut(Double_t etamut) { fEtaMut = etamut; }
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param pmut [description]
    */
   void SetPMut(Double_t pmut) { fPMut = pmut; }
@@ -155,7 +160,7 @@ public:
   /**
    * @brief [brief description]
    * @details [long description]
-   * 
+   *
    * @param epsc [description]
    */
   void SetEpsilonC(Double_t epsc) { fEpsilonC = epsc; }
@@ -172,7 +177,8 @@ public:
    */
   static Functions *Instance();
   /**
-  friend std::ostream& operator<<(std::ostream& os, std::vector<std::pair<Double_t,Double_t>> &limit){
+  friend std::ostream& operator<<(std::ostream& os,
+  std::vector<std::pair<Double_t,Double_t>> &limit){
   for(auto &x:limit){
     os << x.first << ":"<< x.second;
   }
@@ -180,17 +186,17 @@ public:
   }
   */
 
-  void PrintLimit( std::vector<std::pair<Double_t,Double_t>> &limit){
-  std::cout << "Check what we create as a limit vector: [";
-  for(auto &x:limit){
-    std::cout << x.first << ":"<< x.second<<" ";
-  }
-  std::cout << "]"<< std::endl;
+  void PrintLimit(std::vector<std::pair<Double_t, Double_t>> &limit) {
+    std::cout << "Check what we create as a limit vector: [";
+    for (auto &x : limit) {
+      std::cout << x.first << ":" << x.second << " ";
+    }
+    std::cout << "]" << std::endl;
   }
 
 private:
   Int_t fNParam; // Number of parameters
-  Int_t fNCons;          
+  Int_t fNCons;
   Int_t fNObjectives; // Number of fitness values (objectives)
   Double_t fPMut;
   Double_t fEtaMut;
@@ -198,8 +204,8 @@ private:
   static Functions *fgFunction;
 
 public:
-  typedef void (*functype)(Genes<Double_t> *); // still dont know
-  typedef void (*popfunctype)(Population<Double_t>&); // still dont know
+  typedef void (*functype)(Genes<Double_t> *);         // still dont know
+  typedef void (*popfunctype)(Population<Double_t> &); // still dont know
   //////////////////////////////////////////////////////////////
   functype evfunc;
   std::vector<std::pair<Double_t, Double_t>> fInterval; // Interval

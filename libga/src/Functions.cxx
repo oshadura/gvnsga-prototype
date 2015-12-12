@@ -17,8 +17,8 @@ ClassImp(Functions)
 
     Functions::Functions(const Functions &func)
     : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval),
-     fNObjectives(func.fNObjectives), fPMut(func.fPMut), fEtaMut(func.fPMut) {
-      fgFunction = this;
+      fNObjectives(func.fNObjectives), fPMut(func.fPMut), fEtaMut(func.fPMut) {
+  fgFunction = this;
 }
 
 Functions *Functions::Instance() {

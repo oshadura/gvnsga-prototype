@@ -19,29 +19,29 @@
 #include "Population.h"
 #include "HistogramManager.h"
 
-//ClassImp(Genes<T>)
-
-template <class T>  Genes<T>::Genes()
-    : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
-      fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
-      fGenes(),
-      fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
-      fTime(0), fMemory(0), setup(0), fConstraines(0) {}
-
-template <class T> Genes<T>::Genes(const Functions& config) throw (ExceptionMessenger):
-      TObject(), fFitness(0), fRank(0), fDominationCounter(0),
-      fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
-      fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0), fVector(0), 
-      fTime(0), fMemory(0), setup(&config), fConstraines(0){
-        fGenes.resize(setup->GetNParam());
-        fFitness.resize(setup->GetNObjectives());
-        fConstraines.resize(setup->GetNCons());
-      }
-
-template <class T> Genes<T>::Genes(Genes &f){}
+// ClassImp(Genes<T>)
 
 template <class T>
-Genes<T>& Genes<T>::operator=(const Genes<T> &gen) {
+Genes<T>::Genes()
+    : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
+      fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
+      fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
+      fVector(0), fTime(0), fMemory(0), setup(0), fConstraines(0) {}
+
+template <class T>
+Genes<T>::Genes(const Functions &config) throw(ExceptionMessenger)
+    : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
+      fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
+      fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
+      fVector(0), fTime(0), fMemory(0), setup(&config), fConstraines(0) {
+  fGenes.resize(setup->GetNParam());
+  fFitness.resize(setup->GetNObjectives());
+  fConstraines.resize(setup->GetNCons());
+}
+
+template <class T> Genes<T>::Genes(Genes &f) {}
+
+template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
   if (this != &gen) {
     fGenes = gen.fGenes;
     fRank = gen.fRank;
@@ -55,16 +55,17 @@ Genes<T>& Genes<T>::operator=(const Genes<T> &gen) {
   return *this;
 }
 
-template <class T>
-void Genes<T>::Set() throw (ExceptionMessenger){
+template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
   if (!setup)
     throw ExceptionMessenger("Do something with individual generation!");
   TRandom3 rand;
   rand.SetSeed(time(NULL));
-  //std::vector<T> *Genes = &fGenes;
+  // std::vector<T> *Genes = &fGenes;
   // Random numbers without limits per each parameter
   Int_t nparam = Functions::Instance()->GetNParam(); // or singletone ?
-  std::cout << "Number of parameters used for generation individual in function Set() is " << nparam << std::endl; 
+  std::cout << "Number of parameters used for generation individual in "
+               "function Set() is "
+            << nparam << std::endl;
   for (Int_t i = 0; i < nparam; ++i) {
     fGenes[i] = rand.Uniform(Functions::Instance()->GetIntervalLimit(i).first,
                              Functions::Instance()->GetIntervalLimit(i).second);
@@ -75,29 +76,27 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
-template <class T> void Genes<T>::Evaluate(Genes<T> &ind){
+template <class T> void Genes<T>::Evaluate(Genes<T> &ind) {
   (Functions::Instance()->evfunc)(&ind);
-  if(Functions::Instance()->GetNCons()){
+  if (Functions::Instance()->GetNCons()) {
     ConstViol = 0;
   }
   fEvaluated = true;
 }
 
-template <class T>
-void Genes<T>::Clear(Option_t * /*option*/) { 
-    TObject::Clear();
-    fGenes.clear();
-    fRank = 0;
-    fDominationCounter = 0.;
-    fEvaluated = 0;
-    fFitness.clear();
-    fCrowdingDistance = 0;
-    fDominated.clear();
-    ConstViol = 0.;
+template <class T> void Genes<T>::Clear(Option_t * /*option*/) {
+  TObject::Clear();
+  fGenes.clear();
+  fRank = 0;
+  fDominationCounter = 0.;
+  fEvaluated = 0;
+  fFitness.clear();
+  fCrowdingDistance = 0;
+  fDominated.clear();
+  ConstViol = 0.;
 }
 
-template <class T>
-T Genes<T>::CheckDominance(const Genes<T> *ind2) {
+template <class T> T Genes<T>::CheckDominance(const Genes<T> *ind2) {
   if (ConstViol < 0 && ind2->ConstViol < 0) {
     if (ConstViol > ind2->ConstViol)
       return 1; // ind1 less
@@ -122,10 +121,12 @@ T Genes<T>::CheckDominance(const Genes<T> *ind2) {
         }
       } else {
         if (GetFitness(i) < ind2->GetFitness(i) &&
-            fabs(GetFitness(i) - ind2->GetFitness(i)) > Functions::Instance()->GetEpsilonC()) {
+            fabs(GetFitness(i) - ind2->GetFitness(i)) >
+                Functions::Instance()->GetEpsilonC()) {
           fFlag1 = 1;
         } else if (GetFitness(i) > ind2->GetFitness(i) &&
-                   fabs(GetFitness(i) - ind2->GetFitness(i)) > Functions::Instance()->GetEpsilonC()) {
+                   fabs(GetFitness(i) - ind2->GetFitness(i)) >
+                       Functions::Instance()->GetEpsilonC()) {
           fFlag2 = 1;
         }
       }
@@ -141,8 +142,7 @@ T Genes<T>::CheckDominance(const Genes<T> *ind2) {
 }
 
 // Polynomial mutation
-template <class T>
-Int_t Genes<T>::Mutate() {
+template <class T> Int_t Genes<T>::Mutate() {
   TRandom rand;
   Double_t fRrnd, fDelta1, fDelta2, fMutPow, fDelta, fValue;
   Double_t y, yl, yu, xy;
@@ -182,7 +182,8 @@ Int_t Genes<T>::Mutate() {
 }
 
 template <class T>
-void Genes<T>::WriteGenesTree(Genes<T> &ind, Population<T> &pop, const char *file) {
+void Genes<T>::WriteGenesTree(Genes<T> &ind, Population<T> &pop,
+                              const char *file) {
   if (!file) {
     TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
@@ -197,10 +198,9 @@ void Genes<T>::WriteGenesTree(Genes<T> &ind, Population<T> &pop, const char *fil
   }
 }
 
-
 template <class T>
-void Genes<T>::UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2, Population<T> &pop,
-                            const char *file) {
+void Genes<T>::UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2,
+                               Population<T> &pop, const char *file) {
   // Looks it is not possible update existing events, lets update the tree
   TFile *f = TFile::Open(file, "RECREATE");
   if (!f) {
@@ -214,7 +214,8 @@ void Genes<T>::UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2, Population<T> &po
 }
 
 template <class T>
-void Genes<T>::ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file) {
+void Genes<T>::ReadGenesTree(Genes<T> &ind, Population<T> &pop,
+                             const char *file) {
 
   TFile *f = TFile::Open(file, "RECREATE");
   TTree *tree = (TTree *)f->Get("gvga");
@@ -222,5 +223,5 @@ void Genes<T>::ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file
   Int_t entries = (Int_t)(tree->GetEntries());
 }
 
-//Ugly instantiating
+// Ugly instantiating
 template class Genes<Double_t>;
