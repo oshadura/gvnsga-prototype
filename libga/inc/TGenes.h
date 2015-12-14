@@ -16,7 +16,7 @@ template <class T> class Population;
 template <class T> class Genes : public TObject {
 public:
   // Constructor
-  Genes();
+  Genes() throw();
   Genes(const Functions &config) throw(ExceptionMessenger);
   // Copy constructor
   Genes(const Genes<T> &copy) {} // Copy operator for vector of Individual
@@ -149,7 +149,6 @@ public:
 private:
   ///////////////////////////////////////////////////
   // Individual parts (Genes)
-
   T fAllev;    // All events (after will be translated in GeantV namespace) #0
   T fBuffev;   // Buffered events (after will be translated in GeantV
                // namespace) #1
@@ -161,16 +160,13 @@ private:
                // namespace) #5
   T fVector;   // Vector size (after will be translated in GeantV
                // namespace) #6
-
   //////////////////////////////////////////////////
   // Parts of fitness vector
   T fTime;   // RT from GeantV (after will be translated in GeantV
              // namespace)
   T fMemory; // RT from GeantV (after will be translated in GeantV
              // namespace)
-
   ///////////////////////////////////////////////////
-
   std::vector<T> fFitness;    // Vector of values of different fitness
                               // function (objectives)
   Int_t fDominationCounter;   // Domination counter for individual (used in
@@ -182,9 +178,8 @@ private:
   Double_t ConstViol;         // Violation of constraints
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
-
   /////// Trial for Genes() constructor ///////////////
-  Functions *setup;
+  const Functions *setup;
   ///////////////////////////////////////////////////
 
   // Should we write a map to be sure about connection between Limits[] and

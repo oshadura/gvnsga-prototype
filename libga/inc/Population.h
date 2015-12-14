@@ -20,31 +20,35 @@ template <class T> class Population : public Genes<T>, public Functions {
 
   typedef Genes<T> Individual;
   // To be used after
-  // template <typename ...Args> using myType = std::function<void(Args...)>;
+  //template <typename ...Args> using myType = std::function<void(Args...)>;
 
 protected:
 public:
   Population()
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fH(0),
-        fPopFunction(NULL), setupPop() {}
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fH(0), fPopFunction(NULL), setupPop() {}
   Population(Int_t size)
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fH(0),
-        fPopFunction(NULL), setupPop() {
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fH(0), fPopFunction(NULL), setupPop() {
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
-  Population(const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,
-             const Int_t fNObjectives, const Double_t fEpsilonC,
-             const Double_t fPMut, const Double_t fEtaMut,
-             const std::vector<std::pair<Double_t, Double_t>> fInterval,
-             Functions::functype func) throw(ExceptionMessenger);
 
-  Population(const Population &pop) {}
-  Population<T> &operator=(const Population<T> &pop) {
-    // comparison operator
+  Population(const Int_t fSizePop,
+    const Int_t fNParam,
+    const Int_t fNCons,
+    const Int_t fNObjectives,
+    const Double_t fEpsilonC,
+    const Double_t fPMut,
+    const Double_t fEtaMut,
+    const std::vector<std::pair<Double_t, Double_t>> fInterval,
+    const Functions::functype func) 
+  throw (ExceptionMessenger);
+
+  Population(const Population& pop){}
+
+  Population<T> &operator=(const Population<T> &pop){
     if (this != &pop) {
       genes = pop.genes;
-      // setupPop = pop.setupPop;
+      setupPop = pop.setupPop;
       fPopFunction = pop.fPopFunction;
       fFront = pop.fFront;
       fPopulation = pop.fPopulation;
@@ -53,7 +57,10 @@ public:
     }
     return *this;
   }
-  virtual ~Population() {}
+
+  virtual ~Population(){
+  }
+
   Individual &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
     fPopulation.emplace(fPopulation.begin() + i, value);
@@ -66,18 +73,24 @@ public:
   std::vector<Individual> GetFront() const { return fFront; }
   Individual GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
-  void SetCrowdingObj(Bool_t co) { fCrowdingObj = co; }
-  void Build() throw(ExceptionMessenger);
+  std::vector<Individual> operator=(Population<T> pop) { return fPopulation; }
+  void SetCrowdingObj(Bool_t co){fCrowdingObj = co;}
+  void Build() throw (ExceptionMessenger);
   void CrowdingDistanceAll();
   void CrowdingDistanceFront(Int_t i);
   void FastNonDominantSorting();
   void Merge(const Population &population1,
              const Population &population2); // Merging two populations
   Int_t Mutate();
-  void Clear(Option_t *option = "");        // Clear function
-  static void Reset(Option_t *option = ""); // Reset function
+  void Clear(Option_t *option = "");         // Clear function
+  static void Reset(Option_t *option = "");  // Reset function
   void Evaluate();
-  void SetPopFunction(Functions::popfunctype f) { fPopFunction = f; }
+  void SetPopFunction(Functions::popfunctype f){
+    fPopFunction = f;
+  }
+  //void SetGenNumber(Int_t i) { fGen = i; }
+  //Int_t GetGenNumber() const { return fGen; }
+
   void ResetHistogramPointer() {
     fH = 0;
   } // Function that reset histogram pointer
@@ -91,34 +104,20 @@ public:
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop){
     os << "Population: [\n";
     //std::ostream_iterator<Genes<T>> fGenesOutIt (os,"\n");
-    //std::copy(pop.GetIndividuals().begin(),
-  pop.GetIndividuals().end(),fGenesOutIt);
+    //std::copy(pop.GetIndividuals().begin(), pop.GetIndividuals().end(),fGenesOutIt);
     for(auto it = pop.begin(); it != pop.end(); ++it){
       os << *it;
     }
     os << "]";
     return os;
+  }
   */
-  void printPopulation(const Population<T> &pop) {
+  void printPopulation(const Population<T>& pop){
     std::cout << "Population: [\n";
-    for (auto it = pop.begin(); it != pop.end(); ++it) {
-      std::cout << *it << std::endl;
+    for(auto it = pop.begin(); it != pop.end(); ++it){
+      std::cout << *it <<std::endl;
     }
   }
-
-  ////////////////////////////////////////
-  typename std::vector<Individual>::iterator begin() {
-    typename std::vector<Individual>::iterator it = fPopulation.begin();
-    return it;
-  }
-  typename std::vector<Individual>::iterator end() {
-    typename std::vector<Individual>::iterator it = fPopulation.end();
-    return it;
-  }
-  Individual operator[](Int_t i) const { return fPopulation.at(i); }
-  void clear() { fPopulation.clear(); }
-  void push_back(Genes<T> i) { return fPopulation.push_back(i); }
-  //////////////////////////////////////
 
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
@@ -127,14 +126,14 @@ public:
 
 private:
   Genes<T> genes;
-  const Functions setupPop;
+  Functions setupPop;
   Functions::popfunctype fPopFunction;
   std::vector<Individual> fFront;
   std::vector<Individual> fPopulation;
   Int_t fSizePop;
   TH1F *fH;
 
-  // Counter
+  //Counter
   ClassDef(Population, 1)
 };
 

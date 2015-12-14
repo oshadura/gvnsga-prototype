@@ -11,24 +11,16 @@
 #include <utility>
 
 using namespace std::placeholders;
-Functions *Functions::fgFunction = 0;
 
 ClassImp(Functions)
 
     Functions::Functions(const Functions &func)
     : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval),
       fNObjectives(func.fNObjectives), fPMut(func.fPMut), fEtaMut(func.fPMut) {
-  fgFunction = this;
-}
-
-Functions *Functions::Instance() {
-  if (!fgFunction)
-    Functions *fgFunction = new Functions();
-  return fgFunction;
 }
 
 void Functions::SetInterval() {
-  for (Int_t i = 0; i < GetNParam(); ++i) {
+  for (Int_t i = 0; i < fNParam; ++i) {
     SetIntervalLimit(i, 1, 100);
   }
 }

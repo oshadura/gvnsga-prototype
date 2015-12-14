@@ -121,7 +121,7 @@ void CMSApp(Genes<Double_t> *individual) {
 
 int main() {
   // Function
-  Functions *geantv = Functions::Instance();
+  Functions *geantv = new Functions();
   //geantv->SetInterval(); // don't work because we initialize fNparam after...
   geantv->fInterval.push_back(make_pair(1,10));
   geantv->fInterval.push_back(make_pair(1,10));

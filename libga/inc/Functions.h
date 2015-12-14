@@ -28,7 +28,6 @@ public:
   Functions()
       : fNParam(0), fInterval(), fNCons(0), fNObjectives(0), fPMut(0),
         fEtaMut(0), fEpsilonC(EPS) {
-    fgFunction = this;
   }
 
   /**
@@ -37,7 +36,6 @@ public:
   Functions(Int_t nparam)
       : fNParam(nparam), fInterval(), fNCons(0), fNObjectives(0), fPMut(0),
         fEtaMut(0), fEpsilonC(EPS) {
-    fgFunction = this;
   }
   /**
    * @brief [brief description]
@@ -50,7 +48,7 @@ public:
    * @brief [brief description]
    * @details [long description]
    */
-  virtual ~Functions() { fgFunction = 0; }
+  virtual ~Functions() {}
   /**
    * @brief [brief description]
    * @details [long description]
@@ -88,93 +86,9 @@ public:
    *
    * @param l [description]
    */
-  void SetInterval(std::vector<std::pair<Double_t, Double_t>> l) const {
+  void SetInterval(std::vector<std::pair<Double_t, Double_t>> l) {
     l = fInterval;
   }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   * @return [description]
-   */
-  Int_t GetNParam() const { return fNParam; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   *
-   * @param nparam [description]
-   */
-  void SetNParam(Int_t nparam) const { nparam = fNParam; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   * @return [description]
-   */
-  Int_t GetNCons() const { return fNCons; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   *
-   * @param ncon [description]
-   */
-  void SetNCons(Int_t ncon) const { ncon = fNCons; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   * @return [description]
-   */
-  Int_t GetNObjectives() const { return fNObjectives; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   *
-   * @param nobj [description]
-   */
-  void SetNObjectives(Int_t nobj) const { nobj = fNObjectives; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   *
-   * @param etamut [description]
-   */
-  void SetEtaMut(Double_t etamut) { fEtaMut = etamut; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   *
-   * @param pmut [description]
-   */
-  void SetPMut(Double_t pmut) { fPMut = pmut; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   * @return [description]
-   */
-  Double_t GetPMut() const { return fPMut; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   * @return [description]
-   */
-  Double_t GetEtaMut() const { return fEtaMut; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   *
-   * @param epsc [description]
-   */
-  void SetEpsilonC(Double_t epsc) { fEpsilonC = epsc; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   * @return [description]
-   */
-  Double_t GetEpsilonC() const { return fEpsilonC; }
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   * @return [description]
-   */
-  static Functions *Instance();
   /**
   friend std::ostream& operator<<(std::ostream& os,
   std::vector<std::pair<Double_t,Double_t>> &limit){
@@ -193,15 +107,6 @@ public:
     std::cout << "]" << std::endl;
   }
 
-private:
-  Int_t fNParam; // Number of parameters
-  Int_t fNCons;
-  Int_t fNObjectives; // Number of fitness values (objectives)
-  Double_t fPMut;
-  Double_t fEtaMut;
-  Double_t fEpsilonC;
-  static Functions *fgFunction;
-
 public:
   typedef void (*functype)(Genes<Double_t> *);         // still dont know
   typedef void (*popfunctype)(Population<Double_t> &); // still dont know
@@ -214,6 +119,12 @@ public:
                                                         // inheritance (?)
                                                         // from
                                                         // function
+  Int_t fNParam; // Number of parameters
+  Int_t fNCons;
+  Int_t fNObjectives; // Number of fitness values (objectives)
+  Double_t fPMut;
+  Double_t fEtaMut;
+  Double_t fEpsilonC;
 
   ClassDef(Functions, 1)
 };

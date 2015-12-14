@@ -160,7 +160,7 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
   Int_t r = rnd.Rndm();
   if (r <= GetPCross()) {
     fNCross++;
-    for (Int_t i = 0; i < Functions::Instance()->GetNParam(); i++) {
+    for (Int_t i = 0; i < fNParam; i++) {
       if (fabs(parent1[i] - parent2[i]) > EPS) {
         if (parent1[i] < parent2[i]) {
           y1 = parent1[i];
@@ -169,8 +169,8 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
           y1 = parent2[i];
           y2 = parent1[i];
         }
-        yl = Functions::Instance()->GetIntervalLimit(i).first;
-        yu = Functions::Instance()->GetIntervalLimit(i).second;
+        yl = fInterval[i].first;
+        yu = fInterval[i].second;
         Int_t r = rnd.Rndm();
         beta = 1.0 + (2.0 * (y1 - yl) / (y2 - y1));
         alpha = 2.0 - pow(beta, -(GetEtaCross() + 1.0));
@@ -203,7 +203,7 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
       }
     }
   } else {
-    for (Int_t i = 0; i < Functions::Instance()->GetNParam(); i++) {
+    for (Int_t i = 0; i < fNParam; i++) {
       child1.SetGene(i, parent1[i]);
       child2.SetGene(i, parent2[i]);
     }
