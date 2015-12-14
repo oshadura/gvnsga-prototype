@@ -60,15 +60,14 @@ template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
     throw ExceptionMessenger("Do something with individual generation!");
   TRandom3 rand;
   rand.SetSeed(time(NULL));
-  // std::vector<T> *Genes = &fGenes;
-  // Random numbers without limits per each parameter
-  Int_t nparam = setup->fNParam; 
+  //std::vector<T> *Genes = &fGenes;
   std::cout << "Number of parameters used for generation individual in "
                "function Set() is "
-            << nparam << std::endl;
-  for (Int_t i = 0; i < nparam; ++i) {
-    fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
-                             setup->GetIntervalLimit(i).second);
+            << (setup->fNParam) << std::endl;
+  for (Int_t i = 0; i < (setup->fNParam); ++i) {
+    //fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
+    //                         setup->GetIntervalLimit(i).second);
+    fGenes[i] = 1;
   }
 }
 

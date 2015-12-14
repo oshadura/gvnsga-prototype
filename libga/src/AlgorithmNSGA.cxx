@@ -85,9 +85,32 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
       new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
                                fEpsilonC, fPMut, fEtaMut, fInterval, function);
   Population<Double_t> *fMixedPop =
-      new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
+      new Population<Double_t>(fSizePop*2, fNParam, fNCons, fNObjectives,
                                fEpsilonC, fPMut, fEtaMut, fInterval, function);
   // Missing check of input variables and creation of population with them
+
+  //Report(configuration);
+
+  ////////////////////////////////////////////////////////////////////////
+        std::cout << "Population size = " << fSizePop
+       << "\nNumber of generations = " << fNGen
+       << "\nNumber of objective functions = " << fNObjectives
+       << "\nNumber of constraints = " << fNCons
+       << "\nNumber of variables = " << fNParam << std::endl;
+
+    if (fNParam != 0) {
+        for (int i = 0; i < fNParam; ++i) {
+            std::cout << "\nLower limit of real variable " << (i+1)
+               << " = " << fInterval[i].first << std::endl;
+            std::cout << "\nUpper limit of real variable " << (i+1)
+               << " = " << fInterval[i].second << std::endl;
+        }
+        std::cout << "\nProbability of crossover of real variable = " << fPCross<< std::endl;
+        std::cout << "\nProbability of mutation of real variable = " << fPMut << std::endl;
+        std::cout<< "\nDistribution index for crossover = " << fEtaCross << std::endl;
+        std::cout << "\nDistribution index for mutation = " << fEtaMut << "\n" << std::endl;
+      }
+  ////////////////////////////////////////////////////////////////////////
 
   if (popfunction) {
     fParentPop->SetPopFunction(popfunction);
@@ -100,7 +123,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
-  // fParentPop->printPopulation(fParentPop);
+  fParentPop->printPopulation(fParentPop);
 }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,

@@ -42,6 +42,7 @@
     for (int i = 0; i < fSizePop; ++i)
     { 
       Genes<T> genes(&setupPop);
+      //Genes<T>::printGenes(genes);
       fPopulation.push_back(genes);
     }
 
@@ -85,7 +86,7 @@ template <class T> void Population<T>::Build() {
 template <class T> void Population<T>::Build() throw (ExceptionMessenger) {
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
     it->Genes<T>::Set();
-    std::cout << "Created population.." << std::endl;
+    std::cout << "Creating population.." << std::endl;
     }
   //WritePopulationTree(*this, "NSGA.root");
 }

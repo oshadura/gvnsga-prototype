@@ -101,29 +101,6 @@ public:
 
   T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
   //////////////////////////////////////////////////////////////
-  /*
-  friend std::ostream &operator<<(std::ostream &os, Genes<T> &g){
-    os << "Individual rank =" << g.GetRank()
-    << "\n Available constraint violations"
-    << g.GetConsViol();
-
-    os << "Gene<T> = [";
-      for(auto it = g.begin(); it != g.end(); ++it){
-      os << *it;
-    }
-    os << "Fitness<T> = [";
-      for(auto it = g.GetFitness().begin(); it != g.GetFitness().end(); ++it){
-      os << *it;
-    }
-    os << "Constraint<T> = [";
-      for(auto it = g.GetConstraines().begin(); it != g.GetConstraines().end();
-  ++it){
-      os << *it;
-    }
-    os << "fCrowdingDistance =" << g.GetCrowdingDistance();
-    return os;
-  }
-  */
 
   void printGenes(Genes<T> &g) {
     std::cout << "Individual rank =" << g.GetRank() << std::endl;
