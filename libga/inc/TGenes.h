@@ -29,13 +29,7 @@ public:
   T CheckDominance(const Genes<T> *ind2);
   Int_t Mutate();
   void StoreGenesTree(Genes<T> *ind);
-  /*operators of comparision = <  > */
-  // Double_t *operator[](Int_t i) { return fGenes[i]; }
-  // Bool_t *operator<(Genes& ind1, Genes& ind2) {return ind1.fFitness <
-  // ind2.fFitness;}
   Genes<T> &operator=(const Genes<T> &gen);
-  // virtual const std::vector<Genes>&  operator[] ( Int_t i ) const { return
-  // fGenes.at(i); }
   void Set() throw(ExceptionMessenger);
   void Evaluate(Genes<T> &ind);
   Int_t GetDominatedCounter() { return fDominationCounter; }
@@ -64,25 +58,22 @@ public:
   void UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2, Population<T> &pop,
                        const char *file);
   void ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
-
   void SetConstrain(Int_t i, T value);
   std::vector<Double_t> GetConstraines() const { return fConstraines; }
-
   Int_t size() { return fGenes.size(); }
-
+  ////////////////////////////////////////
   typename std::vector<T>::iterator begin() {
     typename std::vector<T>::iterator it = fGenes.begin();
     return it;
   }
-
   typename std::vector<T>::iterator end() {
     typename std::vector<T>::iterator it = fGenes.end();
     return it;
   }
-
   T operator[](Int_t i) const { return fGenes.at(i); }
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
+  //////////////////////////////////////
   ////////// Parameters definition /////////////
   T GetAllev() const { return fAllev; }
   T GetBuffev() const { return fBuffev; }

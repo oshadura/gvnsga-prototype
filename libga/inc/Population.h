@@ -33,7 +33,6 @@ public:
     fFront.reserve(fSizePop);
     fPopulation.reserve(fSizePop);
   }
-
   Population(const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,
              const Int_t fNObjectives, const Double_t fEpsilonC,
              const Double_t fPMut, const Double_t fEtaMut,
@@ -41,12 +40,11 @@ public:
              Functions::functype func) throw(ExceptionMessenger);
 
   Population(const Population &pop) {}
-
   Population<T> &operator=(const Population<T> &pop) {
     // comparison operator
     if (this != &pop) {
       genes = pop.genes;
-      setupPop = pop.setupPop;
+      // setupPop = pop.setupPop;
       fPopFunction = pop.fPopFunction;
       fFront = pop.fFront;
       fPopulation = pop.fPopulation;
@@ -55,9 +53,7 @@ public:
     }
     return *this;
   }
-
   virtual ~Population() {}
-
   Individual &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
     fPopulation.emplace(fPopulation.begin() + i, value);
@@ -70,7 +66,6 @@ public:
   std::vector<Individual> GetFront() const { return fFront; }
   Individual GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
-  std::vector<Individual> operator=(Population<T> pop) { return fPopulation; }
   void SetCrowdingObj(Bool_t co) { fCrowdingObj = co; }
   void Build() throw(ExceptionMessenger);
   void CrowdingDistanceAll();
@@ -83,9 +78,6 @@ public:
   static void Reset(Option_t *option = ""); // Reset function
   void Evaluate();
   void SetPopFunction(Functions::popfunctype f) { fPopFunction = f; }
-  // void SetGenNumber(Int_t i) { fGen = i; }
-  // Int_t GetGenNumber() const { return fGen; }
-
   void ResetHistogramPointer() {
     fH = 0;
   } // Function that reset histogram pointer
@@ -113,6 +105,20 @@ public:
       std::cout << *it << std::endl;
     }
   }
+
+  ////////////////////////////////////////
+  typename std::vector<Individual>::iterator begin() {
+    typename std::vector<Individual>::iterator it = fPopulation.begin();
+    return it;
+  }
+  typename std::vector<Individual>::iterator end() {
+    typename std::vector<Individual>::iterator it = fPopulation.end();
+    return it;
+  }
+  Individual operator[](Int_t i) const { return fPopulation.at(i); }
+  void clear() { fPopulation.clear(); }
+  void push_back(Genes<T> i) { return fPopulation.push_back(i); }
+  //////////////////////////////////////
 
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)

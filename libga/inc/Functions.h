@@ -77,7 +77,6 @@ public:
   /**
    * @brief [brief description]
    * @details [long description]
-   *
    * @param i [description]
    * @param fMin [description]
    * @param fMax [description]
@@ -89,7 +88,7 @@ public:
    *
    * @param l [description]
    */
-  void SetInterval(std::vector<std::pair<Double_t, Double_t>> l) {
+  void SetInterval(std::vector<std::pair<Double_t, Double_t>> l) const {
     l = fInterval;
   }
   /**
@@ -104,7 +103,7 @@ public:
    *
    * @param nparam [description]
    */
-  void SetNParam(Int_t nparam) { nparam = fNParam; }
+  void SetNParam(Int_t nparam) const { nparam = fNParam; }
   /**
    * @brief [brief description]
    * @details [long description]
@@ -117,7 +116,7 @@ public:
    *
    * @param ncon [description]
    */
-  void SetNCons(Int_t ncon) { ncon = fNCons; }
+  void SetNCons(Int_t ncon) const { ncon = fNCons; }
   /**
    * @brief [brief description]
    * @details [long description]
@@ -130,7 +129,7 @@ public:
    *
    * @param nobj [description]
    */
-  void SetNObjectives(Int_t nobj) { nobj = fNObjectives; }
+  void SetNObjectives(Int_t nobj) const { nobj = fNObjectives; }
   /**
    * @brief [brief description]
    * @details [long description]

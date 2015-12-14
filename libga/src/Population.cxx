@@ -155,7 +155,7 @@ template <class T> void Population<T>::FastNonDominantSorting() {
   int fi = 1;
   while (fFront[fi - 1].size() > 0) {
     Genes<T> &fronti = fFront[fi - 1];
-    std::vector<Double_t> Q;
+    std::vector<T> Q;
     for (Int_t i = 0; (ULong_t)i < fronti.size(); ++i) {
       Genes<T> &p = fPopulation[fronti[i]];
       for (Int_t j = 0; (ULong_t)j < p.GetDominated().size(); ++j) {

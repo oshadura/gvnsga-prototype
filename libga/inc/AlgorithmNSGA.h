@@ -13,7 +13,6 @@ class AlgorithmNSGA {
 public:
   AlgorithmNSGA();
   virtual ~AlgorithmNSGA();
-  ////////////////////////////////////////////////////
   void Initialize() throw(ExceptionMessenger);
   void Selection(Population<Double_t> &oldpop, Population<Double_t> &newpop);
   Genes<Double_t> &Tournament(Genes<Double_t> &ind1,

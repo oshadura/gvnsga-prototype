@@ -48,13 +48,6 @@ AlgorithmNSGA::~AlgorithmNSGA() {
     fMixedPop = 0;
   }
 }
-/*
-AlgorithmNSGA *AlgorithmNSGA::Instance() {
-  if (!fgNSGA2)
-    AlgorithmNSGA *fgNSGA2 = new AlgorithmNSGA();
-  return fgNSGA2;
-}
-*/
 
 void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 
@@ -107,7 +100,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
-  fParentPop->printPopulation(fParentPop);
+  // fParentPop->printPopulation(fParentPop);
 }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
