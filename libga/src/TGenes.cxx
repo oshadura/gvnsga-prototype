@@ -65,9 +65,8 @@ template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
                "function Set() is "
             << (setup->fNParam) << std::endl;
   for (Int_t i = 0; i < (setup->fNParam); ++i) {
-    //fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
-    //                         setup->GetIntervalLimit(i).second);
-    fGenes[i] = 1;
+    fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
+                             setup->GetIntervalLimit(i).second);
   }
 }
 
