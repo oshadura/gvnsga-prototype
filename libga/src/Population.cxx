@@ -85,8 +85,9 @@ template <class T> void Population<T>::Build() {
 
 template <class T> void Population<T>::Build() throw (ExceptionMessenger) {
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    it->Genes<T>::Set();
-    std::cout << "Creating population.." << std::endl;
+    //it->Genes<T>::Set();
+    it->Genes<T>::Set(setupPop);
+    std::cout << "Creating individual.." << std::endl;
     }
   //WritePopulationTree(*this, "NSGA.root");
 }

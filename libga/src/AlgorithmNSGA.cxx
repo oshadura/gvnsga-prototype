@@ -90,9 +90,9 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   // Missing check of input variables and creation of population with them
 
   //Report(configuration);
-
+  
   ////////////////////////////////////////////////////////////////////////
-        std::cout << "Population size = " << fSizePop
+      std::cout << "Population size = " << fSizePop
        << "\nNumber of generations = " << fNGen
        << "\nNumber of objective functions = " << fNObjectives
        << "\nNumber of constraints = " << fNCons

@@ -31,6 +31,9 @@ public:
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
   void Set() throw(ExceptionMessenger);
+  ////!!!
+  void Set(Functions &setup) throw(ExceptionMessenger);
+  ////!!!
   void Evaluate(Genes<T> &ind);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<T> GetDominated() {

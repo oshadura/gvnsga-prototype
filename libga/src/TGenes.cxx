@@ -56,17 +56,35 @@ template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
 }
 
 template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
-  if (!setup)
-    throw ExceptionMessenger("Do something with individual generation!");
+ // if (!setup)
+ //   throw ExceptionMessenger("Do something with individual generation!");
   TRandom3 rand;
   rand.SetSeed(time(NULL));
-  //std::vector<T> *Genes = &fGenes;
-  std::cout << "Number of parameters used for generation individual in "
-               "function Set() is "
-            << (setup->fNParam) << std::endl;
   for (Int_t i = 0; i < (setup->fNParam); ++i) {
     fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
                              setup->GetIntervalLimit(i).second);
+  }
+}
+
+
+template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger) {
+  /*
+  TRandom3 rand;
+  rand.SetSeed(time(NULL));
+  for (Int_t i = 0; i < (setup.fNParam); ++i) {
+    Double_t gene = rand.Uniform(setup.fInterval[i].first,setup.fInterval[i].second);
+    fGenes.push_back(gene);
+  }
+  */
+  //lets imagine that we have only one limit for all parameters
+  std::random_device rnd_device;
+  std::mt19937 mersenne_engine(rnd_device());
+  fGenes.reserve(setup.fNParam);
+  std::uniform_int_distribution<int> dist(setup.fInterval[0].first, setup.fInterval[0].second);
+  auto gen = std::bind(dist, mersenne_engine);
+  std::generate(std::begin(fGenes), std::end(fGenes), gen);
+  for (auto i : fGenes) {
+    std::cout << i << " ";
   }
 }
 
@@ -75,7 +93,7 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
 }
 
 template <class T> void Genes<T>::Evaluate(Genes<T> &ind) {
-  (setup->evfunc)(&ind);
+  (*setup->evfunc)(&ind);
   if (setup->fNCons) {
     ConstViol = 0;
   }

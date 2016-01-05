@@ -48,11 +48,11 @@ void CMSApp(Genes<Double_t> *individual) {
   // Commenting line for compilation purposes, after we will get value from
   // individual vector
   // int nthreads = ncputhreads;
-  int nthreads = 4;
+  int nthreads = individual->GetThread();
   // Value from individual vector
-  int ntotal = 10; // Number of events to be transported
+  int ntotal = individual->GetAllev(); // Number of events to be transported
   // Value from individual vector
-  int nbuffered = 5; // Number of buffered events (tunable [1,ntotal])
+  int nbuffered = individual->GetBuffev(); // Number of buffered events (tunable [1,ntotal])
   TGeoManager::Import(geomfile);
   TaskBroker *broker = nullptr;
   if (coprocessor) {
@@ -83,9 +83,9 @@ void CMSApp(Genes<Double_t> *individual) {
   bool graphics = (prop->GetMonFeatures()) ? true : false;
   prop->fUseMonitoring = graphics;
   // Value from individual vector
-  prop->fPriorityThr = 0.1;
+  prop->fPriorityThr = individual->GetPriority();
   // Value from individual vector
-  prop->fNperBasket = 16; // Initial vector size (tunable)
+  prop->fNperBasket = individual->GetVector(); // Initial vector size (tunable)
   // Value from individual vector
   prop->fMaxPerBasket = 64; // Maximum vector size (tunable)
   prop->fMaxRes = 4000;
@@ -97,7 +97,7 @@ void CMSApp(Genes<Double_t> *individual) {
   std::string s = "pp14TeVminbias.root";
   prop->fPrimaryGenerator = new HepMCGenerator(s);
   // Value from individual vector
-  prop->fLearnSteps = 100000;
+  prop->fLearnSteps = individual->GetSteps();
   if (performance)
     prop->fLearnSteps = 0;
   CMSApplication *app = new CMSApplication();
@@ -116,7 +116,7 @@ void CMSApp(Genes<Double_t> *individual) {
   prop->PropagatorGeom(geomfile, nthreads, graphics);
   delete prop;
   // counter.stop;
-  //////////////////// Write a Fitness [vector, map(FitnessValue,Constraint)]
+  return;
 }
 
 int main() {
