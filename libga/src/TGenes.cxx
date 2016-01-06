@@ -79,12 +79,12 @@ template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger
   //lets imagine that we have only one limit for all parameters
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
-  fGenes.reserve(setup.fNParam);
+  fGenes.resize(setup.fNParam);
   std::uniform_int_distribution<int> dist(setup.fInterval[0].first, setup.fInterval[0].second);
   auto gen = std::bind(dist, mersenne_engine);
   std::generate(std::begin(fGenes), std::end(fGenes), gen);
   for (auto i : fGenes) {
-    std::cout << i << " ";
+    std::cout << "| " << i << " = element of gene |";
   }
 }
 
