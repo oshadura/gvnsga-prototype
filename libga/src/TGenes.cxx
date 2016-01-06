@@ -4,6 +4,9 @@
 #include <utility>
 #include <random>
 #include <algorithm>
+#include <stdexcept> 
+
+// Map for Genes[x]<->Limits[x] (?)
 #include <map>
 
 #include "TRandom3.h"
@@ -56,18 +59,21 @@ template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
 }
 
 template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
- // if (!setup)
- //   throw ExceptionMessenger("Do something with individual generation!");
-  TRandom3 rand;
-  rand.SetSeed(time(NULL));
-  for (Int_t i = 0; i < (setup->fNParam); ++i) {
-    fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
+/*
+if (!setup)
+  throw ExceptionMessenger("Do something with setup function!");
+*/
+TRandom3 rand;
+rand.SetSeed(time(NULL));
+for (Int_t i = 0; i < (setup->fNParam); ++i) {
+  fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
                              setup->GetIntervalLimit(i).second);
   }
 }
 
 
 template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger) {
+  /////////////////////////////
   /*
   TRandom3 rand;
   rand.SetSeed(time(NULL));
@@ -76,11 +82,24 @@ template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger
     fGenes.push_back(gene);
   }
   */
-  //lets imagine that we have only one limit for all parameters
+  //////////////////////////////
+  /*
+  if (!setup)
+    throw ExceptionMessenger("Do something with setup function!");
+  */
+  //lets imagine that we have only one limit #0 for all parameters
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
   fGenes.resize(setup.fNParam);
-  std::uniform_int_distribution<int> dist(setup.fInterval[0].first, setup.fInterval[0].second);
+  /*
+  try {
+    fGenes.resize(fGenes.max_vector()+1);
+  }
+  catch (const std::length_error& le) {
+    std::cerr << "Length error: " << le.what() << '\n';
+  }
+  */
+  std::uniform_real_distribution<T> dist(setup.fInterval[0].first, setup.fInterval[0].second);
   auto gen = std::bind(dist, mersenne_engine);
   std::generate(std::begin(fGenes), std::end(fGenes), gen);
   for (auto i : fGenes) {
@@ -92,7 +111,10 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
-template <class T> void Genes<T>::Evaluate(Genes<T> &ind) {
+template <class T> void Genes<T>::Evaluate(Genes<T> &ind) throw (ExceptionMessenger){
+  /*if (!setup)
+    throw ExceptionMessenger("Missing setup function!");
+  */
   (*setup->evfunc)(&ind);
   if (setup->fNCons) {
     ConstViol = 0;
@@ -112,7 +134,7 @@ template <class T> void Genes<T>::Clear(Option_t * /*option*/) {
   ConstViol = 0.;
 }
 
-template <class T> T Genes<T>::CheckDominance(const Genes<T> *ind2) {
+template <class T> T Genes<T>::CheckDominance(const Genes<T> *ind2) throw (ExceptionMessenger){
   if (ConstViol < 0 && ind2->ConstViol < 0) {
     if (ConstViol > ind2->ConstViol)
       return 1; // ind1 less

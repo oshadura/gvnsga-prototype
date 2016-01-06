@@ -26,14 +26,10 @@
 #endif
 
 void CMSApp(Genes<Double_t> *individual) {
-  ///////////////////// Old part from counters experiments
+  // We need to add perfomance measuring header .h
 
-  // const Events events {
-  //  hwcounters::cache::L1::DCA,
-  //  hwcounters::cache::L1::DCH,
-  //  hwcounters::cache::L1::DCM };
-  // auto counter = PerfStat(events);
-  // counter.start();
+  MemInfo_t  memInfo;
+  ProcInfo_t procInfo;
 
   ///////////////////// Values from original function (runCMS.C)
   bool performance = true;
@@ -115,18 +111,23 @@ void CMSApp(Genes<Double_t> *individual) {
   prop->fUseMonitoring = graphics;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
   delete prop;
-  // counter.stop;
+
   return;
 }
 
 int main() {
   // Function
   Functions *geantv = new Functions();
-  //geantv->SetInterval(); // don't work because we initialize fNparam after...
+  //geantv->SetInterval(); // don't work because we initialize fNparam after..
+  // STUPID SOLUTION
   geantv->fInterval.push_back(make_pair(1,10));
   geantv->fInterval.push_back(make_pair(1,10));
-  //std::vector<std::pair<Double_t,Double_t>> Interval = geantv->fInterval;
-  //std::cout << "Check what we create as a limit vector: [" << &Interval << "]"<< std::endl;
+  geantv->fInterval.push_back(make_pair(1,10));
+  geantv->fInterval.push_back(make_pair(1,10));
+  geantv->fInterval.push_back(make_pair(1,10));
+  geantv->fInterval.push_back(make_pair(1,10));
+
+
   geantv->PrintLimit(geantv->fInterval);
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
@@ -134,7 +135,7 @@ int main() {
   nsga2->SetEtaCross(0.7);
   nsga2->SetGenTotalNumber(5);
   nsga2->SetNCons(0); // First version will be constrainless
-  nsga2->SetNParam(2); // blablabla - see Genes.h
+  nsga2->SetNParam(6); // blablabla - see TGenes.h
   nsga2->SetNObjectives(2); // Memory, Time
   //nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetPopulationSize(4);
@@ -143,7 +144,6 @@ int main() {
   nsga2->SetEpsilonC(0.7);
   nsga2->SetLimit(geantv->fInterval);
   nsga2->SetFunction(&CMSApp);
-  ///!!!!!!!!!!!///
   nsga2->Initialize();
   nsga2->Evolution();
   // Test population initialization

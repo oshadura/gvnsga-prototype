@@ -26,7 +26,7 @@ public:
   virtual ~Genes() {}
   // Function building Genes (moved in Population and Functions)
   void Clear(Option_t *option = "");
-  T CheckDominance(const Genes<T> *ind2);
+  T CheckDominance(const Genes<T> *ind2) throw (ExceptionMessenger);
   Int_t Mutate();
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
@@ -34,7 +34,7 @@ public:
   ////!!!
   void Set(Functions &setup) throw(ExceptionMessenger);
   ////!!!
-  void Evaluate(Genes<T> &ind);
+  void Evaluate(Genes<T> &ind) throw (ExceptionMessenger);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<T> GetDominated() {
     return fDominated;
