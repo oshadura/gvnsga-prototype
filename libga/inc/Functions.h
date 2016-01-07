@@ -17,14 +17,18 @@ template <class T> class Population;
 class Functions {
 
 public:
-  /**
-   * @brief Simple constructor
-   *
-   * @param fNParam number of parameters
-   * @param fNCons number of constrains
-   * @param fInterval vectors of itervals for parameters
-   * @param fConstrains Vector of constraines
-   */
+ /**
+  * @brief Simple constructor
+  * @details  Setup point for individul/population
+  * 
+  * @param fNParam Number of parameters (size of Gene)
+  * @param fInterval Specificly generated vector of limits (should depend on parts of Genes) like [0,100] for number of buffered particles
+  * @param fNCons Number of constrains
+  * @param fNObjectives Number of objectives for fitness function
+  * @param fPMut Probability of mutation
+  * @param fEtaMut Distribution index for mutation
+  * @param fEpsilonC Distribution index for SBX crossover (?)
+  */
   Functions()
       : fNParam(0), fInterval(), fNCons(0), fNObjectives(0), fPMut(0),
         fEtaMut(0), fEpsilonC(EPS) {
@@ -108,17 +112,12 @@ public:
   }
 
 public:
-  typedef void (*functype)(Genes<Double_t> *);         // still dont know
-  typedef void (*popfunctype)(Population<Double_t> &); // still dont know
+  //typedef void (*functype)(Genes<Double_t> *);       // still dont know if to use in such way or not
+  typedef void (*functype)(std::vector<Double_t> *fGenes, std::vector<Double_t> *fFitness, std::vector<Double_t> *fConstraines);
+  typedef void (*popfunctype)(Population<Double_t> &); // still dont know if to use in such way or not
   //////////////////////////////////////////////////////////////
   functype evfunc;
-  std::vector<std::pair<Double_t, Double_t>> fInterval; // Interval
-                                                        // settings for
-                                                        // genes in
-                                                        // cromosome ->
-                                                        // inheritance (?)
-                                                        // from
-                                                        // function
+  std::vector<std::pair<Double_t, Double_t>> fInterval;
   Int_t fNParam; // Number of parameters
   Int_t fNCons;
   Int_t fNObjectives; // Number of fitness values (objectives)

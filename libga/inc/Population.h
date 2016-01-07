@@ -57,10 +57,8 @@ public:
     }
     return *this;
   }
-
-  virtual ~Population(){
-  }
-
+  
+  virtual ~Population(){}
   Individual &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
     fPopulation.emplace(fPopulation.begin() + i, value);

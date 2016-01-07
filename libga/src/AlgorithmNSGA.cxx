@@ -88,9 +88,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
       new Population<Double_t>(fSizePop*2, fNParam, fNCons, fNObjectives,
                                fEpsilonC, fPMut, fEtaMut, fInterval, function);
   // Missing check of input variables and creation of population with them
-
-  //Report(configuration);
-  
+  //Report(configuration); 
   ////////////////////////////////////////////////////////////////////////
       std::cout << "Population size = " << fSizePop
        << "\nNumber of generations = " << fNGen
@@ -157,7 +155,7 @@ void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
 Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
                                            Genes<Double_t> &ind2) const {
   static TRandom rnd;
-  Int_t fFlag = ind1.CheckDominance(&ind2);
+  Int_t fFlag = ind1.CheckDominance(ind2.GetSetup(),&ind2);
   if (fFlag == 1) // Yes
     return ind1;
   else if (fFlag == -1) // Opposite

@@ -141,7 +141,7 @@ template <class T> void Population<T>::FastNonDominantSorting() {
     Genes<T> &p = fPopulation[i];
     for (Int_t j = 0; (ULong_t)j < fPopulation.size(); ++j) {
       Genes<T> &q = fPopulation[j];
-      Int_t compare = p.Genes<T>::CheckDominance(&q);
+      Int_t compare = p.Genes<T>::CheckDominance(&setupPop, &q);
       if (compare == 1) {
         fDom.push_back(j);
       } else if (compare == -1) {
@@ -265,21 +265,19 @@ template <class T> void Population<T>::Evaluate() {
 #pragma omp parrallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
     auto ind = GetGenes(i);
-    Genes<T>::Evaluate(ind);
+    //Genes<T>::Evaluate(ind);
+    ind.Evaluate(&setupPop);
   }
 #else
+  /*
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    Genes<T>::Evaluate(*it);
+    //Genes<T>::Evaluate(*it);
+    it.Evaluate(&setupPop);
+
   }
+  */
 #endif
 }
-
-/*
-  template<class T>
-  void Population<T>::printPopulation(const Population<T>& p) {
-    std::for_each(p.begin(), p.end(), Genes<T>::printGene<class T::value_type>);
-  }
-*/
 
 // Ugly instantiation
 template class Population<Double_t>;

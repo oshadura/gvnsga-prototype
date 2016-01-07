@@ -5,9 +5,9 @@
 #include "Functions.h"
 #include <vector>
 
-// template <class T> class Population;
-// template <class T> class Genes;
-class Functions;
+template <class T> class Population;
+template <class T> class Genes;
+//class Functions; 
 
 class AlgorithmNSGA {
 public:

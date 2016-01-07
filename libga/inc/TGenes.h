@@ -26,15 +26,14 @@ public:
   virtual ~Genes() {}
   // Function building Genes (moved in Population and Functions)
   void Clear(Option_t *option = "");
-  T CheckDominance(const Genes<T> *ind2) throw (ExceptionMessenger);
+  T CheckDominance(Functions *setup, const Genes<T> *ind2) throw(ExceptionMessenger);
   Int_t Mutate();
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
   void Set() throw(ExceptionMessenger);
-  ////!!!
   void Set(Functions &setup) throw(ExceptionMessenger);
-  ////!!!
-  void Evaluate(Genes<T> &ind) throw (ExceptionMessenger);
+  void Evaluate(Genes<T> &ind) throw(ExceptionMessenger);
+  void Evaluate(Functions &setup) throw(ExceptionMessenger);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<T> GetDominated() {
     return fDominated;
@@ -63,6 +62,7 @@ public:
   void ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
   void SetConstrain(Int_t i, T value);
   std::vector<Double_t> GetConstraines() const { return fConstraines; }
+  Functions* GetSetup(){return setup;}
   Int_t size() { return fGenes.size(); }
   ////////////////////////////////////////
   typename std::vector<T>::iterator begin() {

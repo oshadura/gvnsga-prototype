@@ -37,9 +37,9 @@ Genes<T>::Genes(const Functions &config) throw(ExceptionMessenger)
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
       fVector(0), fTime(0), fMemory(0), setup(&config), fConstraines(0) {
-  fGenes.resize(setup->fNParam);
-  fFitness.resize(setup->fNObjectives);
-  fConstraines.resize(setup->fNCons);
+  fGenes.resize(setup->fNParam,0);
+  fFitness.resize(setup->fNObjectives,0);
+  fConstraines.resize(setup->fNCons,0);
 }
 
 template <class T> Genes<T>::Genes(Genes &f) {}
@@ -71,7 +71,6 @@ for (Int_t i = 0; i < (setup->fNParam); ++i) {
   }
 }
 
-
 template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger) {
   /////////////////////////////
   /*
@@ -81,13 +80,10 @@ template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger
     Double_t gene = rand.Uniform(setup.fInterval[i].first,setup.fInterval[i].second);
     fGenes.push_back(gene);
   }
-  */
-  //////////////////////////////
-  /*
   if (!setup)
     throw ExceptionMessenger("Do something with setup function!");
   */
-  //lets imagine that we have only one limit #0 for all parameters
+  // Lets imagine that we have only one limit #0 for all parameters
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
   fGenes.resize(setup.fNParam);
@@ -112,11 +108,18 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
 }
 
 template <class T> void Genes<T>::Evaluate(Genes<T> &ind) throw (ExceptionMessenger){
-  /*if (!setup)
-    throw ExceptionMessenger("Missing setup function!");
-  */
-  (*setup->evfunc)(&ind);
+  //(*setup->evfunc)(&ind);
+  (*setup->evfunc)(&fGenes[0], &fFitness[0], &fConstraines[0]);
   if (setup->fNCons) {
+    ConstViol = 0;
+  }
+  fEvaluated = true;
+}
+
+template <class T> void Genes<T>::Evaluate(Functions &setup) throw (ExceptionMessenger){
+  //(*setup->evfunc)(&ind);
+  (setup.evfunc)(&fGenes[0], &fFitness[0], &fConstraines[0]);
+  if (setup.fNCons) {
     ConstViol = 0;
   }
   fEvaluated = true;
@@ -134,7 +137,7 @@ template <class T> void Genes<T>::Clear(Option_t * /*option*/) {
   ConstViol = 0.;
 }
 
-template <class T> T Genes<T>::CheckDominance(const Genes<T> *ind2) throw (ExceptionMessenger){
+template <class T> T Genes<T>::CheckDominance(Functions *setup, const Genes<T> *ind2) throw(ExceptionMessenger){
   if (ConstViol < 0 && ind2->ConstViol < 0) {
     if (ConstViol > ind2->ConstViol)
       return 1; // ind1 less
