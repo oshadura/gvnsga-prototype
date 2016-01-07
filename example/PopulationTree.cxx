@@ -120,7 +120,7 @@ void CMSApp(Genes<Double_t> *individual) {
 }
 */
 
-void CMSApp(*fGenes, *fFitness, *fConstraines) {
+void CMSApp(std::vector<Double_t> *fGenes, std::vector<Double_t> *fFitness, std::vector<Double_t> *fConstraines) {
   // We need to add perfomance measuring header .h
 
   MemInfo_t  memInfo;
@@ -138,11 +138,11 @@ void CMSApp(*fGenes, *fFitness, *fConstraines) {
   // Commenting line for compilation purposes, after we will get value from
   // individual vector
   // int nthreads = ncputhreads;
-  int nthreads = fGenes.GetThread();
+  int nthreads = fGenes->GetThread();
   // Value from individual vector
-  int ntotal = individual->GetAllev(); // Number of events to be transported
+  int ntotal = fGenes->GetAllev(); // Number of events to be transported
   // Value from individual vector
-  int nbuffered = individual->GetBuffev(); // Number of buffered events (tunable [1,ntotal])
+  int nbuffered = fGenes->GetBuffev(); // Number of buffered events (tunable [1,ntotal])
   TGeoManager::Import(geomfile);
   TaskBroker *broker = nullptr;
   if (coprocessor) {
@@ -173,9 +173,9 @@ void CMSApp(*fGenes, *fFitness, *fConstraines) {
   bool graphics = (prop->GetMonFeatures()) ? true : false;
   prop->fUseMonitoring = graphics;
   // Value from individual vector
-  prop->fPriorityThr = individual->GetPriority();
+  prop->fPriorityThr = fGenes->GetPriority();
   // Value from individual vector
-  prop->fNperBasket = individual->GetVector(); // Initial vector size (tunable)
+  prop->fNperBasket = fGenes->GetVector(); // Initial vector size (tunable)
   // Value from individual vector
   prop->fMaxPerBasket = 64; // Maximum vector size (tunable)
   prop->fMaxRes = 4000;
@@ -187,7 +187,7 @@ void CMSApp(*fGenes, *fFitness, *fConstraines) {
   std::string s = "pp14TeVminbias.root";
   prop->fPrimaryGenerator = new HepMCGenerator(s);
   // Value from individual vector
-  prop->fLearnSteps = individual->GetSteps();
+  prop->fLearnSteps = fGenes->GetSteps();
   if (performance)
     prop->fLearnSteps = 0;
   CMSApplication *app = new CMSApplication();

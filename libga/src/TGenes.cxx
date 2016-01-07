@@ -109,7 +109,7 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
 
 template <class T> void Genes<T>::Evaluate(Genes<T> &ind) throw (ExceptionMessenger){
   //(*setup->evfunc)(&ind);
-  (*setup->evfunc)(&fGenes[0], &fFitness[0], &fConstraines[0]);
+  (*setup->evfunc)(&fGenes, &fFitness, &fConstraines);
   if (setup->fNCons) {
     ConstViol = 0;
   }
@@ -118,7 +118,7 @@ template <class T> void Genes<T>::Evaluate(Genes<T> &ind) throw (ExceptionMessen
 
 template <class T> void Genes<T>::Evaluate(Functions &setup) throw (ExceptionMessenger){
   //(*setup->evfunc)(&ind);
-  (setup.evfunc)(&fGenes[0], &fFitness[0], &fConstraines[0]);
+  (setup.evfunc)(&fGenes, &fFitness, &fConstraines);
   if (setup.fNCons) {
     ConstViol = 0;
   }
