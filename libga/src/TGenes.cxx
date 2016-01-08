@@ -12,6 +12,7 @@
 #include "TRandom3.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TChain.h"
 #include "TBranch.h"
 #include "TLeaf.h"
 #include "TTreeReader.h"
@@ -242,6 +243,7 @@ void Genes<T>::UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2,
   output->Branch("Population", &pop);
   tree->AddFriend("gvga_1", f);
   f->Write();
+  f->Close();
 }
 
 template <class T>

@@ -160,10 +160,8 @@ private:
   /////// Trial for Genes() constructor ///////////////
   const Functions *setup;
   ///////////////////////////////////////////////////
-
   // Should we write a map to be sure about connection between Limits[] and
   // Genes[] || Fitmess[] and Constraint[]?
-
   // static std::multimap<Genes,Limits> fInputMap;
   // static std::multimap<Genes,Constraint> fOutputMap;
 

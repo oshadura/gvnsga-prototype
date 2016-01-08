@@ -89,7 +89,7 @@ template <class T> void Population<T>::Build() throw (ExceptionMessenger) {
     it->Genes<T>::Set(setupPop);
     std::cout << " Creating new individual.." << std::endl;
     }
-  //WritePopulationTree(*this, "NSGA.root");
+  WritePopulationTree(*this, "NSGA.root");
 }
 
 template <class T> void Population<T>::CrowdingDistanceAll() {
