@@ -49,9 +49,10 @@ endif()
 #----------------------------------------------------------------------------
 
 option(ENABLE_OPENMP "Adding OpenMP support" ON)
-find_package(OpenMP)
-if(ENABLE_OPENMP)
-  set(GVNSGA_COMPILATION_FLAGS "${GA_COMPILATION_FLAGS} -DOPENMP")
+find_package(OpenMP REQUIRED)
+if(OPENMP_FOUND)
+  set(GVNSGA_COMPILATION_FLAGS "${GA_COMPILATION_FLAGS} -DENABLE_OPENMP")
+  set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 #----------------------------------------------------------------------------
 #option(ENABLE_BOOST "Adding OpenMP support" ON)
@@ -60,7 +61,7 @@ endif()
 #  set(GVNSGA_COMPILATION_FLAGS "${GA_COMPILATION_FLAGS} -DBOOST")
 #endif()
 #----------------------------------------------------------------------------
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GA_CXX_FLAGS} ${GA_COMPILATION_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GA_CXX_FLAGS} ${GVNSGA_COMPILATION_FLAGS}")
 message(STATUS "Compiling GA with C++ flags: ${CMAKE_CXX_FLAGS}")
 #----------------------------------------------------------------------------
 

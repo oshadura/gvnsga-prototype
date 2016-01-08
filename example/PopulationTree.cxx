@@ -9,6 +9,7 @@
 #include "HistogramManager.h"
 #include "TGenes.h"
 #include "AlgorithmNSGA.h"
+#include "GeantVFitness.h"
 
 #include "Rtypes.h"
 #include "TGeoManager.h"
@@ -120,12 +121,12 @@ void CMSApp(Genes<Double_t> *individual) {
 }
 */
 
-void CMSApp(std::vector<Double_t> *fGenes, std::vector<Double_t> *fFitness, std::vector<Double_t> *fConstraines) {
+// Forget about constrains now!
+std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
   // We need to add perfomance measuring header .h
-
-  MemInfo_t  memInfo;
-  ProcInfo_t procInfo;
-
+  GeantVFitness fitness;
+  fitness.LogMemoryFitness();
+  std::vector<Double_t> fFitness;
   ///////////////////// Values from original function (runCMS.C)
   bool performance = true;
   const char *geomfile = "cms2015.root";
@@ -138,11 +139,11 @@ void CMSApp(std::vector<Double_t> *fGenes, std::vector<Double_t> *fFitness, std:
   // Commenting line for compilation purposes, after we will get value from
   // individual vector
   // int nthreads = ncputhreads;
-  int nthreads = fGenes->GetThread();
+  int nthreads = individual->GetThread();
   // Value from individual vector
-  int ntotal = fGenes->GetAllev(); // Number of events to be transported
+  int ntotal = individual->GetAllev(); // Number of events to be transported
   // Value from individual vector
-  int nbuffered = fGenes->GetBuffev(); // Number of buffered events (tunable [1,ntotal])
+  int nbuffered = individual->GetBuffev(); // Number of buffered events (tunable [1,ntotal])
   TGeoManager::Import(geomfile);
   TaskBroker *broker = nullptr;
   if (coprocessor) {
@@ -173,9 +174,9 @@ void CMSApp(std::vector<Double_t> *fGenes, std::vector<Double_t> *fFitness, std:
   bool graphics = (prop->GetMonFeatures()) ? true : false;
   prop->fUseMonitoring = graphics;
   // Value from individual vector
-  prop->fPriorityThr = fGenes->GetPriority();
+  prop->fPriorityThr = individual->GetPriority();
   // Value from individual vector
-  prop->fNperBasket = fGenes->GetVector(); // Initial vector size (tunable)
+  prop->fNperBasket = individual->GetVector(); // Initial vector size (tunable)
   // Value from individual vector
   prop->fMaxPerBasket = 64; // Maximum vector size (tunable)
   prop->fMaxRes = 4000;
@@ -187,7 +188,7 @@ void CMSApp(std::vector<Double_t> *fGenes, std::vector<Double_t> *fFitness, std:
   std::string s = "pp14TeVminbias.root";
   prop->fPrimaryGenerator = new HepMCGenerator(s);
   // Value from individual vector
-  prop->fLearnSteps = fGenes->GetSteps();
+  prop->fLearnSteps = individual->GetSteps();
   if (performance)
     prop->fLearnSteps = 0;
   CMSApplication *app = new CMSApplication();
@@ -205,15 +206,16 @@ void CMSApp(std::vector<Double_t> *fGenes, std::vector<Double_t> *fFitness, std:
   prop->fUseMonitoring = graphics;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
   delete prop;
-  //////////SUPER STUPID SOLUTION/////////////
-  fFitness[0] = 
-  fFitness[1] = 
+  //////////SUPER STUPID SOLUTION-> JUST TO CHECK IF IT WORKS/////////////
+  fFitness[0] = 0.0;
+  fFitness[1] = 0.0;
   ///////////////////////////////////////////
-  return;
+  fitness.HistOutputFitness();
+  return fFitness;
 }
 
 
-int main() {
+int main(int argc, char *argv[]) {
   // Function
   Functions *geantv = new Functions();
   //geantv->SetInterval(); // don't work because we initialize fNparam after...

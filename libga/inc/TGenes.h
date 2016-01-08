@@ -32,8 +32,7 @@ public:
   Genes<T> &operator=(const Genes<T> &gen);
   void Set() throw(ExceptionMessenger);
   void Set(Functions &setup) throw(ExceptionMessenger);
-  void Evaluate(Genes<T> &ind) throw(ExceptionMessenger);
-  void Evaluate(Functions &setup) throw(ExceptionMessenger);
+  void Evaluate(Functions &setup,Genes<T> &ind) throw(ExceptionMessenger);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<T> GetDominated() {
     return fDominated;

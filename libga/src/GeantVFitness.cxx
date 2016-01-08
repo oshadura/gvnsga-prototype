@@ -48,7 +48,7 @@ void GeantVFitness::HistOutputFitness(){
 	}
 	hMemRes.Write();
 	hMemVirt.Write();
-	double maxMemResident = (std::max_element(fMemoryVector.begin(), fMemoryVector.end(),CompairMemResident()))->fMemResident;
+	double maxMemResident = (std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemResident()))->fMemResident;
 	double maxMemVirtual  = (std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemVirtual()))->fMemVirtual;
     std::printf("Maximum resident memory usage:%f\n", (maxMemResident / (1024. * 1024.)));
     std::printf("Maximum virtual memory usage:%f\n", (maxMemVirtual / (1024. * 1024.)));

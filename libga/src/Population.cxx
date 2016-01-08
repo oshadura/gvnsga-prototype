@@ -262,20 +262,15 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
 
 template <class T> void Population<T>::Evaluate() {
 #ifdef ENABLE_OPENMP
-#pragma omp parrallel for
+#pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
     auto ind = GetGenes(i);
-    //Genes<T>::Evaluate(ind);
-    ind.Evaluate(&setupPop);
+    Genes<T>::Evaluate(setupPop, ind);
   }
 #else
-  /*
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    //Genes<T>::Evaluate(*it);
-    it.Evaluate(&setupPop);
-
+    Genes<T>::Evaluate(setupPop, *it);
   }
-  */
 #endif
 }
 

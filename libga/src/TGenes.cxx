@@ -87,14 +87,14 @@ template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
   fGenes.resize(setup.fNParam);
-  /*
+  
   try {
-    fGenes.resize(fGenes.max_vector()+1);
+    fGenes.resize(setup.fNParam);
   }
   catch (const std::length_error& le) {
     std::cerr << "Length error: " << le.what() << '\n';
   }
-  */
+  
   std::uniform_real_distribution<T> dist(setup.fInterval[0].first, setup.fInterval[0].second);
   auto gen = std::bind(dist, mersenne_engine);
   std::generate(std::begin(fGenes), std::end(fGenes), gen);
@@ -107,18 +107,8 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
-template <class T> void Genes<T>::Evaluate(Genes<T> &ind) throw (ExceptionMessenger){
-  //(*setup->evfunc)(&ind);
-  (*setup->evfunc)(&fGenes, &fFitness, &fConstraines);
-  if (setup->fNCons) {
-    ConstViol = 0;
-  }
-  fEvaluated = true;
-}
-
-template <class T> void Genes<T>::Evaluate(Functions &setup) throw (ExceptionMessenger){
-  //(*setup->evfunc)(&ind);
-  (setup.evfunc)(&fGenes, &fFitness, &fConstraines);
+template <class T> void Genes<T>::Evaluate(Functions &setup, Genes<T> &ind) throw (ExceptionMessenger){
+  (setup.evfunc)(ind);
   if (setup.fNCons) {
     ConstViol = 0;
   }
