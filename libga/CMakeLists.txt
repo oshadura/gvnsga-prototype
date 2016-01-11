@@ -47,19 +47,28 @@ else(Clang)
 endif()
 
 #----------------------------------------------------------------------------
-
+# export OMP_NUM_THREADS=1
 option(ENABLE_OPENMP "Adding OpenMP support" ON)
-find_package(OpenMP REQUIRED)
+find_package(OpenMP)
 if(OPENMP_FOUND)
   set(GVNSGA_COMPILATION_FLAGS "${GA_COMPILATION_FLAGS} -DENABLE_OPENMP")
   set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
+
 #----------------------------------------------------------------------------
-#option(ENABLE_BOOST "Adding OpenMP support" ON)
-#find_package(Boost)
-#if(ENABLE_BOOST)
-#  set(GVNSGA_COMPILATION_FLAGS "${GA_COMPILATION_FLAGS} -DBOOST")
-#endif()
+option(ENABLE_MPI "Adding MPI support" ON)
+find_package(MPI)
+if(MPI_CXX_FOUND)
+  set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_MPI")
+endif()
+
+#----------------------------------------------------------------------------
+option(ENABLE_BOOST "Adding OpenMP support" ON)
+find_package(Boost)
+if(BOOST_FOUND)
+  set(GVNSGA_COMPILATION_FLAGS "${GA_COMPILATION_FLAGS} -DENABLE_BOOST")
+endif()
+
 #----------------------------------------------------------------------------
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GA_CXX_FLAGS} ${GVNSGA_COMPILATION_FLAGS}")
 message(STATUS "Compiling GA with C++ flags: ${CMAKE_CXX_FLAGS}")

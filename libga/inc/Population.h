@@ -57,7 +57,7 @@ public:
     }
     return *this;
   }
-  
+
   virtual ~Population(){}
   Individual &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
@@ -76,18 +76,17 @@ public:
   void Build() throw (ExceptionMessenger);
   void CrowdingDistanceAll();
   void CrowdingDistanceFront(Int_t i);
+  //void FastNonDominantSorting(const Population<T> &population);
   void FastNonDominantSorting();
   void Merge(const Population &population1,
              const Population &population2); // Merging two populations
   Int_t Mutate();
   void Clear(Option_t *option = "");         // Clear function
   static void Reset(Option_t *option = "");  // Reset function
-  void Evaluate();
+  void Evaluate(const Population<T>& pop);
   void SetPopFunction(Functions::popfunctype f){
     fPopFunction = f;
   }
-  //void SetGenNumber(Int_t i) { fGen = i; }
-  //Int_t GetGenNumber() const { return fGen; }
 
   void ResetHistogramPointer() {
     fH = 0;
@@ -111,10 +110,11 @@ public:
   }
   */
   void printPopulation(const Population<T>& pop){
-    std::cout << "Population: [\n";
+    std::cout << "Population: [\n" << std::endl;
     for(auto it = pop.begin(); it != pop.end(); ++it){
-      std::cout << *it <<std::endl;
+      std::cout << *it << std::endl;
     }
+    std::cout << " ]\n" << std::endl;
   }
   
 public:

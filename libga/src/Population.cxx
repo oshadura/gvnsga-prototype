@@ -42,7 +42,6 @@
     for (int i = 0; i < fSizePop; ++i)
     { 
       Genes<T> genes(&setupPop);
-      //Genes<T>::printGenes(genes);
       fPopulation.push_back(genes);
     }
 
@@ -85,7 +84,6 @@ template <class T> void Population<T>::Build() {
 
 template <class T> void Population<T>::Build() throw (ExceptionMessenger) {
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    //it->Genes<T>::Set();
     it->Genes<T>::Set(setupPop);
     std::cout << " Creating new individual.." << std::endl;
     }
@@ -179,6 +177,57 @@ template <class T> void Population<T>::FastNonDominantSorting() {
   }
 }
 
+/*
+template <class T> void Population<T>::FastNonDominantSorting(const Population<T> &population) {
+  Genes<T> p, q, Q;
+  fFront.resize(1);
+  fFront[0].clear();
+#pragma omp parallel for
+  for (int i = 0; i < population.size(); ++i) {
+    std::vector<Double_t> fDom;
+    Int_t fDomCount = 0;
+    Genes<T> p, q;
+    p.GetGene(i);
+    for (Int_t j = 0; j < population.size(); ++j) {
+      q.GetGene(j);
+      Int_t compare = p.Genes<T>::CheckDominance(&setupPop, &q);
+      if (compare == 1) {
+        fDom.push_back(j);
+      } else if (compare == -1) {
+        fDomCount += 1;
+      }
+    }
+#pragma omp critical
+    {
+    p.SetDominatedCounter(fDomCount);
+    p.GetDominated().clear();
+    p.GetDominated() = fDom;
+    if (p.GetDominatedCounter() == 0) {
+      p.SetRank(1);
+      fFront[0].push_back(i);
+    }}
+  }
+  std::sort(fFront[0].begin(), fFront[0].end());
+  int fi = 1;
+  while (fFront[fi - 1].size() > 0) {
+    Genes<T> &fronti = fFront[fi - 1];
+    for (Int_t i = 0; i < fronti.size(); ++i) {
+      p.GetGene(fronti[i]);
+      for (Int_t j = 0; j < p.GetDominated().size(); ++j) {
+        q.GetGene(p.GetDominated(j));
+        q.SetDominatedCounter(-1); // -= 1;
+        if (q.GetDominatedCounter() == 0) {
+          q.SetRank(fi + 1);
+          Q.push_back(p.GetDominated(j));
+        }
+      }
+    }
+    fi += 1;
+    fFront.push_back(Q);
+  }
+}
+*/
+
 template <class T>
 void Population<T>::Merge(const Population<T> &population1,
                           const Population<T> &population2) {
@@ -194,27 +243,27 @@ template <class T> void Population<T>::Clear(Option_t * /*option*/) {
 
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
-  TStopwatch Timer;
-  if (!file) {
+  //if (!file) {
     TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
-    tree->Branch("Population", &pop);
-    f->Write();
+    tree->Branch("Population", &pop, "Population generation");
     tree->Fill();
     tree->Print();
-  } else {
+  //} 
+  /*
+  else {
     TFile *f = TFile::Open(file, "RECREATE");
     TTree *tree = (TTree *)f->Get("gvga");
     TTree *tr_c = new TTree("gvga_1", "Genetic Algorithm friend Tree");
     tree->AddFriend("gvga_1", f);
-    f->Write();
     tree->Fill();
     tree->Print();
   }
+  */
 }
 
 template <class T> Int_t Population<T>::Mutate(){
-   Int_t tmp;
+  Int_t tmp;
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it)
   {
     tmp += it-> Genes<T>::Mutate();
@@ -260,16 +309,18 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
   }
 }
 
-template <class T> void Population<T>::Evaluate() {
+template <class T> void Population<T>::Evaluate(const Population<T>& pop) {
 #ifdef ENABLE_OPENMP
 #pragma omp parallel for
-  for (int i = 0; i < GetPopulationSize(); ++i) {
+  for (int i = 0; i < pop.GetPopulationSize(); ++i) {
     auto ind = GetGenes(i);
     Genes<T>::Evaluate(setupPop, ind);
+    Genes<T>::printGenes(ind);
   }
 #else
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
+  for (auto it = pop.GetIndividuals().begin(); it != pop.GetIndividuals().end(); ++it) {
     Genes<T>::Evaluate(setupPop, *it);
+    Genes<T>::printGenes(*it);
   }
 #endif
 }

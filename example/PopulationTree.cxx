@@ -39,10 +39,13 @@ std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
   bool coprocessor = COPROCESSOR_REQUEST;
   // int nthreads = ncputhreads;
   int nthreads = individual->GetThread();
+  printf("Debugging RunCMS.C: thread value = %x\n", nthreads);
   // Value from individual vector
   int ntotal = individual->GetAllev(); // Number of events to be transported
+  printf("Debugging RunCMS.C: all events value = %x\n", ntotal);
   // Value from individual vector
   int nbuffered = individual->GetBuffev(); // Number of buffered events (tunable [1,ntotal])
+  printf("Debugging RunCMS.C: buffered particles value = %x\n", nbuffered);
   TGeoManager::Import(geomfile);
   TaskBroker *broker = nullptr;
   if (coprocessor) {
@@ -74,6 +77,7 @@ std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
   prop->fUseMonitoring = graphics;
   // Value from individual vector
   prop->fPriorityThr = individual->GetPriority();
+  printf(" Debugging RunCMS.C: priority value = %x\n", prop->fPriorityThr);
   // Value from individual vector
   prop->fNperBasket = individual->GetVector(); // Initial vector size (tunable)
   // Value from individual vector
@@ -88,6 +92,7 @@ std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
   prop->fPrimaryGenerator = new HepMCGenerator(s);
   // Value from individual vector
   prop->fLearnSteps = individual->GetSteps();
+  printf(" Debugging RunCMS.C: learning steps value = %x\n", prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
   CMSApplication *app = new CMSApplication();

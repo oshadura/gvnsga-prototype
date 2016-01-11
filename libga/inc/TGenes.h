@@ -105,7 +105,7 @@ public:
   //////////////////////////////////////////////////////////////
 
   void printGenes(Genes<T> &g) {
-    std::cout << "Individual rank =" << g.GetRank() << std::endl;
+    std::cout << "Individual rank = " << g.GetRank() << std::endl;
     //<< "\n Available constraint violations"
     //<< g.GetConsViol()<< std::endl;
 
@@ -113,6 +113,7 @@ public:
     for (auto it = g.begin(); it != g.end(); ++it) {
       std::cout << *it << std::endl;
     }
+    std::cout << "]" << std::endl;
     // std::cout << "Fitness<T> = [";
     //  for(auto it = GetFitness(g).begin; it != g.GetFitness(g).end(); ++it){
     //  std::cout << *it << std::endl;
@@ -122,7 +123,8 @@ public:
          ++it) {
       std::cout << *it << std::endl;
     }
-    std::cout << "fCrowdingDistance =" << g.GetCrowdingDistance() << std::endl;
+    std::cout << "]" << std::endl;
+    std::cout << "fCrowdingDistance = " << g.GetCrowdingDistance() << std::endl;
   }
 
 private:

@@ -115,13 +115,14 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
     fChildPop->SetPopFunction(popfunction);
     fMixedPop->SetPopFunction(popfunction);
   }
+
   fGen = 1;
   std::cout << "New generetion #" << fGen << std::endl;
   fParentPop->Build();
-  fParentPop->Evaluate();
+  fParentPop->printPopulation(fParentPop);
+  fParentPop->Evaluate(fParentPop);
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
-  fParentPop->printPopulation(fParentPop);
 }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
@@ -232,12 +233,11 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
 }
 
 void AlgorithmNSGA::NextStep() {
-
   std::cout << "New generetion #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate(); // not a std::pair (?)
   fChildPop->GenCounter = fNGen + 1;
-  fChildPop->Evaluate();
+  fChildPop->Evaluate(fChildPop);
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
   fMixedPop->GenCounter = fGen + 1;
