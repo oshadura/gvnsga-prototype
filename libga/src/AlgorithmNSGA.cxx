@@ -119,10 +119,10 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   fGen = 1;
   std::cout << "New generetion #" << fGen << std::endl;
   fParentPop->Build();
-  fParentPop->printPopulation(fParentPop);
-  fParentPop->Evaluate(fParentPop);
+  fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
+  fParentPop->printPopulation(fParentPop);
 }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
@@ -237,7 +237,7 @@ void AlgorithmNSGA::NextStep() {
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate(); // not a std::pair (?)
   fChildPop->GenCounter = fNGen + 1;
-  fChildPop->Evaluate(fChildPop);
+  fChildPop->Evaluate();
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
   fMixedPop->GenCounter = fGen + 1;

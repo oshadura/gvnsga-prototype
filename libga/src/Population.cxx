@@ -309,16 +309,16 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
   }
 }
 
-template <class T> void Population<T>::Evaluate(const Population<T>& pop) {
+template <class T> void Population<T>::Evaluate() {
 #ifdef ENABLE_OPENMP
 #pragma omp parallel for
-  for (int i = 0; i < pop.GetPopulationSize(); ++i) {
+  for (int i = 0; i < GetPopulationSize(); ++i) {
     auto ind = GetGenes(i);
     Genes<T>::Evaluate(setupPop, ind);
     Genes<T>::printGenes(ind);
   }
 #else
-  for (auto it = pop.GetIndividuals().begin(); it != pop.GetIndividuals().end(); ++it) {
+  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
     Genes<T>::Evaluate(setupPop, *it);
     Genes<T>::printGenes(*it);
   }

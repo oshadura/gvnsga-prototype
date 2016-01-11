@@ -83,7 +83,8 @@ public:
   Int_t Mutate();
   void Clear(Option_t *option = "");         // Clear function
   static void Reset(Option_t *option = "");  // Reset function
-  void Evaluate(const Population<T>& pop);
+  //void Evaluate(const Population<T>& pop);
+  void Evaluate();
   void SetPopFunction(Functions::popfunctype f){
     fPopFunction = f;
   }
