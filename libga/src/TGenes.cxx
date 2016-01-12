@@ -4,7 +4,7 @@
 #include <utility>
 #include <random>
 #include <algorithm>
-#include <stdexcept> 
+#include <stdexcept>
 
 // Map for Genes[x]<->Limits[x] (?)
 #include <map>
@@ -26,7 +26,7 @@
 // ClassImp(Genes<T>)
 
 template <class T>
-Genes<T>::Genes() throw ()
+Genes<T>::Genes() throw()
     : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
@@ -38,9 +38,9 @@ Genes<T>::Genes(const Functions &config) throw(ExceptionMessenger)
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
       fVector(0), fTime(0), fMemory(0), setup(&config), fConstraines(0) {
-  fGenes.resize(setup->fNParam,0);
-  fFitness.resize(setup->fNObjectives,0);
-  fConstraines.resize(setup->fNCons,0);
+  fGenes.resize(setup->fNParam, 0);
+  fFitness.resize(setup->fNObjectives, 0);
+  fConstraines.resize(setup->fNCons, 0);
 }
 
 template <class T> Genes<T>::Genes(Genes &f) {}
@@ -60,25 +60,27 @@ template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
 }
 
 template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
-/*
-if (!setup)
-  throw ExceptionMessenger("Do something with setup function!");
-*/
-TRandom3 rand;
-rand.SetSeed(time(NULL));
-for (Int_t i = 0; i < (setup->fNParam); ++i) {
-  fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
+  /*
+  if (!setup)
+    throw ExceptionMessenger("Do something with setup function!");
+  */
+  TRandom3 rand;
+  rand.SetSeed(time(NULL));
+  for (Int_t i = 0; i < (setup->fNParam); ++i) {
+    fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
                              setup->GetIntervalLimit(i).second);
   }
 }
 
-template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger) {
+template <class T>
+void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger) {
   /////////////////////////////
   /*
   TRandom3 rand;
   rand.SetSeed(time(NULL));
   for (Int_t i = 0; i < (setup.fNParam); ++i) {
-    Double_t gene = rand.Uniform(setup.fInterval[i].first,setup.fInterval[i].second);
+    Double_t gene =
+  rand.Uniform(setup.fInterval[i].first,setup.fInterval[i].second);
     fGenes.push_back(gene);
   }
   if (!setup)
@@ -88,15 +90,15 @@ template <class T> void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
   fGenes.resize(setup.fNParam);
-  
+
   try {
     fGenes.resize(setup.fNParam);
-  }
-  catch (const std::length_error& le) {
+  } catch (const std::length_error &le) {
     std::cerr << "Length error: " << le.what() << '\n';
   }
-  
-  std::uniform_real_distribution<T> dist(setup.fInterval[0].first, setup.fInterval[0].second);
+
+  std::uniform_real_distribution<T> dist(setup.fInterval[0].first,
+                                         setup.fInterval[0].second);
   auto gen = std::bind(dist, mersenne_engine);
   std::generate(std::begin(fGenes), std::end(fGenes), gen);
   for (auto i : fGenes) {
@@ -108,8 +110,10 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
-template <class T> void Genes<T>::Evaluate(Functions &setup, Genes<T> &ind) throw (ExceptionMessenger){
-  std::cout<<"Again debug from Genes<T>::Evaluate():\n";
+template <class T>
+void Genes<T>::Evaluate(Functions &setup,
+                        Genes<T> &ind) throw(ExceptionMessenger) {
+  std::cout << "Again debug from Genes<T>::Evaluate():\n";
   printGenes(ind);
   (setup.evfunc)(ind);
   if (setup.fNCons) {
@@ -130,7 +134,9 @@ template <class T> void Genes<T>::Clear(Option_t * /*option*/) {
   ConstViol = 0.;
 }
 
-template <class T> T Genes<T>::CheckDominance(Functions *setup, const Genes<T> *ind2) throw(ExceptionMessenger){
+template <class T>
+T Genes<T>::CheckDominance(Functions *setup,
+                           const Genes<T> *ind2) throw(ExceptionMessenger) {
   if (ConstViol < 0 && ind2->ConstViol < 0) {
     if (ConstViol > ind2->ConstViol)
       return 1; // ind1 less
@@ -155,8 +161,7 @@ template <class T> T Genes<T>::CheckDominance(Functions *setup, const Genes<T> *
         }
       } else {
         if (GetFitness(i) < ind2->GetFitness(i) &&
-            fabs(GetFitness(i) - ind2->GetFitness(i)) >
-                setup->fEpsilonC) {
+            fabs(GetFitness(i) - ind2->GetFitness(i)) > setup->fEpsilonC) {
           fFlag1 = 1;
         } else if (GetFitness(i) > ind2->GetFitness(i) &&
                    fabs(GetFitness(i) - ind2->GetFitness(i)) >
@@ -193,14 +198,12 @@ template <class T> Int_t Genes<T>::Mutate() {
       if (fRrnd <= 0.5) {
         xy = 1.0 - fDelta1;
         fValue = 2.0 * fRrnd +
-                 (1.0 - 2.0 * fRrnd) *
-                     (pow(xy, (setup->fEtaMut + 1.0)));
+                 (1.0 - 2.0 * fRrnd) * (pow(xy, (setup->fEtaMut + 1.0)));
         fDelta = pow(fValue, fMutPow) - 1.0;
       } else {
         xy = 1.0 - fDelta2;
         fValue = 2.0 * (1.0 - fRrnd) +
-                 2.0 * (fRrnd - 0.5) *
-                     (pow(xy, (setup->fEtaMut + 1.0)));
+                 2.0 * (fRrnd - 0.5) * (pow(xy, (setup->fEtaMut + 1.0)));
         fDelta = 1.0 - (pow(fValue, fMutPow));
       }
       y = y + fDelta * (yu - yl);

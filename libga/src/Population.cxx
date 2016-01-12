@@ -19,33 +19,29 @@
 
 // ClassImp(Population<T>)
 
-  template <class T> Population<T>::Population(const Int_t fSizePop,
-    const Int_t fNParam,
-    const Int_t fNCons,
-    const Int_t fNObjectives,
-    const Double_t fEpsilonC,
-    const Double_t fPMut,
+template <class T>
+Population<T>::Population(
+    const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,
+    const Int_t fNObjectives, const Double_t fEpsilonC, const Double_t fPMut,
     const Double_t fEtaMut,
     const std::vector<std::pair<Double_t, Double_t>> fInterval,
-    const Functions::functype func) 
-  throw (ExceptionMessenger) : fCrowdingObj(true), fPopFunction(NULL), setupPop(){
+    const Functions::functype func) throw(ExceptionMessenger)
+    : fCrowdingObj(true), fPopFunction(NULL), setupPop() {
 
-    setupPop.fNParam = fNParam;
-    setupPop.fInterval = fInterval;
-    setupPop.fNCons = fNCons;
-    setupPop.fNObjectives = fNObjectives;
-    setupPop.fEpsilonC = fEpsilonC;
-    setupPop.fPMut = fPMut;
-    setupPop.fEtaMut = fEtaMut;
-    setupPop.evfunc = func;
+  setupPop.fNParam = fNParam;
+  setupPop.fInterval = fInterval;
+  setupPop.fNCons = fNCons;
+  setupPop.fNObjectives = fNObjectives;
+  setupPop.fEpsilonC = fEpsilonC;
+  setupPop.fPMut = fPMut;
+  setupPop.fEtaMut = fEtaMut;
+  setupPop.evfunc = func;
 
-    for (int i = 0; i < fSizePop; ++i)
-    { 
-      Genes<T> genes(&setupPop);
-      fPopulation.push_back(genes);
-    }
-
+  for (int i = 0; i < fSizePop; ++i) {
+    Genes<T> genes(setupPop);
+    fPopulation.push_back(genes);
   }
+}
 
 /**
  * @brief Struct that is it crowding over objectives of
@@ -82,11 +78,11 @@ template <class T> void Population<T>::Build() {
 }
 */
 
-template <class T> void Population<T>::Build() throw (ExceptionMessenger) {
+template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
     it->Genes<T>::Set(setupPop);
     std::cout << " Creating new individual.." << std::endl;
-    }
+  }
   WritePopulationTree(*this, "NSGA.root");
 }
 
@@ -102,8 +98,7 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t i) {
   Int_t l = F.size();
   for (Int_t i = 0; i < l; ++i)
     GetGenes(F[i]).SetCrowdingDistance(0);
-  Int_t limit = fCrowdingObj ? setupPop.fNObjectives
-                             : setupPop.fNParam;
+  Int_t limit = fCrowdingObj ? setupPop.fNObjectives : setupPop.fNParam;
   for (Int_t m = 0; m < limit; ++m) {
     std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
     GetGenes(F[0]).SetCrowdingDistance(INF);
@@ -148,13 +143,14 @@ template <class T> void Population<T>::FastNonDominantSorting() {
     }
 #pragma omp critical
     {
-    p.SetDominatedCounter(fDomCount);
-    p.GetDominated().clear();
-    p.GetDominated() = fDom;
-    if (p.GetDominatedCounter() == 0) {
-      p.SetRank(1);
-      fFront[0].push_back(i);
-    }}
+      p.SetDominatedCounter(fDomCount);
+      p.GetDominated().clear();
+      p.GetDominated() = fDom;
+      if (p.GetDominatedCounter() == 0) {
+        p.SetRank(1);
+        fFront[0].push_back(i);
+      }
+    }
   }
   std::sort(fFront[0].begin(), fFront[0].end());
   int fi = 1;
@@ -178,7 +174,8 @@ template <class T> void Population<T>::FastNonDominantSorting() {
 }
 
 /*
-template <class T> void Population<T>::FastNonDominantSorting(const Population<T> &population) {
+template <class T> void Population<T>::FastNonDominantSorting(const
+Population<T> &population) {
   Genes<T> p, q, Q;
   fFront.resize(1);
   fFront[0].clear();
@@ -243,13 +240,13 @@ template <class T> void Population<T>::Clear(Option_t * /*option*/) {
 
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
-  //if (!file) {
-    TFile *f = new TFile(file, "RECREATE");
-    TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
-    tree->Branch("Population", &pop, "Population generation");
-    tree->Fill();
-    tree->Print();
-  //} 
+  // if (!file) {
+  TFile *f = new TFile(file, "RECREATE");
+  TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
+  tree->Branch("Population", &pop, "Population generation");
+  tree->Fill();
+  tree->Print();
+  //}
   /*
   else {
     TFile *f = TFile::Open(file, "RECREATE");
@@ -262,11 +259,10 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
   */
 }
 
-template <class T> Int_t Population<T>::Mutate(){
+template <class T> Int_t Population<T>::Mutate() {
   Int_t tmp;
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it)
-  {
-    tmp += it-> Genes<T>::Mutate();
+  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
+    tmp += it->Genes<T>::Mutate();
   }
   return tmp;
 }
