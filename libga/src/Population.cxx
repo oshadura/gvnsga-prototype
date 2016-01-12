@@ -26,8 +26,7 @@ Population<T>::Population(
     const Double_t fEtaMut,
     const std::vector<std::pair<Double_t, Double_t>> fInterval,
     const Functions::functype func) throw(ExceptionMessenger)
-    : fCrowdingObj(true), fPopFunction(NULL), setupPop() {
-
+    : fCrowdingObj(true), fPopFunction(NULL), setupPop(){
   setupPop.fNParam = fNParam;
   setupPop.fInterval = fInterval;
   setupPop.fNCons = fNCons;
@@ -38,8 +37,7 @@ Population<T>::Population(
   setupPop.evfunc = func;
 
   for (int i = 0; i < fSizePop; ++i) {
-    Genes<T> genes(setupPop);
-    fPopulation.push_back(genes);
+    fPopulation.push_back(Genes<T>(setupPop));
   }
 }
 
@@ -60,27 +58,9 @@ template <typename T> struct Comparing {
   };
 };
 
-/*
-template <class T> void Population<T>::Build() {
-  TRandom3 rand;
-  rand.SetSeed(time(NULL));
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    for (Int_t i = 1; i <= Functions::Instance()->GetNParam(); ++i) {
-      for (const std::pair<Double_t, Double_t> &limit :
-           (Functions::Instance()->GetInterval())) {
-        Double_t value = rand.Uniform(limit.first, limit.second);
-        Int_t position = std::distance(GetIndividuals().begin(), it);
-        SetGenes(position, Genes<T>::SetGene(i, value));
-      }
-    }
-  }
-  WritePopulationTree(*this, "NSGA.root");
-}
-*/
-
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    it->Genes<T>::Set(setupPop);
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    it->Genes<T>::Set(setupPop, *it);
     std::cout << " Creating new individual.." << std::endl;
   }
   WritePopulationTree(*this, "NSGA.root");

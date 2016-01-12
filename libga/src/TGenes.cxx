@@ -73,37 +73,19 @@ template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
 }
 
 template <class T>
-void Genes<T>::Set(Functions &setup) throw(ExceptionMessenger) {
-  /////////////////////////////
-  /*
-  TRandom3 rand;
-  rand.SetSeed(time(NULL));
-  for (Int_t i = 0; i < (setup.fNParam); ++i) {
-    Double_t gene =
-  rand.Uniform(setup.fInterval[i].first,setup.fInterval[i].second);
-    fGenes.push_back(gene);
-  }
-  if (!setup)
-    throw ExceptionMessenger("Do something with setup function!");
-  */
+void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   // Lets imagine that we have only one limit #0 for all parameters
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
-  fGenes.resize(setup.fNParam);
-
-  try {
-    fGenes.resize(setup.fNParam);
-  } catch (const std::length_error &le) {
-    std::cerr << "Length error: " << le.what() << '\n';
-  }
-
+  ind.resize(setup.fNParam);
   std::uniform_real_distribution<T> dist(setup.fInterval[0].first,
                                          setup.fInterval[0].second);
   auto gen = std::bind(dist, mersenne_engine);
-  std::generate(std::begin(fGenes), std::end(fGenes), gen);
-  for (auto i : fGenes) {
+  std::generate(std::begin(ind), std::end(ind), gen);
+  for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
   }
+  //printGenes(ind);
 }
 
 template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {

@@ -32,7 +32,7 @@ public:
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
   void Set() throw(ExceptionMessenger);
-  void Set(Functions &setup) throw(ExceptionMessenger);
+  void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<T> GetDominated() {
@@ -77,7 +77,8 @@ public:
   T operator[](Int_t i) const { return fGenes.at(i); }
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
-
+  void resize(Int_t i) {return fGenes.resize(i);}
+  
   T GetAllev() const { return fAllev; }
 
   T GetBuffev() const { return fBuffev; }
@@ -112,7 +113,7 @@ public:
   //////////////////////////////////////////////////////////////
 
   void printGenes(Genes<T> &g) {
-    
+
     std::cout << "Individual rank = " << g.GetRank() <<"\n" << std::endl;
 
     std::cout<< "Available constraint violations = "<< g.GetConsViol()<< "\n" << std::endl;

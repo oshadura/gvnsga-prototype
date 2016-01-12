@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
   nsga2->SetPCross(0.5);
   nsga2->SetEtaCross(0.7);
   nsga2->SetGenTotalNumber(5);
-  nsga2->SetNCons(0); // First version will be constrainless
+  nsga2->SetNCons(1); // First version will be constrainless
   nsga2->SetNParam(6);
   nsga2->SetNObjectives(2); // Memory, Time
   //nsga2->SetInterval(); // Testing intervals between [0,100]

@@ -123,10 +123,15 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   fGen = 1;
   std::cout << "New generetion #" << fGen << std::endl;
   fParentPop->Build();
+  fParentPop->printPopulation(fParentPop);
+  /*
+  for (auto it = fParentPop->GetIndividuals().begin(); it != fParentPop->GetIndividuals().end(); ++it){
+    it->Genes<Double_t>::printGenes(*it);
+  }
+  */
   fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
-  // fParentPop->printPopulation(fParentPop);
 }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
