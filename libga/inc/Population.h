@@ -21,8 +21,6 @@ template <class T> class Population : public Genes<T>, public Functions{
 
  // To be used after
  // template <typename ...Args> using myType = std::function<void(Args...)>;
-
-protected:
 public:
   Population()
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fH(0),
@@ -30,8 +28,8 @@ public:
   Population(Int_t size)
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fH(0),
         fPopFunction(NULL), setupPop(){
-    fFront.reserve(fSizePop);
-    fPopulation.reserve(fSizePop);
+    //fFront.reserve(fSizePop);
+    //fPopulation.reserve(fSizePop);
   }
 
   Population(const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,
@@ -61,7 +59,7 @@ public:
   }
   void PushGenes(const Genes<T> &value) { fPopulation.push_back(value); }
   void SetPopulationSize(Int_t s) { fPopulation.resize(s); }
-  Int_t GetPopulationSize() const { return fPopulation.size(); }
+  Int_t GetPopulationSize() { return fPopulation.size(); }
   Int_t GetPopulationSetupSize() const { return fSizePop; }
   std::vector<Genes<T>> GetIndividuals() { return fPopulation; }
   std::vector<Genes<T>> GetFront() { return fFront; }
@@ -76,9 +74,9 @@ public:
   void Merge(const Population &population1,
              const Population &population2); // Merging two populations
   Int_t Mutate();
+  void Evaluate();
   void Clear(Option_t *option = "");        // Clear function
   static void Reset(Option_t *option = ""); // Reset function
-  void Evaluate();
   void SetPopFunction(Functions::popfunctype f) { fPopFunction = f; }
   void ResetHistogramPointer() {
     fH = 0;
@@ -89,6 +87,9 @@ public:
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
+
+  Genes<T> operator[](Int_t i) { return fPopulation.at(i); }
+
   /*
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop) {
     os << "Population: [\n";
@@ -122,6 +123,10 @@ public:
   std::vector<Genes<T>> fPopulation;
 
 private:
+
+  void Evaluation();
+  void EvaluationOpenMP();
+  
   Functions setupPop;
   Functions::popfunctype fPopFunction;
   //std::vector<Genes<T>> fFront;

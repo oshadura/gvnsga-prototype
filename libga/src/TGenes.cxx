@@ -47,14 +47,24 @@ template <class T> Genes<T>::Genes(Genes &f) {}
 
 template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
   if (this != &gen) {
-    fGenes = gen.fGenes;
-    fRank = gen.fRank;
-    fDominationCounter = gen.fDominationCounter;
-    fEvaluated = gen.fEvaluated;
-    fFitness = gen.fFitness;
-    fCrowdingDistance = gen.fCrowdingDistance;
-    fDominated = gen.fDominated;
-    ConstViol = gen.ConstViol;
+      fFitness = gen.fFitness;
+      fRank = gen.fRank;
+      fDominationCounter = gen.fDominationCounter;
+      fCrowdingDistance = gen.fCrowdingDistance;
+      fEvaluated = gen.fCrowdingDistance;
+      fDominated = gen.fDominated;
+      ConstViol = gen.ConstViol;
+      fGenes = gen.fGenes;
+      fAllev = gen.fAllev;
+      fBuffev = gen.fBuffev;
+      fThread = gen.fThread;
+      fPriority = gen.fPriority;
+      fSteps = gen.fSteps;
+      fVector = gen.fVector;
+      fTime = gen.fTime;
+      fMemory = gen.fMemory;
+      setup = gen.setup;
+      fConstraines = gen.fConstraines;
   }
   return *this;
 }

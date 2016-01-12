@@ -37,7 +37,7 @@ Population<T>::Population(
   setupPop.evfunc = func;
 
   for (int i = 0; i < fSizePop; ++i) {
-    fPopulation.push_back(Genes<T>(setupPop));
+    fPopulation.emplace_back(Genes<T>(setupPop));
   }
 }
 
@@ -58,9 +58,20 @@ template <typename T> struct Comparing {
   };
 };
 
+/*
+template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
+  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
+    it->Genes<T>::Set(setupPop, *it);
+    std::cout << " Creating new individual.." << std::endl;
+  }
+  WritePopulationTree(*this, "NSGA.root");
+}
+*/
+
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     it->Genes<T>::Set(setupPop, *it);
+    //fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
   WritePopulationTree(*this, "NSGA.root");
@@ -235,18 +246,26 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
 
 template <class T> void Population<T>::Evaluate() {
 #ifdef ENABLE_OPENMP
-#pragma omp parallel for
+  EvaluationOpenMP();
+#else
+  Evaluation();
+#endif
+}
+
+template <class T> void Population<T>::Evaluation(){
+    for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    Genes<T>::Evaluate(setupPop, *it);
+    Genes<T>::printGenes(*it);
+  }
+}
+
+template <class T> void Population<T>::EvaluationOpenMP(){
+  #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
     auto ind = GetGenes(i);
     Genes<T>::Evaluate(setupPop, ind); 
     Genes<T>::printGenes(ind);
   }
-#else
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    Genes<T>::Evaluate(setupPop, *it);
-    Genes<T>::printGenes(*it);
-  }
-#endif
 }
 
 // Ugly instantiation

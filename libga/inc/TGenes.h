@@ -64,6 +64,7 @@ public:
   void ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
   void SetConstrain(Int_t i, T value);
   std::vector<T> GetConstraines() const { return fConstraines; }
+  std::vector<T> GetfGenes() const {return fGenes;}
   const Functions *GetSetup() { return setup; }
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
@@ -78,7 +79,6 @@ public:
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
   void resize(Int_t i) {return fGenes.resize(i);}
-  
   T GetAllev() const { return fAllev; }
 
   T GetBuffev() const { return fBuffev; }
