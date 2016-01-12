@@ -113,7 +113,7 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
 template <class T>
 void Genes<T>::Evaluate(Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
-  std::cout << "Again debug from Genes<T>::Evaluate():\n";
+  std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
   printGenes(ind);
   (setup.evfunc)(ind);
   if (setup.fNCons) {

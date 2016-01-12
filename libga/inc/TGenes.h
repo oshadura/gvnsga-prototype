@@ -56,12 +56,14 @@ public:
   void SetCrowdingDistance(T dist) { fCrowdingDistance = dist; }
   Int_t GetRank() const { return fRank; }
   void SetRank(Int_t rank) { fRank = rank; }
+  Double_t GetConsViol() const { return ConstViol; }
+  void SetConsViol(Double_t consv) { ConstViol = consv; }
   void WriteGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
   void UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2, Population<T> &pop,
                        const char *file);
   void ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
   void SetConstrain(Int_t i, T value);
-  std::vector<Double_t> GetConstraines() const { return fConstraines; }
+  std::vector<T> GetConstraines() const { return fConstraines; }
   const Functions *GetSetup() { return setup; }
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
@@ -110,26 +112,30 @@ public:
   //////////////////////////////////////////////////////////////
 
   void printGenes(Genes<T> &g) {
-    std::cout << "Individual rank = " << g.GetRank() << std::endl;
-    //<< "\n Available constraint violations"
-    //<< g.GetConsViol()<< std::endl;
+    
+    std::cout << "Individual rank = " << g.GetRank() <<"\n" << std::endl;
+
+    std::cout<< "Available constraint violations = "<< g.GetConsViol()<< "\n" << std::endl;
 
     std::cout << "Gene<T> = [";
     for (auto it = g.begin(); it != g.end(); ++it) {
       std::cout << *it << std::endl;
     }
-    std::cout << "]" << std::endl;
-    // std::cout << "Fitness<T> = [";
-    //  for(auto it = GetFitness(g).begin; it != g.GetFitness(g).end(); ++it){
-    //  std::cout << *it << std::endl;
-    //}
+    std::cout << "]" << "\n" << std::endl;
+    /*
+    std::cout << "Fitness<T> = [";
+      for (auto it = g.GetFitnessVector().begin; it != g.GetFitnessVector().end(); ++it){
+        std::cout << *it << std::endl;
+      }
+    std::cout << "]" <<"\n" << std::endl;
+    */
     std::cout << "Constraint<T> = [";
     for (auto it = g.GetConstraines().begin(); it != g.GetConstraines().end();
          ++it) {
       std::cout << *it << std::endl;
     }
-    std::cout << "]" << std::endl;
-    std::cout << "fCrowdingDistance = " << g.GetCrowdingDistance() << std::endl;
+    std::cout << "]" << "\n" << std::endl;
+    std::cout << "fCrowdingDistance = " << g.GetCrowdingDistance() << "\n" << std::endl;
   }
 
 private:

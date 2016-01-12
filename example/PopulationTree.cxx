@@ -28,6 +28,7 @@
 
 // Forget about constrains now!
 std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
+  std::cout << "xxxxxxxxxxxxxxxxxxxxxxx Example runCMS.C xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
   // We need to modify perfomance counter header GeantVFitness.h
   GeantVFitness fitness;
   fitness.LogMemoryFitness();
