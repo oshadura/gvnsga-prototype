@@ -33,7 +33,11 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   // We need to modify perfomance counter header GeantVFitness.h
   GeantVFitness fitness;
   fitness.LogMemoryFitness();
+  //XXXXXXXXXXXXXXXX Take a fitness from individual.GetFitness() XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   std::vector<Double_t> fFitness;
+  //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  //CMSApplication *fApplicationCMS = new CMSApplication();
+  std::cout << "CMSApplication address" << fApplicationCMS << std::endl;
   bool performance = true;
   const char *geomfile = "cms2015.root";
   const char *xsec = "xsec_FTFP_BERT_G496p02_1mev.root";
