@@ -21,13 +21,14 @@
 #include "GeantPropagator.h"
 #include "TTabPhysProcess.h"
 #include "CMSApplication.h"
+#include "GeantVApplication.h"
 
 #ifndef COPROCESSOR_REQUEST
 #define COPROCESSOR_REQUEST false
 #endif
 
 // Forget about constrains now!
-std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
+std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   std::cout << "xxxxxxxxxxxxxxxxxxxxxxx Example runCMS.C xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
   // We need to modify perfomance counter header GeantVFitness.h
   GeantVFitness fitness;
@@ -39,14 +40,14 @@ std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
   const char *fstate = "fstate_FTFP_BERT_G496p02_1mev.root";
   bool coprocessor = COPROCESSOR_REQUEST;
   // int nthreads = ncputhreads;
-  int nthreads = individual->GetThread();
-  printf("Debugging RunCMS.C: thread value = %x\n", nthreads);
+  int nthreads = individual.GetThread(individual);
+  printf("Debugging RunCMS.C: thread value = %d\n", nthreads);
   // Value from individual vector
-  int ntotal = individual->GetAllev(); // Number of events to be transported
-  printf("Debugging RunCMS.C: all events value = %x\n", ntotal);
+  int ntotal = individual.GetAllev(individual); // Number of events to be transported
+  printf("Debugging RunCMS.C: all events value = %d\n", ntotal);
   // Value from individual vector
-  int nbuffered = individual->GetBuffev(); // Number of buffered events (tunable [1,ntotal])
-  printf("Debugging RunCMS.C: buffered particles value = %x\n", nbuffered);
+  int nbuffered = individual.GetBuffev(individual); // Number of buffered events (tunable [1,ntotal])
+  printf("Debugging RunCMS.C: buffered particles value = %d\n", nbuffered);
   TGeoManager::Import(geomfile);
   TaskBroker *broker = nullptr;
   if (coprocessor) {
@@ -77,10 +78,11 @@ std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
   bool graphics = (prop->GetMonFeatures()) ? true : false;
   prop->fUseMonitoring = graphics;
   // Value from individual vector
-  prop->fPriorityThr = individual->GetPriority();
-  printf(" Debugging RunCMS.C: priority value = %x\n", prop->fPriorityThr);
+  prop->fPriorityThr = individual.GetPriority(individual);
+  printf(" Debugging RunCMS.C: priority value = %f\n", prop->fPriorityThr);
   // Value from individual vector
-  prop->fNperBasket = individual->GetVector(); // Initial vector size (tunable)
+  prop->fNperBasket = individual.GetVector(individual); // Initial vector size (tunable)
+  printf(" Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
   // Value from individual vector
   prop->fMaxPerBasket = 64; // Maximum vector size (tunable)
   prop->fMaxRes = 4000;
@@ -92,8 +94,8 @@ std::vector<Double_t> CMSApp(Genes<Double_t> *individual) {
   std::string s = "pp14TeVminbias.root";
   prop->fPrimaryGenerator = new HepMCGenerator(s);
   // Value from individual vector
-  prop->fLearnSteps = individual->GetSteps();
-  printf(" Debugging RunCMS.C: learning steps value = %x\n", prop->fLearnSteps);
+  prop->fLearnSteps = individual.GetSteps(individual);
+  printf(" Debugging RunCMS.C: learning steps value = %d\n", prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
   CMSApplication *app = new CMSApplication();

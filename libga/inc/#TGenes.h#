@@ -43,7 +43,7 @@ public:
   T GetGene(Int_t i) const { return fGenes.at(i); }
   Genes<T> SetGene(Int_t i, T value) {
     fGenes.emplace(fGenes.begin() + i, value);
-    //    return fGenes;
+    //   i return fGenes;
   }
   std::vector<T> GetFitnessVector() const {
     return fFitness;
@@ -79,7 +79,6 @@ public:
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
   void resize(Int_t i) {return fGenes.resize(i);}
-///////// To be used later ////////////////////
   T GetAllev() const { return fAllev; }
 
   T GetBuffev() const { return fBuffev; }
@@ -95,7 +94,7 @@ public:
   T GetTime() const { return fTime; }
 
   T GetMemory() const { return fMemory; }
-/////////////////////////////////////////////
+
   T GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
 
   T GetBuffev(Genes<T> &ind) const { return ind.GetGene(1); }
