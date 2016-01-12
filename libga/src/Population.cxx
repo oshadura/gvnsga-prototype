@@ -262,9 +262,10 @@ template <class T> void Population<T>::Evaluation(){
 template <class T> void Population<T>::EvaluationOpenMP(){
   #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
-    auto ind = GetGenes(i);
-    Genes<T>::Evaluate(setupPop, ind); 
-    Genes<T>::printGenes(ind);
+    fPopulation[i].Evaluate(setupPop, fPopulation[i]);
+    //auto ind = GetGenes(i);
+    //Genes<T>::Evaluate(setupPop, ind); 
+    //Genes<T>::printGenes(ind);
   }
 }
 
