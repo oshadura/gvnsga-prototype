@@ -123,7 +123,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   fGen = 1;
   std::cout << "New generetion #" << fGen << std::endl;
   fParentPop->Build();
-  fParentPop->printPopulation(fParentPop);
+  //fParentPop->printPopulation(fParentPop);
   /*
   for (auto it = fParentPop->GetIndividuals().begin(); it != fParentPop->GetIndividuals().end(); ++it){
     it->Genes<Double_t>::printGenes(*it);
