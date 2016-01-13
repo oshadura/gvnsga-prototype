@@ -121,7 +121,7 @@ public:
 
     std::cout << "Gene<T> = [";
     for (auto it = g.begin(); it != g.end(); ++it) {
-      std::cout << *it << std::endl;
+      std::cout << *it << " ";
     }
     std::cout << "]" << "\n" << std::endl;
     /*

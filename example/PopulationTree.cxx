@@ -36,8 +36,9 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   //XXXXXXXXXXXXXXXX Take a fitness from individual.GetFitness() XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   std::vector<Double_t> fFitness;
   //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  //CMSApplication *fApplicationCMS = new CMSApplication();
-  std::cout << "CMSApplication address" << fApplicationCMS << std::endl;
+  GeantVApplication *fApplication;
+  std::cout << "GeantVApplication address initialized in example = " << fApplication<< std::endl;
+  std::cout << "Lets pass it to GeantV propagator.."<< std::endl;
   bool performance = true;
   const char *geomfile = "cms2015.root";
   const char *xsec = "xsec_FTFP_BERT_G496p02_1mev.root";
@@ -69,6 +70,7 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
       GeantPropagator::Instance(ntotal, nbuffered, nthreads);
   if (broker)
     prop->SetTaskBroker(broker);
+  //prop->fApplication = fApplication;
   prop->SetNminThreshold(5 * nthreads);
   prop->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
   prop->SetMonitored(GeantPropagator::kMonMemory, false & (!performance));
@@ -83,10 +85,10 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   prop->fUseMonitoring = graphics;
   // Value from individual vector
   prop->fPriorityThr = individual.GetPriority(individual);
-  printf(" Debugging RunCMS.C: priority value = %f\n", prop->fPriorityThr);
+  printf("Debugging RunCMS.C: priority value = %f\n", prop->fPriorityThr);
   // Value from individual vector
   prop->fNperBasket = individual.GetVector(individual); // Initial vector size (tunable)
-  printf(" Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
+  printf("Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
   // Value from individual vector
   prop->fMaxPerBasket = 64; // Maximum vector size (tunable)
   prop->fMaxRes = 4000;
@@ -99,7 +101,7 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   prop->fPrimaryGenerator = new HepMCGenerator(s);
   // Value from individual vector
   prop->fLearnSteps = individual.GetSteps(individual);
-  printf(" Debugging RunCMS.C: learning steps value = %d\n", prop->fLearnSteps);
+  printf("Debugging RunCMS.C: learning steps value = %d\n", prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
   CMSApplication *app = new CMSApplication();
