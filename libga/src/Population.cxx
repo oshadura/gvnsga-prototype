@@ -35,7 +35,6 @@ Population<T>::Population(
   setupPop.fPMut = fPMut;
   setupPop.fEtaMut = fEtaMut;
   setupPop.evfunc = func;
-
   for (int i = 0; i < fSizePop; ++i) {
     fPopulation.emplace_back(Genes<T>(setupPop));
   }

@@ -21,22 +21,30 @@
 #include "GeantPropagator.h"
 #include "TTabPhysProcess.h"
 #include "CMSApplication.h"
+#include "ExN03Application.h"
 #include "GeantVApplication.h"
 
 #ifndef COPROCESSOR_REQUEST
 #define COPROCESSOR_REQUEST false
 #endif
 
-std::vector<Double_t> runSimple(Genes<Double_t> &individual) {
-  GeantVFitness fitness;
-  fitness.LogMemoryFitness();
+void runApp(Genes<Double_t> &individual) {
+  //GeantVFitness fitness;
+  //fitness.LogMemoryFitness();
+  const char *geomfile="ExN03.root";
+  const char *xsec="xsec_FTFP_BERT.root";
+  const char *fstate="fstate_FTFP_BERT.root";
+  bool performance=true;
+  bool coprocessor = COPROCESSOR_REQUEST;
   int nthreads = individual.GetThread(individual);
+  printf("Debugging Run.C: thread value = %d\n", nthreads);
   int ntotal =
       individual.GetAllev(individual); // Number of events to be transported
+  printf("Debugging Run.C: all events value = %d\n", ntotal);
   int nbuffered = individual.GetBuffev(
       individual); // Number of buffered events (tunable [1,ntotal])
+  printf("Debugging Run.C: buffered particles value = %d\n", nbuffered);
   TGeoManager::Import(geomfile);
-
   TaskBroker *broker = nullptr;
   if (coprocessor) {
 #ifdef GEANTCUDA_REPLACE
@@ -69,10 +77,12 @@ std::vector<Double_t> runSimple(Genes<Double_t> &individual) {
   // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
   // If set to 0 takes the default value of 0.01
   prop->fPriorityThr = individual.GetPriority(individual);
+  printf("Debugging Run.C: priority value = %f\n", prop->fPriorityThr);
   // Initial vector size, this is no longer an important model parameter,
   // because is gets dynamically modified to accomodate the track flow
   prop->fNperBasket =
       individual.GetVector(individual); // Initial vector size (tunable)
+  printf("Debugging Run.C: vector value = %d\n", prop->fNperBasket);
   // This is now the most important parameter for memory considerations
   prop->fMaxPerBasket = 256; // Maximum vector size (tunable)
   prop->fEmin = 3.E-6;       // [3 KeV] energy cut
@@ -87,6 +97,7 @@ std::vector<Double_t> runSimple(Genes<Double_t> &individual) {
   // Number of steps for learning phase (tunable [0, 1e6])
   // if set to 0 disable learning phase
   prop->fLearnSteps = individual.GetSteps(individual);
+  printf("Debugging Run.C: learning steps value = %d\n", prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
   prop->fApplication = new ExN03Application();
@@ -108,26 +119,24 @@ std::vector<Double_t> runSimple(Genes<Double_t> &individual) {
   prop->PropagatorGeom(geomfile, nthreads, graphics);
   delete prop;
   //////////SUPER STUPID SOLUTION-> JUST TO CHECK IF IT WORKS/////////////
-  fFitness[0] = 0.0;
-  fFitness[1] = 0.0;
+  individual.SetFitness(0, prop->fTimer->RealTime());
+  //fFitness[1] = fitness->maxMemResident;
   ///////////////////////////////////////////
-  fitness.HistOutputFitness();
-  return fFitness;
+  //fitness.HistOutputFitness();
+  return;
 }
 
 // Forget about constrains now!
-std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
+void CMSApp(Genes<Double_t> &individual) {
+  GeantVFitness fitness;
   // std::cout << "xxxxxxxxxxxxxxxxxxxxxxx Example runCMS.C
   // xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
   // We need to modify perfomance counter header GeantVFitness.h
 
   // XXXXXXXXXXXXXXXX Take a fitness from individual.GetFitness()
-  // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  std::vector<Double_t> fFitness;
-  // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   // GeantVApplication *fApplication;
-  std::cout << "GeantVApplication address initialized in example = "
-            << fApplication << std::endl;
+  //std::cout << "GeantVApplication address initialized in example = "
+  //          << fApplication << std::endl;
   std::cout << "Lets pass it to GeantV propagator.." << std::endl;
   bool performance = true;
   const char *geomfile = "cms2015.root";
@@ -213,11 +222,11 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   prop->PropagatorGeom(geomfile, nthreads, graphics);
   delete prop;
   //////////SUPER STUPID SOLUTION-> JUST TO CHECK IF IT WORKS/////////////
-  fFitness[0] = 0.0;
-  fFitness[1] = 0.0;
+  //fFitness[0] = 0.0;
+  //fFitness[1] = 0.0;
   ///////////////////////////////////////////
   fitness.HistOutputFitness();
-  return fFitness;
+  return;
 }
 
 int main(int argc, char *argv[]) {
@@ -246,7 +255,8 @@ int main(int argc, char *argv[]) {
   nsga2->SetEtaMut(0.7);
   nsga2->SetEpsilonC(0.7);
   nsga2->SetLimit(geantv->fInterval);
-  nsga2->SetFunction(&CMSApp);
+  //nsga2->SetFunction(&CMSApp);
+  nsga2->SetFunction(&runApp);
   nsga2->Initialize();
   nsga2->Evolution();
   return 0;

@@ -113,8 +113,8 @@ public:
 
 public:
   //typedef void (*functype)(Genes<Double_t> *);       // still dont know if to use in such way or not
-  typedef std::vector<Double_t> (*functype)(Genes<Double_t> &);
-  typedef std::vector<Double_t> (*popfunctype)(Population<Double_t> &); // still dont know if to use in such way or not
+  typedef void (*functype)(Genes<Double_t> &);
+  typedef void (*popfunctype)(Population<Double_t> &); // still dont know if to use in such way or not
   //////////////////////////////////////////////////////////////
   functype evfunc;
   std::vector<std::pair<Double_t, Double_t>> fInterval;

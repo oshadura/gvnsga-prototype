@@ -42,9 +42,7 @@ public:
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
   Genes<T> SetGene(Int_t i, T value) {
-    fGenes.emplace(fGenes.begin() + i, value);
-    //    return fGenes;
-  }
+    fGenes.emplace(fGenes.begin() + i, value);}
   std::vector<T> GetFitnessVector() const {
     return fFitness;
   } // Get a vector of fTime and fMemory
@@ -52,6 +50,7 @@ public:
     return fFitness.at(i);
   } // Get Fitness at i position
   void SetFitness(std::vector<T> fitness) { fFitness = fitness; }
+  void SetFitness(Int_t i, T value){ fFitness.emplace(fFitness.begin() + i, value); }
   T GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(T dist) { fCrowdingDistance = dist; }
   Int_t GetRank() const { return fRank; }
