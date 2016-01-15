@@ -27,93 +27,108 @@
 #define COPROCESSOR_REQUEST false
 #endif
 
-std::vector<Double_t> runSimple(Genes<Double_t> &individual){
+std::vector<Double_t> runSimple(Genes<Double_t> &individual) {
   GeantVFitness fitness;
   fitness.LogMemoryFitness();
   int nthreads = individual.GetThread(individual);
-  int ntotal = individual.GetAllev(individual); // Number of events to be transported
-  int nbuffered = individual.GetBuffev(individual); // Number of buffered events (tunable [1,ntotal])
+  int ntotal =
+      individual.GetAllev(individual); // Number of events to be transported
+  int nbuffered = individual.GetBuffev(
+      individual); // Number of buffered events (tunable [1,ntotal])
   TGeoManager::Import(geomfile);
 
   TaskBroker *broker = nullptr;
   if (coprocessor) {
 #ifdef GEANTCUDA_REPLACE
     CoprocessorBroker *gpuBroker = new CoprocessorBroker();
-    gpuBroker->CudaSetup(32,128,1);
+    gpuBroker->CudaSetup(32, 128, 1);
     broker = gpuBroker;
-    nthreads += gpuBroker->GetNstream()+1;
+    nthreads += gpuBroker->GetNstream() + 1;
 #else
-    std::cerr << "Error: Coprocessor processing requested but support was not enabled\n";
+    std::cerr << "Error: Coprocessor processing requested but support was not "
+                 "enabled\n";
 #endif
-   }
-   GeantPropagator *prop = GeantPropagator::Instance(ntotal, nbuffered, nthreads);
-   if (broker) prop->SetTaskBroker(broker);
-   // Monitor different features
-   prop->SetNminThreshold(5*nthreads);
-   prop->SetMonitored(GeantPropagator::kMonQueue,          true & (!performance));
-   prop->SetMonitored(GeantPropagator::kMonMemory,         false & (!performance));
-   prop->SetMonitored(GeantPropagator::kMonBasketsPerVol,  false & (!performance));
-   prop->SetMonitored(GeantPropagator::kMonVectors,        false & (!performance));
-   prop->SetMonitored(GeantPropagator::kMonConcurrency,    false & (!performance));
-   prop->SetMonitored(GeantPropagator::kMonTracksPerEvent, false & (!performance));
-   bool graphics = (prop->GetMonFeatures()) ? true : false;
-   prop->fUseMonitoring = graphics;
-   prop->fNaverage = 500;   // Average number of tracks per event 
-   // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
-   // If set to 0 takes the default value of 0.01
+  }
+  GeantPropagator *prop =
+      GeantPropagator::Instance(ntotal, nbuffered, nthreads);
+  if (broker)
+    prop->SetTaskBroker(broker);
+  // Monitor different features
+  prop->SetNminThreshold(5 * nthreads);
+  prop->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
+  prop->SetMonitored(GeantPropagator::kMonMemory, false & (!performance));
+  prop->SetMonitored(GeantPropagator::kMonBasketsPerVol,
+                     false & (!performance));
+  prop->SetMonitored(GeantPropagator::kMonVectors, false & (!performance));
+  prop->SetMonitored(GeantPropagator::kMonConcurrency, false & (!performance));
+  prop->SetMonitored(GeantPropagator::kMonTracksPerEvent,
+                     false & (!performance));
+  bool graphics = (prop->GetMonFeatures()) ? true : false;
+  prop->fUseMonitoring = graphics;
+  prop->fNaverage = 500; // Average number of tracks per event
+  // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
+  // If set to 0 takes the default value of 0.01
   prop->fPriorityThr = individual.GetPriority(individual);
-   // Initial vector size, this is no longer an important model parameter, 
-   // because is gets dynamically modified to accomodate the track flow
-  prop->fNperBasket = individual.GetVector(individual); // Initial vector size (tunable)
-   // This is now the most important parameter for memory considerations
-   prop->fMaxPerBasket = 256;   // Maximum vector size (tunable)
-   prop->fEmin = 3.E-6; // [3 KeV] energy cut
-   prop->fEmax = 0.03;  // [30MeV] used for now to select particle gun energy
-   // Create the tab. phys process.
-   prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
-   // for vector physics -OFF now
-   // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin, nthreads);
-   prop->fPrimaryGenerator = new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
-   // Number of steps for learning phase (tunable [0, 1e6])
-   // if set to 0 disable learning phase
+  // Initial vector size, this is no longer an important model parameter,
+  // because is gets dynamically modified to accomodate the track flow
+  prop->fNperBasket =
+      individual.GetVector(individual); // Initial vector size (tunable)
+  // This is now the most important parameter for memory considerations
+  prop->fMaxPerBasket = 256; // Maximum vector size (tunable)
+  prop->fEmin = 3.E-6;       // [3 KeV] energy cut
+  prop->fEmax = 0.03; // [30MeV] used for now to select particle gun energy
+  // Create the tab. phys process.
+  prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
+  // for vector physics -OFF now
+  // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
+  // nthreads);
+  prop->fPrimaryGenerator =
+      new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
+  // Number of steps for learning phase (tunable [0, 1e6])
+  // if set to 0 disable learning phase
   prop->fLearnSteps = individual.GetSteps(individual);
-  if (performance) prop->fLearnSteps = 0;
-   prop->fApplication = new ExN03Application();
-   // Activate I/O
-   prop->fFillTree = false;
-   // Activate old version of single thread serialization/reading
+  if (performance)
+    prop->fLearnSteps = 0;
+  prop->fApplication = new ExN03Application();
+  // Activate I/O
+  prop->fFillTree = false;
+  // Activate old version of single thread serialization/reading
   // prop->fConcurrentWrite = false;
-// Activate debugging using -DBUG_HUNT=ON in your cmake build
-   prop->fDebugEvt = 0;
-   prop->fDebugTrk = 0;
-   prop->fDebugStp = 0;
-   prop->fDebugRep = 10;
-// Activate standard scoring   
-   prop->fUseStdScoring = true;
-   if (performance) prop->fUseStdScoring = false;
-   // Monitor the application
-   prop->fUseAppMonitoring = false;
-   prop->PropagatorGeom(geomfile, nthreads, graphics);
-   delete prop;
+  // Activate debugging using -DBUG_HUNT=ON in your cmake build
+  prop->fDebugEvt = 0;
+  prop->fDebugTrk = 0;
+  prop->fDebugStp = 0;
+  prop->fDebugRep = 10;
+  // Activate standard scoring
+  prop->fUseStdScoring = true;
+  if (performance)
+    prop->fUseStdScoring = false;
+  // Monitor the application
+  prop->fUseAppMonitoring = false;
+  prop->PropagatorGeom(geomfile, nthreads, graphics);
+  delete prop;
   //////////SUPER STUPID SOLUTION-> JUST TO CHECK IF IT WORKS/////////////
   fFitness[0] = 0.0;
   fFitness[1] = 0.0;
   ///////////////////////////////////////////
   fitness.HistOutputFitness();
   return fFitness;
-}   
+}
 
 // Forget about constrains now!
 std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
-  //std::cout << "xxxxxxxxxxxxxxxxxxxxxxx Example runCMS.C xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
+  // std::cout << "xxxxxxxxxxxxxxxxxxxxxxx Example runCMS.C
+  // xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
   // We need to modify perfomance counter header GeantVFitness.h
-  
-  //XXXXXXXXXXXXXXXX Take a fitness from individual.GetFitness() XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+  // XXXXXXXXXXXXXXXX Take a fitness from individual.GetFitness()
+  // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   std::vector<Double_t> fFitness;
-  //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  //GeantVApplication *fApplication;
-  std::cout << "GeantVApplication address initialized in example = " << fApplication<< std::endl;
-  std::cout << "Lets pass it to GeantV propagator.."<< std::endl;
+  // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  // GeantVApplication *fApplication;
+  std::cout << "GeantVApplication address initialized in example = "
+            << fApplication << std::endl;
+  std::cout << "Lets pass it to GeantV propagator.." << std::endl;
   bool performance = true;
   const char *geomfile = "cms2015.root";
   const char *xsec = "xsec_FTFP_BERT_G496p02_1mev.root";
@@ -123,10 +138,12 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   int nthreads = individual.GetThread(individual);
   printf("Debugging RunCMS.C: thread value = %d\n", nthreads);
   // Value from individual vector
-  int ntotal = individual.GetAllev(individual); // Number of events to be transported
+  int ntotal =
+      individual.GetAllev(individual); // Number of events to be transported
   printf("Debugging RunCMS.C: all events value = %d\n", ntotal);
   // Value from individual vector
-  int nbuffered = individual.GetBuffev(individual); // Number of buffered events (tunable [1,ntotal])
+  int nbuffered = individual.GetBuffev(
+      individual); // Number of buffered events (tunable [1,ntotal])
   printf("Debugging RunCMS.C: buffered particles value = %d\n", nbuffered);
   TGeoManager::Import(geomfile);
   TaskBroker *broker = nullptr;
@@ -145,7 +162,7 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
       GeantPropagator::Instance(ntotal, nbuffered, nthreads);
   if (broker)
     prop->SetTaskBroker(broker);
-  //prop->fApplication = fApplication;
+  // prop->fApplication = fApplication;
   prop->SetNminThreshold(5 * nthreads);
   prop->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
   prop->SetMonitored(GeantPropagator::kMonMemory, false & (!performance));
@@ -162,7 +179,8 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   prop->fPriorityThr = individual.GetPriority(individual);
   printf("Debugging RunCMS.C: priority value = %f\n", prop->fPriorityThr);
   // Value from individual vector
-  prop->fNperBasket = individual.GetVector(individual); // Initial vector size (tunable)
+  prop->fNperBasket =
+      individual.GetVector(individual); // Initial vector size (tunable)
   printf("Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
   // Value from individual vector
   prop->fMaxPerBasket = 64; // Maximum vector size (tunable)
@@ -205,14 +223,14 @@ std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
 int main(int argc, char *argv[]) {
   // Function definition
   Functions *geantv = new Functions();
-  //geantv->SetInterval(); // don't work because we initialize fNparam after...
+  // geantv->SetInterval(); // don't work because we initialize fNparam after...
   // STUPID SOLUTION //
-  geantv->fInterval.push_back(make_pair(1,10));
-  geantv->fInterval.push_back(make_pair(1,10));
-  geantv->fInterval.push_back(make_pair(1,10));
-  geantv->fInterval.push_back(make_pair(1,10));
-  geantv->fInterval.push_back(make_pair(1,10));
-  geantv->fInterval.push_back(make_pair(1,10));
+  geantv->fInterval.push_back(make_pair(1, 10));
+  geantv->fInterval.push_back(make_pair(1, 10));
+  geantv->fInterval.push_back(make_pair(1, 10));
+  geantv->fInterval.push_back(make_pair(1, 10));
+  geantv->fInterval.push_back(make_pair(1, 10));
+  geantv->fInterval.push_back(make_pair(1, 10));
   geantv->PrintLimit(geantv->fInterval);
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
@@ -222,7 +240,7 @@ int main(int argc, char *argv[]) {
   nsga2->SetNCons(1); // First version will be constrainless
   nsga2->SetNParam(6);
   nsga2->SetNObjectives(2); // Memory, Time
-  //nsga2->SetInterval(); // Testing intervals between [0,100]
+  // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetPopulationSize(4);
   nsga2->SetPMut(0.7);
   nsga2->SetEtaMut(0.7);
