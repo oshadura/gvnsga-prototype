@@ -254,7 +254,7 @@ template <class T> void Population<T>::Evaluate() {
 template <class T> void Population<T>::Evaluation(){
     for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     Genes<T>::Evaluate(setupPop, *it);
-    Genes<T>::printGenes(*it);
+    //Genes<T>::printGenes(*it);
   }
 }
 

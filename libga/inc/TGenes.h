@@ -123,13 +123,11 @@ public:
       std::cout << *it << " ";
     }
     std::cout << "]" << "\n" << std::endl;
-    /*
     std::cout << "Fitness<T> = [";
-      for (auto it = g.GetFitnessVector().begin; it != g.GetFitnessVector().end(); ++it){
+      for (auto it = g.GetFitnessVector().begin(); it != g.GetFitnessVector().end(); ++it){
         std::cout << *it << std::endl;
       }
     std::cout << "]" <<"\n" << std::endl;
-    */
     std::cout << "Constraint<T> = [";
     for (auto it = g.GetConstraines().begin(); it != g.GetConstraines().end();
          ++it) {
