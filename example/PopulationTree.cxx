@@ -29,12 +29,12 @@
 #endif
 
 void runApp(Genes<Double_t> &individual) {
-  //GeantVFitness fitness;
-  //fitness.LogMemoryFitness();
-  const char *geomfile="ExN03.root";
-  const char *xsec="xsec_FTFP_BERT.root";
-  const char *fstate="fstate_FTFP_BERT.root";
-  bool performance=true;
+  // GeantVFitness fitness;
+  // fitness.LogMemoryFitness();
+  const char *geomfile = "ExN03.root";
+  const char *xsec = "xsec_FTFP_BERT.root";
+  const char *fstate = "fstate_FTFP_BERT.root";
+  bool performance = true;
   bool coprocessor = COPROCESSOR_REQUEST;
   int nthreads = individual.GetThread(individual);
   printf("Debugging Run.C: thread value = %d\n", nthreads);
@@ -120,9 +120,9 @@ void runApp(Genes<Double_t> &individual) {
   delete prop;
   //////////SUPER STUPID SOLUTION-> JUST TO CHECK IF IT WORKS/////////////
   individual.SetFitness(0, prop->fTimer->RealTime());
-  //fFitness[1] = fitness->maxMemResident;
+  // fFitness[1] = fitness->maxMemResident;
   ///////////////////////////////////////////
-  //fitness.HistOutputFitness();
+  // fitness.HistOutputFitness();
   return;
 }
 
@@ -132,10 +132,9 @@ void CMSApp(Genes<Double_t> &individual) {
   // std::cout << "xxxxxxxxxxxxxxxxxxxxxxx Example runCMS.C
   // xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
   // We need to modify perfomance counter header GeantVFitness.h
-
   // XXXXXXXXXXXXXXXX Take a fitness from individual.GetFitness()
   // GeantVApplication *fApplication;
-  //std::cout << "GeantVApplication address initialized in example = "
+  // std::cout << "GeantVApplication address initialized in example = "
   //          << fApplication << std::endl;
   std::cout << "Lets pass it to GeantV propagator.." << std::endl;
   bool performance = true;
@@ -222,8 +221,8 @@ void CMSApp(Genes<Double_t> &individual) {
   prop->PropagatorGeom(geomfile, nthreads, graphics);
   delete prop;
   //////////SUPER STUPID SOLUTION-> JUST TO CHECK IF IT WORKS/////////////
-  //fFitness[0] = 0.0;
-  //fFitness[1] = 0.0;
+  // fFitness[0] = 0.0;
+  // fFitness[1] = 0.0;
   ///////////////////////////////////////////
   fitness.HistOutputFitness();
   return;
@@ -244,18 +243,19 @@ int main(int argc, char *argv[]) {
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
-  nsga2->SetEtaCross(0.7);
-  nsga2->SetGenTotalNumber(5);
-  nsga2->SetNCons(1); // First version will be constrainless
+  nsga2->SetPMut(0.7);
+  nsga2->SetGenTotalNumber(2);
+  nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(6);
   nsga2->SetNObjectives(2); // Memory, Time
   // nsga2->SetInterval(); // Testing intervals between [0,100]
+  nsga2->SetCrowdingObj(false);
   nsga2->SetPopulationSize(4);
-  nsga2->SetPMut(0.7);
-  nsga2->SetEtaMut(0.7);
+  nsga2->SetEtaMut(10);
+  nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);
   nsga2->SetLimit(geantv->fInterval);
-  //nsga2->SetFunction(&CMSApp);
+  // nsga2->SetFunction(&CMSApp);
   nsga2->SetFunction(&runApp);
   nsga2->Initialize();
   nsga2->Evolution();

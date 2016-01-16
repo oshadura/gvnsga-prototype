@@ -26,7 +26,7 @@ Population<T>::Population(
     const Double_t fEtaMut,
     const std::vector<std::pair<Double_t, Double_t>> fInterval,
     const Functions::functype func) throw(ExceptionMessenger)
-    : fCrowdingObj(true), fPopFunction(NULL), setupPop(){
+    : fCrowdingObj(true), fPopFunction(NULL), setupPop() {
   setupPop.fNParam = fNParam;
   setupPop.fInterval = fInterval;
   setupPop.fNCons = fNCons;
@@ -70,7 +70,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     it->Genes<T>::Set(setupPop, *it);
-    //fPopulation.emplace_back(&(*it).GetfGenes());
+    // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
   WritePopulationTree(*this, "NSGA.root");
@@ -251,20 +251,20 @@ template <class T> void Population<T>::Evaluate() {
 #endif
 }
 
-template <class T> void Population<T>::Evaluation(){
-    for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+template <class T> void Population<T>::Evaluation() {
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     Genes<T>::Evaluate(setupPop, *it);
-    //Genes<T>::printGenes(*it);
+    Genes<T>::printGenes(*it);
   }
 }
 
-template <class T> void Population<T>::EvaluationOpenMP(){
-  #pragma omp parallel for
+template <class T> void Population<T>::EvaluationOpenMP() {
+#pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
     fPopulation[i].Evaluate(setupPop, fPopulation[i]);
-    //auto ind = GetGenes(i);
-    //Genes<T>::Evaluate(setupPop, ind); 
-    //Genes<T>::printGenes(ind);
+    // auto ind = GetGenes(i);
+    // Genes<T>::Evaluate(setupPop, ind);
+    // Genes<T>::printGenes(ind);
   }
 }
 
