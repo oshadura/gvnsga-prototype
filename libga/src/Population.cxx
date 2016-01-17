@@ -187,22 +187,19 @@ template <class T> Int_t Population<T>::Mutate() {
 
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
-  if (!file) {
-    //////////////////////////////////////
-    TFile *f = new TFile(file, "RECREATE");
+  //if (!file) {
+    TFile *f = new TFile(file, "CREATE");
     TTree *tree = new TTree("Population", "Genetic Algorithm TTree");
     tree->Branch("Population", "Population", &pop);
-    //////////////////////////////////////
     for (int i = 0; i < pop.GetPopulationSize(); ++i){
       for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end(); ++it) {
         tree->Branch("Genes", "Genes", &it);
       }
     }
-    /////////////////////////////////////
     tree->Fill();
     tree->Print();
-    tree->Write();
-  }
+    //tree->Write();
+  //}
   /*
   else {
     TFile *f = TFile::Open(file, "RECREATE");
@@ -211,14 +208,12 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
     exit(-1); 
     }
   */
-  ////// Will be uncommented after installation of latest ROOT (> 15 September)
+  // Will be uncommented after installation of latest ROOT (> 15 September)
   /*
   else {
-    ///////////////////////////////////////
     TFile *ffriend = new TFile("NSGA-friend.root", "RECREATE");
     TTree *treecopy = new TTree("Population", "Genetic Algorithm TTree");
     treecopy->Branch("Population", "Population", &pop);
-    ///////////////////////////////////////
     TFile *f = new TFile("NSGA.root");
     TTree *tree = (TTree *)f->Get("tree");
     tree->AddFriend("treecopy", "NSGA-friend.root");
