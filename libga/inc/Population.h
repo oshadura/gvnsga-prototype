@@ -126,7 +126,7 @@ private:
 
   void Evaluation();
   void EvaluationOpenMP();
-  
+  ////////////////////////
   Functions setupPop;
   Functions::popfunctype fPopFunction;
   //std::vector<Genes<T>> fFront;

@@ -176,26 +176,6 @@ template <class T> void Population<T>::Clear(Option_t * /*option*/) {
   ;
 } // Clear function
 
-template <class T>
-void Population<T>::WritePopulationTree(Population &pop, const char *file) {
-  // if (!file) {
-  TFile *f = new TFile(file, "RECREATE");
-  TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
-  tree->Branch("Population", &pop, "Population generation");
-  tree->Fill();
-  tree->Print();
-  //}
-  /*
-  else {
-    TFile *f = TFile::Open(file, "RECREATE");
-    TTree *tree = (TTree *)f->Get("gvga");
-    TTree *tr_c = new TTree("gvga_1", "Genetic Algorithm friend Tree");
-    tree->AddFriend("gvga_1", f);
-    tree->Fill();
-    tree->Print();
-  }
-  */
-}
 
 template <class T> Int_t Population<T>::Mutate() {
   Int_t tmp;
@@ -206,14 +186,57 @@ template <class T> Int_t Population<T>::Mutate() {
 }
 
 template <class T>
+void Population<T>::WritePopulationTree(Population &pop, const char *file) {
+  if (!file) {
+    //////////////////////////////////////
+    TFile *f = new TFile(file, "RECREATE");
+    TTree *tree = new TTree("Population", "Genetic Algorithm TTree");
+    tree->Branch("Population", "Population", &pop);
+    //////////////////////////////////////
+    for (int i = 0; i < pop.GetPopulationSize(); ++i){
+      for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end(); ++it) {
+        tree->Branch("Genes", "Genes", &it);
+      }
+    }
+    /////////////////////////////////////
+    tree->Fill();
+    tree->Print();
+    tree->Write();
+  }
+  /*
+  else {
+    TFile *f = TFile::Open(file, "RECREATE");
+    if (f->IsZombie()) { 
+    std::cout << "Error opening file" << std::endl; 
+    exit(-1); 
+    }
+  */
+  ////// Will be uncommented after installation of latest ROOT (> 15 September)
+  /*
+  else {
+    ///////////////////////////////////////
+    TFile *ffriend = new TFile("NSGA-friend.root", "RECREATE");
+    TTree *treecopy = new TTree("Population", "Genetic Algorithm TTree");
+    treecopy->Branch("Population", "Population", &pop);
+    ///////////////////////////////////////
+    TFile *f = new TFile("NSGA.root");
+    TTree *tree = (TTree *)f->Get("tree");
+    tree->AddFriend("treecopy", "NSGA-friend.root");
+    tree->Fill();
+    tree->Print();
+  }
+  */
+}
+
+template <class T>
 void Population<T>::UpdatePopulationTree(Population<T> &pop, const char *file) {
   // Looks it is not possible update existing events, lets update the tree
   TFile *f = TFile::Open(file, "RECREATE");
   if (!f) {
     return;
   }
-  TTree *tree = (TTree *)f->Get("gvga");
-  TTree *output = new TTree("gvga_1", "Changing individual in a population");
+  TTree *tree = (TTree *)f->Get("Population");
+  TTree *output = new TTree("Population", "Changing individual in a population");
   output->Branch("Population", &pop);
   tree->AddFriend("gvga_1", f);
   f->Write();
@@ -223,7 +246,7 @@ template <class T>
 void Population<T>::ReadPopulationTree(Population<T> &pop, const char *file) {
 
   TFile *f = TFile::Open(file, "RECREATE");
-  TTree *tree = (TTree *)f->Get("gvga");
+  TTree *tree = (TTree *)f->Get("Population");
   tree->SetBranchAddress("Population", &pop);
   Int_t entries = (Int_t)(tree->GetEntries());
 }
