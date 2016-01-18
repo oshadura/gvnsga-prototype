@@ -9,7 +9,7 @@
 find_path(HEPMC_INCLUDE_DIR HepMC/GenEvent.h 
           HINTS ${HEPMC_ROOT_DIR}/include $ENV{HEPMC_ROOT_DIR}/include)
 find_library(HEPMC_LIBRARY NAMES HepMC 
-             HINTS ${HEPMC_ROOT_DIR}/lib $ENV{HEPMC_ROOT_DIR}/lib)
+             HINTS ${HEPMC_ROOT_DIR}/lib64 $ENV{HEPMC_ROOT_DIR}/lib64)
 
 set(HEPMC_INCLUDE_DIRS ${HEPMC_INCLUDE_DIR})
 set(HEPMC_LIBRARIES ${HEPMC_LIBRARY})

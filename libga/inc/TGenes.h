@@ -14,6 +14,10 @@ class Functions;
 template <class T> class Population;
 
 template <class T> class Genes : public TObject {
+
+protected:
+  T fGeneType;
+
 public:
   // Constructor
   Genes() throw();

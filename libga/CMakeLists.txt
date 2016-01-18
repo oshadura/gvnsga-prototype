@@ -18,8 +18,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
       message(STATUS "Detecting: MSVC")
 endif()
-#----------------------------------------------------------------------------
-############
+#-----------------------------------------------------------------------------
+
 if (GNU)
   set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -std=c++11 -Wall -fPIC -g")
   if (CMAKE_BUILD_TYPE MATCHES Debug)

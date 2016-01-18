@@ -12,6 +12,7 @@
 #include "HistogramManager.h"
 
 // AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
+ClassImp(AlgorithmNSGA)
 
 struct Sort {
   Population<Double_t> &pop;
@@ -278,5 +279,3 @@ void AlgorithmNSGA::Evolution() {
     NextStep();
   } // Check through population object
 }
-
-ClassImp(AlgorithmNSGA)

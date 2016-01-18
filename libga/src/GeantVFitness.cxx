@@ -5,6 +5,8 @@
 
 class TTree;
 
+ClassImp(GeantVFitness)
+
 struct CompairMemResident {
 
 bool operator()(ProcInfo_t lhs, ProcInfo_t rhs) {

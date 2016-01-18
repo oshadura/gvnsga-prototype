@@ -215,6 +215,7 @@ struct PFMWatch {
     return countoverhead[1];
     //    return Taccum/(1.*N);
   }
+    ClassDef(PFMWatch, 1)
 };
 
 #endif

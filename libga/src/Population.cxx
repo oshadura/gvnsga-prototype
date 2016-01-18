@@ -11,13 +11,14 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TStopwatch.h"
+#include "TSystem.h"
 
 #include "TGenes.h"
 #include "Functions.h"
 #include "Population.h"
 #include "HistogramManager.h"
 
-// ClassImp(Population<T>)
+templateClassImp(Population)
 
 template <class T>
 Population<T>::Population(
@@ -73,7 +74,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
-  WritePopulationTree(*this, "NSGA.root");
+  //WritePopulationTree(*this, "NSGA.root");
 }
 
 template <class T> void Population<T>::CrowdingDistanceAll() {
@@ -188,7 +189,8 @@ template <class T> Int_t Population<T>::Mutate() {
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
   //if (!file) {
-    TFile *f = new TFile(file, "CREATE");
+    gSystem->Load("libga/libGA.so");
+    TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("Population", "Genetic Algorithm TTree");
     tree->Branch("Population", "Population", &pop);
     for (int i = 0; i < pop.GetPopulationSize(); ++i){

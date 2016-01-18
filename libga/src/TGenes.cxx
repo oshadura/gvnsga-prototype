@@ -23,7 +23,7 @@
 #include "Population.h"
 #include "HistogramManager.h"
 
-// ClassImp(Genes<T>)
+templateClassImp(Genes)
 
 template <class T>
 Genes<T>::Genes() throw()

@@ -16,6 +16,7 @@ public:
 private:
 	std::vector<ProcInfo_t> fMemoryVector;
 
+	ClassDef(GeantVFitness, 1)
 };	
 
 #endif
