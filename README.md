@@ -17,3 +17,7 @@ How to run:
 
 cmake ../ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DVc_DIR=/home/geant/Install/VC1.0/lib/cmake/Vc/ -DHEPMC_ROOT_DIR=/afs/cern.ch/work/g/geant/jenkins/workspace/olwork21-gcc491-geant/HepMC/ -DCMAKE_CXX_FLAGS="-fabi-version=6 -fdiagnostics-color"
 
+####### New version #######
+
+cmake ../ -DCMAKE_INSTALL_PREFIX=/home/geant/Install/gvnsga-prototype -DVc_DIR=/home/geant/Install/Vc/lib/cmake/Vc/ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DCMAKE_PREFIX_PATH=/home/geant/Install/HepMC/ -DCMAKE_CXX_FLAGS="-fdiagnostics-color=auto -fpermissive -fabi-version=6 -fext-numeric-literals" -DVecGeom_DIR=/home/geant/Install/VecGeom/lib/CMake/ -DCMAKE_BUILD_TYPE=Debug -DBOOST_ROOT=/home/geant/Install/boost/
+
