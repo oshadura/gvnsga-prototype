@@ -31,7 +31,7 @@ ClassImp(AlgorithmNSGA)
 
 AlgorithmNSGA::AlgorithmNSGA()
     : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0),
-      fNMut(0), fNGen(0), fParentPop(), fChildPop(), fMixedPop(), fSizePop(0),
+      fNMut(0), fNGen(0), fParentPop(0), fChildPop(0), fMixedPop(0), fSizePop(0),
       fNParam(0), fInterval(0), fNCons(0), fNObjectives(0), fPMut(0),
       fEtaMut(0), fEpsilonC(0), fCrowdingObj(true) {}
 
@@ -114,17 +114,15 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
               << std::endl;
   }
   ////////////////////////////////////////////////////////////////////////
-
   if (popfunction) {
     fParentPop->SetPopFunction(popfunction);
     fChildPop->SetPopFunction(popfunction);
     fMixedPop->SetPopFunction(popfunction);
   }
-
   fGen = 1;
   std::cout << "New generetion #" << fGen << std::endl;
   fParentPop->Build();
-  // fParentPop->printPopulation(fParentPop);
+  ///////////////////////// My favorite debug /////////////////////////////
   /*
   for (auto it = fParentPop->GetIndividuals().begin(); it !=
   fParentPop->GetIndividuals().end(); ++it){
@@ -134,13 +132,18 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
+  std::cout << "STUPID POPULATION WHERE ARE YOU?" << std::endl;
+  for (auto it = fParentPop->GetIndividuals().begin(); it !=
+  fParentPop->GetIndividuals().end(); ++it){
+    it->Genes<Double_t>::printGenes(*it);
+  }
 }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
-                              Population<Double_t> &newpop) {
+                              Population<Double_t> &newpop) throw(ExceptionMessenger) {
   static TRandom3 rand;
-  const Int_t N = oldpop.GetPopulationSetupSize();
-  // const Int_t N = 4;
+  //const Int_t N = oldpop.GetPopulationSize();
+  const Int_t N = 4;
   std::vector<Int_t> a1(N), a2(N);
   for (Int_t i = 0; i < N; ++i) {
     a1[i] = a2[i] = i;

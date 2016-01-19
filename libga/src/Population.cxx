@@ -58,16 +58,6 @@ template <typename T> struct Comparing {
   };
 };
 
-/*
-template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
-    it->Genes<T>::Set(setupPop, *it);
-    std::cout << " Creating new individual.." << std::endl;
-  }
-  WritePopulationTree(*this, "NSGA.root");
-}
-*/
-
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     it->Genes<T>::Set(setupPop, *it);

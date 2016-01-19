@@ -28,8 +28,8 @@ public:
   Population(Int_t size)
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fH(0),
         fPopFunction(NULL), setupPop() {
-    // fFront.reserve(fSizePop);
-    // fPopulation.reserve(fSizePop);
+     fFront.reserve(size);
+     fPopulation.reserve(size);
   }
 
   Population(const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,

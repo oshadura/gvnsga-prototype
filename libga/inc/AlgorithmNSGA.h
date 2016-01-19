@@ -14,7 +14,7 @@ public:
   AlgorithmNSGA();
   virtual ~AlgorithmNSGA();
   void Initialize() throw(ExceptionMessenger);
-  void Selection(Population<Double_t> &oldpop, Population<Double_t> &newpop);
+  void Selection(Population<Double_t> &oldpop, Population<Double_t> &newpop) throw(ExceptionMessenger);
   Genes<Double_t> &Tournament(Genes<Double_t> &ind1,
                               Genes<Double_t> &ind2) const;
   void Crossover(const Genes<Double_t> &parent1, const Genes<Double_t> &parent2,
