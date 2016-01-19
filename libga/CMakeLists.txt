@@ -63,15 +63,15 @@ if(MPI_CXX_FOUND)
 endif()
 
 #----------------------------------------------------------------------------
-option(ENABLE_BOOST "Adding OpenMP support" ON)
+option(ENABLE_BOOST "Adding Boost support" ON)
 find_package(Boost)
 if(BOOST_FOUND)
   set(GVNSGA_COMPILATION_FLAGS "${GA_COMPILATION_FLAGS} -DENABLE_BOOST")
 endif()
 
 #----------------------------------------------------------------------------
-option(ENABLE_PERFMON "Adding PerfMon support" ON)
-find_package(PerfMon)
+option(ENABLE_PERFMON "Adding PerfMon support" OFF)
+find_package(PerfMon QUIET)
 if(PerfMon_FOUND)
   set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_PERFMON")
 endif()

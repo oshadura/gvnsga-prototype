@@ -10,8 +10,10 @@
 #include "TGenes.h"
 #include "AlgorithmNSGA.h"
 #include "GeantVFitness.h"
-#include "PFMWatch.h"
 
+#ifdef ENABLE_PERFMON
+#include "PFMWatch.h"
+#endif
 
 #include "Rtypes.h"
 #include "TGeoManager.h"
@@ -31,10 +33,12 @@
 #endif
 
 void runApp(Genes<Double_t> &individual) {
-  // GeantVFitness fitness;
-  // fitness.LogMemoryFitness();
-  //#######################################
+// GeantVFitness fitness;
+// fitness.LogMemoryFitness();
+//#######################################
+#ifdef ENABLE_PERFMON
   PFMWatch perfcontrol;
+#endif
   //#######################################
   const char *geomfile = "ExN03.root";
   const char *xsec = "xsec_FTFP_BERT.root";

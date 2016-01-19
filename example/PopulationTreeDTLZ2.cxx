@@ -21,7 +21,7 @@ static const double halfpi = boost::math::constants::pi<double>() / 2.0;
 
 void DTLZ2(Genes<Double_t> &individual) {
   double y = 0.0;
-  for(Int_t i = 0; i < individual.GetfGenes().size(); ++i) {
+  for (Int_t i = 0; i < individual.GetfGenes().size(); ++i) {
     y += pow(individual.GetGene(i) - 0.5, 2);
   }
   individual.SetFitness(0, y);
@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
   nsga2->SetPMut(0.7);
   nsga2->SetGenTotalNumber(2);
   nsga2->SetNCons(0); // First version will be constrainless
-  nsga2->SetNParam(6);
-  nsga2->SetNObjectives(2); // Memory, Time
+  nsga2->SetNParam(2);
+  nsga2->SetNObjectives(1); // Memory, Time
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
   nsga2->SetPopulationSize(4);

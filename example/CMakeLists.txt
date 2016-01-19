@@ -10,7 +10,7 @@ find_package(VecGeom REQUIRED)
 #find_package(Vc REQUIRED)
 find_package(HepMC REQUIRED)
 find_package(Boost)
-find_package(PerfMon)
+find_package(PerfMon QUIET)
 #---------------------------------------------------------------------------
 include_directories(${Vc_INCLUDE_DIR} ${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
@@ -34,10 +34,10 @@ macro(build_executables EXECUTABLES)
   foreach(EXECUTABLE ${EXECUTABLES})
     get_filename_component(TARGET_NAME ${EXECUTABLE} NAME_WE)
     add_executable(${TARGET_NAME} ${EXECUTABLE})
-    if(Boost_FOUND)
-    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} -lpfm)
+    if(PerfMon_FOUND)
+    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARIES})
     else()
-    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} -lpfm)
+    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS})
     endif()
     add_dependencies(${TARGET_NAME} GA)
   endforeach()
@@ -48,8 +48,8 @@ set(LIBGA_EXAMPLES
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ1.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ2.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ3.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRun.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
+   #${CMAKE_SOURCE_DIR}/example/PopulationTreeRun.cxx
+   #${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
 )
 
 #----------------------------------------------------------------------------
@@ -58,4 +58,6 @@ set(LIBGA_EXAMPLES
 #target_link_libraries(PopulationTree GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${VECGEOM_LIBRARIES} ${HEPMC3_LIBRARIES} ${GEANTV_LIBRARIES})
 
 build_executables("${LIBGA_EXAMPLES}")
-install(TARGETS PopulationTreeDTLZ1 PopulationTreeDTLZ2 PopulationTreeDTLZ3 PopulationTreeRun PopulationTreeRunCMS DESTINATION ${CMAKE_BINARY_DIR})
+install(TARGETS PopulationTreeDTLZ1 PopulationTreeDTLZ2 PopulationTreeDTLZ3
+# PopulationTreeRun PopulationTreeRunCMS
+ DESTINATION ${CMAKE_BINARY_DIR})
