@@ -6,6 +6,7 @@
 #include "TH1.h"
 #include "TTreeReader.h"
 #include "TTreeReaderArray.h"
+#include "TTreeReaderValue.h"
 #include <vector>
 
 class HistogramManager : public TObject {
@@ -23,8 +24,8 @@ private:
 public:
   HistogramManager(TDirectory *dir);
   virtual ~HistogramManager() {}
-  void HFill(Population<Double_t> &pop, char *file);
-  bool CheckValue(ROOT::Internal::TTreeReaderValueBase *value);
+  Bool_t HFill(Population<Double_t> &pop, char *file);
+  Bool_t CheckValue(ROOT::Internal::TTreeReaderValueBase *value);
 
   ClassDef(HistogramManager, 1)
 };
