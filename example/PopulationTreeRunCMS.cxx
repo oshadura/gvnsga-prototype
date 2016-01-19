@@ -10,6 +10,7 @@
 #include "TGenes.h"
 #include "AlgorithmNSGA.h"
 #include "GeantVFitness.h"
+#include "PFMWatch.h"
 
 #include "Rtypes.h"
 #include "TGeoManager.h"
