@@ -14,7 +14,7 @@
 // AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
 ClassImp(AlgorithmNSGA)
 
-struct Sort {
+    struct Sort {
   Population<Double_t> &pop;
   Sort(Population<Double_t> &population) : pop(population){};
   bool operator()(Int_t i, Int_t j) {
@@ -124,9 +124,10 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   fGen = 1;
   std::cout << "New generetion #" << fGen << std::endl;
   fParentPop->Build();
-  //fParentPop->printPopulation(fParentPop);
+  // fParentPop->printPopulation(fParentPop);
   /*
-  for (auto it = fParentPop->GetIndividuals().begin(); it != fParentPop->GetIndividuals().end(); ++it){
+  for (auto it = fParentPop->GetIndividuals().begin(); it !=
+  fParentPop->GetIndividuals().end(); ++it){
     it->Genes<Double_t>::printGenes(*it);
   }
   */
@@ -138,8 +139,8 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
                               Population<Double_t> &newpop) {
   static TRandom3 rand;
-  // const Int_t N = oldpop.GetPopulationSetupSize();
-  const Int_t N = 4;
+  const Int_t N = oldpop.GetPopulationSetupSize();
+  // const Int_t N = 4;
   std::vector<Int_t> a1(N), a2(N);
   for (Int_t i = 0; i < N; ++i) {
     a1[i] = a2[i] = i;
