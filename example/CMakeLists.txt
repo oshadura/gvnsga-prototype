@@ -10,6 +10,7 @@ find_package(VecGeom REQUIRED)
 #find_package(Vc REQUIRED)
 find_package(HepMC REQUIRED)
 find_package(Boost)
+find_package(PerfMon)
 #---------------------------------------------------------------------------
 include_directories(${Vc_INCLUDE_DIR} ${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)

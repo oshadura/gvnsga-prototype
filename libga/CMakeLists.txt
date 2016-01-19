@@ -70,6 +70,14 @@ if(BOOST_FOUND)
 endif()
 
 #----------------------------------------------------------------------------
+option(ENABLE_PERFMON "Adding PerfMon support" ON)
+find_package(PerfMon)
+if(PerfMon_FOUND)
+  set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_PERFMON")
+endif()
+
+#----------------------------------------------------------------------------
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GA_CXX_FLAGS} ${GVNSGA_COMPILATION_FLAGS}")
 message(STATUS "Compiling GA with C++ flags: ${CMAKE_CXX_FLAGS}")
 #----------------------------------------------------------------------------
