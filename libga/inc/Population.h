@@ -17,19 +17,19 @@
 #include <algorithm>
 
 template <class T> class Genes;
-template <class T> class Population : public Genes<T>, public Functions{
+template <class T> class Population : public Genes<T>, public Functions {
 
- // To be used after
- // template <typename ...Args> using myType = std::function<void(Args...)>;
+  // To be used after
+  // template <typename ...Args> using myType = std::function<void(Args...)>;
 public:
   Population()
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fH(0),
-        fPopFunction(NULL), setupPop(){}
+        fPopFunction(NULL), setupPop() {}
   Population(Int_t size)
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fH(0),
-        fPopFunction(NULL), setupPop(){
-    //fFront.reserve(fSizePop);
-    //fPopulation.reserve(fSizePop);
+        fPopFunction(NULL), setupPop() {
+    // fFront.reserve(fSizePop);
+    // fPopulation.reserve(fSizePop);
   }
 
   Population(const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,
@@ -107,13 +107,15 @@ public:
   // Const <-> non const iterator problem
   void printPopulation(const Population<T> &pop) {
     std::cout << "Population: [\n" << std::endl;
-    for (int i = 0; i < pop.GetPopulationSize(); ++i){
-      for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end(); ++it) {
-      std::cout << *it << std::endl;
+    for (int i = 0; i < const_cast<Population<T> &>(pop).GetPopulationSize();
+         ++i) {
+      for (auto it = const_cast<Population<T> &>(pop).GetGenes(i).begin();
+           it != const_cast<Population<T> &>(pop).GetGenes(i).end(); ++it) {
+        std::cout << *it << std::endl;
+      }
     }
-  }
     std::cout << " ]\n" << std::endl;
-}
+  }
 
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
@@ -123,14 +125,13 @@ public:
   std::vector<Genes<T>> fPopulation;
 
 private:
-
   void Evaluation();
   void EvaluationOpenMP();
   ////////////////////////
   Functions setupPop;
   Functions::popfunctype fPopFunction;
-  //std::vector<Genes<T>> fFront;
-  //std::vector<Genes<T>> fPopulation;
+  // std::vector<Genes<T>> fFront;
+  // std::vector<Genes<T>> fPopulation;
   Int_t fSizePop;
   TH1F *fH;
 

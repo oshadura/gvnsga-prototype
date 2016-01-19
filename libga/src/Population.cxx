@@ -20,13 +20,13 @@
 
 templateClassImp(Population)
 
-template <class T>
-Population<T>::Population(
-    const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,
-    const Int_t fNObjectives, const Double_t fEpsilonC, const Double_t fPMut,
-    const Double_t fEtaMut,
-    const std::vector<std::pair<Double_t, Double_t>> fInterval,
-    const Functions::functype func) throw(ExceptionMessenger)
+    template <class T>
+    Population<T>::Population(
+        const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,
+        const Int_t fNObjectives, const Double_t fEpsilonC,
+        const Double_t fPMut, const Double_t fEtaMut,
+        const std::vector<std::pair<Double_t, Double_t>> fInterval,
+        const Functions::functype func) throw(ExceptionMessenger)
     : fCrowdingObj(true), fPopFunction(NULL), setupPop() {
   setupPop.fNParam = fNParam;
   setupPop.fInterval = fInterval;
@@ -74,7 +74,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
-  //WritePopulationTree(*this, "NSGA.root");
+  // WritePopulationTree(*this, "NSGA.root");
 }
 
 template <class T> void Population<T>::CrowdingDistanceAll() {
@@ -170,13 +170,13 @@ void Population<T>::Merge(const Population<T> &population1,
   std::copy(population1.fPopulation.begin(), population1.fPopulation.end(),
             fPopulation.begin());
   std::copy(population2.fPopulation.begin(), population2.fPopulation.end(),
-            fPopulation.begin() + population1.GetPopulationSize());
+            fPopulation.begin() +
+                const_cast<Population<T> &>(population1).GetPopulationSize());
 }
 
 template <class T> void Population<T>::Clear(Option_t * /*option*/) {
   ;
 } // Clear function
-
 
 template <class T> Int_t Population<T>::Mutate() {
   Int_t tmp;
@@ -188,26 +188,26 @@ template <class T> Int_t Population<T>::Mutate() {
 
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
-  //if (!file) {
-    gSystem->Load("libga/libGA.so");
-    TFile *f = new TFile(file, "RECREATE");
-    TTree *tree = new TTree("Population", "Genetic Algorithm TTree");
-    tree->Branch("Population", "Population", &pop);
-    for (int i = 0; i < pop.GetPopulationSize(); ++i){
-      for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end(); ++it) {
-        tree->Branch("Genes", "Genes", &it);
-      }
+  // if (!file) {
+  gSystem->Load("libga/libGA.so");
+  TFile *f = new TFile(file, "RECREATE");
+  TTree *tree = new TTree("Population", "Genetic Algorithm TTree");
+  tree->Branch("Population", "Population", &pop);
+  for (int i = 0; i < pop.GetPopulationSize(); ++i) {
+    for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end(); ++it) {
+      tree->Branch("Genes", "Genes", &it);
     }
-    tree->Fill();
-    tree->Print();
-    //tree->Write();
+  }
+  tree->Fill();
+  tree->Print();
+  // tree->Write();
   //}
   /*
   else {
     TFile *f = TFile::Open(file, "RECREATE");
-    if (f->IsZombie()) { 
-    std::cout << "Error opening file" << std::endl; 
-    exit(-1); 
+    if (f->IsZombie()) {
+    std::cout << "Error opening file" << std::endl;
+    exit(-1);
     }
   */
   // Will be uncommented after installation of latest ROOT (> 15 September)
@@ -233,7 +233,8 @@ void Population<T>::UpdatePopulationTree(Population<T> &pop, const char *file) {
     return;
   }
   TTree *tree = (TTree *)f->Get("Population");
-  TTree *output = new TTree("Population", "Changing individual in a population");
+  TTree *output =
+      new TTree("Population", "Changing individual in a population");
   output->Branch("Population", &pop);
   tree->AddFriend("gvga_1", f);
   f->Write();
