@@ -17,7 +17,7 @@
 #define COPROCESSOR_REQUEST false
 #endif
 
-static const double halfpi = boost::math::constants::pi<double>() / 2.0;
+static const double halfpi = boost::math::constants::pi<Double_t>() / 2.0;
 
 void DTLZ2(Genes<Double_t> &individual) {
   double y = 0.0;

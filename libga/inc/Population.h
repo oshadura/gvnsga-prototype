@@ -90,7 +90,6 @@ public:
 
   Genes<T> operator[](Int_t i) { return fPopulation.at(i); }
 
-  /*
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop) {
     os << "Population: [\n";
     std::ostream_iterator<Genes<T>> fGenesOutIt(os, "\n");
@@ -102,7 +101,6 @@ public:
     os << "]";
     return os;
   }
-  */
 
   // Const <-> non const iterator problem
   void printPopulation(const Population<T> &pop) {

@@ -129,21 +129,26 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
     it->Genes<Double_t>::printGenes(*it);
   }
   */
+  /////////////////////////////////////////////////////////////////////////
   fParentPop->Evaluate();
-  fParentPop->FastNonDominantSorting();
-  fParentPop->CrowdingDistanceAll();
-  std::cout << "STUPID POPULATION WHERE ARE YOU?" << std::endl;
+  ////////////////////////////////////////////////////////////////////////
+  /*
+  std::cout << "STUPID POPULATION WHERE ARE YOU?\n" << std::endl;
   for (auto it = fParentPop->GetIndividuals().begin(); it !=
   fParentPop->GetIndividuals().end(); ++it){
     it->Genes<Double_t>::printGenes(*it);
   }
-}
+  */
+  ////////////////////////////////////////////////////////////////////////
+  fParentPop->FastNonDominantSorting();
+  fParentPop->CrowdingDistanceAll();
+  }
 
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
                               Population<Double_t> &newpop) throw(ExceptionMessenger) {
   static TRandom3 rand;
-  //const Int_t N = oldpop.GetPopulationSize();
-  const Int_t N = 4;
+  const Int_t N = oldpop.GetPopulationSize();
+  //const Int_t N = 4;
   std::vector<Int_t> a1(N), a2(N);
   for (Int_t i = 0; i < N; ++i) {
     a1[i] = a2[i] = i;
