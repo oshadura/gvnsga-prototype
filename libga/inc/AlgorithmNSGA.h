@@ -90,7 +90,6 @@ public:
   Population<Double_t> *fParentPop;
   Population<Double_t> *fChildPop;
   Population<Double_t> *fMixedPop;
-  std::ofstream configuration;
 
   ClassDef(AlgorithmNSGA, 1)
 };
