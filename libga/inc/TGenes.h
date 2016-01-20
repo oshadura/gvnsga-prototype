@@ -30,8 +30,7 @@ public:
   virtual ~Genes() {}
   // Function building Genes (moved in Population and Functions)
   void Clear(Option_t *option = "");
-  T CheckDominance(Functions *setup,
-                   const Genes<T> *ind2) throw(ExceptionMessenger);
+  T CheckDominance(const Genes<T> *ind2) throw(ExceptionMessenger);
   Int_t Mutate();
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);

@@ -130,7 +130,7 @@ void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
                               Population<Double_t> &newpop) throw(ExceptionMessenger) {
   static TRandom3 rand;
   const Int_t N = oldpop.GetPopulationSize();
-  std::vector<Int_t> VecGenes1(N), VecGenes2(N);
+  std::vector<Double_t> VecGenes1(N), VecGenes2(N);
   for (Int_t i = 0; i < N; ++i) {
     VecGenes1[i] = VecGenes2[i] = i;
   }
@@ -157,8 +157,7 @@ Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
                                            Genes<Double_t> &ind2) const {
   static TRandom rnd;
   const Functions *setupind = ind1.GetSetup();
-  // std::cout << "So so" << GetNObjectives() << std::endl;
-  Int_t fFlag = ind1.CheckDominance(const_cast<Functions *>(setupind), &ind2);
+  Int_t fFlag = ind1.CheckDominance(&ind2);
   if (fFlag == 1) // Yes
     return ind1;
   else if (fFlag == -1) // Opposite
