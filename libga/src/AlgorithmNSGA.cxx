@@ -129,36 +129,37 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
                               Population<Double_t> &newpop) throw(ExceptionMessenger) {
   static TRandom3 rand;
-  const Int_t N = oldpop.GetPopulationSize();
-  std::vector<Int_t> VecGenes1(N), VecGenes2(N);
-  for (Int_t i = 0; i < N; ++i) {
-    VecGenes1[i] = VecGenes2[i] = i;
+  const Int_t PopSizeCheck = oldpop.GetPopulationSize();
+  if((newpop.GetPopulationSize()) != PopSizeCheck)
+    throw ExceptionMessenger("OMG! New population has wrong size");
+  std::vector<Int_t> VecIndexGenes1(PopSizeCheck), VecIndexGenes2(PopSizeCheck);
+  for (Int_t i = 0; i < PopSizeCheck; ++i) {
+    VecIndexGenes1[i] = VecIndexGenes2[i] = i;
   }
-  for (Int_t i = 0; i < N; ++i) {
-    std::swap(VecGenes1[rand.Uniform(i, N - 1)], VecGenes1[i]);
-    std::swap(VecGenes2[rand.Uniform(i, N - 1)], VecGenes2[i]);
+  for (Int_t i = 0; i < PopSizeCheck; ++i) {
+    std::swap(VecIndexGenes1[rand.Uniform(i, PopSizeCheck - 1)], VecIndexGenes1[i]);
+    std::swap(VecIndexGenes2[rand.Uniform(i, PopSizeCheck - 1)], VecIndexGenes2[i]);
   }
-  for (Int_t i = 0; i < N; i += 4) {
+  for (Int_t i = 0; i < PopSizeCheck; i += 4) {
     Genes<Double_t> &Combination11 =
-        Tournament(oldpop.GetGenes(VecGenes1[i]), oldpop.GetGenes(VecGenes1[i + 1]));
+        Tournament(oldpop.GetGenes(VecIndexGenes1[i]), oldpop.GetGenes(VecIndexGenes1[i + 1]));
     Genes<Double_t> &Combination12 =
-        Tournament(oldpop.GetGenes(VecGenes1[i + 2]), oldpop.GetGenes(VecGenes1[i + 3]));
+        Tournament(oldpop.GetGenes(VecIndexGenes1[i + 2]), oldpop.GetGenes(VecIndexGenes1[i + 3]));
     Crossover(Combination11, Combination12, newpop.GetGenes(i), newpop.GetGenes(i + 1));
-
     Genes<Double_t> &Combination21 =
-        Tournament(oldpop.GetGenes(VecGenes2[i]), oldpop.GetGenes(VecGenes2[i + 1]));
+        Tournament(oldpop.GetGenes(VecIndexGenes2[i]), oldpop.GetGenes(VecIndexGenes2[i + 1]));
     Genes<Double_t> &Combination22 =
-        Tournament(oldpop.GetGenes(VecGenes2[i + 2]), oldpop.GetGenes(VecGenes2[i + 3]));
+        Tournament(oldpop.GetGenes(VecIndexGenes2[i + 2]), oldpop.GetGenes(VecIndexGenes2[i + 3]));
     Crossover(Combination21, Combination22, newpop.GetGenes(i + 2), newpop.GetGenes(i + 3));
   }
-}
+} 
 
 Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
                                            Genes<Double_t> &ind2) const {
   static TRandom rnd;
-  const Functions *setupind = ind1.GetSetup();
-  // std::cout << "So so" << GetNObjectives() << std::endl;
-  Int_t fFlag = ind1.CheckDominance(const_cast<Functions *>(setupind), &ind2);
+  const Functions* setupind = ind1.GetSetup();
+  std::cout << "So so - number of objectives " << ind1.GetSetup() << std::endl;
+  Int_t fFlag = ind1.CheckDominance(const_cast<Functions* >(setupind), &ind2);
   if (fFlag == 1) // Yes
     return ind1;
   else if (fFlag == -1) // Opposite

@@ -68,7 +68,7 @@ public:
   void SetConstrain(Int_t i, T value);
   std::vector<T> GetConstraines() const { return fConstraines; }
   std::vector<T> GetfGenes() const {return fGenes;}
-  const Functions *GetSetup() { return setup; }
+  const Functions* GetSetup() const { return setup; }
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
     typename std::vector<T>::iterator it = fGenes.begin();
@@ -142,7 +142,6 @@ public:
   }
 
 private:
-  ///////////////////////////////////////////////////
   // Individual parts (Genes)
   T fAllev;    // All events (after will be translated in GeantV namespace) #0
   T fBuffev;   // Buffered events (after will be translated in GeantV
@@ -155,13 +154,11 @@ private:
                // namespace) #5
   T fVector;   // Vector size (after will be translated in GeantV
                // namespace) #6
-  //////////////////////////////////////////////////
   // Parts of fitness vector
   T fTime;   // RT from GeantV (after will be translated in GeantV
              // namespace)
   T fMemory; // RT from GeantV (after will be translated in GeantV
              // namespace)
-  ///////////////////////////////////////////////////
   std::vector<T> fFitness;    // Vector of values of different fitness
                               // function (objectives)
   Int_t fDominationCounter;   // Domination counter for individual (used in
@@ -175,7 +172,6 @@ private:
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
   /////// Trial for Genes() constructor ///////////////
   const Functions *setup;
-  ///////////////////////////////////////////////////
   // Should we write a map to be sure about connection between Limits[] and
   // Genes[] || Fitmess[] and Constraint[]?
   // static std::multimap<Genes,Limits> fInputMap;
