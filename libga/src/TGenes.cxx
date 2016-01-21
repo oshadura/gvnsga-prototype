@@ -85,6 +85,7 @@ template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
 template <class T>
 void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   // Lets imagine that we have only one limit #0 for all parameters
+  ind = Genes<T>(setup);
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
   ind.resize(setup.fNParam);
@@ -95,7 +96,7 @@ void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
   }
-  //printGenes(ind);
+  
 }
 
 template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
