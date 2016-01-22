@@ -174,18 +174,18 @@ T Genes<T>::CheckDominance(Functions *setup,
 }
 
 // Polynomial mutation
-template <class T> Int_t Genes<T>::Mutate() {
+template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
   TRandom rand;
   Double_t fRrnd, fDelta1, fDelta2, fMutPow, fDelta, fValue;
-  Double_t y, yl, yu, xy;
+  Double_t y, LimitDown, LimitUp, xy;
   Int_t fNMut = 0;
   for (Int_t j = 0; j < setup->fNParam; ++j) {
     if (rand.Rndm() <= setup->fPMut) {
       y = fGenes[j];
-      yl = setup->GetIntervalLimit(j).first;
-      yu = setup->GetIntervalLimit(j).second;
-      fDelta1 = (y - yl) / (yu - yl);
-      fDelta2 = (yu - y) / (yu - yl);
+      LimitDown = setup->GetIntervalLimit(j).first;
+      LimitUp = setup->GetIntervalLimit(j).second;
+      fDelta1 = (y - LimitDown) / (LimitUp - LimitDown);
+      fDelta2 = (LimitUp - y) / (LimitUp - LimitDown);
       fRrnd = rand.Rndm();
       fMutPow = 1.0 / (setup->fEtaMut + 1.0);
       if (fRrnd <= 0.5) {
@@ -199,11 +199,11 @@ template <class T> Int_t Genes<T>::Mutate() {
                  2.0 * (fRrnd - 0.5) * (pow(xy, (setup->fEtaMut + 1.0)));
         fDelta = 1.0 - (pow(fValue, fMutPow));
       }
-      y = y + fDelta * (yu - yl);
-      if (y < yl)
-        y = yl;
-      if (y > yu)
-        y = yu;
+      y = y + fDelta * (LimitUp - LimitDown);
+      if (y < LimitDown)
+        y = LimitDown;
+      if (y > LimitUp)
+        y = LimitUp;
       fGenes[j] = y;
       fNMut += 1;
     }

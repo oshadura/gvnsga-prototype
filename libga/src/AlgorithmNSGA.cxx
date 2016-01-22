@@ -179,48 +179,50 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
                               Genes<Double_t> &child1,
                               Genes<Double_t> &child2) {
   static TRandom rnd;
-  Double_t y1, y2, yl, yu;
-  Double_t c1, c2;
-  Double_t alpha, beta, betaq;
-  Int_t r = rnd.Rndm();
-  if (r <= GetPCross()) {
+  Double_t Component1, Component2, LimitDown, LimitUp;
+  Double_t Crossover1, Crossover2;
+  Double_t Alpha, Beta, Betaq;
+  Int_t Rand = rnd.Rndm();
+  if (Rand <= GetPCross()) {
     fNCross++;
     for (Int_t i = 0; i < fNParam; i++) {
       if (fabs(parent1[i] - parent2[i]) > EPS) {
         if (parent1[i] < parent2[i]) {
-          y1 = parent1[i];
-          y2 = parent2[i];
+          Component1 = parent1[i];
+          Component2 = parent2[i];
         } else {
-          y1 = parent2[i];
-          y2 = parent1[i];
+          Component1 = parent2[i];
+          Component2 = parent1[i];
         }
-        yl = fInterval[i].first;
-        yu = fInterval[i].second;
-        Int_t r = rnd.Rndm();
-        beta = 1.0 + (2.0 * (y1 - yl) / (y2 - y1));
-        alpha = 2.0 - pow(beta, -(GetEtaCross() + 1.0));
-        if (r <= (1.0 / alpha)) { // This is a contracting crossover
-          betaq = pow((r * alpha), (1.0 / (GetEtaCross() + 1.0)));
+        LimitDown = fInterval[i].first;
+        LimitUp = fInterval[i].second;
+        Int_t Rand = rnd.Rndm();
+        Beta = 1.0 + (2.0 * (Component1 - LimitDown) / (Component2 - Component1));
+        Alpha = 2.0 - pow(Beta, -(GetEtaCross() + 1.0));
+        if (Rand <= (1.0 / Alpha)) { // This is a contracting crossover
+          Betaq = pow((Rand * Alpha), (1.0 / (GetEtaCross() + 1.0)));
         } else { // This is an expanding crossover
-          betaq = pow((1.0 / (2.0 - r * alpha)), (1.0 / (GetEtaCross() + 1.0)));
+          Betaq = pow((1.0 / (2.0 - Rand * Alpha)), (1.0 / (GetEtaCross() + 1.0)));
         }
-        c1 = 0.5 * ((y1 + y2) - betaq * (y2 - y1));
-        beta = 1.0 + (2.0 * (yu - y2) / (y2 - y1));
-        alpha = 2.0 - pow(beta, -(GetEtaCross() + 1.0));
-        if (r <= (1.0 / alpha)) { // This is a contracting crossover
-          betaq = pow((r * alpha), (1.0 / (GetEtaCross() + 1.0)));
+        Crossover1 = 0.5 * ((Component1 + Component2) - Betaq * (Component2 - Component1));
+        Beta = 1.0 + (2.0 * (LimitUp - Component2) / (Component2 - Component1));
+        Alpha = 2.0 - pow(Beta, -(GetEtaCross() + 1.0));
+        if (Rand <= (1.0 /Alpha)) { // This is a contracting crossover
+          Betaq = pow((Rand * Alpha), (1.0 / (GetEtaCross() + 1.0)));
         } else { // This is an expanding crossover
-          betaq = pow((1.0 / (2.0 - r * alpha)), (1.0 / (GetEtaCross() + 1.0)));
+          Betaq = pow((1.0 / (2.0 - Rand * Alpha)), (1.0 / (GetEtaCross() + 1.0)));
         }
-        c2 = 0.5 * ((y1 + y2) + betaq * (y2 - y1));
-        c1 = fmin(fmax(c1, yl), yu);
-        c2 = fmin(fmax(c2, yl), yu);
+        Crossover2 = 0.5 * ((Component1 + Component2) + Betaq * (Component2 - Component1));
+        Crossover1 = fmin(fmax(Crossover1, LimitDown), LimitUp);
+        Crossover2 = fmin(fmax(Crossover2, LimitDown), LimitUp);
         if (rnd.Uniform() <= 0.5) {
-          child1.SetGene(i, c2);
-          child2.SetGene(i, c1);
+          child1.SetGene(i, Crossover2);
+          child2.SetGene(i, Crossover1);
         } else {
-          child1.SetGene(i, c1);
-          child2.SetGene(i, c2);
+          std::cout << "Print Crossover part 1 = " << Crossover1 << std::endl;
+          child1.SetGene(i, Crossover1);
+          std::cout << "Print Crossover part 1 = " << Crossover2 << std::endl;
+          child2.SetGene(i, Crossover2);
         }
       } else {
         child1.SetGene(i, parent1[i]);

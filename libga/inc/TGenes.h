@@ -32,7 +32,7 @@ public:
   void Clear(Option_t *option = "");
   T CheckDominance(Functions *setup,
                    const Genes<T> *ind2) throw(ExceptionMessenger);
-  Int_t Mutate();
+  Int_t Mutate(const Functions *setup);
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
   void Set() throw(ExceptionMessenger);
