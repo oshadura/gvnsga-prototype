@@ -35,10 +35,6 @@ int main(int argc, char *argv[]) {
   // STUPID SOLUTION //
   geantv->fInterval.push_back(std::make_pair(1, 10));
   geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
   geantv->PrintLimit(geantv->fInterval);
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();

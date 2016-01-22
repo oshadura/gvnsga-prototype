@@ -23,9 +23,7 @@ public:
   Genes() throw();
   Genes(const Functions &config) throw(ExceptionMessenger);
   // Copy constructor
-  Genes(const Genes<T> &copy) {} // Copy operator for vector of Individual
-  // Parametrized constructor
-  Genes(Genes &f); // Vector of parameters = individual
+  Genes(const Genes<T> &copy) = default; // Copy operator for vector of Individual
   // Destructor
   virtual ~Genes() {}
   // Function building Genes (moved in Population and Functions)
@@ -45,8 +43,11 @@ public:
   T GetDominated(Int_t i) { return fDominated.at(i); } // 1 Dominated individual
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
-  Genes<T> SetGene(Int_t i, T value) {
-    fGenes.emplace(fGenes.begin() + i, value);}
+  Genes<T>& SetGene(Int_t i, T value) {
+      auto it = fGenes.emplace (fGenes.begin()+1, i);
+      fGenes.emplace (it, value);
+      return *this;
+    }
   std::vector<T> GetFitnessVector() const {
     return fFitness;
   } // Get a vector of fTime and fMemory

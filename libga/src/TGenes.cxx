@@ -43,8 +43,6 @@ Genes<T>::Genes(const Functions &config) throw(ExceptionMessenger)
   fConstraines.resize(setup->fNCons, 0);
 }
 
-template <class T> Genes<T>::Genes(Genes &f) {}
-
 template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
   if (this != &gen) {
       fFitness = gen.fFitness;
@@ -93,6 +91,7 @@ void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
                                          setup.fInterval[0].second);
   auto gen = std::bind(dist, mersenne_engine);
   std::generate(std::begin(ind), std::end(ind), gen);
+
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
   }

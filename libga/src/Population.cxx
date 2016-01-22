@@ -170,7 +170,7 @@ template <class T> void Population<T>::Clear(Option_t * /*option*/) {
 
 template <class T> Int_t Population<T>::Mutate() {
   Int_t tmp;
-  for (auto it = GetIndividuals().begin(); it != GetIndividuals().end(); ++it) {
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     const Functions* setupind = (*it).GetSetup();
     std::cout << "So so - number of objectives in Population::Mutation() " << (*it).GetSetup() << std::endl;
     tmp += it->Genes<T>::Mutate(setupind);

@@ -221,7 +221,7 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
         } else {
           std::cout << "Print Crossover part 1 = " << Crossover1 << std::endl;
           child1.SetGene(i, Crossover1);
-          std::cout << "Print Crossover part 1 = " << Crossover2 << std::endl;
+          std::cout << "Print Crossover part 2 = " << Crossover2 << std::endl;
           child2.SetGene(i, Crossover2);
         }
       } else {
@@ -255,7 +255,7 @@ void AlgorithmNSGA::NextStep() {
     Genes<Double_t> Fi = fMixedPop->GetFront(i);
     fMixedPop->CrowdingDistanceFront(i);            // calculate crowding in Fi
     for (Int_t j = 0; (Double_t)j < Fi.size(); ++j) // Pt+1 = Pt+1 U Fi
-      fParentPop->GetIndividuals().push_back(fMixedPop->GetFront(j));
+      fParentPop->fPopulation.push_back(fMixedPop->GetFront(j));
     i += 1;
   }
   fMixedPop->CrowdingDistanceFront(i); // calculate crowding in F
@@ -264,7 +264,7 @@ void AlgorithmNSGA::NextStep() {
   const int extra =
       fParentPop->GetPopulationSetupSize() - fParentPop->GetPopulationSize();
   for (int j = 0; j < extra; ++j) // Pt+1 = Pt+1 U Fi[1:N-|Pt+1|]
-    fParentPop->GetIndividuals().push_back(fMixedPop->GetFront(j));
+    fParentPop->fPopulation.push_back(fMixedPop->GetFront(j));
   fParentPop->GenCounter = fGen + 1;
 }
 
