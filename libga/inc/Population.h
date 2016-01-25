@@ -101,7 +101,6 @@ public:
     os << "]";
     return os;
   }
-
   // Const <-> non const iterator problem
   void printPopulation(const Population<T> &pop) {
     std::cout << "Population: [\n" << std::endl;
@@ -125,11 +124,8 @@ public:
 private:
   void Evaluation();
   void EvaluationOpenMP();
-  ////////////////////////
   Functions setupPop;
   Functions::popfunctype fPopFunction;
-  // std::vector<Genes<T>> fFront;
-  // std::vector<Genes<T>> fPopulation;
   Int_t fSizePop;
   TH1F *fH;
 

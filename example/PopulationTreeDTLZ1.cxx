@@ -46,7 +46,7 @@ void DTLZ1(Genes<Double_t> &individual) {
     if (i > 1) {
       f *= 1 - individual.GetGene((individual.GetSetup()->GetNObjectives() - i + 1) - 1);
     }
-    individual.SetFitness((i-1), f);
+    individual.SetFitness(f);
   }
   return;
 }
@@ -59,7 +59,9 @@ int main(int argc, char *argv[]) {
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
+  std::cout<< "-==============================================-"<<std::endl;
   geantv->PrintLimit(geantv->fInterval);
+  std::cout<< "-==============================================-"<<std::endl;  
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);

@@ -55,7 +55,8 @@ public:
     return fFitness.at(i);
   } // Get Fitness at i position
   void SetFitness(std::vector<T> fitness) { fFitness = fitness; }
-  void SetFitness(Int_t i, T value){ fFitness.emplace(fFitness.begin() + i, value); }
+  //void SetFitness(Int_t i, T value){ fFitness.emplace(fFitness.begin() + i, value); }
+  void SetFitness(T value){ fFitness.push_back(value); }
   T GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(T dist) { fCrowdingDistance = dist; }
   Int_t GetRank() const { return fRank; }
@@ -125,18 +126,18 @@ public:
 
     std::cout << "Gene<T> = [";
     for (auto it = g.begin(); it != g.end(); ++it) {
-      std::cout << *it << " ";
+      std::cout << *it << ' ';
     }
     std::cout << "]" << "\n" << std::endl;
     std::cout << "Fitness<T> = [";
       for (auto it = g.GetFitnessVector().begin(); it != g.GetFitnessVector().end(); ++it){
-        std::cout << *it << std::endl;
+        std::cout << *it << ' ';
       }
     std::cout << "]" <<"\n" << std::endl;
     std::cout << "Constraint<T> = [";
     for (auto it = g.GetConstraines().begin(); it != g.GetConstraines().end();
          ++it) {
-      std::cout << *it << std::endl;
+      std::cout << *it << ' ';
     }
     std::cout << "]" << "\n" << std::endl;
     std::cout << "fCrowdingDistance = " << g.GetCrowdingDistance() << "\n" << std::endl;

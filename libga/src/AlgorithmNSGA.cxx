@@ -90,7 +90,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
                                fEpsilonC, fPMut, fEtaMut, fInterval, function);
   // Missing check of input variables and creation of population with them
   // Report(configuration);
-  ////////////////////////////////////////////////////////////////////////
+  std::cout<< "-==============================================-"<<std::endl;
   std::cout << "Population size = " << fSizePop
             << "\nNumber of generations = " << fNGen
             << "\nNumber of objective functions = " << fNObjectives
@@ -119,6 +119,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
     fMixedPop->SetPopFunction(popfunction);
   }
   fGen = 1;
+  std::cout<< "-==============================================-"<<std::endl;
   std::cout << "New generetion #" << fGen << std::endl;
   fParentPop->Build();
   fParentPop->Evaluate();
@@ -238,6 +239,7 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
 }
 
 void AlgorithmNSGA::NextStep() {
+  std::cout<< "-==============================================-"<<std::endl;
   std::cout << "New generetion #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate(); // not a std::pair (?)

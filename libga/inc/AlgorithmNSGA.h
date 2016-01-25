@@ -7,7 +7,6 @@
 
 template <class T> class Population;
 template <class T> class Genes;
-//class Functions; 
 
 class AlgorithmNSGA {
 public:
