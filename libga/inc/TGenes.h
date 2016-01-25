@@ -44,7 +44,7 @@ public:
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
   Genes<T>& SetGene(Int_t i, T value) {
-      auto it = fGenes.emplace (fGenes.begin()+1, i);
+      auto it = fGenes.emplace (fGenes.begin(), i);
       fGenes.emplace (it, value);
       return *this;
     }

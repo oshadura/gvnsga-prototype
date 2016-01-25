@@ -22,11 +22,32 @@
 static const double pi = boost::math::constants::pi<double>();
 
 void DTLZ3(Genes<Double_t> &individual) {
+  /*
   double y = 0.0;
   for( Int_t i = 0; i < individual.GetfGenes().size(); ++i) {
     y += pow(individual.GetGene(i) - 0.5, 2) - cos(20 * boost::math::constants::pi<double>() * (individual.GetGene(i) - 0.5));
   }
   individual.SetFitness(0, 100.0 * (y + individual.GetfGenes().size()));
+  */
+  Int_t n = individual.GetSetup()->GetNParam();
+  Int_t k = n - individual.GetSetup()->GetNObjectives() + 1;
+  Double_t g = 0.0;
+  for ( Int_t i = n - k + 1; i <= n; i++) {
+    g +=
+        pow(individual.GetGene(i-1) - 0.5, 2) - cos(20 * pi * (individual.GetGene(i-1) - 0.5));
+  }
+  g = 100 * (k + g);
+  for (Int_t i = 1; i <= individual.GetSetup()->GetNObjectives(); i++) {
+    double f = (1 + g);
+    for (Int_t j = individual.GetSetup()->GetNObjectives() - i; j >= 1; j--) {
+      f *= cos(individual.GetGene(j-1) * pi / 2);
+    }
+    if (i > 1) {
+      f *= sin(individual.GetGene((individual.GetSetup()->GetNObjectives() - i + 1) - 1) * pi / 2);
+    }
+    individual.SetFitness((i-1), f);
+  }
+
   return;
 }
 
@@ -35,12 +56,12 @@ int main(int argc, char *argv[]) {
   Functions *geantv = new Functions();
   // geantv->SetInterval(); // don't work because we initialize fNparam after...
   // STUPID SOLUTION //
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->PrintLimit(geantv->fInterval);
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();

@@ -107,6 +107,10 @@ public:
     return fNObjectives;
   }
 
+  Int_t GetNParam() const {
+    return fNObjectives;
+  }
+
   void PrintLimit(std::vector<std::pair<Double_t, Double_t>> &limit) {
     std::cout << "Check what we create as a limit vector: [";
     for (auto &x : limit) {
