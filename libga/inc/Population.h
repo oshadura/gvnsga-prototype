@@ -16,6 +16,9 @@
 #include <memory>
 #include <algorithm>
 
+#define EPS 1e-14
+#define INF 1e+14
+
 template <class T> class Genes;
 template <class T> class Population : public Genes<T>, public Functions {
 

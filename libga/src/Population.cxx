@@ -68,7 +68,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
 }
 
 template <class T> void Population<T>::CrowdingDistanceAll() {
-  for (Int_t i = 0; (ULong_t)i < fFront.size(); ++i)
+  for (Int_t i = 0; i < fFront.size(); ++i)
     CrowdingDistanceFront(i);
 }
 
