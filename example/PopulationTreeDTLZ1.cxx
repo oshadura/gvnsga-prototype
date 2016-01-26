@@ -32,11 +32,9 @@ void DTLZ1(Genes<Double_t> &individual) {
   individual.SetFitness(0, 100.0 * (y + individual.GetfGenes().size()));
   */
 
-  Int_t n = individual.GetSetup()->GetNParam(); // 7
+  Int_t n = individual.GetSetup()->GetNParam();      // 7
   Int_t m = individual.GetSetup()->GetNObjectives(); // 3
-  Int_t k = n - m + 1; // 5
-
-  if (n != m + k - 1) return false; 
+  Int_t k = n - m + 1;                               // 5
 
   Double_t g = 0.0;
 
@@ -57,7 +55,8 @@ void DTLZ1(Genes<Double_t> &individual) {
     if (i > 0) {
       f *= (1 - individual.GetGene(j));
     }
-    std::cout<<"Stupid iterator - tell me your value = "<< i << " Function is " << f << std::endl;
+    // std::cout << "Stupid iterator - tell me your value = " << i
+    //          << " Function is " << f << std::endl;
     individual.SetFitness(i, f);
   }
   return;

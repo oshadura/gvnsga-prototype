@@ -41,13 +41,12 @@ public:
   std::vector<Int_t> GetDominated() {
     return fDominated;
   } // Vector of dominanted counters
-  T GetDominated(Int_t i) { return fDominated.at(i); } // 1 Dominated individual
+  T GetDominated(Int_t i) { return fDominated.at(i); }
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
   Genes<T> &SetGene(Int_t i, T value) {
     auto it = fGenes.emplace(fGenes.begin(), i);
     fGenes.emplace(it, value);
-    return *this;
   }
   std::vector<T> GetFitnessVector() const {
     return fFitness;
@@ -73,9 +72,9 @@ public:
   std::vector<T> GetConstraines() const { return fConstraines; }
   std::vector<T> GetfGenes() const { return fGenes; }
   const Functions *GetSetup() const { return setup; }
-  void SetDominated(std::vector<Int_t> &d){ fDominated = d; }
+  void SetDominated(std::vector<Int_t> &d) { fDominated = d; }
   ////////////////////////////////////////////////////
-  Int_t capacity() {return fGenes.capacity();}
+  Int_t capacity() { return fGenes.capacity(); }
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
     typename std::vector<T>::iterator it = fGenes.begin();
@@ -172,13 +171,13 @@ private:
                            // namespace)
   std::vector<T> fFitness; // Vector of values of different fitness
                            // function (objectives)
-  Int_t fDominationCounter;   // Domination counter for individual (used in
-                              // Non-Dominant sorting)
-  Int_t fRank;                // Rank of Individual
-  Double_t fCrowdingDistance; // Crowding distance per individual
-  Bool_t fEvaluated;          // Evaluated or not
-  std::vector<Int_t> fDominated;  // Vector of dominanted counters
-  Double_t ConstViol;         // Violation of constraints
+  Int_t fDominationCounter;      // Domination counter for individual (used in
+                                 // Non-Dominant sorting)
+  Int_t fRank;                   // Rank of Individual
+  Double_t fCrowdingDistance;    // Crowding distance per individual
+  Bool_t fEvaluated;             // Evaluated or not
+  std::vector<Int_t> fDominated; // Vector of dominanted counters
+  Double_t ConstViol;            // Violation of constraints
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
   /////// Trial for Genes() constructor ///////////////

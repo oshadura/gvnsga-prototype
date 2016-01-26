@@ -144,7 +144,7 @@ T Genes<T>::CheckDominance(Functions *setup,
     // ind1 doesn't violate and ind2 does => ind1 dominates
     return 1;
   } else {
-    Int_t fFlag1 = 0; 
+    Int_t fFlag1 = 0;
     Int_t fFlag2 = 0;
     for (Int_t i = 0; i < setup->fNObjectives; ++i) {
       if (setup->fNObjectives > 1) {
@@ -205,11 +205,16 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
         y = LimitDown;
       if (y > LimitUp)
         y = LimitUp;
-      fGenes[j] = y;
+      // fGenes[j] = y;
+      std::cout << "Print new crossover part = " << y << std::endl;
+      SetGene(j, y);
       fNMut += 1;
     }
   }
-  std::cout << "Number of mutation " << fNMut << std::endl; 
+  std::cout << "-========------=MUTATE=-------========-" << std::endl;
+  std::cout << "Number of mutations " << fNMut << std::endl;
+  std::cout << "-============------------============-" << std::endl;
+
   return fNMut;
 }
 
