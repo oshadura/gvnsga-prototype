@@ -12,7 +12,7 @@ public:
 
 private:
   std::string message;
-    ClassDef(ExceptionMessenger, 1)
+  ClassDef(ExceptionMessenger, 1)
 };
 
 #endif

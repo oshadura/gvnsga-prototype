@@ -143,9 +143,9 @@ int main(int argc, char *argv[]) {
   geantv->fInterval.push_back(std::make_pair(1, 10));
   geantv->fInterval.push_back(std::make_pair(1, 10));
   geantv->fInterval.push_back(std::make_pair(1, 10));
-  std::cout<< "-==============================================-"<<std::endl;
+  std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);
-  std::cout<< "-==============================================-"<<std::endl;
+  std::cout << "-==============================================-" << std::endl;
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);

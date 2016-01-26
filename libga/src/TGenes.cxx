@@ -25,8 +25,8 @@
 
 templateClassImp(Genes)
 
-template <class T>
-Genes<T>::Genes() throw()
+    template <class T>
+    Genes<T>::Genes() throw()
     : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
@@ -38,31 +38,31 @@ Genes<T>::Genes(const Functions &config) throw(ExceptionMessenger)
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
       fVector(0), fTime(0), fMemory(0), setup(&config), fConstraines(0) {
-  fGenes.resize(setup->fNParam);
-  fFitness.resize(setup->fNObjectives);
-  fConstraines.resize(setup->fNCons);
+  fGenes.resize(setup->fNParam, 0);
+  fFitness.resize(setup->fNObjectives, 0);
+  fConstraines.resize(setup->fNCons, 0);
 }
 
 template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
   if (this != &gen) {
-      fFitness = gen.fFitness;
-      fRank = gen.fRank;
-      fDominationCounter = gen.fDominationCounter;
-      fCrowdingDistance = gen.fCrowdingDistance;
-      fEvaluated = gen.fCrowdingDistance;
-      fDominated = gen.fDominated;
-      ConstViol = gen.ConstViol;
-      fGenes = gen.fGenes;
-      fAllev = gen.fAllev;
-      fBuffev = gen.fBuffev;
-      fThread = gen.fThread;
-      fPriority = gen.fPriority;
-      fSteps = gen.fSteps;
-      fVector = gen.fVector;
-      fTime = gen.fTime;
-      fMemory = gen.fMemory;
-      setup = gen.setup;
-      fConstraines = gen.fConstraines;
+    fFitness = gen.fFitness;
+    fRank = gen.fRank;
+    fDominationCounter = gen.fDominationCounter;
+    fCrowdingDistance = gen.fCrowdingDistance;
+    fEvaluated = gen.fCrowdingDistance;
+    fDominated = gen.fDominated;
+    ConstViol = gen.ConstViol;
+    fGenes = gen.fGenes;
+    fAllev = gen.fAllev;
+    fBuffev = gen.fBuffev;
+    fThread = gen.fThread;
+    fPriority = gen.fPriority;
+    fSteps = gen.fSteps;
+    fVector = gen.fVector;
+    fTime = gen.fTime;
+    fMemory = gen.fMemory;
+    setup = gen.setup;
+    fConstraines = gen.fConstraines;
   }
   return *this;
 }
@@ -95,7 +95,6 @@ void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
   }
-  
 }
 
 template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
@@ -105,7 +104,7 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
 template <class T>
 void Genes<T>::Evaluate(Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
-  std::cout<< "-==============================================-"<<std::endl;
+  std::cout << "-==============================================-" << std::endl;
   std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
   printGenes(ind);
   (setup.evfunc)(ind);

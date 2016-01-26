@@ -171,8 +171,9 @@ template <class T> void Population<T>::Clear(Option_t * /*option*/) {
 template <class T> Int_t Population<T>::Mutate() {
   Int_t tmp;
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
-    const Functions* setupind = (*it).GetSetup();
-    std::cout << "So so - number of objectives in Population::Mutation() " << (*it).GetSetup() << std::endl;
+    const Functions *setupind = (*it).GetSetup();
+    std::cout << "So so - number of objectives in Population::Mutation() "
+              << (*it).GetSetup() << std::endl;
     tmp += it->Genes<T>::Mutate(setupind);
   }
   return tmp;
@@ -267,8 +268,9 @@ template <class T> void Population<T>::Evaluate() {
 template <class T> void Population<T>::Evaluation() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     Genes<T>::Evaluate(setupPop, *it);
-    std::cout<< "-==============================================-"<<std::endl;
-    std::cout << "Printout after sequence evaluation:"<<std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout after sequence evaluation:" << std::endl;
     Genes<T>::printGenes(*it);
   }
 }
@@ -277,8 +279,9 @@ template <class T> void Population<T>::EvaluationOpenMP() {
 #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
     fPopulation[i].Evaluate(setupPop, fPopulation[i]);
-    std::cout<< "-==============================================-"<<std::endl;
-    std::cout << "Printout after OPENMP evaluation:"<<std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout after OPENMP evaluation:" << std::endl;
     Genes<T>::printGenes(fPopulation[i]);
   }
 }

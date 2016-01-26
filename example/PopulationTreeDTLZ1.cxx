@@ -26,7 +26,8 @@ void DTLZ1(Genes<Double_t> &individual) {
   double y = 0.0;
 
   for(Int_t i = 0; i < individual.GetfGenes().size(); ++i) {
-    y += pow(individual.GetGene(i) - 0.5, 2) - cos(20 * pi * (individual.GetGene(i) - 0.5));
+    y += pow(individual.GetGene(i) - 0.5, 2) - cos(20 * pi *
+  (individual.GetGene(i) - 0.5));
   }
   individual.SetFitness(0, 100.0 * (y + individual.GetfGenes().size()));
   */
@@ -35,16 +36,19 @@ void DTLZ1(Genes<Double_t> &individual) {
   Int_t k = n - individual.GetSetup()->GetNObjectives() + 1;
   Double_t g = 0.0;
   for (Int_t i = n - k + 1; i <= n; ++i) {
-    g += pow(individual.GetGene(i-1) - 0.5, 2) - cos(20 * pi * (individual.GetGene(i-1) - 0.5));
+    g += pow(individual.GetGene(i - 1) - 0.5, 2) -
+         cos(20 * pi * (individual.GetGene(i - 1) - 0.5));
   }
   g = 100 * (k + g);
   for (Int_t i = 1; i <= individual.GetSetup()->GetNObjectives(); ++i) {
     Double_t f = 0.5 * (1 + g);
     for (Int_t j = individual.GetSetup()->GetNObjectives() - i; j >= 1; --j) {
-      f *= individual.GetGene(j-1);
+      f *= individual.GetGene(j - 1);
     }
     if (i > 1) {
-      f *= 1 - individual.GetGene((individual.GetSetup()->GetNObjectives() - i + 1) - 1);
+      f *= 1 -
+           individual.GetGene(
+               (individual.GetSetup()->GetNObjectives() - i + 1) - 1);
     }
     individual.SetFitness(f);
   }
@@ -59,9 +63,9 @@ int main(int argc, char *argv[]) {
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
-  std::cout<< "-==============================================-"<<std::endl;
+  std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);
-  std::cout<< "-==============================================-"<<std::endl;  
+  std::cout << "-==============================================-" << std::endl;
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);

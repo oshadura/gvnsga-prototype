@@ -5,18 +5,18 @@
 #include <TSystem.h>
 #include <vector>
 
-class GeantVFitness{
+class GeantVFitness {
 public:
-	GeantVFitness(){}
-	virtual ~GeantVFitness(){}
-	void LogMemoryFitness();
-	void LogTimeFitness();
-	void HistOutputFitness();
+  GeantVFitness() {}
+  virtual ~GeantVFitness() {}
+  void LogMemoryFitness();
+  void LogTimeFitness();
+  void HistOutputFitness();
 
 private:
-	std::vector<ProcInfo_t> fMemoryVector;
+  std::vector<ProcInfo_t> fMemoryVector;
 
-	ClassDef(GeantVFitness, 1)
-};	
+  ClassDef(GeantVFitness, 1)
+};
 
 #endif

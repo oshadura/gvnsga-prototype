@@ -16,8 +16,7 @@ ClassImp(Functions)
 
     Functions::Functions(const Functions &func)
     : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval),
-      fNObjectives(func.fNObjectives), fPMut(func.fPMut), fEtaMut(func.fPMut) {
-}
+      fNObjectives(func.fNObjectives), fPMut(func.fPMut), fEtaMut(func.fPMut) {}
 
 void Functions::SetInterval() {
   for (Int_t i = 0; i < fNParam; ++i) {

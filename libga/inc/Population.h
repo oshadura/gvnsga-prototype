@@ -28,8 +28,8 @@ public:
   Population(Int_t size)
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fH(0),
         fPopFunction(NULL), setupPop() {
-     fFront.reserve(size);
-     fPopulation.reserve(size);
+    fFront.reserve(size);
+    fPopulation.reserve(size);
   }
 
   Population(const Int_t fSizePop, const Int_t fNParam, const Int_t fNCons,
@@ -61,7 +61,7 @@ public:
   void SetPopulationSize(Int_t s) { fPopulation.resize(s); }
   Int_t GetPopulationSize() { return fPopulation.size(); }
   Int_t GetPopulationSetupSize() const { return fSizePop; }
-  //std::vector<Genes<T>> GetIndividuals() { return fPopulation; }
+  // std::vector<Genes<T>> GetIndividuals() { return fPopulation; }
   std::vector<Genes<T>> GetFront() { return fFront; }
   Genes<T> GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
@@ -93,8 +93,7 @@ public:
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop) {
     os << "Population: [\n";
     std::ostream_iterator<Genes<T>> fGenesOutIt(os, "\n");
-    std::copy(pop.fPopulation.begin(), pop.fPopulation.end(),
-              fGenesOutIt);
+    std::copy(pop.fPopulation.begin(), pop.fPopulation.end(), fGenesOutIt);
     for (auto it = pop.begin(); it != pop.end(); ++it) {
       os << *it;
     }

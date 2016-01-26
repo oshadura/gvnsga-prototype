@@ -13,7 +13,8 @@ public:
   AlgorithmNSGA();
   virtual ~AlgorithmNSGA();
   void Initialize() throw(ExceptionMessenger);
-  void Selection(Population<Double_t> &oldpop, Population<Double_t> &newpop) throw(ExceptionMessenger);
+  void Selection(Population<Double_t> &oldpop,
+                 Population<Double_t> &newpop) throw(ExceptionMessenger);
   Genes<Double_t> &Tournament(Genes<Double_t> &ind1,
                               Genes<Double_t> &ind2) const;
   void Crossover(const Genes<Double_t> &parent1, const Genes<Double_t> &parent2,
@@ -41,26 +42,26 @@ public:
   void SetEtaMut(Double_t em) { this->fEtaMut = em; }
   void SetEpsilonC(Double_t ec) { this->fEpsilonC = ec; }
   void SetLimit(std::vector<std::pair<Double_t, Double_t>> lim) {
-    this->fInterval = lim; 
+    this->fInterval = lim;
   }
-  void Report(std::ostream& os) const{
-        os << "Population size = " << fSizePop
+  void Report(std::ostream &os) const {
+    os << "Population size = " << fSizePop
        << "\nNumber of generations = " << fNGen
        << "\nNumber of objective functions = " << fNObjectives
        << "\nNumber of constraints = " << fNCons
        << "\nNumber of variables = " << fNParam;
 
     if (fNParam != 0) {
-        for (int i = 0; i < fNParam; ++i) {
-            os << "\nLower limit of real variable " << (i+1)
-               << " = " << fInterval[i].first;
-            os << "\nUpper limit of real variable " << (i+1)
-               << " = " << fInterval[i].second;
-        }
-        os << "\nProbability of crossover of real variable = " << fPCross;
-        os << "\nProbability of mutation of real variable = " << fPMut;
-        os << "\nDistribution index for crossover = " << fEtaCross;
-        os << "\nDistribution index for mutation = " << fEtaMut;
+      for (int i = 0; i < fNParam; ++i) {
+        os << "\nLower limit of real variable " << (i + 1) << " = "
+           << fInterval[i].first;
+        os << "\nUpper limit of real variable " << (i + 1) << " = "
+           << fInterval[i].second;
+      }
+      os << "\nProbability of crossover of real variable = " << fPCross;
+      os << "\nProbability of mutation of real variable = " << fPMut;
+      os << "\nDistribution index for crossover = " << fEtaCross;
+      os << "\nDistribution index for mutation = " << fEtaMut;
     }
   }
 

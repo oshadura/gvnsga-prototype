@@ -31,9 +31,9 @@ ClassImp(AlgorithmNSGA)
 
 AlgorithmNSGA::AlgorithmNSGA()
     : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0),
-      fNMut(0), fNGen(0), fParentPop(0), fChildPop(0), fMixedPop(0), fSizePop(0),
-      fNParam(0), fInterval(0), fNCons(0), fNObjectives(0), fPMut(0),
-      fEtaMut(0), fEpsilonC(0), fCrowdingObj(true) {}
+      fNMut(0), fNGen(0), fParentPop(0), fChildPop(0), fMixedPop(0),
+      fSizePop(0), fNParam(0), fInterval(0), fNCons(0), fNObjectives(0),
+      fPMut(0), fEtaMut(0), fEpsilonC(0), fCrowdingObj(true) {}
 
 AlgorithmNSGA::~AlgorithmNSGA() {
   if (fChildPop) {
@@ -90,7 +90,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
                                fEpsilonC, fPMut, fEtaMut, fInterval, function);
   // Missing check of input variables and creation of population with them
   // Report(configuration);
-  std::cout<< "-==============================================-"<<std::endl;
+  std::cout << "-==============================================-" << std::endl;
   std::cout << "Population size = " << fSizePop
             << "\nNumber of generations = " << fNGen
             << "\nNumber of objective functions = " << fNObjectives
@@ -119,48 +119,57 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
     fMixedPop->SetPopFunction(popfunction);
   }
   fGen = 1;
-  std::cout<< "-==============================================-"<<std::endl;
-  std::cout << "New generetion #" << fGen << std::endl;
+  std::cout << "-==============================================-" << std::endl;
+  std::cout << "New generation #" << fGen << std::endl;
   fParentPop->Build();
   fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
-  }
+}
 
-void AlgorithmNSGA::Selection(Population<Double_t> &oldpop,
-                              Population<Double_t> &newpop) throw(ExceptionMessenger) {
+void AlgorithmNSGA::Selection(
+    Population<Double_t> &oldpop,
+    Population<Double_t> &newpop) throw(ExceptionMessenger) {
   static TRandom3 rand;
   const Int_t PopSizeCheck = oldpop.GetPopulationSize();
-  if((newpop.GetPopulationSize()) != PopSizeCheck)
+  if ((newpop.GetPopulationSize()) != PopSizeCheck)
     throw ExceptionMessenger("OMG! New population has wrong size");
   std::vector<Int_t> VecIndexGenes1(PopSizeCheck), VecIndexGenes2(PopSizeCheck);
   for (Int_t i = 0; i < PopSizeCheck; ++i) {
     VecIndexGenes1[i] = VecIndexGenes2[i] = i;
   }
   for (Int_t i = 0; i < PopSizeCheck; ++i) {
-    std::swap(VecIndexGenes1[rand.Uniform(i, PopSizeCheck - 1)], VecIndexGenes1[i]);
-    std::swap(VecIndexGenes2[rand.Uniform(i, PopSizeCheck - 1)], VecIndexGenes2[i]);
+    std::swap(VecIndexGenes1[rand.Uniform(i, PopSizeCheck - 1)],
+              VecIndexGenes1[i]);
+    std::swap(VecIndexGenes2[rand.Uniform(i, PopSizeCheck - 1)],
+              VecIndexGenes2[i]);
   }
   for (Int_t i = 0; i < PopSizeCheck; i += 4) {
     Genes<Double_t> &Combination11 =
-        Tournament(oldpop.GetGenes(VecIndexGenes1[i]), oldpop.GetGenes(VecIndexGenes1[i + 1]));
+        Tournament(oldpop.GetGenes(VecIndexGenes1[i]),
+                   oldpop.GetGenes(VecIndexGenes1[i + 1]));
     Genes<Double_t> &Combination12 =
-        Tournament(oldpop.GetGenes(VecIndexGenes1[i + 2]), oldpop.GetGenes(VecIndexGenes1[i + 3]));
-    Crossover(Combination11, Combination12, newpop.GetGenes(i), newpop.GetGenes(i + 1));
+        Tournament(oldpop.GetGenes(VecIndexGenes1[i + 2]),
+                   oldpop.GetGenes(VecIndexGenes1[i + 3]));
+    Crossover(Combination11, Combination12, newpop.GetGenes(i),
+              newpop.GetGenes(i + 1));
     Genes<Double_t> &Combination21 =
-        Tournament(oldpop.GetGenes(VecIndexGenes2[i]), oldpop.GetGenes(VecIndexGenes2[i + 1]));
+        Tournament(oldpop.GetGenes(VecIndexGenes2[i]),
+                   oldpop.GetGenes(VecIndexGenes2[i + 1]));
     Genes<Double_t> &Combination22 =
-        Tournament(oldpop.GetGenes(VecIndexGenes2[i + 2]), oldpop.GetGenes(VecIndexGenes2[i + 3]));
-    Crossover(Combination21, Combination22, newpop.GetGenes(i + 2), newpop.GetGenes(i + 3));
+        Tournament(oldpop.GetGenes(VecIndexGenes2[i + 2]),
+                   oldpop.GetGenes(VecIndexGenes2[i + 3]));
+    Crossover(Combination21, Combination22, newpop.GetGenes(i + 2),
+              newpop.GetGenes(i + 3));
   }
-} 
+}
 
 Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
                                            Genes<Double_t> &ind2) const {
   static TRandom rnd;
-  const Functions* setupind = ind1.GetSetup();
+  const Functions *setupind = ind1.GetSetup();
   std::cout << "So so - number of objectives " << ind1.GetSetup() << std::endl;
-  Int_t fFlag = ind1.CheckDominance(const_cast<Functions* >(setupind), &ind2);
+  Int_t fFlag = ind1.CheckDominance(const_cast<Functions *>(setupind), &ind2);
   if (fFlag == 1) // Yes
     return ind1;
   else if (fFlag == -1) // Opposite
@@ -198,22 +207,27 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
         LimitDown = fInterval[i].first;
         LimitUp = fInterval[i].second;
         Int_t Rand = rnd.Rndm();
-        Beta = 1.0 + (2.0 * (Component1 - LimitDown) / (Component2 - Component1));
+        Beta =
+            1.0 + (2.0 * (Component1 - LimitDown) / (Component2 - Component1));
         Alpha = 2.0 - pow(Beta, -(GetEtaCross() + 1.0));
         if (Rand <= (1.0 / Alpha)) { // This is a contracting crossover
           Betaq = pow((Rand * Alpha), (1.0 / (GetEtaCross() + 1.0)));
         } else { // This is an expanding crossover
-          Betaq = pow((1.0 / (2.0 - Rand * Alpha)), (1.0 / (GetEtaCross() + 1.0)));
+          Betaq =
+              pow((1.0 / (2.0 - Rand * Alpha)), (1.0 / (GetEtaCross() + 1.0)));
         }
-        Crossover1 = 0.5 * ((Component1 + Component2) - Betaq * (Component2 - Component1));
+        Crossover1 = 0.5 * ((Component1 + Component2) -
+                            Betaq * (Component2 - Component1));
         Beta = 1.0 + (2.0 * (LimitUp - Component2) / (Component2 - Component1));
         Alpha = 2.0 - pow(Beta, -(GetEtaCross() + 1.0));
-        if (Rand <= (1.0 /Alpha)) { // This is a contracting crossover
+        if (Rand <= (1.0 / Alpha)) { // This is a contracting crossover
           Betaq = pow((Rand * Alpha), (1.0 / (GetEtaCross() + 1.0)));
         } else { // This is an expanding crossover
-          Betaq = pow((1.0 / (2.0 - Rand * Alpha)), (1.0 / (GetEtaCross() + 1.0)));
+          Betaq =
+              pow((1.0 / (2.0 - Rand * Alpha)), (1.0 / (GetEtaCross() + 1.0)));
         }
-        Crossover2 = 0.5 * ((Component1 + Component2) + Betaq * (Component2 - Component1));
+        Crossover2 = 0.5 * ((Component1 + Component2) +
+                            Betaq * (Component2 - Component1));
         Crossover1 = fmin(fmax(Crossover1, LimitDown), LimitUp);
         Crossover2 = fmin(fmax(Crossover2, LimitDown), LimitUp);
         if (rnd.Uniform() <= 0.5) {
@@ -239,8 +253,8 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
 }
 
 void AlgorithmNSGA::NextStep() {
-  std::cout<< "-==============================================-"<<std::endl;
-  std::cout << "New generetion #" << fGen + 1 << std::endl;
+  std::cout << "-==============================================-" << std::endl;
+  std::cout << "New generation #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate(); // not a std::pair (?)
   fChildPop->GenCounter = fNGen + 1;

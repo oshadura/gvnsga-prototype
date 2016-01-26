@@ -31,7 +31,7 @@ void DTLZ2(Genes<Double_t> &individual) {
   Int_t k = n - individual.GetSetup()->GetNObjectives() + 1;
   Double_t g = 0.0;
   for (Int_t i = n - k + 1; i <= n; i++) {
-    g += pow(individual.GetGene(i-1) - 0.5, 2);
+    g += pow(individual.GetGene(i - 1) - 0.5, 2);
   }
   for (Int_t i = 1; i <= individual.GetSetup()->GetNObjectives(); i++) {
     Double_t f = (1 + g);
@@ -39,7 +39,8 @@ void DTLZ2(Genes<Double_t> &individual) {
       f *= cos(individual.GetGene(j - 1) * halfpi);
     }
     if (i > 1) {
-      f *= sin(((individual.GetSetup()->GetNObjectives() - i + 1) - 1) * halfpi);
+      f *=
+          sin(((individual.GetSetup()->GetNObjectives() - i + 1) - 1) * halfpi);
     }
     individual.SetFitness(f);
   }
@@ -53,9 +54,9 @@ int main(int argc, char *argv[]) {
   // STUPID SOLUTION //
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
-  std::cout<< "-==============================================-"<<std::endl;
+  std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);
-  std::cout<< "-==============================================-"<<std::endl;
+  std::cout << "-==============================================-" << std::endl;
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);

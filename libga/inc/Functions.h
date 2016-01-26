@@ -17,30 +17,29 @@ template <class T> class Population;
 class Functions {
 
 public:
- /**
-  * @brief Simple constructor
-  * @details  Setup point for individul/population
-  * 
-  * @param fNParam Number of parameters (size of Gene)
-  * @param fInterval Specificly generated vector of limits (should depend on parts of Genes) like [0,100] for number of buffered particles
-  * @param fNCons Number of constrains
-  * @param fNObjectives Number of objectives for fitness function
-  * @param fPMut Probability of mutation
-  * @param fEtaMut Distribution index for mutation
-  * @param fEpsilonC Distribution index for SBX crossover (?)
-  */
+  /**
+   * @brief Simple constructor
+   * @details  Setup point for individul/population
+   *
+   * @param fNParam Number of parameters (size of Gene)
+   * @param fInterval Specificly generated vector of limits (should depend on
+   * parts of Genes) like [0,100] for number of buffered particles
+   * @param fNCons Number of constrains
+   * @param fNObjectives Number of objectives for fitness function
+   * @param fPMut Probability of mutation
+   * @param fEtaMut Distribution index for mutation
+   * @param fEpsilonC Distribution index for SBX crossover (?)
+   */
   Functions()
       : fNParam(0), fInterval(), fNCons(0), fNObjectives(0), fPMut(0),
-        fEtaMut(0), fEpsilonC(EPS) {
-  }
+        fEtaMut(0), fEpsilonC(EPS) {}
 
   /**
    * @brief Simple constructor with known number of parameters to be observed
    */
   Functions(Int_t nparam)
       : fNParam(nparam), fInterval(), fNCons(0), fNObjectives(0), fPMut(0),
-        fEtaMut(0), fEpsilonC(EPS) {
-  }
+        fEtaMut(0), fEpsilonC(EPS) {}
   /**
    * @brief [brief description]
    * @details [long description]
@@ -103,13 +102,9 @@ public:
   }
   */
 
-  Int_t GetNObjectives() const {
-    return fNObjectives;
-  }
+  Int_t GetNObjectives() const { return fNObjectives; }
 
-  Int_t GetNParam() const {
-    return fNObjectives;
-  }
+  Int_t GetNParam() const { return fNObjectives; }
 
   void PrintLimit(std::vector<std::pair<Double_t, Double_t>> &limit) {
     std::cout << "Check what we create as a limit vector: [";
@@ -120,9 +115,11 @@ public:
   }
 
 public:
-  //typedef void (*functype)(Genes<Double_t> *);       // still dont know if to use in such way or not
+  // typedef void (*functype)(Genes<Double_t> *);       // still dont know if to
+  // use in such way or not
   typedef void (*functype)(Genes<Double_t> &);
-  typedef void (*popfunctype)(Population<Double_t> &); // still dont know if to use in such way or not
+  typedef void (*popfunctype)(
+      Population<Double_t> &); // still dont know if to use in such way or not
   //////////////////////////////////////////////////////////////
   functype evfunc;
   std::vector<std::pair<Double_t, Double_t>> fInterval;

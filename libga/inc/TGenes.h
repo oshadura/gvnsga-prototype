@@ -23,7 +23,8 @@ public:
   Genes() throw();
   Genes(const Functions &config) throw(ExceptionMessenger);
   // Copy constructor
-  Genes(const Genes<T> &copy) = default; // Copy operator for vector of Individual
+  Genes(const Genes<T> &copy) =
+      default; // Copy operator for vector of Individual
   // Destructor
   virtual ~Genes() {}
   // Function building Genes (moved in Population and Functions)
@@ -43,11 +44,11 @@ public:
   T GetDominated(Int_t i) { return fDominated.at(i); } // 1 Dominated individual
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
-  Genes<T>& SetGene(Int_t i, T value) {
-      auto it = fGenes.emplace (fGenes.begin(), i);
-      fGenes.emplace (it, value);
-      return *this;
-    }
+  Genes<T> &SetGene(Int_t i, T value) {
+    auto it = fGenes.emplace(fGenes.begin(), i);
+    fGenes.emplace(it, value);
+    return *this;
+  }
   std::vector<T> GetFitnessVector() const {
     return fFitness;
   } // Get a vector of fTime and fMemory
@@ -55,8 +56,9 @@ public:
     return fFitness.at(i);
   } // Get Fitness at i position
   void SetFitness(std::vector<T> fitness) { fFitness = fitness; }
-  //void SetFitness(Int_t i, T value){ fFitness.emplace(fFitness.begin() + i, value); }
-  void SetFitness(T value){ fFitness.push_back(value); }
+  // void SetFitness(Int_t i, T value){ fFitness.emplace(fFitness.begin() + i,
+  // value); }
+  void SetFitness(T value) { fFitness.push_back(value); }
   T GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(T dist) { fCrowdingDistance = dist; }
   Int_t GetRank() const { return fRank; }
@@ -69,8 +71,8 @@ public:
   void ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
   void SetConstrain(Int_t i, T value);
   std::vector<T> GetConstraines() const { return fConstraines; }
-  std::vector<T> GetfGenes() const {return fGenes;}
-  const Functions* GetSetup() const { return setup; }
+  std::vector<T> GetfGenes() const { return fGenes; }
+  const Functions *GetSetup() const { return setup; }
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
     typename std::vector<T>::iterator it = fGenes.begin();
@@ -83,8 +85,8 @@ public:
   T operator[](Int_t i) const { return fGenes.at(i); }
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
-  void resize(Int_t i) {return fGenes.resize(i);}
-///////// To be used later ////////////////////
+  void resize(Int_t i) { return fGenes.resize(i); }
+  ///////// To be used later ////////////////////
   T GetAllev() const { return fAllev; }
 
   T GetBuffev() const { return fBuffev; }
@@ -100,7 +102,7 @@ public:
   T GetTime() const { return fTime; }
 
   T GetMemory() const { return fMemory; }
-/////////////////////////////////////////////
+  /////////////////////////////////////////////
   T GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
 
   T GetBuffev(Genes<T> &ind) const { return ind.GetGene(1); }
@@ -120,27 +122,33 @@ public:
 
   void printGenes(Genes<T> &g) {
 
-    std::cout << "Individual rank = " << g.GetRank() <<"\n" << std::endl;
+    std::cout << "Individual rank = " << g.GetRank() << "\n" << std::endl;
 
-    std::cout<< "Available constraint violations = "<< g.GetConsViol()<< "\n" << std::endl;
+    std::cout << "Available constraint violations = " << g.GetConsViol() << "\n"
+              << std::endl;
 
     std::cout << "Gene<T> = [";
     for (auto it = g.begin(); it != g.end(); ++it) {
       std::cout << *it << ' ';
     }
-    std::cout << "]" << "\n" << std::endl;
+    std::cout << "]"
+              << "\n" << std::endl;
     std::cout << "Fitness<T> = [";
-      for (auto it = g.GetFitnessVector().begin(); it != g.GetFitnessVector().end(); ++it){
-        std::cout << *it << ' ';
-      }
-    std::cout << "]" <<"\n" << std::endl;
+    for (auto it = g.GetFitnessVector().begin();
+         it != g.GetFitnessVector().end(); ++it) {
+      std::cout << *it << ' ';
+    }
+    std::cout << "]"
+              << "\n" << std::endl;
     std::cout << "Constraint<T> = [";
     for (auto it = g.GetConstraines().begin(); it != g.GetConstraines().end();
          ++it) {
       std::cout << *it << ' ';
     }
-    std::cout << "]" << "\n" << std::endl;
-    std::cout << "fCrowdingDistance = " << g.GetCrowdingDistance() << "\n" << std::endl;
+    std::cout << "]"
+              << "\n" << std::endl;
+    std::cout << "fCrowdingDistance = " << g.GetCrowdingDistance() << "\n"
+              << std::endl;
   }
 
 private:
@@ -157,12 +165,12 @@ private:
   T fVector;   // Vector size (after will be translated in GeantV
                // namespace) #6
   // Parts of fitness vector
-  T fTime;   // RT from GeantV (after will be translated in GeantV
-             // namespace)
-  T fMemory; // RT from GeantV (after will be translated in GeantV
-             // namespace)
-  std::vector<T> fFitness;    // Vector of values of different fitness
-                              // function (objectives)
+  T fTime;                 // RT from GeantV (after will be translated in GeantV
+                           // namespace)
+  T fMemory;               // RT from GeantV (after will be translated in GeantV
+                           // namespace)
+  std::vector<T> fFitness; // Vector of values of different fitness
+                           // function (objectives)
   Int_t fDominationCounter;   // Domination counter for individual (used in
                               // Non-Dominant sorting)
   Int_t fRank;                // Rank of Individual
