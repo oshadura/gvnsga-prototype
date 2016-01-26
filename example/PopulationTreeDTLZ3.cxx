@@ -48,7 +48,7 @@ void DTLZ3(Genes<Double_t> &individual) {
                    (individual.GetSetup()->GetNObjectives() - i + 1) - 1) *
                pi / 2);
     }
-    individual.SetFitness(f);
+    individual.SetFitness((i-1), f);
   }
 
   return;

@@ -48,13 +48,13 @@ templateClassImp(Population)
  m
  */
 template <typename T> struct Comparing {
-  Comparing(Population<T> &p, Int_t indx) : pop(p), m(indx){};
+  Comparing(Population<T> &p, Int_t index) : pop(p), m(index){};
   Population<T> &pop;
   Int_t m;
   Bool_t operator()(Int_t i, Int_t j) {
     return pop.fCrowdingObj
-               ? pop.GetGenes(i).GetFitness(i) < pop.GetGenes(j).GetFitness(j)
-               : pop.GetGenes(i)[i] < pop.GetGenes(j)[j];
+               ? pop.GetGenes(i).GetFitness(m) < pop.GetGenes(j).GetFitness(j)
+               : pop.GetGenes(i).GetGene(m) < pop.GetGenes(i).GetGene(j);
   };
 };
 
@@ -73,47 +73,53 @@ template <class T> void Population<T>::CrowdingDistanceAll() {
 }
 
 template <class T> void Population<T>::CrowdingDistanceFront(Int_t i) {
-  Genes<T> &F = fFront[i]; // Genes
+  std::vector<Int_t> &F = fFront[i]; 
   if (F.size() == 0)
     return;
-  Int_t l = F.size();
-  for (Int_t i = 0; i < l; ++i)
+  for (Int_t i = 0; i < F.size(); ++i)
     GetGenes(F[i]).SetCrowdingDistance(0);
   Int_t limit = fCrowdingObj ? setupPop.fNObjectives : setupPop.fNParam;
   for (Int_t m = 0; m < limit; ++m) {
-    std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
+    //std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
     GetGenes(F[0]).SetCrowdingDistance(INF);
-    if (l > 1)
-      GetGenes(F[l - i]).SetCrowdingDistance(INF);
-    for (Int_t i = 1; i < l - 1; ++i) {
+    if (F.size() > 1)
+      GetGenes(F[F.size() - i]).SetCrowdingDistance(INF);
+    for (Int_t i = 1; i < F.size() - 1; ++i) {
       if (GetGenes(F[i]).GetCrowdingDistance() != INF) {
         if (IsCrowdingObj() &&
-            GetGenes(F[l - 1]).GetFitness(m) != GetGenes(F[0]).GetFitness(m)) {
+            GetGenes(F[F.size() - 1]).GetFitness(m) != GetGenes(F[0]).GetFitness(m)) {
           Double_t dist =
               (GetGenes(F[i + 1]).GetFitness(m) -
                GetGenes(F[i - 1]).GetFitness(m)) /
-              (GetGenes(F[l - 1]).GetFitness(m) - GetGenes(F[0]).GetFitness(m));
+              (GetGenes(F[F.size() - 1]).GetFitness(m) - GetGenes(F[0]).GetFitness(m));
           GetGenes(F[i]).SetCrowdingDistance(dist);
         } else if (!IsCrowdingObj() &&
-                   GetGenes(F[l - 1])[m] != GetGenes(F[0])[m]) {
+                   GetGenes(F[F.size() - 1])[m] != GetGenes(F[0])[m]) {
           Double_t dist = (GetGenes(F[i + 1])[m] - GetGenes(F[i - 1])[m]) /
-                          (GetGenes(F[l - 1])[m] - GetGenes(F[0])[m]);
+                          (GetGenes(F[F.size() - 1])[m] - GetGenes(F[0])[m]);
           GetGenes(F[i]).SetCrowdingDistance(dist);
         }
       }
     }
   }
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    std::cout << "-==============================================-"<< std::endl;
+    std::cout << "Printout after all stepes:" << std::endl;
+    Genes<T>::printGenes(*it);
+  }
 }
 
 template <class T> void Population<T>::FastNonDominantSorting() {
+  //std::cout << fPopulation.size() <<std::endl;
   fFront.resize(1);
   fFront[0].clear();
 #pragma omp parallel for
-  for (int i = 0; i < (ULong_t)fPopulation.size(); ++i) {
-    std::vector<Double_t> fDom;
+  // Dominance checking for each Gene
+  for (int i = 0; i < fPopulation.size(); ++i) {
+    std::vector<Int_t> fDom;
     Int_t fDomCount = 0;
     Genes<T> &p = fPopulation[i];
-    for (Int_t j = 0; (ULong_t)j < fPopulation.size(); ++j) {
+    for (Int_t j = 0; j < fPopulation.size(); ++j) {
       Genes<T> &q = fPopulation[j];
       Int_t compare = p.Genes<T>::CheckDominance(&setupPop, &q);
       if (compare == 1) {
@@ -126,7 +132,7 @@ template <class T> void Population<T>::FastNonDominantSorting() {
     {
       p.SetDominatedCounter(fDomCount);
       p.GetDominated().clear();
-      p.GetDominated() = fDom;
+      p.SetDominated(fDom);
       if (p.GetDominatedCounter() == 0) {
         p.SetRank(1);
         fFront[0].push_back(i);
@@ -136,11 +142,11 @@ template <class T> void Population<T>::FastNonDominantSorting() {
   std::sort(fFront[0].begin(), fFront[0].end());
   int fi = 1;
   while (fFront[fi - 1].size() > 0) {
-    Genes<T> &fronti = fFront[fi - 1];
-    Genes<T> Q;
-    for (Int_t i = 0; (ULong_t)i < fronti.size(); ++i) {
+    std::vector<Int_t> &fronti = fFront[fi - 1];
+    std::vector<Int_t> Q;
+    for (Int_t i = 0; i < fronti.size(); ++i) {
       Genes<T> &p = fPopulation[fronti[i]];
-      for (Int_t j = 0; (ULong_t)j < p.GetDominated().size(); ++j) {
+      for (Int_t j = 0; j < p.GetDominated().size(); ++j) {
         Genes<T> &q = fPopulation[p.GetDominated(j)];
         q.SetDominatedCounter(-1); // -= 1;
         if (q.GetDominatedCounter() == 0) {
@@ -152,6 +158,14 @@ template <class T> void Population<T>::FastNonDominantSorting() {
     fi += 1;
     fFront.push_back(Q);
   }
+  std::cout << "-==============================================-" << std::endl;
+  std::cout << "Front for Population fFront<T> = [";
+  for (int i = 0; i < fFront.size(); ++i){
+    for (auto &it : fFront[i]) {
+      std::cout << it << ' ';
+    }
+  }
+  std::cout << "]" << "\n" << std::endl;
 }
 
 template <class T>
@@ -172,8 +186,8 @@ template <class T> Int_t Population<T>::Mutate() {
   Int_t tmp;
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     const Functions *setupind = (*it).GetSetup();
-    std::cout << "So so - number of objectives in Population::Mutation() "
-              << (*it).GetSetup() << std::endl;
+    std::cout << "So so, just to be sure -> number of objectives in Population::Mutation() "
+              << (*it).GetSetup()->GetNObjectives() << std::endl;
     tmp += it->Genes<T>::Mutate(setupind);
   }
   return tmp;

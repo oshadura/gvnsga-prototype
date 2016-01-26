@@ -62,8 +62,8 @@ public:
   Int_t GetPopulationSize() { return fPopulation.size(); }
   Int_t GetPopulationSetupSize() const { return fSizePop; }
   // std::vector<Genes<T>> GetIndividuals() { return fPopulation; }
-  std::vector<Genes<T>> GetFront() { return fFront; }
-  Genes<T> GetFront(Int_t i) { return fFront.at(i); }
+  std::vector<std::vector<Int_t>> GetFront() { return fFront; }
+  std::vector<Int_t> GetFront(Int_t i) { return fFront.at(i); }
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
   std::vector<Genes<T>> operator=(Population<T> pop) { return fPopulation; }
   void SetCrowdingObj(Bool_t co) { fCrowdingObj = co; }
@@ -117,7 +117,7 @@ public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
                        // false: crowding over real variable
   Int_t GenCounter;
-  std::vector<Genes<T>> fFront;
+  std::vector<std::vector<Int_t>> fFront;
   std::vector<Genes<T>> fPopulation;
 
 private:

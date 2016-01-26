@@ -123,7 +123,7 @@ void CMSApp(Genes<Double_t> &individual) {
   prop->fUseMonitoring = graphics;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
   delete prop;
-  individual.SetFitness(prop->fTimer->RealTime());
+  individual.SetFitness(0, prop->fTimer->RealTime());
   fitness.HistOutputFitness();
   return;
 }

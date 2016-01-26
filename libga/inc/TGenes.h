@@ -38,9 +38,9 @@ public:
   void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   Int_t GetDominatedCounter() { return fDominationCounter; }
-  std::vector<T> GetDominated() {
+  std::vector<Int_t> GetDominated() {
     return fDominated;
-  } // Vector of dominanted individuals
+  } // Vector of dominanted counters
   T GetDominated(Int_t i) { return fDominated.at(i); } // 1 Dominated individual
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
@@ -58,7 +58,7 @@ public:
   void SetFitness(std::vector<T> fitness) { fFitness = fitness; }
   // void SetFitness(Int_t i, T value){ fFitness.emplace(fFitness.begin() + i,
   // value); }
-  void SetFitness(T value) { fFitness.push_back(value); }
+  void SetFitness(Int_t i, T value) { fFitness[i] = value; }
   T GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(T dist) { fCrowdingDistance = dist; }
   Int_t GetRank() const { return fRank; }
@@ -73,6 +73,9 @@ public:
   std::vector<T> GetConstraines() const { return fConstraines; }
   std::vector<T> GetfGenes() const { return fGenes; }
   const Functions *GetSetup() const { return setup; }
+  void SetDominated(std::vector<Int_t> &d){ fDominated = d; }
+  ////////////////////////////////////////////////////
+  Int_t capacity() {return fGenes.capacity();}
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
     typename std::vector<T>::iterator it = fGenes.begin();
@@ -126,7 +129,7 @@ public:
 
     std::cout << "Available constraint violations = " << g.GetConsViol() << "\n"
               << std::endl;
-
+    std::cout << "Size of Gene<T> is " << g.capacity() << "\n" << std::endl;
     std::cout << "Gene<T> = [";
     for (auto it = g.begin(); it != g.end(); ++it) {
       std::cout << *it << ' ';
@@ -134,16 +137,14 @@ public:
     std::cout << "]"
               << "\n" << std::endl;
     std::cout << "Fitness<T> = [";
-    for (auto it = g.GetFitnessVector().begin();
-         it != g.GetFitnessVector().end(); ++it) {
-      std::cout << *it << ' ';
+    for (auto &it : g.GetFitnessVector()) {
+      std::cout << it << ' ';
     }
     std::cout << "]"
               << "\n" << std::endl;
     std::cout << "Constraint<T> = [";
-    for (auto it = g.GetConstraines().begin(); it != g.GetConstraines().end();
-         ++it) {
-      std::cout << *it << ' ';
+    for (auto &it : g.GetConstraines()) {
+      std::cout << it << ' ';
     }
     std::cout << "]"
               << "\n" << std::endl;
@@ -176,7 +177,7 @@ private:
   Int_t fRank;                // Rank of Individual
   Double_t fCrowdingDistance; // Crowding distance per individual
   Bool_t fEvaluated;          // Evaluated or not
-  std::vector<T> fDominated;  // Vector of dominanted individuals
+  std::vector<Int_t> fDominated;  // Vector of dominanted counters
   Double_t ConstViol;         // Violation of constraints
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2

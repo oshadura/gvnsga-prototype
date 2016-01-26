@@ -168,7 +168,7 @@ Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
                                            Genes<Double_t> &ind2) const {
   static TRandom rnd;
   const Functions *setupind = ind1.GetSetup();
-  std::cout << "So so - number of objectives " << ind1.GetSetup() << std::endl;
+  std::cout << "So so, just to be sure - number of objectives on Tournament() " << ind1.GetSetup()->GetNObjectives() << std::endl;
   Int_t fFlag = ind1.CheckDominance(const_cast<Functions *>(setupind), &ind2);
   if (fFlag == 1) // Yes
     return ind1;
@@ -256,7 +256,7 @@ void AlgorithmNSGA::NextStep() {
   std::cout << "-==============================================-" << std::endl;
   std::cout << "New generation #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
-  fNMut = fChildPop->Mutate(); // not a std::pair (?)
+  fNMut = fChildPop->Mutate(); 
   fChildPop->GenCounter = fNGen + 1;
   fChildPop->Evaluate();
   // fNMut += fNMut;
@@ -268,10 +268,10 @@ void AlgorithmNSGA::NextStep() {
   Int_t i = 0;
   while (fParentPop->GetPopulationSize() + (fMixedPop->GetFront(i)).size() <
          fMixedPop->GetPopulationSetupSize()) {
-    Genes<Double_t> Fi = fMixedPop->GetFront(i);
+    std::vector<Int_t> Fi = fMixedPop->GetFront(i);
     fMixedPop->CrowdingDistanceFront(i);            // calculate crowding in Fi
-    for (Int_t j = 0; (Double_t)j < Fi.size(); ++j) // Pt+1 = Pt+1 U Fi
-      fParentPop->fPopulation.push_back(fMixedPop->GetFront(j));
+    for (Int_t j = 0;j < Fi.size(); ++j) // Pt+1 = Pt+1 U Fi
+      fParentPop->fPopulation.push_back(fMixedPop->GetGenes(Fi[j]));
     i += 1;
   }
   fMixedPop->CrowdingDistanceFront(i); // calculate crowding in F
@@ -280,7 +280,7 @@ void AlgorithmNSGA::NextStep() {
   const int extra =
       fParentPop->GetPopulationSetupSize() - fParentPop->GetPopulationSize();
   for (int j = 0; j < extra; ++j) // Pt+1 = Pt+1 U Fi[1:N-|Pt+1|]
-    fParentPop->fPopulation.push_back(fMixedPop->GetFront(j));
+    fParentPop->fPopulation.push_back( fMixedPop->GetGenes(fMixedPop->GetFront(i)[j]));
   fParentPop->GenCounter = fGen + 1;
 }
 

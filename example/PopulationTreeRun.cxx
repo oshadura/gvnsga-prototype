@@ -127,7 +127,7 @@ void runApp(Genes<Double_t> &individual) {
   prop->fUseAppMonitoring = false;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
   delete prop;
-  individual.SetFitness(prop->fTimer->RealTime());
+  individual.SetFitness(0, prop->fTimer->RealTime());
   // fitness.HistOutputFitness();
   return;
 }

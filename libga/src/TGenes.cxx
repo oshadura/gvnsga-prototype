@@ -30,14 +30,15 @@ templateClassImp(Genes)
     : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
-      fVector(0), fTime(0), fMemory(0), setup(0), fConstraines(0) {}
+      fVector(0), fTime(0), fMemory(0), setup(0), fConstraines() {}
 
 template <class T>
 Genes<T>::Genes(const Functions &config) throw(ExceptionMessenger)
-    : TObject(), fFitness(0), fRank(0), fDominationCounter(0),
+    : TObject(), fFitness(), fRank(0), fDominationCounter(0),
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
-      fVector(0), fTime(0), fMemory(0), setup(&config), fConstraines(0) {
+      fVector(0), fTime(0), fMemory(0), setup(&config), fConstraines() {
+
   fGenes.resize(setup->fNParam, 0);
   fFitness.resize(setup->fNObjectives, 0);
   fConstraines.resize(setup->fNCons, 0);
@@ -143,7 +144,8 @@ T Genes<T>::CheckDominance(Functions *setup,
     // ind1 doesn't violate and ind2 does => ind1 dominates
     return 1;
   } else {
-    Int_t fFlag1, fFlag2;
+    Int_t fFlag1 = 0; 
+    Int_t fFlag2 = 0;
     for (Int_t i = 0; i < setup->fNObjectives; ++i) {
       if (setup->fNObjectives > 1) {
         if (GetFitness(i) < ind2->GetFitness(i)) {
