@@ -80,7 +80,7 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t i) {
     GetGenes(F[i]).SetCrowdingDistance(0);
   Int_t limit = fCrowdingObj ? setupPop.fNObjectives : setupPop.fNParam;
   for (Int_t m = 0; m < limit; ++m) {
-    std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
+    //std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
     GetGenes(F[0]).SetCrowdingDistance(INF);
     if (F.size() > 1)
       GetGenes(F[F.size() - i]).SetCrowdingDistance(INF);

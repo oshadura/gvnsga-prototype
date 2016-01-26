@@ -254,7 +254,9 @@ void AlgorithmNSGA::NextStep() {
   std::cout << "New generation #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate();
+  std::cout << "-==============================================-"<< std::endl;
   std::cout << "Number of mutations in whole generation " << fNMut << "\n";
+  std::cout << "-==============================================-"<< std::endl;
   fChildPop->GenCounter = fNGen + 1;
   fChildPop->Evaluate();
   // fNMut += fNMut;

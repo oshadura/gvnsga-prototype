@@ -44,7 +44,7 @@ void DTLZ1(Genes<Double_t> &individual) {
   }
   g = 100 * (k + g);
 
-  individual.GetFitnessVector().resize(m, 0);
+  //individual.GetFitnessVector().resize(m, 0);
 
   for (Int_t i = 0; i < m; ++i) {
     Double_t f = 0.5 * (1 + g);

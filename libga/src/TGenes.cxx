@@ -177,7 +177,7 @@ T Genes<T>::CheckDominance(Functions *setup,
 // Polynomial mutation
 template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
   TRandom rand;
-  Double_t fRrnd, fDelta1, fDelta2, fMutPow, fDelta, fValue;
+  Double_t fRnd, fDelta1, fDelta2, fMutPow, fDelta, fValue;
   Double_t y, LimitDown, LimitUp, xy;
   Int_t fNMut = 0;
   for (Int_t j = 0; j < setup->fNParam; ++j) {
@@ -187,17 +187,17 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
       LimitUp = setup->GetIntervalLimit(j).second;
       fDelta1 = (y - LimitDown) / (LimitUp - LimitDown);
       fDelta2 = (LimitUp - y) / (LimitUp - LimitDown);
-      fRrnd = rand.Rndm();
+      fRnd = rand.Rndm();
       fMutPow = 1.0 / (setup->fEtaMut + 1.0);
-      if (fRrnd <= 0.5) {
+      if (fRnd <= 0.5) {
         xy = 1.0 - fDelta1;
-        fValue = 2.0 * fRrnd +
-                 (1.0 - 2.0 * fRrnd) * (pow(xy, (setup->fEtaMut + 1.0)));
+        fValue = 2.0 * fRnd +
+                 (1.0 - 2.0 * fRnd) * (pow(xy, (setup->fEtaMut + 1.0)));
         fDelta = pow(fValue, fMutPow) - 1.0;
       } else {
         xy = 1.0 - fDelta2;
-        fValue = 2.0 * (1.0 - fRrnd) +
-                 2.0 * (fRrnd - 0.5) * (pow(xy, (setup->fEtaMut + 1.0)));
+        fValue = 2.0 * (1.0 - fRnd) +
+                 2.0 * (fRnd - 0.5) * (pow(xy, (setup->fEtaMut + 1.0)));
         fDelta = 1.0 - (pow(fValue, fMutPow));
       }
       y = y + fDelta * (LimitUp - LimitDown);
@@ -205,16 +205,11 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
         y = LimitDown;
       if (y > LimitUp)
         y = LimitUp;
-      // fGenes[j] = y;
       std::cout << "Print new crossover part = " << y << std::endl;
       SetGene(j, y);
       fNMut += 1;
     }
   }
-  std::cout << "-========------=MUTATE=-------========-" << std::endl;
-  std::cout << "Number of mutations " << fNMut << std::endl;
-  std::cout << "-============------------============-" << std::endl;
-
   return fNMut;
 }
 
