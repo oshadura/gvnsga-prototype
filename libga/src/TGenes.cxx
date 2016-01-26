@@ -209,6 +209,7 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
       fNMut += 1;
     }
   }
+  std::cout << "Number of mutation " << fNMut << std::endl; 
   return fNMut;
 }
 

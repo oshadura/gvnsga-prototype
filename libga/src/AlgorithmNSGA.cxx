@@ -130,7 +130,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 void AlgorithmNSGA::Selection(
     Population<Double_t> &oldpop,
     Population<Double_t> &newpop) throw(ExceptionMessenger) {
-  static TRandom3 rand;
+  static TRandom rand;
   const Int_t PopSizeCheck = oldpop.GetPopulationSize();
   if ((newpop.GetPopulationSize()) != PopSizeCheck)
     throw ExceptionMessenger("OMG! New population has wrong size");
@@ -139,9 +139,9 @@ void AlgorithmNSGA::Selection(
     VecIndexGenes1[i] = VecIndexGenes2[i] = i;
   }
   for (Int_t i = 0; i < PopSizeCheck; ++i) {
-    std::swap(VecIndexGenes1[rand.Uniform(i, PopSizeCheck - 1)],
+    std::swap(VecIndexGenes1[rand.Integer(PopSizeCheck - 1)],
               VecIndexGenes1[i]);
-    std::swap(VecIndexGenes2[rand.Uniform(i, PopSizeCheck - 1)],
+    std::swap(VecIndexGenes2[rand.Integer(PopSizeCheck - 1)],
               VecIndexGenes2[i]);
   }
   for (Int_t i = 0; i < PopSizeCheck; i += 4) {

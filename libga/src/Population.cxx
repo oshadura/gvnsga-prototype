@@ -189,6 +189,8 @@ template <class T> Int_t Population<T>::Mutate() {
     std::cout << "So so, just to be sure -> number of objectives in Population::Mutation() "
               << (*it).GetSetup()->GetNObjectives() << std::endl;
     tmp += it->Genes<T>::Mutate(setupind);
+    std::cout << "-==============================================-" << std::endl;
+    printGenes(*it);
   }
   return tmp;
 }
