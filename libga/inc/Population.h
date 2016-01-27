@@ -21,9 +21,6 @@
 
 template <class T> class Genes;
 template <class T> class Population : public Genes<T>, public Functions {
-
-  // To be used after
-  // template <typename ...Args> using myType = std::function<void(Args...)>;
 public:
   Population()
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fH(0),
@@ -54,22 +51,26 @@ public:
     }
     return *this;
   }
+  std::vector<Genes<T>> operator=(Population<T> pop) { return fPopulation; }
 
   virtual ~Population() {}
+  /////
   Genes<T> &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
     fPopulation.emplace(fPopulation.begin() + i, value);
   }
   void PushGenes(const Genes<T> &value) { fPopulation.push_back(value); }
+  /////
   void SetPopulationSize(Int_t s) { fPopulation.resize(s); }
   Int_t GetPopulationSize() { return fPopulation.size(); }
   Int_t GetPopulationSetupSize() const { return fSizePop; }
-  // std::vector<Genes<T>> GetIndividuals() { return fPopulation; }
+  /////
   std::vector<std::vector<Int_t>> GetFront() { return fFront; }
-  std::vector<Int_t> GetFront(Int_t i) { return fFront.at(i); }
+  std::vector<Int_t> &GetFront(Int_t i) { return fFront.at(i); }
+  /////
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
-  std::vector<Genes<T>> operator=(Population<T> pop) { return fPopulation; }
   void SetCrowdingObj(Bool_t co) { fCrowdingObj = co; }
+  /////
   void Build() throw(ExceptionMessenger);
   void CrowdingDistanceAll();
   void CrowdingDistanceFront(Int_t i);
@@ -78,21 +79,21 @@ public:
              const Population &population2); // Merging two populations
   Int_t Mutate();
   void Evaluate();
-  void Clear(Option_t *option = "");        // Clear function
-  static void Reset(Option_t *option = ""); // Reset function
+  /////
   void SetPopFunction(Functions::popfunctype f) { fPopFunction = f; }
+  /////
   void ResetHistogramPointer() {
     fH = 0;
   } // Function that reset histogram pointer
   TH1F *GetHistogram() const { return fH; } // Return histosgrames
-  //////////////////// Playing with ROOT files///////////////
+  /////
   void WritePopulationTree(Population &pop, const char *file);
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
-
+  /////
   Genes<T> operator[](Int_t i) { return fPopulation.at(i); }
-
+  /////
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop) {
     os << "Population: [\n";
     std::ostream_iterator<Genes<T>> fGenesOutIt(os, "\n");
@@ -126,12 +127,13 @@ public:
 private:
   void Evaluation();
   void EvaluationOpenMP();
+
+private:
   Functions setupPop;
   Functions::popfunctype fPopFunction;
   Int_t fSizePop;
   TH1F *fH;
 
-  // Counter
   ClassDef(Population, 1)
 };
 

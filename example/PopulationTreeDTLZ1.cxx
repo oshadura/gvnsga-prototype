@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
   // Function definition
   Functions *geantv = new Functions();
   // geantv->SetInterval(); // don't work because we initialize fNparam after...
-  // STUPID SOLUTION // cjange on .emplace()
+  // STUPID SOLUTION // change on .emplace()
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
@@ -74,6 +74,10 @@ int main(int argc, char *argv[]) {
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
+
+  //geantv->fInterval.resize(7);
+  //geantv->std::fill(fInterval.begin(),fInterval.begin(),std::make_pair(0, 1));
+
   std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);
   std::cout << "-==============================================-" << std::endl;

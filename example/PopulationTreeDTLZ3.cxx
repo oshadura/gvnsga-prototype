@@ -22,14 +22,6 @@
 static const double pi = boost::math::constants::pi<double>();
 
 void DTLZ3(Genes<Double_t> &individual) {
-  /*
-  double y = 0.0;
-  for( Int_t i = 0; i < individual.GetfGenes().size(); ++i) {
-    y += pow(individual.GetGene(i) - 0.5, 2) - cos(20 *
-  boost::math::constants::pi<double>() * (individual.GetGene(i) - 0.5));
-  }
-  individual.SetFitness(0, 100.0 * (y + individual.GetfGenes().size()));
-  */
   Int_t n = individual.GetSetup()->GetNParam();
   Int_t k = n - individual.GetSetup()->GetNObjectives() + 1;
   Double_t g = 0.0;
@@ -72,13 +64,13 @@ int main(int argc, char *argv[]) {
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
   nsga2->SetPMut(0.7);
-  nsga2->SetGenTotalNumber(2);
+  nsga2->SetGenTotalNumber(300);
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(6);
   nsga2->SetNObjectives(2); // Memory, Time
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
-  nsga2->SetPopulationSize(4);
+  nsga2->SetPopulationSize(12);
   nsga2->SetEtaMut(10);
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);

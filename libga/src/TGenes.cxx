@@ -205,7 +205,7 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
         y = LimitDown;
       if (y > LimitUp)
         y = LimitUp;
-      std::cout << "Print new crossover part = " << y << std::endl;
+      //std::cout << "Print new crossover part = " << y << std::endl;
       SetGene(j, y);
       fNMut += 1;
     }

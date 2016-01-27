@@ -46,10 +46,10 @@ public:
   }
   void Report(std::ostream &os) const {
     os << "Population size = " << fSizePop
-       << "\nNumber of generations = " << fNGen
-       << "\nNumber of objective functions = " << fNObjectives
-       << "\nNumber of constraints = " << fNCons
-       << "\nNumber of variables = " << fNParam;
+       << "Number of generations = " << fNGen
+       << "Number of objective functions = " << fNObjectives
+       << "Number of constraints = " << fNCons
+       << "Number of variables = " << fNParam;
 
     if (fNParam != 0) {
       for (int i = 0; i < fNParam; ++i) {

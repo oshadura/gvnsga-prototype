@@ -44,10 +44,7 @@ public:
   T GetDominated(Int_t i) { return fDominated.at(i); }
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
-  Genes<T> &SetGene(Int_t i, T value) {
-    auto it = fGenes.emplace(fGenes.begin(), i);
-    fGenes.emplace(it, value);
-  }
+  void SetGene(Int_t i, T value) { fGenes[i] = value; }
   std::vector<T> GetFitnessVector() const {
     return fFitness;
   } // Get a vector of fTime and fMemory
@@ -55,8 +52,6 @@ public:
     return fFitness.at(i);
   } // Get Fitness at i position
   void SetFitness(std::vector<T> fitness) { fFitness = fitness; }
-  // void SetFitness(Int_t i, T value){ fFitness.emplace(fFitness.begin() + i,
-  // value); }
   void SetFitness(Int_t i, T value) { fFitness[i] = value; }
   T GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(T dist) { fCrowdingDistance = dist; }
@@ -64,6 +59,8 @@ public:
   void SetRank(Int_t rank) { fRank = rank; }
   Double_t GetConsViol() const { return ConstViol; }
   void SetConsViol(Double_t consv) { ConstViol = consv; }
+  void SetEvaluated(Bool_t value) { fEvaluated = value; }
+
   void WriteGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
   void UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2, Population<T> &pop,
                        const char *file);
@@ -73,7 +70,6 @@ public:
   std::vector<T> GetfGenes() const { return fGenes; }
   const Functions *GetSetup() const { return setup; }
   void SetDominated(std::vector<Int_t> &d) { fDominated = d; }
-  ////////////////////////////////////////////////////
   Int_t capacity() { return fGenes.capacity(); }
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
@@ -88,7 +84,7 @@ public:
   void clear() { fGenes.clear(); }
   void push_back(Int_t i) { return fGenes.push_back(i); }
   void resize(Int_t i) { return fGenes.resize(i); }
-  ///////// To be used later ////////////////////
+
   T GetAllev() const { return fAllev; }
 
   T GetBuffev() const { return fBuffev; }
@@ -104,7 +100,7 @@ public:
   T GetTime() const { return fTime; }
 
   T GetMemory() const { return fMemory; }
-  /////////////////////////////////////////////
+
   T GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
 
   T GetBuffev(Genes<T> &ind) const { return ind.GetGene(1); }
@@ -120,7 +116,6 @@ public:
   T GetTime(Genes<T> &ind) const { return ind.GetFitness(0); }
 
   T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
-  //////////////////////////////////////////////////////////////
 
   void printGenes(Genes<T> &g) {
 
@@ -180,7 +175,6 @@ private:
   Double_t ConstViol;            // Violation of constraints
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
-  /////// Trial for Genes() constructor ///////////////
   const Functions *setup;
   // Should we write a map to be sure about connection between Limits[] and
   // Genes[] || Fitmess[] and Constraint[]?
