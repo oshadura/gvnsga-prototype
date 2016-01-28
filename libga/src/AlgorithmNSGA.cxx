@@ -14,12 +14,14 @@
 // AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
 ClassImp(AlgorithmNSGA)
 
-  struct Sorting{
+    struct Sorting {
   const Population<Double_t> &pop;
   Sorting(Population<Double_t> &population) : pop(population){};
   bool operator()(Int_t i, Int_t j) {
-    const Genes<Double_t> &ind1 = pop.GetGenes(i);
-    const Genes<Double_t> &ind2 = pop.GetGenes(j);
+    const Genes<Double_t> &ind1 =
+        const_cast<Population<Double_t> &>(pop).GetGenes(i);
+    const Genes<Double_t> &ind2 =
+        const_cast<Population<Double_t> &>(pop).GetGenes(j);
     if (ind1.GetRank() < ind2.GetRank())
       return true;
     else if (ind1.GetRank() == ind2.GetRank() &&
@@ -123,7 +125,8 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   fMixedPop->fCrowdingObj = fCrowdingObj;
   fMixedPop->fCrowdingObj = fCrowdingObj;
   fGen = 1;
-  std::cout << "=================New generation #" << fGen << "================"<< std::endl;
+  std::cout << "=================New generation #" << fGen
+            << "================" << std::endl;
   fParentPop->Build();
   fParentPop->Evaluate();
   fParentPop->FastNonDominantSorting();
@@ -228,45 +231,45 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
         Crossover2 = 0.5 * ((Component1 + Component2) +
                             Betaq * (Component2 - Component1));
         Crossover1 = fmin(fmax(Crossover1, LimitDown), LimitUp);
-        //std::cout << "DEBUG: Crossover1 = "<< Crossover2 << std::endl;
+        // std::cout << "DEBUG: Crossover1 = "<< Crossover2 << std::endl;
         Crossover2 = fmin(fmax(Crossover2, LimitDown), LimitUp);
-        //std::cout << "DEBUG: Crossover2 = "<< Crossover2 << std::endl;
+        // std::cout << "DEBUG: Crossover2 = "<< Crossover2 << std::endl;
         if (rnd.Uniform() <= 0.5) {
           child1.SetGene(i, Crossover2);
-          //std::cout << "==============DEBUG=================" << std::endl;
-          //child1.Genes<Double_t>::printGenes(child1);
+          // std::cout << "==============DEBUG=================" << std::endl;
+          // child1.Genes<Double_t>::printGenes(child1);
           child2.SetGene(i, Crossover1);
-          //std::cout << "==============DEBUG=================" << std::endl;
-          //child2.Genes<Double_t>::printGenes(child2);
+          // std::cout << "==============DEBUG=================" << std::endl;
+          // child2.Genes<Double_t>::printGenes(child2);
         } else {
           child1.SetGene(i, Crossover1);
-          //std::cout << "==============DEBUG=================" << std::endl;
-          //child1.Genes<Double_t>::printGenes(child1);
+          // std::cout << "==============DEBUG=================" << std::endl;
+          // child1.Genes<Double_t>::printGenes(child1);
           child2.SetGene(i, Crossover2);
-          //std::cout << "==============DEBUG=================" << std::endl;
-          //child2.Genes<Double_t>::printGenes(child2);
+          // std::cout << "==============DEBUG=================" << std::endl;
+          // child2.Genes<Double_t>::printGenes(child2);
         }
       } else {
         child1.SetGene(i, parent1.GetGene(i));
-        //std::cout << "==============DEBUG=================" << std::endl;
-        //child1.Genes<Double_t>::printGenes(child1);
+        // std::cout << "==============DEBUG=================" << std::endl;
+        // child1.Genes<Double_t>::printGenes(child1);
         child2.SetGene(i, parent2.GetGene(i));
-        //std::cout << "==============DEBUG=================" << std::endl;
-        //child2.Genes<Double_t>::printGenes(child2);
+        // std::cout << "==============DEBUG=================" << std::endl;
+        // child2.Genes<Double_t>::printGenes(child2);
       }
     }
   } else {
     for (Int_t i = 0; i < fNParam; i++) {
       child1.SetGene(i, parent1.GetGene(i));
-      //std::cout << "==============DEBUG=================" << std::endl;
-      //child1.Genes<Double_t>::printGenes(child1);
+      // std::cout << "==============DEBUG=================" << std::endl;
+      // child1.Genes<Double_t>::printGenes(child1);
       child2.SetGene(i, parent2.GetGene(i));
-      //std::cout << "==============DEBUG=================" << std::endl;
-      //child2.Genes<Double_t>::printGenes(child1);
+      // std::cout << "==============DEBUG=================" << std::endl;
+      // child2.Genes<Double_t>::printGenes(child1);
     }
   }
- child1.SetEvaluated(false);
- child2.SetEvaluated(false);
+  child1.SetEvaluated(false);
+  child2.SetEvaluated(false);
 }
 
 void AlgorithmNSGA::NextStep() {
@@ -275,9 +278,11 @@ void AlgorithmNSGA::NextStep() {
   std::cout << "New generation #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate();
-  //std::cout << "-==============================================-"<< std::endl;
-  //std::cout << "Number of mutations in whole generation " << fNMut << "\n";
-  //std::cout << "-==============================================-"<< std::endl;
+  // std::cout << "-==============================================-"<<
+  // std::endl;
+  // std::cout << "Number of mutations in whole generation " << fNMut << "\n";
+  // std::cout << "-==============================================-"<<
+  // std::endl;
   fChildPop->GenCounter = fNGen + 1;
   fChildPop->Evaluate();
   // fNMut += fNMut;
@@ -300,10 +305,13 @@ void AlgorithmNSGA::NextStep() {
   std::cout << "]"<< "\n" << std::endl;
   */
   ///////////////////////////////////////////////////////////////
-  //std::cout << "fParentPop->GetPopulationSize() = " << fParentPop->GetPopulationSize() << std::endl;
-  //std::cout << "fMixedPop->GetFront(i).size() = "<< fMixedPop->GetFront(i).size() << std::endl;
-  //std::cout << "fSizePop = " << fSizePop << std::endl;
-  while (fParentPop->GetPopulationSize() + fMixedPop->GetFront(i).size() < fSizePop) {
+  // std::cout << "fParentPop->GetPopulationSize() = " <<
+  // fParentPop->GetPopulationSize() << std::endl;
+  // std::cout << "fMixedPop->GetFront(i).size() = "<<
+  // fMixedPop->GetFront(i).size() << std::endl;
+  // std::cout << "fSizePop = " << fSizePop << std::endl;
+  while (fParentPop->GetPopulationSize() + fMixedPop->GetFront(i).size() <
+         fSizePop) {
     std::vector<Int_t> Fi = fMixedPop->GetFront(i);
     fMixedPop->CrowdingDistanceFront(i);
     // calculate crowding in Fi
@@ -314,9 +322,9 @@ void AlgorithmNSGA::NextStep() {
   }
   fMixedPop->CrowdingDistanceFront(i);
   // calculate crowding in F
-  std::sort(fMixedPop->GetFront(i).begin(), fMixedPop->GetFront(i).end(), Sorting(*fMixedPop));
-  const int extra =
-      fSizePop - fParentPop->GetPopulationSize();
+  std::sort(fMixedPop->GetFront(i).begin(), fMixedPop->GetFront(i).end(),
+            Sorting(*fMixedPop));
+  const int extra = fSizePop - fParentPop->GetPopulationSize();
   // Pt+1 = Pt+1 U Fi[1:N-|Pt+1|]
   for (int j = 0; j < extra; ++j)
     fParentPop->fPopulation.push_back(

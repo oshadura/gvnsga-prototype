@@ -44,7 +44,7 @@ void DTLZ1(Genes<Double_t> &individual) {
   }
   g = 100 * (k + g);
 
-  //individual.GetFitnessVector().resize(m, 0);
+  // individual.GetFitnessVector().resize(m, 0);
 
   for (Int_t i = 0; i < m; ++i) {
     Double_t f = 0.5 * (1 + g);
@@ -75,8 +75,9 @@ int main(int argc, char *argv[]) {
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
 
-  //geantv->fInterval.resize(7);
-  //geantv->std::fill(fInterval.begin(),fInterval.begin(),std::make_pair(0, 1));
+  // geantv->fInterval.resize(7);
+  // geantv->std::fill(fInterval.begin(),fInterval.begin(),std::make_pair(0,
+  // 1));
 
   std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);

@@ -47,14 +47,20 @@ templateClassImp(Population)
  two individuals with different indexes and objectives/variables with index
  m
  */
-template <typename T> struct Comparing{
+template <typename T> struct Comparing {
   Comparing(const Population<T> &p, Int_t index) : pop(p), m(index){};
   const Population<T> &pop;
   Int_t m;
   Bool_t operator()(Int_t i, Int_t j) {
     return pop.fCrowdingObj
-               ? pop.GetGenes(i).GetFitness(m) < pop.GetGenes(j).GetFitness(j)
-               : pop.GetGenes(i).GetGene(m) < pop.GetGenes(i).GetGene(j);
+               ? const_cast<Population<Double_t> &>(pop).GetGenes(i).GetFitness(
+                     m) < const_cast<Population<Double_t> &>(pop)
+                              .GetGenes(j)
+                              .GetFitness(j)
+               : const_cast<Population<Double_t> &>(pop).GetGenes(i).GetGene(
+                     m) < const_cast<Population<Double_t> &>(pop)
+                              .GetGenes(i)
+                              .GetGene(j);
   };
 };
 
@@ -64,7 +70,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
-  //WritePopulationTree(*this, "NSGA.root");
+  // WritePopulationTree(*this, "NSGA.root");
 }
 
 template <class T> void Population<T>::CrowdingDistanceAll() {
@@ -84,16 +90,21 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t front) {
   for (Int_t i = 0; i < F.size(); ++i)
     GetGenes(F[i]).SetCrowdingDistance(0);
   Int_t limit = fCrowdingObj ? setupPop.fNObjectives : setupPop.fNParam;
-  //std::cout << "Limit for calculating CrowDist (setupPop.fNObjectives : setupPop.fNParam) = " << limit << std::endl;
+  // std::cout << "Limit for calculating CrowDist (setupPop.fNObjectives :
+  // setupPop.fNParam) = " << limit << std::endl;
   for (Int_t m = 0; m < limit; ++m) {
     std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
     GetGenes(F[0]).SetCrowdingDistance(INF);
     if (F.size() > 1)
       GetGenes(F[F.size() - 1]).SetCrowdingDistance(INF);
-      std::cout << "-==============================================-"<< std::endl;
-      std::cout << "Min in our front = " << GetGenes(F[0]).GetGene(0) << std::endl;
-      std::cout << "Max in our front = " << GetGenes(F[F.size()- 1]).GetGene(0) << std::endl;
-      std::cout << "-==============================================-"<< std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Min in our front = " << GetGenes(F[0]).GetGene(0)
+              << std::endl;
+    std::cout << "Max in our front = " << GetGenes(F[F.size() - 1]).GetGene(0)
+              << std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
     for (Int_t i = 1; i < F.size() - 1; ++i) {
       if (GetGenes(F[i]).GetCrowdingDistance() != INF) {
         if (IsCrowdingObj() &&
@@ -105,21 +116,28 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t front) {
                            GetGenes(F[0]).GetFitness(m));
           GetGenes(F[i]).SetCrowdingDistance(dist);
         } else if (!IsCrowdingObj() &&
-                   GetGenes(F[F.size() - 1]).GetGene(m) != GetGenes(F[0]).GetGene(m)) {
-          Double_t dist = (GetGenes(F[i + 1]).GetGene(m) - GetGenes(F[i - 1]).GetGene(m)) /
-                          (GetGenes(F[F.size() - 1]).GetGene(m) - GetGenes(F[0]).GetGene(m));
+                   GetGenes(F[F.size() - 1]).GetGene(m) !=
+                       GetGenes(F[0]).GetGene(m)) {
+          Double_t dist =
+              (GetGenes(F[i + 1]).GetGene(m) - GetGenes(F[i - 1]).GetGene(m)) /
+              (GetGenes(F[F.size() - 1]).GetGene(m) -
+               GetGenes(F[0]).GetGene(m));
           GetGenes(F[i]).SetCrowdingDistance(dist);
         }
       }
     }
   }
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
-    std::cout << "-==============================================-"<< std::endl;
-    std::cout << "-==============================================-"<< std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
     std::cout << "Printout after crowding distance steps:" << std::endl;
     Genes<T>::printGenes(*it);
-    std::cout << "-==============================================-"<< std::endl;
-    std::cout << "-==============================================-"<< std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
   }
 }
 
@@ -193,18 +211,17 @@ void Population<T>::Merge(const Population<T> &population1,
                 const_cast<Population<T> &>(population1).GetPopulationSize());
 }
 
-
 template <class T> Int_t Population<T>::Mutate() {
   Int_t tmp;
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     const Functions *setupind = (*it).GetSetup();
-    //std::cout << "-==============================================-"
+    // std::cout << "-==============================================-"
     //          << std::endl;
     // std::cout << "So so, just to be sure -> number of objectives in "
     //             "Population::Mutation() "
     //          << (*it).GetSetup()->GetNObjectives() << std::endl;
     tmp += it->Genes<T>::Mutate(setupind);
-    //this->printGenes(*it);
+    // this->printGenes(*it);
   }
   return tmp;
 }

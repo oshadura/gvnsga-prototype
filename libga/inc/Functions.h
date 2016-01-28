@@ -115,7 +115,6 @@ public:
   }
 
 public:
-
   typedef void (*functype)(Genes<Double_t> &);
   typedef void (*popfunctype)(
       Population<Double_t> &); // still dont know if to use in such way or not

@@ -27,9 +27,9 @@ void DTLZ2(Genes<Double_t> &individual) {
   }
   individual.SetFitness(0, y);
   */
-  Int_t n = individual.GetSetup()->GetNParam(); //12
-  Int_t m = individual.GetSetup()->GetNObjectives(); //3
-  Int_t k = n - m + 1; //10
+  Int_t n = individual.GetSetup()->GetNParam(); // 12
+  Int_t m = individual.GetSetup()->GetNObjectives(); // 3
+  Int_t k = n - m + 1; // 10
 
   Double_t g = 0.0;
 
@@ -37,16 +37,16 @@ void DTLZ2(Genes<Double_t> &individual) {
     g += pow(individual.GetGene(i) - 0.5, 2);
   }
 
-  //individual.GetFitnessVector().resize(m, 0);
+  // individual.GetFitnessVector().resize(m, 0);
 
   for (Int_t i = 0; i < m; ++i) {
-    Double_t f = (1 + g);size_t j = 0;
-    for (; i + m <=  m - 2; ++j){
+    Double_t f = (1 + g);
+    size_t j = 0;
+    for (; i + m <= m - 2; ++j) {
       f *= cos(individual.GetGene(j) * halfpi);
     }
     if (m > 1) {
-      f *=
-          sin(individual.GetGene(j) * halfpi);
+      f *= sin(individual.GetGene(j) * halfpi);
     }
     individual.SetFitness(i, f);
   }

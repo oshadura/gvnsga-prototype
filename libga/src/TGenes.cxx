@@ -191,8 +191,8 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
       fMutPow = 1.0 / (setup->fEtaMut + 1.0);
       if (fRnd <= 0.5) {
         xy = 1.0 - fDelta1;
-        fValue = 2.0 * fRnd +
-                 (1.0 - 2.0 * fRnd) * (pow(xy, (setup->fEtaMut + 1.0)));
+        fValue =
+            2.0 * fRnd + (1.0 - 2.0 * fRnd) * (pow(xy, (setup->fEtaMut + 1.0)));
         fDelta = pow(fValue, fMutPow) - 1.0;
       } else {
         xy = 1.0 - fDelta2;
@@ -205,7 +205,7 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
         y = LimitDown;
       if (y > LimitUp)
         y = LimitUp;
-      //std::cout << "Print new crossover part = " << y << std::endl;
+      // std::cout << "Print new crossover part = " << y << std::endl;
       SetGene(j, y);
       fNMut += 1;
     }
