@@ -113,6 +113,8 @@ public:
 
   T GetVector(Genes<T> &ind) const { return ind.GetGene(5); }
 
+  T GetMaxVector(Genes<T> &ind) const { return ind.GetGene(6); }
+
   T GetTime(Genes<T> &ind) const { return ind.GetFitness(0); }
 
   T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
@@ -159,6 +161,7 @@ private:
                // namespace) #5
   T fVector;   // Vector size (after will be translated in GeantV
                // namespace) #6
+  T fMaxVector; // Max VectorSize
   // Parts of fitness vector
   T fTime;                 // RT from GeantV (after will be translated in GeantV
                            // namespace)
