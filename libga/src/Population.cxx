@@ -153,7 +153,7 @@ template <class T> void Population<T>::FastNonDominantSorting() {
     Genes<T> &p = fPopulation[i];
     for (Int_t j = 0; j < fPopulation.size(); ++j) {
       Genes<T> &q = fPopulation[j];
-      Int_t compare = p.Genes<T>::CheckDominance(&setupPop, &q);
+      Int_t compare = p.Genes<T>::CheckDominance(&q);
       if (compare == 1) {
         fDom.push_back(j);
       } else if (compare == -1) {

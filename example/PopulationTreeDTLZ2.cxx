@@ -25,6 +25,8 @@ void DTLZ2(Genes<Double_t> &individual) {
   for (Int_t i = 0; i < individual.GetfGenes().size(); ++i) {
     y += pow(individual.GetGene(i) - 0.5, 2);
   }
+  printf("Fitness value = %f\n", y);
+  // Problem with changing types
   individual.SetFitness(0, y);
   */
   Int_t n = individual.GetSetup()->GetNParam(); // 12
