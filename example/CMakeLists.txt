@@ -48,8 +48,9 @@ set(LIBGA_EXAMPLES
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ1.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ2.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ3.cxx
-   #${CMAKE_SOURCE_DIR}/example/PopulationTreeRun.cxx
-   #${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRun.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunLoop.cxx
 )
 
 #----------------------------------------------------------------------------
@@ -58,6 +59,5 @@ set(LIBGA_EXAMPLES
 #target_link_libraries(PopulationTree GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${VECGEOM_LIBRARIES} ${HEPMC3_LIBRARIES} ${GEANTV_LIBRARIES})
 
 build_executables("${LIBGA_EXAMPLES}")
-install(TARGETS PopulationTreeDTLZ1 PopulationTreeDTLZ2 PopulationTreeDTLZ3
-# PopulationTreeRun PopulationTreeRunCMS
+install(TARGETS PopulationTreeDTLZ1 PopulationTreeDTLZ2 PopulationTreeDTLZ3 PopulationTreeRun PopulationTreeRunCMS PopulationTreeRunLoop
  DESTINATION ${CMAKE_BINARY_DIR})
