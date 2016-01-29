@@ -66,7 +66,7 @@ template <typename T> struct Comparing {
 
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
-    it->Genes<T>::Set(setupPop, *it);
+    it->Genes<T>::SetGeantV(setupPop, *it);
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }

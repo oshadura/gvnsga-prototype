@@ -34,8 +34,8 @@ public:
   Int_t Mutate(const Functions *setup);
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
-  void Set() throw(ExceptionMessenger);
   void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  void SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<Int_t> GetDominated() {

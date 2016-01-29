@@ -135,14 +135,7 @@ void runApp(Genes<Double_t> &individual) {
 int main(int argc, char *argv[]) {
   // Function definition
   Functions *geantv = new Functions();
-  // geantv->SetInterval(); // don't work because we initialize fNparam after...
-  // STUPID SOLUTION //
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
+  geantv->SetIntervalGeantV();
   std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);
   std::cout << "-==============================================-" << std::endl;

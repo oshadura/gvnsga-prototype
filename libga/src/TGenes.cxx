@@ -68,19 +68,6 @@ template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
   return *this;
 }
 
-template <class T> void Genes<T>::Set() throw(ExceptionMessenger) {
-  /*
-  if (!setup)
-    throw ExceptionMessenger("Do something with setup function!");
-  */
-  TRandom3 rand;
-  rand.SetSeed(time(NULL));
-  for (Int_t i = 0; i < (setup->fNParam); ++i) {
-    fGenes[i] = rand.Uniform(setup->GetIntervalLimit(i).first,
-                             setup->GetIntervalLimit(i).second);
-  }
-}
-
 template <class T>
 void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   // Lets imagine that we have only one limit #0 for all parameters
@@ -97,6 +84,44 @@ void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
     std::cout << "| " << i << " = element of gene |";
   }
 }
+
+template <class T>
+void Genes<T>::SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
+  // FIX GENERATORS
+  // 1. Consider value that ([0] - 1) should be always smaller [0]
+  // 2. Consider that [5] and [6] are generated in diferent way (new generator)
+  ind = Genes<T>(setup);
+  std::random_device rnd_device;
+  std::mt19937 mersenne_engine(rnd_device());
+  ind.resize(setup.fNParam);
+  for (Int_t i = 0; i < (setup.fNParam); ++i) {
+  std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
+                                         setup.fInterval[i].second);
+  auto gen = std::bind(dist, mersenne_engine);
+  std::generate_n(std::begin(ind) + i, 1, gen);
+}
+
+  for (auto i : ind) {
+    std::cout << "| " << i << " = element of gene |";
+  }
+  /*
+  TRandom rand;
+  rand.SetSeed(5000);
+  ind = Genes<T>(setup);
+  ind.resize(setup.fNParam);
+  rand.SetSeed(time(NULL));
+  for (Int_t i = 0; i < (setup.fNParam); ++i) {
+     fGenes[i] = rand.Uniform(setup .fInterval[i].first,
+                             setup.fInterval[i].second);
+     //fGenes.emplace(fGenes.begin() + i, value);
+  }
+
+  for (auto i : ind) {
+    std::cout << "| " << i << " = element of gene |";
+  }
+  */
+}
+
 
 template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);

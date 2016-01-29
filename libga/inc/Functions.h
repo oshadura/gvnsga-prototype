@@ -75,6 +75,8 @@ public:
    * @details [long description]
    */
   void SetInterval();
+
+  void SetIntervalGeantV();
   /**
    * @brief [brief description]
    * @details [long description]
@@ -92,15 +94,6 @@ public:
   void SetInterval(std::vector<std::pair<Double_t, Double_t>> l) {
     l = fInterval;
   }
-  /**
-  friend std::ostream& operator<<(std::ostream& os,
-  std::vector<std::pair<Double_t,Double_t>> &limit){
-  for(auto &x:limit){
-    os << x.first << ":"<< x.second;
-  }
-    return os;
-  }
-  */
 
   Int_t GetNObjectives() const { return fNObjectives; }
 
