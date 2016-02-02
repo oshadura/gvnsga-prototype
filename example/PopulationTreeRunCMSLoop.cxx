@@ -84,6 +84,7 @@ void CMSApp(Genes<Double_t> &individual) {
   delete prop;
   individual.SetFitness(0, prop->fTimer->RealTime());
   //fitness.HistOutputFitness();
+  prop->Clear();
   return;
 }
 

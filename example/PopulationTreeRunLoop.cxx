@@ -94,7 +94,7 @@ void runAppLoop(Genes<Double_t> &individual) {
   prop->PropagatorGeom(geomfile, nthread, false);
   individual.SetFitness(0, prop->fTimer->RealTime());
   // fitness.HistOutputFitness();
-  prop->Clear();
+  //prop->Clear();
   return;
 }
 
