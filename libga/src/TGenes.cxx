@@ -86,7 +86,8 @@ void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
 }
 
 template <class T>
-void Genes<T>::SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
+void Genes<T>::SetGeantV(Functions &setup,
+                         Genes<T> &ind) throw(ExceptionMessenger) {
   // FIX GENERATORS
   // 1. Consider value that ([0] - 1) should be always smaller [0]
   // 2. Consider that [5] and [6] are generated in diferent way (new generator)
@@ -95,11 +96,11 @@ void Genes<T>::SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMesseng
   std::mt19937 mersenne_engine(rnd_device());
   ind.resize(setup.fNParam);
   for (Int_t i = 0; i < (setup.fNParam); ++i) {
-  std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
-                                         setup.fInterval[i].second);
-  auto gen = std::bind(dist, mersenne_engine);
-  std::generate_n(std::begin(ind) + i, 1, gen);
-}
+    std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
+                                           setup.fInterval[i].second);
+    auto gen = std::bind(dist, mersenne_engine);
+    std::generate_n(std::begin(ind) + i, 1, gen);
+  }
 
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
@@ -122,7 +123,6 @@ void Genes<T>::SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMesseng
   */
 }
 
-
 template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);
 }
@@ -134,7 +134,7 @@ void Genes<T>::Evaluate(GeantPropagator *prop, Functions &setup,
   std::cout << "-==============================================-" << std::endl;
   std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
   printGenes(ind);
-  (setup.evfunc)(prop,ind);
+  (setup.evfunc)(prop, ind);
   if (setup.fNCons) {
     ConstViol = 0;
   }

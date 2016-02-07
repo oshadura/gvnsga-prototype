@@ -40,10 +40,7 @@ bool coprocessor = COPROCESSOR_REQUEST;
 int nthreads = 4;
 int ntotal = 10;
 int nbuffered = 5;
-GeantPropagator *prop =
-      GeantPropagator::Instance(ntotal, nbuffered, nthreads);
-
-
+GeantPropagator *prop = GeantPropagator::Instance(ntotal, nbuffered, nthreads);
 
 void runAppLoop(Genes<Double_t> &individual) {
   // Should be generated each time because of prop.Clear()
@@ -56,13 +53,14 @@ void runAppLoop(Genes<Double_t> &individual) {
   prop->fNevents = individual.GetBuffev(
       individual); // Number of buffered events (tunable [1,ntotal])
   printf("Debugging Run.C: buffered particles value = %d\n", prop->fNevents);
-  prop->fNaverage = 500; 
+  prop->fNaverage = 500;
   prop->fPriorityThr = individual.GetPriority(individual);
   printf("Debugging Run.C: priority value = %f\n", prop->fPriorityThr);
   prop->fNperBasket =
       individual.GetVector(individual); // Initial vector size (tunable)
   printf("Debugging Run.C: vector value = %d\n", prop->fNperBasket);
-  prop->fMaxPerBasket = individual.GetMaxVector(individual); // Maximum vector size (tunable)
+  prop->fMaxPerBasket =
+      individual.GetMaxVector(individual); // Maximum vector size (tunable)
   printf("Debugging Run.C: max vector value = %d\n", prop->fMaxPerBasket);
   // for vector physics -OFF now
   // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
@@ -89,7 +87,9 @@ void runAppLoop(Genes<Double_t> &individual) {
   // Monitor the application
   prop->fUseMonitoring = false;
   prop->fUseAppMonitoring = false;
-  std::cout << "-====================== PropagatorGeom ========================-" << std::endl;
+  std::cout
+      << "-====================== PropagatorGeom ========================-"
+      << std::endl;
   prop->PropagatorGeom(geomfile, nthread, false);
   individual.SetFitness(0, prop->fTimer->RealTime());
   // fitness.HistOutputFitness();
@@ -134,11 +134,13 @@ int main(int argc, char *argv[]) {
   // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
   // If set to 0 takes the default value of 0.01
   prop->fPriorityThr = 0.01;
-  printf("First initialized value in Run.C: priority value = %f\n", prop->fPriorityThr);
+  printf("First initialized value in Run.C: priority value = %f\n",
+         prop->fPriorityThr);
   // Initial vector size, this is no longer an important model parameter,
   // because is gets dynamically modified to accomodate the track flow
   prop->fNperBasket = 64; // Initial vector size (tunable)
-  printf("First initialized value in Run.C: fNperBasket = %d\n", prop->fNperBasket);
+  printf("First initialized value in Run.C: fNperBasket = %d\n",
+         prop->fNperBasket);
   // This is now the most important parameter for memory considerations
   prop->fMaxPerBasket = 256; // Maximum vector size (tunable)
   prop->fEmin = 3.E-6;       // [3 KeV] energy cut
@@ -146,14 +148,16 @@ int main(int argc, char *argv[]) {
   // for vector physics -OFF now
   // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
   // nthreads);
-  std::cout << "-===================== GunGenerator =========================-" << std::endl;
+  std::cout << "-===================== GunGenerator =========================-"
+            << std::endl;
   prop->fPrimaryGenerator =
       new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
   prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
   // Number of steps for learning phase (tunable [0, 1e6])
   // if set to 0 disable learning phase
   prop->fLearnSteps = 1000;
-  printf("First initialized value in Run.C: learning steps value = %d\n", prop->fLearnSteps);
+  printf("First initialized value in Run.C: learning steps value = %d\n",
+         prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
   /////////////////////////////////////////////////////////////////////////////

@@ -309,7 +309,7 @@ template <class T> void Population<T>::Evaluate(GeantPropagator *prop) {
 #ifdef ENABLE_OPENMP
   EvaluationOpenMP(prop);
 #else
-    Evaluation(prop);
+  Evaluation(prop);
 #endif
 }
 #else
@@ -317,14 +317,13 @@ template <class T> void Population<T>::Evaluate() {
 #ifdef ENABLE_OPENMP
   EvaluationOpenMP();
 #else
-    Evaluation();
+  Evaluation();
 #endif
 }
 #endif
 
-
 #ifdef ENABLE_GEANTV
-template <class T> void Population<T>::Evaluation(GeantPropagator* prop) {
+template <class T> void Population<T>::Evaluation(GeantPropagator *prop) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     Genes<T>::Evaluate(prop, setupPop, *it);
     std::cout << "-==============================================-"
@@ -346,7 +345,7 @@ template <class T> void Population<T>::Evaluation() {
 #endif
 
 #ifdef ENABLE_GEANTV
-template <class T> void Population<T>::EvaluationOpenMP(GeantPropagator* prop) {
+template <class T> void Population<T>::EvaluationOpenMP(GeantPropagator *prop) {
 #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
     fPopulation[i].Evaluate(prop, setupPop, fPopulation[i]);

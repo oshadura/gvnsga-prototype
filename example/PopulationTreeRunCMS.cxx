@@ -34,10 +34,10 @@
 
 // Forget about constrains now!
 void CMSApp(Genes<Double_t> &individual) {
-  #ifdef ENABLE_PERFMON
-    PFMWatch perfcontrol;
-  #endif
-  //GeantVFitness fitness;
+#ifdef ENABLE_PERFMON
+  PFMWatch perfcontrol;
+#endif
+  // GeantVFitness fitness;
   // std::cout << "xxxxxxxxxxxxxxxxxxxxxxx Example runCMS.C
   // xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
   // We need to modify perfomance counter header GeantVFitness.h
@@ -128,9 +128,9 @@ void CMSApp(Genes<Double_t> &individual) {
     prop->fUseStdScoring = false;
   prop->fUseMonitoring = graphics;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
-  //delete prop;
+  // delete prop;
   individual.SetFitness(0, prop->fTimer->RealTime());
-  //fitness.HistOutputFitness();
+  // fitness.HistOutputFitness();
   delete prop;
   return;
 }

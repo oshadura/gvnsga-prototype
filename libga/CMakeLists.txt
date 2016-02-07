@@ -79,10 +79,10 @@ endif()
 #----------------------------------------------------------------------------
 option(GEANTV "If we are using libGA already for GeantV" ON)
 find_package(GeantV)
-#if(GEANTV_FOUND)
+if(GEANTV_FOUND)
   set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_GEANTV")
   set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${GEANTV_CXX_FLAGS}")
-#endif()
+endif()
 #----------------------------------------------------------------------------
 
 option(VecGeom "If we are using libGA already with VecGeom" ON)
@@ -106,9 +106,15 @@ message(STATUS "Compiling GA with C++ flags: ${CMAKE_CXX_FLAGS}")
 #----------------------------------------------------------------------------
 
 include_directories(inc)
-include_directories(${GEANTV_INCLUDE_DIR})
-include_directories(${VECGEOM_INCLUDE_DIR})
-include_directories(${Vc_INCLUDE_DIR})
+if(ENABLE_GEANTV)
+  include_directories(${GEANTV_INCLUDE_DIR})
+endif()
+if(ENABLE_VECGEOM)
+  include_directories(${VECGEOM_INCLUDE_DIR})
+endif()
+if(ENABLE_VC)
+  include_directories(${Vc_INCLUDE_DIR})
+endif()
 #-----------------------------------------------------------------------------
 
 file(GLOB sources src/*.cxx)

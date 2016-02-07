@@ -61,7 +61,7 @@ set(LIBGA_EXAMPLES
 #target_link_libraries(PopulationTree GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${VECGEOM_LIBRARIES} ${HEPMC3_LIBRARIES} ${GEANTV_LIBRARIES})
 
 build_executables("${LIBGA_EXAMPLES}")
-install(TARGETS 
+install(TARGETS
   PopulationTreeDTLZ1
   PopulationTreeDTLZ2
   PopulationTreeDTLZ3

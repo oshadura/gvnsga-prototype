@@ -36,13 +36,13 @@ AlgorithmNSGA::AlgorithmNSGA()
     : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0),
       fNMut(0), fNGen(0), fParentPop(0), fChildPop(0), fMixedPop(0),
       fSizePop(0), fNParam(0), fInterval(0), fNCons(0), fNObjectives(0),
-      fPMut(0), fEtaMut(0), fEpsilonC(0), fCrowdingObj(true), fProp(0){}
+      fPMut(0), fEtaMut(0), fEpsilonC(0), fCrowdingObj(true), fProp(0) {}
 #else
 AlgorithmNSGA::AlgorithmNSGA()
     : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0),
       fNMut(0), fNGen(0), fParentPop(0), fChildPop(0), fMixedPop(0),
       fSizePop(0), fNParam(0), fInterval(0), fNCons(0), fNObjectives(0),
-      fPMut(0), fEtaMut(0), fEpsilonC(0), fCrowdingObj(true){}
+      fPMut(0), fEtaMut(0), fEpsilonC(0), fCrowdingObj(true) {}
 #endif
 
 AlgorithmNSGA::~AlgorithmNSGA() {

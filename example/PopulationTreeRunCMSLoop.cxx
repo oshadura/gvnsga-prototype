@@ -37,14 +37,14 @@ const char *geomfile = "cms2015.root";
 const char *xsec = "xsec_FTFP_BERT_G496p02_1mev.root";
 const char *fstate = "fstate_FTFP_BERT_G496p02_1mev.root";
 bool coprocessor = COPROCESSOR_REQUEST;
-// Initialized values number of threads 
+// Initialized values number of threads
 int nthreads = 4;
 int ntotal = 10;
 int nbuffered = 5;
 GeantPropagator *prop = GeantPropagator::Instance(ntotal, nbuffered, nthreads);
 
 void CMSApp(Genes<Double_t> &individual) {
-  //GeantVFitness fitness;
+  // GeantVFitness fitness;
   std::cout << "Lets pass it to GeantV propagator.." << std::endl;
   nthreads = individual.GetThread(individual);
   printf("Debugging RunCMS.C: thread value = %d\n", nthreads);
@@ -64,14 +64,17 @@ void CMSApp(Genes<Double_t> &individual) {
       individual.GetVector(individual); // Initial vector size (tunable)
   printf("Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
   // Value from individual vector
-  prop->fMaxPerBasket = individual.GetMaxVector(individual);; // Maximum vector size (tunable)
+  prop->fMaxPerBasket = individual.GetMaxVector(individual);
+  ; // Maximum vector size (tunable)
   printf("Debugging RunCMS.C: vector value = %d\n", prop->fMaxPerBasket);
-    // Value from individual vector
+  // Value from individual vector
   prop->fLearnSteps = individual.GetSteps(individual);
   printf("Debugging RunCMS.C: learning steps value = %d\n", prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
-  std::cout << "-========================= New CMSApplication =====================-" << std::endl;
+  std::cout
+      << "-========================= New CMSApplication =====================-"
+      << std::endl;
   CMSApplication *app = new CMSApplication();
   app->SetScoreType(CMSApplication::kScore);
   if (performance)
@@ -84,10 +87,12 @@ void CMSApp(Genes<Double_t> &individual) {
   prop->fUseStdScoring = true;
   if (performance)
     prop->fUseStdScoring = false;
-  std::cout << "-========================= Propagating Geometry =====================-" << std::endl;
+  std::cout << "-========================= Propagating Geometry "
+               "=====================-"
+            << std::endl;
   prop->PropagatorGeom(geomfile, nthreads, prop->fUseMonitoring);
   individual.SetFitness(0, prop->fTimer->RealTime());
-  //fitness.HistOutputFitness();
+  // fitness.HistOutputFitness();
   prop->Clean();
   return;
 }
@@ -97,9 +102,9 @@ int main(int argc, char *argv[]) {
   printf("First initialized value in RunCMS.C: ntotal = %d\n", ntotal);
   printf("First initialized value in RunCMS.C: nbuffered = %d\n", nbuffered);
   prop->Clean();
-  #ifdef ENABLE_PERFMON
-    PFMWatch perfcontrol;
-  #endif
+#ifdef ENABLE_PERFMON
+  PFMWatch perfcontrol;
+#endif
 
   TGeoManager::Import(geomfile);
   TaskBroker *broker = nullptr;
@@ -114,9 +119,9 @@ int main(int argc, char *argv[]) {
                  "enabled\n";
 #endif
   }
-    prop->fBmag = 40.; // 4 Tesla
-    //  Enable use of RK integration in field for charged particles
-    prop->fUseRungeKutta = false;
+  prop->fBmag = 40.; // 4 Tesla
+  //  Enable use of RK integration in field for charged particles
+  prop->fUseRungeKutta = false;
   if (broker)
     prop->SetTaskBroker(broker);
   prop->SetNminThreshold(5 * nthreads);
@@ -135,10 +140,14 @@ int main(int argc, char *argv[]) {
     prop->fMaxRes = 0;
   prop->fEmin = 0.001; // [1 MeV] energy cut
   prop->fEmax = 0.01;  // 10 MeV
-  std::cout << "-========================= New TTabPhysProcess =====================-" << std::endl;
+  std::cout
+      << "-========================= New TTabPhysProcess =====================-"
+      << std::endl;
   prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
   std::string s = "pp14TeVminbias.root";
-  std::cout << "-========================= New HepMCGenerator =====================-" << std::endl;
+  std::cout
+      << "-========================= New HepMCGenerator =====================-"
+      << std::endl;
   prop->fPrimaryGenerator = new HepMCGenerator(s);
   ///////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////
@@ -166,8 +175,10 @@ int main(int argc, char *argv[]) {
   nsga2->SetFunction(&CMSApp);
   nsga2->Initialize();
   nsga2->Evolution();
-  std::cout<< "I arrived to my special point!!!Champagne!!!"<< std::endl;
-  std::cout << "-======================== Delete propagator ======================-" << std::endl;
+  std::cout << "I arrived to my special point!!!Champagne!!!" << std::endl;
+  std::cout
+      << "-======================== Delete propagator ======================-"
+      << std::endl;
   delete prop;
   return 0;
 }
