@@ -46,13 +46,11 @@ GeantPropagator *prop =
 
 
 void runAppLoop(Genes<Double_t> &individual) {
-  prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
   // Should be generated each time because of prop.Clear()
   prop->fApplication = new ExN03Application();
-  //////////////////////////////////////////////////
-  prop->fNthreads = individual.GetThread(individual);
+  Int_t nthread = prop->fNthreads = individual.GetThread(individual);
   printf("Debugging Run.C: thread value = %d\n", prop->fNthreads);
-  Int_t nthread = prop->fNtotal =
+  prop->fNtotal =
       individual.GetAllev(individual); // Number of events to be transported
   printf("Debugging Run.C: all events value = %d\n", prop->fNtotal);
   prop->fNevents = individual.GetBuffev(
@@ -91,17 +89,19 @@ void runAppLoop(Genes<Double_t> &individual) {
   // Monitor the application
   prop->fUseMonitoring = false;
   prop->fUseAppMonitoring = false;
+  std::cout << "-====================== PropagatorGeom ========================-" << std::endl;
   prop->PropagatorGeom(geomfile, nthread, false);
   individual.SetFitness(0, prop->fTimer->RealTime());
   // fitness.HistOutputFitness();
-  //prop->Clear();
+  prop->Clean();
   return;
 }
 
 int main(int argc, char *argv[]) {
-printf("First initialized value in Run.C: thread value = %d\n", nthreads);
-printf("First initialized value in Run.C: ntotal = %d\n", ntotal);
-printf("First initialized value in Run.C: nbuffered = %d\n", nbuffered);
+  printf("First initialized value in Run.C: thread value = %d\n", nthreads);
+  printf("First initialized value in Run.C: ntotal = %d\n", ntotal);
+  printf("First initialized value in Run.C: nbuffered = %d\n", nbuffered);
+  prop->Clean();
 #ifdef ENABLE_PERFMON
   PFMWatch perfcontrol;
 #endif
@@ -146,12 +146,14 @@ printf("First initialized value in Run.C: nbuffered = %d\n", nbuffered);
   // for vector physics -OFF now
   // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
   // nthreads);
+  std::cout << "-===================== GunGenerator =========================-" << std::endl;
   prop->fPrimaryGenerator =
       new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
+  prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
   // Number of steps for learning phase (tunable [0, 1e6])
   // if set to 0 disable learning phase
   prop->fLearnSteps = 1000;
-  printf("irst initialized value in Run.C: learning steps value = %d\n", prop->fLearnSteps);
+  printf("First initialized value in Run.C: learning steps value = %d\n", prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
   /////////////////////////////////////////////////////////////////////////////

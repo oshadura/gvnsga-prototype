@@ -5,14 +5,22 @@
 #include "TTreeReader.h"
 #include "TTreeReaderArray.h"
 
+#ifdef ENABLE_GEANTV
+  #include "GeantPropagator.h"
+#endif
+
 #include <vector>
 
 #include "Functions.h"
 #include "ExceptionMessenger.h"
 
+#ifdef ENABLE_GEANTV
+  class GeantPropagator;
+#endif
+
+
 class Functions;
 template <class T> class Population;
-
 template <class T> class Genes : public TObject {
 
 protected:
@@ -36,7 +44,14 @@ public:
   Genes<T> &operator=(const Genes<T> &gen);
   void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   void SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
-  void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  
+  #ifdef ENABLE_GEANTV
+    void Evaluate(GeantPropagator *prop, Functions &setup,
+                        Genes<T> &ind) throw(ExceptionMessenger);
+  #else
+    void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  #endif
+
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<Int_t> GetDominated() {
     return fDominated;
@@ -179,6 +194,10 @@ private:
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
   const Functions *setup;
+
+#ifdef ENABLE_GEANTV
+  GeantPropagator *prop;
+#endif
   // Should we write a map to be sure about connection between Limits[] and
   // Genes[] || Fitmess[] and Constraint[]?
   // static std::multimap<Genes,Limits> fInputMap;

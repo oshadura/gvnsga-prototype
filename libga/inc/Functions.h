@@ -4,6 +4,8 @@
 #include "TGenes.h"
 #include "invoke_cpp11.hpp"
 
+#include "GeantPropagator.h"
+
 #include <vector>
 #include <limits>
 #include <functional>
@@ -108,7 +110,11 @@ public:
   }
 
 public:
+#ifdef ENABLE_GEANTV
+  typedef void (*functype)(GeantPropagator *, Genes<Double_t> &);
+#else
   typedef void (*functype)(Genes<Double_t> &);
+#endif
   typedef void (*popfunctype)(
       Population<Double_t> &); // still dont know if to use in such way or not
   functype evfunc;

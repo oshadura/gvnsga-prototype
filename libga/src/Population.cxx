@@ -304,14 +304,36 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
   }
 }
 
+#ifdef ENABLE_GEANTV
+template <class T> void Population<T>::Evaluate(GeantPropagator *prop) {
+#ifdef ENABLE_OPENMP
+  EvaluationOpenMP(prop);
+#else
+    Evaluation(prop);
+#endif
+}
+#else
 template <class T> void Population<T>::Evaluate() {
 #ifdef ENABLE_OPENMP
   EvaluationOpenMP();
 #else
-  Evaluation();
+    Evaluation();
 #endif
 }
+#endif
 
+
+#ifdef ENABLE_GEANTV
+template <class T> void Population<T>::Evaluation(GeantPropagator* prop) {
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    Genes<T>::Evaluate(prop, setupPop, *it);
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout after sequence evaluation:" << std::endl;
+    Genes<T>::printGenes(*it);
+  }
+}
+#else
 template <class T> void Population<T>::Evaluation() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     Genes<T>::Evaluate(setupPop, *it);
@@ -321,7 +343,20 @@ template <class T> void Population<T>::Evaluation() {
     Genes<T>::printGenes(*it);
   }
 }
+#endif
 
+#ifdef ENABLE_GEANTV
+template <class T> void Population<T>::EvaluationOpenMP(GeantPropagator* prop) {
+#pragma omp parallel for
+  for (int i = 0; i < GetPopulationSize(); ++i) {
+    fPopulation[i].Evaluate(prop, setupPop, fPopulation[i]);
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout after OPENMP evaluation:" << std::endl;
+    Genes<T>::printGenes(fPopulation[i]);
+  }
+}
+#else
 template <class T> void Population<T>::EvaluationOpenMP() {
 #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
@@ -332,6 +367,7 @@ template <class T> void Population<T>::EvaluationOpenMP() {
     Genes<T>::printGenes(fPopulation[i]);
   }
 }
+#endif
 
 // Ugly instantiation
 template class Population<Double_t>;

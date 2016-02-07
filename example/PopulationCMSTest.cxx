@@ -32,21 +32,13 @@
 #define COPROCESSOR_REQUEST false
 #endif
 
-bool performance = true;
-const char *geomfile = "cms2015.root";
-const char *xsec = "xsec_FTFP_BERT_G496p02_1mev.root";
-const char *fstate = "fstate_FTFP_BERT_G496p02_1mev.root";
-bool coprocessor = COPROCESSOR_REQUEST;
-// Initialized values number of threads 
-int nthreads = 4;
-int ntotal = 10;
-int nbuffered = 5;
-GeantPropagator *prop = GeantPropagator::Instance(ntotal, nbuffered, nthreads);
+#define performance true
 
-void CMSApp(Genes<Double_t> &individual) {
+void CMSApp(GeantPropagator *prop, Genes<Double_t> &individual) {
+  const char *geomfile = "cms2015.root";
   //GeantVFitness fitness;
   std::cout << "Lets pass it to GeantV propagator.." << std::endl;
-  nthreads = individual.GetThread(individual);
+  Int_t nthreads = individual.GetThread(individual);
   printf("Debugging RunCMS.C: thread value = %d\n", nthreads);
   // Value from individual vector
   int ntotal =
@@ -57,6 +49,7 @@ void CMSApp(Genes<Double_t> &individual) {
       individual); // Number of buffered events (tunable [1,ntotal])
   printf("Debugging RunCMS.C: buffered particles value = %d\n", nbuffered);
   // Value from individual vector
+  printf("Hey what we have as a priority value? %f\n", prop->fPriorityThr);
   prop->fPriorityThr = individual.GetPriority(individual);
   printf("Debugging RunCMS.C: priority value = %f\n", prop->fPriorityThr);
   // Value from individual vector
@@ -93,13 +86,22 @@ void CMSApp(Genes<Double_t> &individual) {
 }
 
 int main(int argc, char *argv[]) {
+  const char *geomfile = "cms2015.root";
+  const char *xsec = "xsec_FTFP_BERT_G496p02_1mev.root";
+  const char *fstate = "fstate_FTFP_BERT_G496p02_1mev.root";
+  bool coprocessor = COPROCESSOR_REQUEST;
+  // Initialized values number of threads 
+  int nthreads = 4;
+  int ntotal = 10;
+  int nbuffered = 5;
+  GeantPropagator *prop = GeantPropagator::Instance(ntotal, nbuffered, nthreads);
   printf("First initialized value in RunCMS.C: thread value = %d\n", nthreads);
   printf("First initialized value in RunCMS.C: ntotal = %d\n", ntotal);
   printf("First initialized value in RunCMS.C: nbuffered = %d\n", nbuffered);
   prop->Clean();
-  #ifdef ENABLE_PERFMON
+#ifdef ENABLE_PERFMON
     PFMWatch perfcontrol;
-  #endif
+#endif
 
   TGeoManager::Import(geomfile);
   TaskBroker *broker = nullptr;
@@ -163,6 +165,7 @@ int main(int argc, char *argv[]) {
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);
   nsga2->SetLimit(geantv->fInterval);
+  nsga2->SetPropagator(prop);
   nsga2->SetFunction(&CMSApp);
   nsga2->Initialize();
   nsga2->Evolution();

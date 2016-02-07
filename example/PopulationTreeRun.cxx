@@ -66,6 +66,7 @@ void runApp(Genes<Double_t> &individual) {
                  "enabled\n";
 #endif
   }
+  std::cout << "-=======================GeantPropagator=======================-" << std::endl;
   GeantPropagator *prop =
       GeantPropagator::Instance(ntotal, nbuffered, nthreads);
   if (broker)
@@ -97,10 +98,12 @@ void runApp(Genes<Double_t> &individual) {
   prop->fEmin = 3.E-6;       // [3 KeV] energy cut
   prop->fEmax = 0.03; // [30MeV] used for now to select particle gun energy
   // Create the tab. phys process.
+  std::cout << "-=======================TTabPhysProcess=======================-" << std::endl;
   prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
   // for vector physics -OFF now
   // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
   // nthreads);
+  std::cout << "-=======================GunGenerator=======================-" << std::endl;
   prop->fPrimaryGenerator =
       new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
   // Number of steps for learning phase (tunable [0, 1e6])
@@ -109,6 +112,7 @@ void runApp(Genes<Double_t> &individual) {
   printf("Debugging Run.C: learning steps value = %d\n", prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
+  std::cout << "-=======================ExN03Application=======================-" << std::endl;
   prop->fApplication = new ExN03Application();
   // Activate I/O
   prop->fFillTree = false;
