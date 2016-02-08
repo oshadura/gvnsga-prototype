@@ -21,10 +21,10 @@ cmake ../ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DVc_DIR=/home/geant/In
 
 cmake ../ -DCMAKE_INSTALL_PREFIX=/home/geant/Install/gvnsga-prototype -DVc_DIR=/home/geant/Install/Vc/lib/cmake/Vc/ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DCMAKE_PREFIX_PATH=/home/geant/Install/HepMC/ -DCMAKE_CXX_FLAGS="-fdiagnostics-color=auto -fpermissive -fabi-version=6 -fext-numeric-literals" -DVecGeom_DIR=/home/geant/Install/VecGeom/lib/CMake/ -DCMAKE_BUILD_TYPE=Debug -DBOOST_ROOT=/home/geant/Install/boost/
 
-############ BUILD with GeantV integration ##############
+####### BUILD with GeantV integration ##############
 
 cmake ../ -DCMAKE_INSTALL_PREFIX=/home/geant/Install/gvnsga-prototype -DVc_DIR=/home/geant/Install/Vc/lib/cmake/Vc/ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DCMAKE_PREFIX_PATH=/home/geant/Install/HepMC/ -DCMAKE_CXX_FLAGS="-fdiagnostics-color=auto -fpermissive -fabi-version=6 -fext-numeric-literals" -DVecGeom_DIR=/home/geant/Install/VecGeom/lib/CMake/VecGeom/ -DCMAKE_BUILD_TYPE=Debug -DBOOST_ROOT=/home/geant/Install/boost/ -DENABLE_GEANTV=ON -DNUMERIC_LIB=OFF
 
-############## BUILD with numerical examples #############
+####### BUILD with numerical examples #############
 
 cmake ../ -DCMAKE_INSTALL_PREFIX=/home/geant/Install/gvnsga-prototype -DVc_DIR=/home/geant/Install/Vc/lib/cmake/Vc/ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DCMAKE_PREFIX_PATH=/home/geant/Install/HepMC/ -DCMAKE_CXX_FLAGS="-fdiagnostics-color=auto -fpermissive -fabi-version=6 -fext-numeric-literals" -DVecGeom_DIR=/home/geant/Install/VecGeom/lib/CMake/VecGeom/ -DCMAKE_BUILD_TYPE=Debug -DBOOST_ROOT=/home/geant/Install/boost/ -DENABLE_GEANTV=OFF -DNUMERIC_LIB=ON
