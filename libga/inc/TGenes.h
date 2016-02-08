@@ -6,7 +6,7 @@
 #include "TTreeReaderArray.h"
 
 #ifdef ENABLE_GEANTV
-  #include "GeantPropagator.h"
+#include "GeantPropagator.h"
 #endif
 
 #include <vector>
@@ -43,7 +43,10 @@ public:
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
   void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  
+  #ifdef ENABLE_GEANTV
   void SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  #endif
   
   #ifdef ENABLE_GEANTV
     void Evaluate(GeantPropagator *prop, Functions &setup,

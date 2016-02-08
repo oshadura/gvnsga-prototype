@@ -85,6 +85,7 @@ void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   }
 }
 
+#ifdef ENABLE_GEANTV
 template <class T>
 void Genes<T>::SetGeantV(Functions &setup,
                          Genes<T> &ind) throw(ExceptionMessenger) {
@@ -122,6 +123,7 @@ void Genes<T>::SetGeantV(Functions &setup,
   }
   */
 }
+#endif
 
 template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);

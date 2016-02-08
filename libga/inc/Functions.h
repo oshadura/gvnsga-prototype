@@ -4,7 +4,9 @@
 #include "TGenes.h"
 #include "invoke_cpp11.hpp"
 
+#ifdef ENABLE_GEANTV
 #include "GeantPropagator.h"
+#endif
 
 #include <vector>
 #include <limits>
@@ -78,7 +80,10 @@ public:
    */
   void SetInterval();
 
+#ifdef ENABLE_GEANTV
   void SetIntervalGeantV();
+#endif
+
   /**
    * @brief [brief description]
    * @details [long description]

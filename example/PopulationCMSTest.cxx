@@ -4,6 +4,8 @@
 #include <vector>    // std::vector
 #include <algorithm> // std::copy
 
+#ifdef ENABLE_GEANTV
+
 #include "Population.h"
 #include "Functions.h"
 #include "HistogramManager.h"
@@ -34,7 +36,7 @@
 
 #define performance true
 
-void CMSApp(GeantPropagator *prop, Genes<Double_t> &individual) {
+void CMSTest(GeantPropagator *prop, Genes<Double_t> &individual) {
   const char *geomfile = "cms2015.root";
   //GeantVFitness fitness;
   std::cout << "Lets pass it to GeantV propagator.." << std::endl;
@@ -165,8 +167,10 @@ int main(int argc, char *argv[]) {
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);
   nsga2->SetLimit(geantv->fInterval);
+#ifdef ENABLE_GEANTV
   nsga2->SetPropagator(prop);
-  nsga2->SetFunction(&CMSApp);
+#endif
+  nsga2->SetFunction(&CMSTest);
   nsga2->Initialize();
   nsga2->Evolution();
   std::cout<< "I arrived to my special point!!!Champagne!!!"<< std::endl;
@@ -174,3 +178,8 @@ int main(int argc, char *argv[]) {
   delete prop;
   return 0;
 }
+#else
+  int main(int argc, char *argv[]) {
+    std::cout << "Geant-V based test: enable Geant-V in cmake flags and re-run compilation"<< std::endl;
+  }
+#endif

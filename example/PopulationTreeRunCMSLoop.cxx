@@ -4,6 +4,8 @@
 #include <vector>    // std::vector
 #include <algorithm> // std::copy
 
+#ifdef ENABLE_GEANTV
+
 #include "Population.h"
 #include "Functions.h"
 #include "HistogramManager.h"
@@ -182,3 +184,8 @@ int main(int argc, char *argv[]) {
   delete prop;
   return 0;
 }
+#else
+  int main(int argc, char *argv[]) {
+    std::cout << "Geant-V based test: enable Geant-V in cmake flags and re-run compilation"<< std::endl;
+  }
+#endif

@@ -24,6 +24,7 @@ void Functions::SetInterval() {
   }
 }
 
+#ifdef ENABLE_GEANTV
 void Functions::SetIntervalGeantV() {
   // for GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
   SetIntervalLimit(0, 1, 100);
@@ -41,6 +42,7 @@ void Functions::SetIntervalGeantV() {
   // for GetMaxVector(Genes<T> &ind) const { return ind.GetGene(6); }
   SetIntervalLimit(6, 1, 512);
 }
+#endif
 
 // Implementation that doesnt allow to change number of parameters
 void Functions::SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax) {

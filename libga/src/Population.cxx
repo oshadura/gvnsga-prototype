@@ -64,6 +64,7 @@ template <typename T> struct Comparing {
   };
 };
 
+#ifdef ENABLE_GEANTV
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     it->Genes<T>::SetGeantV(setupPop, *it);
@@ -72,6 +73,16 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   }
   // WritePopulationTree(*this, "NSGA.root");
 }
+#else
+template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    it->Genes<T>::Set(setupPop, *it);
+    // fPopulation.emplace_back(&(*it).GetfGenes());
+    std::cout << " Creating new individual.." << std::endl;
+  }
+  // WritePopulationTree(*this, "NSGA.root");
+}
+#endif
 
 template <class T> void Population<T>::CrowdingDistanceAll() {
   for (Int_t i = 0; i < fFront.size(); ++i)

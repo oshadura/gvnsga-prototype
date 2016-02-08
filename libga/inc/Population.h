@@ -4,7 +4,9 @@
 #include "TGenes.h"
 #include "ExceptionMessenger.h"
 
+#ifdef ENABLE_GEANTV
 #include "GeantPropagator.h"
+#endif
 
 #include "TH1.h"
 #include "TFile.h"
