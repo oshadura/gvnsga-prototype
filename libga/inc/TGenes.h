@@ -5,18 +5,18 @@
 #include "TTreeReader.h"
 #include "TTreeReaderArray.h"
 
-#ifdef ENABLE_GEANTV
-#include "GeantPropagator.h"
-#endif
+//#ifdef ENABLE_GEANTV
+//#include "GeantPropagator.h"
+//#endif
 
 #include <vector>
 
 #include "Functions.h"
 #include "ExceptionMessenger.h"
 
-#ifdef ENABLE_GEANTV
-  class GeantPropagator;
-#endif
+//#ifdef ENABLE_GEANTV
+//  class GeantPropagator;
+//#endif
 
 
 class Functions;
@@ -48,12 +48,12 @@ public:
   void SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   #endif
   
-  #ifdef ENABLE_GEANTV
-    void Evaluate(GeantPropagator *prop, Functions &setup,
-                        Genes<T> &ind) throw(ExceptionMessenger);
-  #else
+  //#ifdef ENABLE_GEANTV
+  //  void Evaluate(GeantPropagator *prop, Functions &setup,
+  //                      Genes<T> &ind) throw(ExceptionMessenger);
+  //#else
     void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
-  #endif
+  //#endif
 
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<Int_t> GetDominated() {
@@ -198,9 +198,9 @@ private:
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
   const Functions *setup;
 
-#ifdef ENABLE_GEANTV
-  GeantPropagator *prop;
-#endif
+//#ifdef ENABLE_GEANTV
+//  GeantPropagator *prop;
+//#endif
   // Should we write a map to be sure about connection between Limits[] and
   // Genes[] || Fitmess[] and Constraint[]?
   // static std::multimap<Genes,Limits> fInputMap;
