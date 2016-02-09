@@ -136,11 +136,11 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   std::cout << "=================New generation #" << fGen
             << "================" << std::endl;
   fParentPop->Build();
-#ifdef ENABLE_GEANTV
-  fParentPop->Evaluate(fProp);
-#else
+//#ifdef ENABLE_GEANTV
+//  fParentPop->Evaluate(fProp);
+//#else
   fParentPop->Evaluate();
-#endif
+//#endif
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
 }
@@ -296,11 +296,11 @@ void AlgorithmNSGA::NextStep() {
   // std::cout << "-==============================================-"<<
   // std::endl;
   fChildPop->GenCounter = fNGen + 1;
-#ifdef ENABLE_GEANTV
-  fChildPop->Evaluate(fProp);
-#else
+//#ifdef ENABLE_GEANTV
+//  fChildPop->Evaluate(fProp);
+//#else
   fChildPop->Evaluate();
-#endif
+//#endif
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
   fMixedPop->GenCounter = fGen + 1;

@@ -129,7 +129,8 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
-#ifdef ENABLE_GEANTV
+//#ifdef ENABLE_GEANTV
+/*
 template <class T>
 void Genes<T>::Evaluate(GeantPropagator *prop, Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
@@ -142,7 +143,8 @@ void Genes<T>::Evaluate(GeantPropagator *prop, Functions &setup,
   }
   fEvaluated = true;
 }
-#else
+*/
+//else
 template <class T>
 void Genes<T>::Evaluate(Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
@@ -155,7 +157,7 @@ void Genes<T>::Evaluate(Functions &setup,
   }
   fEvaluated = true;
 }
-#endif
+//#endif
 
 template <class T> void Genes<T>::Clear(Option_t * /*option*/) {
   TObject::Clear();

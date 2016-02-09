@@ -83,6 +83,7 @@ void CMSTest(GeantPropagator *prop, Genes<Double_t> &individual) {
   prop->PropagatorGeom(geomfile, nthreads, prop->fUseMonitoring);
   individual.SetFitness(0, prop->fTimer->RealTime());
   //fitness.HistOutputFitness();
+  
   return;
 }
 

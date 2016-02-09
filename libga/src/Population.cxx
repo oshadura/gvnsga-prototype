@@ -315,7 +315,8 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
   }
 }
 
-#ifdef ENABLE_GEANTV
+//#ifdef ENABLE_GEANTV
+/*
 template <class T> void Population<T>::Evaluate(GeantPropagator *prop) {
 #ifdef ENABLE_OPENMP
   EvaluationOpenMP(prop);
@@ -323,7 +324,8 @@ template <class T> void Population<T>::Evaluate(GeantPropagator *prop) {
   Evaluation(prop);
 #endif
 }
-#else
+*/
+//#else
 template <class T> void Population<T>::Evaluate() {
 #ifdef ENABLE_OPENMP
   EvaluationOpenMP();
@@ -331,10 +333,10 @@ template <class T> void Population<T>::Evaluate() {
   Evaluation();
 #endif
 }
-#endif
+//#endif
 
-#ifdef ENABLE_GEANTV
-template <class T> void Population<T>::Evaluation(GeantPropagator *prop) {
+//#ifdef ENABLE_GEANTV
+/*template <class T> void Population<T>::Evaluation(GeantPropagator *prop) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     Genes<T>::Evaluate(prop, setupPop, *it);
     std::cout << "-==============================================-"
@@ -344,6 +346,7 @@ template <class T> void Population<T>::Evaluation(GeantPropagator *prop) {
   }
 }
 #else
+*/
 template <class T> void Population<T>::Evaluation() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     Genes<T>::Evaluate(setupPop, *it);
@@ -353,9 +356,10 @@ template <class T> void Population<T>::Evaluation() {
     Genes<T>::printGenes(*it);
   }
 }
-#endif
+//#endif
 
-#ifdef ENABLE_GEANTV
+//#ifdef ENABLE_GEANTV
+/*
 template <class T> void Population<T>::EvaluationOpenMP(GeantPropagator *prop) {
 #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
@@ -366,7 +370,8 @@ template <class T> void Population<T>::EvaluationOpenMP(GeantPropagator *prop) {
     Genes<T>::printGenes(fPopulation[i]);
   }
 }
-#else
+*/
+//#else
 template <class T> void Population<T>::EvaluationOpenMP() {
 #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
@@ -377,7 +382,7 @@ template <class T> void Population<T>::EvaluationOpenMP() {
     Genes<T>::printGenes(fPopulation[i]);
   }
 }
-#endif
+//#endif
 
 // Ugly instantiation
 template class Population<Double_t>;
