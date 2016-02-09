@@ -1,8 +1,8 @@
-# Locate the VecGeom library. 
+# Locate the VecGeom library.
 #
 # This file is meant to be copied into projects that want to use VecGeom. It will
-# search for VecGeomConfig.cmake, which ships with VecGeom and which will provide 
-# up-to-date buildsystem changes. 
+# search for VecGeomConfig.cmake, which ships with VecGeom and which will provide
+# up-to-date buildsystem changes.
 #
 # This module defines the following variables:
 # VECGEOM_FOUND

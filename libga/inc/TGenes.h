@@ -5,14 +5,22 @@
 #include "TTreeReader.h"
 #include "TTreeReaderArray.h"
 
+#ifdef ENABLE_GEANTV
+#include "GeantPropagator.h"
+#endif
+
 #include <vector>
 
 #include "Functions.h"
 #include "ExceptionMessenger.h"
 
+#ifdef ENABLE_GEANTV
+  class GeantPropagator;
+#endif
+
+
 class Functions;
 template <class T> class Population;
-
 template <class T> class Genes : public TObject {
 
 protected:
@@ -34,9 +42,19 @@ public:
   Int_t Mutate(const Functions *setup);
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
-  void Set() throw(ExceptionMessenger);
   void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
-  void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  
+  #ifdef ENABLE_GEANTV
+  void SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  #endif
+  
+  #ifdef ENABLE_GEANTV
+    void Evaluate(GeantPropagator *prop, Functions &setup,
+                        Genes<T> &ind) throw(ExceptionMessenger);
+  #else
+    void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  #endif
+
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<Int_t> GetDominated() {
     return fDominated;
@@ -113,6 +131,8 @@ public:
 
   T GetVector(Genes<T> &ind) const { return ind.GetGene(5); }
 
+  T GetMaxVector(Genes<T> &ind) const { return ind.GetGene(6); }
+
   T GetTime(Genes<T> &ind) const { return ind.GetFitness(0); }
 
   T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
@@ -159,6 +179,7 @@ private:
                // namespace) #5
   T fVector;   // Vector size (after will be translated in GeantV
                // namespace) #6
+  T fMaxVector; // Max VectorSize
   // Parts of fitness vector
   T fTime;                 // RT from GeantV (after will be translated in GeantV
                            // namespace)
@@ -176,6 +197,10 @@ private:
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
   const Functions *setup;
+
+#ifdef ENABLE_GEANTV
+  GeantPropagator *prop;
+#endif
   // Should we write a map to be sure about connection between Limits[] and
   // Genes[] || Fitmess[] and Constraint[]?
   // static std::multimap<Genes,Limits> fInputMap;

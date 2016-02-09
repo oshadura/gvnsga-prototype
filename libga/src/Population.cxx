@@ -64,6 +64,16 @@ template <typename T> struct Comparing {
   };
 };
 
+#ifdef ENABLE_GEANTV
+template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    it->Genes<T>::SetGeantV(setupPop, *it);
+    // fPopulation.emplace_back(&(*it).GetfGenes());
+    std::cout << " Creating new individual.." << std::endl;
+  }
+  // WritePopulationTree(*this, "NSGA.root");
+}
+#else
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     it->Genes<T>::Set(setupPop, *it);
@@ -72,6 +82,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   }
   // WritePopulationTree(*this, "NSGA.root");
 }
+#endif
 
 template <class T> void Population<T>::CrowdingDistanceAll() {
   for (Int_t i = 0; i < fFront.size(); ++i)
@@ -304,6 +315,15 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
   }
 }
 
+#ifdef ENABLE_GEANTV
+template <class T> void Population<T>::Evaluate(GeantPropagator *prop) {
+#ifdef ENABLE_OPENMP
+  EvaluationOpenMP(prop);
+#else
+  Evaluation(prop);
+#endif
+}
+#else
 template <class T> void Population<T>::Evaluate() {
 #ifdef ENABLE_OPENMP
   EvaluationOpenMP();
@@ -311,7 +331,19 @@ template <class T> void Population<T>::Evaluate() {
   Evaluation();
 #endif
 }
+#endif
 
+#ifdef ENABLE_GEANTV
+template <class T> void Population<T>::Evaluation(GeantPropagator *prop) {
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    Genes<T>::Evaluate(prop, setupPop, *it);
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout after sequence evaluation:" << std::endl;
+    Genes<T>::printGenes(*it);
+  }
+}
+#else
 template <class T> void Population<T>::Evaluation() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     Genes<T>::Evaluate(setupPop, *it);
@@ -321,7 +353,20 @@ template <class T> void Population<T>::Evaluation() {
     Genes<T>::printGenes(*it);
   }
 }
+#endif
 
+#ifdef ENABLE_GEANTV
+template <class T> void Population<T>::EvaluationOpenMP(GeantPropagator *prop) {
+#pragma omp parallel for
+  for (int i = 0; i < GetPopulationSize(); ++i) {
+    fPopulation[i].Evaluate(prop, setupPop, fPopulation[i]);
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout after OPENMP evaluation:" << std::endl;
+    Genes<T>::printGenes(fPopulation[i]);
+  }
+}
+#else
 template <class T> void Population<T>::EvaluationOpenMP() {
 #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
@@ -332,6 +377,7 @@ template <class T> void Population<T>::EvaluationOpenMP() {
     Genes<T>::printGenes(fPopulation[i]);
   }
 }
+#endif
 
 // Ugly instantiation
 template class Population<Double_t>;
