@@ -44,9 +44,6 @@ void CMSApp(Genes<Double_t> &individual) {
   // xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
   // We need to modify perfomance counter header GeantVFitness.h
   // XXXXXXXXXXXXXXXX Take a fitness from individual.GetFitness()
-  // GeantVApplication *fApplication;
-  // std::cout << "GeantVApplication address initialized in example = "
-  //          << fApplication << std::endl;
   std::cout << "Lets pass it to GeantV propagator.." << std::endl;
   bool performance = true;
   const char *geomfile = "cms2015.root";
@@ -130,10 +127,9 @@ void CMSApp(Genes<Double_t> &individual) {
     prop->fUseStdScoring = false;
   prop->fUseMonitoring = graphics;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
-  // delete prop;
+  delete prop;
   individual.SetFitness(0, prop->fTimer->RealTime());
   // fitness.HistOutputFitness();
-  delete prop;
   return;
 }
 

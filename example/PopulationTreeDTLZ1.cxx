@@ -24,16 +24,6 @@
 static const double pi = boost::math::constants::pi<double>();
 
 void DTLZ1(Genes<Double_t> &individual) {
-  /*
-  double y = 0.0;
-
-  for(Int_t i = 0; i < individual.GetfGenes().size(); ++i) {
-    y += pow(individual.GetGene(i) - 0.5, 2) - cos(20 * pi *
-  (individual.GetGene(i) - 0.5));
-  }
-  individual.SetFitness(0, 100.0 * (y + individual.GetfGenes().size()));
-  */
-
   Int_t n = individual.GetSetup()->GetNParam();      // 7
   Int_t m = individual.GetSetup()->GetNObjectives(); // 3
   Int_t k = n - m + 1;                               // 5

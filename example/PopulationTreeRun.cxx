@@ -160,7 +160,6 @@ int main(int argc, char *argv[]) {
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);
   nsga2->SetLimit(geantv->fInterval);
-  // nsga2->SetFunction(&CMSApp);
   nsga2->SetFunction(&runApp);
   nsga2->Initialize();
   nsga2->Evolution();

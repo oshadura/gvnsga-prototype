@@ -1,10 +1,14 @@
+//
+// Works only on branch oshadura/fix
+//
+
 #include <cmath>
 #include <iostream>  // std::cout
 #include <iterator>  // std::ostream_iterator
 #include <vector>    // std::vector
 #include <algorithm> // std::copy
 
-#ifdef ENABLE_GEANTV
+#ifdef OLD_TEST
 
 #include "Population.h"
 #include "Functions.h"
@@ -100,7 +104,7 @@ int main(int argc, char *argv[]) {
   printf("First initialized value in RunCMS.C: thread value = %d\n", nthreads);
   printf("First initialized value in RunCMS.C: ntotal = %d\n", ntotal);
   printf("First initialized value in RunCMS.C: nbuffered = %d\n", nbuffered);
-  prop->Clean();
+  //prop->Clean();
 #ifdef ENABLE_PERFMON
     PFMWatch perfcontrol;
 #endif
@@ -177,6 +181,6 @@ int main(int argc, char *argv[]) {
 }
 #else
   int main(int argc, char *argv[]) {
-    std::cout << "Geant-V based test: enable Geant-V in cmake flags and re-run compilation"<< std::endl;
+    std::cout << "Old Geant-V based test...."<< std::endl;
   }
 #endif

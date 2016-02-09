@@ -22,15 +22,6 @@
 static const double halfpi = boost::math::constants::pi<Double_t>() / 2.0;
 
 void DTLZ2(Genes<Double_t> &individual) {
-  /*
-  double y = 0.0;
-  for (Int_t i = 0; i < individual.GetfGenes().size(); ++i) {
-    y += pow(individual.GetGene(i) - 0.5, 2);
-  }
-  printf("Fitness value = %f\n", y);
-  // Problem with changing types
-  individual.SetFitness(0, y);
-  */
   Int_t n = individual.GetSetup()->GetNParam(); // 12
   Int_t m = individual.GetSetup()->GetNObjectives(); // 3
   Int_t k = n - m + 1; // 10
