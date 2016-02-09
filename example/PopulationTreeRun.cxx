@@ -4,6 +4,8 @@
 #include <vector>    // std::vector
 #include <algorithm> // std::copy
 
+#ifdef ENABLE_GEANTV
+
 #include "Population.h"
 #include "Functions.h"
 #include "HistogramManager.h"
@@ -66,6 +68,7 @@ void runApp(Genes<Double_t> &individual) {
                  "enabled\n";
 #endif
   }
+  std::cout << "-=======================GeantPropagator=======================-" << std::endl;
   GeantPropagator *prop =
       GeantPropagator::Instance(ntotal, nbuffered, nthreads);
   if (broker)
@@ -97,10 +100,12 @@ void runApp(Genes<Double_t> &individual) {
   prop->fEmin = 3.E-6;       // [3 KeV] energy cut
   prop->fEmax = 0.03; // [30MeV] used for now to select particle gun energy
   // Create the tab. phys process.
+  std::cout << "-=======================TTabPhysProcess=======================-" << std::endl;
   prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
   // for vector physics -OFF now
   // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
   // nthreads);
+  std::cout << "-=======================GunGenerator=======================-" << std::endl;
   prop->fPrimaryGenerator =
       new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
   // Number of steps for learning phase (tunable [0, 1e6])
@@ -109,6 +114,7 @@ void runApp(Genes<Double_t> &individual) {
   printf("Debugging Run.C: learning steps value = %d\n", prop->fLearnSteps);
   if (performance)
     prop->fLearnSteps = 0;
+  std::cout << "-=======================ExN03Application=======================-" << std::endl;
   prop->fApplication = new ExN03Application();
   // Activate I/O
   prop->fFillTree = false;
@@ -135,14 +141,7 @@ void runApp(Genes<Double_t> &individual) {
 int main(int argc, char *argv[]) {
   // Function definition
   Functions *geantv = new Functions();
-  // geantv->SetInterval(); // don't work because we initialize fNparam after...
-  // STUPID SOLUTION //
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
-  geantv->fInterval.push_back(std::make_pair(1, 10));
+  geantv->SetIntervalGeantV();
   std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);
   std::cout << "-==============================================-" << std::endl;
@@ -167,3 +166,8 @@ int main(int argc, char *argv[]) {
   nsga2->Evolution();
   return 0;
 }
+#else
+  int main(int argc, char *argv[]) {
+    std::cout << "Geant-V based test: enable Geant-V in cmake flags and re-run compilation"<< std::endl;
+  }
+#endif

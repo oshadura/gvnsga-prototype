@@ -1,5 +1,5 @@
-# Locate the GeantV library. 
-# 
+# Locate the GeantV library.
+#
 #
 # This module defines the following variables:
 # GEANTV_FOUND
@@ -15,11 +15,9 @@
 # GEANTV_LIB_DIR
 # GEANTV_CMAKE_MODULES_DIR
 #
-include(FindPackageHandleStandardArgs)
-
 if ($ENV{GeantV_DIR})
   set(GeantV_DIR $ENV{GeantV_DIR})
 endif()
 find_package(GeantV ${GeantV_FIND_VERSION} NO_MODULE PATHS ${GeantV_DIR} )
-
+include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GeantV CONFIG_MODE)

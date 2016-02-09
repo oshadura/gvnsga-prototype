@@ -4,13 +4,16 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 project(libGAExamples)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../cmake/modules")
 #----------------------------------------------------------------------------
-find_package(ROOT REQUIRED)
-find_package(GeantV REQUIRED)
-find_package(VecGeom REQUIRED)
+#find_package(ROOT REQUIRED)
+#find_package(GeantV REQUIRED)
+#find_package(VecGeom REQUIRED)
 #find_package(Vc REQUIRED)
-find_package(HepMC REQUIRED)
-find_package(Boost)
-find_package(PerfMon QUIET)
+#find_package(Boost)
+#find_package(PerfMon QUIET)
+
+if(ENABLE_GEANTV)
+  find_package(HepMC REQUIRED)
+endif()
 #---------------------------------------------------------------------------
 include_directories(${Vc_INCLUDE_DIR} ${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
@@ -48,8 +51,11 @@ set(LIBGA_EXAMPLES
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ1.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ2.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ3.cxx
-   #${CMAKE_SOURCE_DIR}/example/PopulationTreeRun.cxx
-   #${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRun.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunLoop.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMSLoop.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationCMSTest.cxx
 )
 
 #----------------------------------------------------------------------------
@@ -58,6 +64,13 @@ set(LIBGA_EXAMPLES
 #target_link_libraries(PopulationTree GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${VECGEOM_LIBRARIES} ${HEPMC3_LIBRARIES} ${GEANTV_LIBRARIES})
 
 build_executables("${LIBGA_EXAMPLES}")
-install(TARGETS PopulationTreeDTLZ1 PopulationTreeDTLZ2 PopulationTreeDTLZ3
-# PopulationTreeRun PopulationTreeRunCMS
+install(TARGETS
+  PopulationTreeDTLZ1
+  PopulationTreeDTLZ2
+  PopulationTreeDTLZ3
+  PopulationTreeRun
+  PopulationTreeRunCMS
+  PopulationTreeRunLoop
+  PopulationTreeRunCMSLoop
+  PopulationCMSTest
  DESTINATION ${CMAKE_BINARY_DIR})

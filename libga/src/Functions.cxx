@@ -24,6 +24,26 @@ void Functions::SetInterval() {
   }
 }
 
+#ifdef ENABLE_GEANTV
+void Functions::SetIntervalGeantV() {
+  // for GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
+  SetIntervalLimit(0, 1, 100);
+  // for GetBuffev(Genes<T> &ind) const { return ind.GetGene(1); }
+  // FIX -> get max value from (GetValue[0] - 1)
+  SetIntervalLimit(1, 1, 99);
+  // for GetThread(Genes<T> &ind) const { return ind.GetGene(2); }
+  SetIntervalLimit(2, 1, 4);
+  // for GetPriority(Genes<T> &ind) const { return ind.GetGene(3); }
+  SetIntervalLimit(3, 0, 0.1);
+  // for GetSteps(Genes<T> &ind) const { return ind.GetGene(4); }
+  SetIntervalLimit(4, 1, 10000);
+  // for T GetVector(Genes<T> &ind) const { return ind.GetGene(5); }
+  SetIntervalLimit(5, 1, 64);
+  // for GetMaxVector(Genes<T> &ind) const { return ind.GetGene(6); }
+  SetIntervalLimit(6, 1, 512);
+}
+#endif
+
 // Implementation that doesnt allow to change number of parameters
 void Functions::SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax) {
   auto value = std::make_pair(fMin, fMax);

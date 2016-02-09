@@ -4,6 +4,10 @@
 #include "TGenes.h"
 #include "invoke_cpp11.hpp"
 
+//#ifdef ENABLE_GEANTV
+//#include "GeantPropagator.h"
+//#endif
+
 #include <vector>
 #include <limits>
 #include <functional>
@@ -75,6 +79,11 @@ public:
    * @details [long description]
    */
   void SetInterval();
+
+#ifdef ENABLE_GEANTV
+  void SetIntervalGeantV();
+#endif
+
   /**
    * @brief [brief description]
    * @details [long description]
@@ -92,15 +101,6 @@ public:
   void SetInterval(std::vector<std::pair<Double_t, Double_t>> l) {
     l = fInterval;
   }
-  /**
-  friend std::ostream& operator<<(std::ostream& os,
-  std::vector<std::pair<Double_t,Double_t>> &limit){
-  for(auto &x:limit){
-    os << x.first << ":"<< x.second;
-  }
-    return os;
-  }
-  */
 
   Int_t GetNObjectives() const { return fNObjectives; }
 
@@ -115,7 +115,11 @@ public:
   }
 
 public:
+//#ifdef ENABLE_GEANTV
+// typedef void (*functype)(GeantPropagator *, Genes<Double_t> &);
+//#else
   typedef void (*functype)(Genes<Double_t> &);
+//#endif
   typedef void (*popfunctype)(
       Population<Double_t> &); // still dont know if to use in such way or not
   functype evfunc;
