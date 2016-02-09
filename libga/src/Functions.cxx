@@ -38,7 +38,7 @@ void Functions::SetIntervalGeantV() {
   // for GetSteps(Genes<T> &ind) const { return ind.GetGene(4); }
   SetIntervalLimit(4, 1, 10000);
   // for T GetVector(Genes<T> &ind) const { return ind.GetGene(5); }
-  SetIntervalLimit(5, 1, 512);
+  SetIntervalLimit(5, 1, 64);
   // for GetMaxVector(Genes<T> &ind) const { return ind.GetGene(6); }
   SetIntervalLimit(6, 1, 512);
 }

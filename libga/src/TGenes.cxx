@@ -96,7 +96,7 @@ void Genes<T>::SetGeantV(Functions &setup,
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
   ind.resize(setup.fNParam);
-  for (Int_t i = 0; i < (setup.fNParam); ++i) {
+  for (Int_t i = 0; i <= (setup.fNParam); ++i) {
     std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
                                            setup.fInterval[i].second);
     auto gen = std::bind(dist, mersenne_engine);

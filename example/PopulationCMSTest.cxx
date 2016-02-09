@@ -37,6 +37,7 @@
 #define performance true
 
 void CMSTest(GeantPropagator *prop, Genes<Double_t> &individual) {
+  //prop->Clean();
   const char *geomfile = "cms2015.root";
   //GeantVFitness fitness;
   std::cout << "Lets pass it to GeantV propagator.." << std::endl;
@@ -51,7 +52,6 @@ void CMSTest(GeantPropagator *prop, Genes<Double_t> &individual) {
       individual); // Number of buffered events (tunable [1,ntotal])
   printf("Debugging RunCMS.C: buffered particles value = %d\n", nbuffered);
   // Value from individual vector
-  printf("Hey what we have as a priority value? %f\n", prop->fPriorityThr);
   prop->fPriorityThr = individual.GetPriority(individual);
   printf("Debugging RunCMS.C: priority value = %f\n", prop->fPriorityThr);
   // Value from individual vector
@@ -60,7 +60,7 @@ void CMSTest(GeantPropagator *prop, Genes<Double_t> &individual) {
   printf("Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
   // Value from individual vector
   prop->fMaxPerBasket = individual.GetMaxVector(individual);; // Maximum vector size (tunable)
-  printf("Debugging RunCMS.C: vector value = %d\n", prop->fMaxPerBasket);
+  printf("Debugging RunCMS.C: vector max value = %d\n", prop->fMaxPerBasket);
     // Value from individual vector
   prop->fLearnSteps = individual.GetSteps(individual);
   printf("Debugging RunCMS.C: learning steps value = %d\n", prop->fLearnSteps);
@@ -83,7 +83,6 @@ void CMSTest(GeantPropagator *prop, Genes<Double_t> &individual) {
   prop->PropagatorGeom(geomfile, nthreads, prop->fUseMonitoring);
   individual.SetFitness(0, prop->fTimer->RealTime());
   //fitness.HistOutputFitness();
-  prop->Clean();
   return;
 }
 
@@ -160,16 +159,13 @@ int main(int argc, char *argv[]) {
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(7);
   nsga2->SetNObjectives(2); // Memory, Time
-  // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
   nsga2->SetPopulationSize(4);
   nsga2->SetEtaMut(10);
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);
   nsga2->SetLimit(geantv->fInterval);
-#ifdef ENABLE_GEANTV
   nsga2->SetPropagator(prop);
-#endif
   nsga2->SetFunction(&CMSTest);
   nsga2->Initialize();
   nsga2->Evolution();
