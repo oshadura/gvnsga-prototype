@@ -53,8 +53,6 @@ set(LIBGA_EXAMPLES
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ3.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeRun.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunLoop.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMSLoop.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationCMSTest.cxx
 )
 
@@ -70,7 +68,5 @@ install(TARGETS
   PopulationTreeDTLZ3
   PopulationTreeRun
   PopulationTreeRunCMS
-  PopulationTreeRunLoop
-  PopulationTreeRunCMSLoop
   PopulationCMSTest
  DESTINATION ${CMAKE_BINARY_DIR})
