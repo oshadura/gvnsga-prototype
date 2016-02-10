@@ -42,7 +42,7 @@ if(BOOST_FOUND)
 endif()
 
 #----------------------------------------------------------------------------
-option(ENABLE_PERFMON "Adding PerfMon support" OFF)
+option(ENABLE_PERFMON "Adding PerfMon support" ON)
 find_package(PerfMon QUIET)
 if(PerfMon_FOUND)
   set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_PERFMON")

@@ -5,9 +5,9 @@
 #include "Functions.h"
 #include <vector>
 
-#ifdef ENABLE_GEANTV
-#include "GeantPropagator.h"
-#endif
+//#ifdef ENABLE_GEANTV
+//#include "GeantPropagator.h"
+//#endif
 
 template <class T> class Population;
 template <class T> class Genes;
@@ -25,16 +25,12 @@ public:
                  Genes<Double_t> &child1, Genes<Double_t> &child2);
   void NextStep();
   void Evolution();
-  ////////////////////////////////////////////////////
   Double_t GetPCross() const { return fPCross; }
   Double_t GetEtaCross() const { return fEtaCross; }
-  //////////////////////////////////////////////////
   void SetPCross(Double_t pcross) { fPCross = pcross; }
   void SetEtaCross(Double_t etacross) { fEtaCross = etacross; }
-  //////////////////////////////////////////////////
   Int_t GetGenTotalNumber() const { return fNGen; }
   void SetGenTotalNumber(Int_t gen) { fNGen = gen; }
-  //====================================================//
   void SetFunction(Functions::functype f) { this->function = f; }
   void SetPopFunction(Functions::popfunctype f) { this->popfunction = f; }
   void SetCrowdingObj(Bool_t s) { this->fCrowdingObj = s; }
@@ -48,9 +44,9 @@ public:
   void SetLimit(std::vector<std::pair<Double_t, Double_t>> lim) {
     this->fInterval = lim;
   }
-#ifdef ENABLE_GEANTV
-  void SetPropagator(GeantPropagator *prop) { this->fProp = prop; }
-#endif
+//#ifdef ENABLE_GEANTV
+//  void SetPropagator(GeantPropagator *prop) { this->fProp = prop; }
+//#endif
   void Report(std::ostream &os) const {
     os << "Population size = " << fSizePop
        << "Number of generations = " << fNGen
@@ -73,9 +69,9 @@ public:
   }
 
 private:
-#ifdef ENABLE_GEANTV
-  GeantPropagator *fProp;
-#endif
+//#ifdef ENABLE_GEANTV
+//  GeantPropagator *fProp;
+//#endif
   Functions::functype function;
   Functions::popfunctype popfunction;
   Int_t fGen; // count

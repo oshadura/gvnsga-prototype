@@ -7,7 +7,7 @@
 
 class GeantVFitness {
 public:
-  GeantVFitness() {}
+  GeantVFitness(): fMemoryVector(0) {}
   virtual ~GeantVFitness() {}
   void LogMemoryFitness();
   void LogTimeFitness();

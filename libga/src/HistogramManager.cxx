@@ -30,23 +30,16 @@ HistogramManager::CheckValue(ROOT::Internal::TTreeReaderValueBase *value) {
   }
   return true;
 }
-/*
-Bool_t HistogramManager::HFill(Population<Double_t> &pop, char *file) {
+
+Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *file) {
 
   TFile *ga = TFile::Open(file);
   TTreeReader reader("Population", ga);
-
   TTreeReaderArray<std::vector<std::vector<Double_t>>> Population(reader,
                                                                   "Population");
   if (!CheckValue(&Population)) {
     return false;
   }
-
-  TTreeReaderArray<std::vector<Double_t>> Genes(reader, "Genes");
-  if (!CheckValue(&Genes)) {
-    return false;
-  }
-
   while (reader.Next()) {
     if (reader.GetEntryStatus() == TTreeReader::kEntryValid) {
       std::cout << "Loaded entry " << reader.GetCurrentEntry() << '\n';
@@ -79,21 +72,14 @@ Bool_t HistogramManager::HFill(Population<Double_t> &pop, char *file) {
       }
       return false;
     }
-    // if (!PopulationR.IsEmpty()) {
-    for (int i = 0; i < pop.GetPopulationSize(); ++i) {
-      for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end();
-           ++it) {
-        // How to fill it?
-        hAllev->Fill(it->GetAllev(), hAllev);
-        hBuffev->Fill(it->GetBuffev(), hBuffev);
-        hThread->Fill(it->GetThread(), hThread);
-        hPriority->Fill(it->GetPriority(), hPriority);
-        hSteps->Fill(it->GetSteps(), hSteps);
-        hVector->Fill(it->GetVector(), hVector);
-
-      }
+    for (auto it = pop.fPopulation.begin(); it != pop.fPopulation.end(); ++it) {
+      hAllev->Fill(it->GetAllev(*it));
+      hBuffev->Fill(it->GetBuffev(*it));
+      hThread->Fill(it->GetThread(*it));
+      hPriority->Fill(it->GetPriority(*it));
+      hSteps->Fill(it->GetSteps(*it));
+      hVector->Fill(it->GetVector(*it));
+      hMaxVector->Fill(it->GetMaxVector(*it));
     }
   }
-  //}
 }
-*/

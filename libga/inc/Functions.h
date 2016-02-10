@@ -32,7 +32,7 @@ public:
    * @param fNObjectives Number of objectives for fitness function
    * @param fPMut Probability of mutation
    * @param fEtaMut Distribution index for mutation
-   * @param fEpsilonC Distribution index for SBX crossover (?)
+   * @param fEpsilonC Distribution index for SBX crossover
    */
   Functions()
       : fNParam(0), fInterval(), fNCons(0), fNObjectives(0), fPMut(0),

@@ -6,10 +6,14 @@
 #  PerfMon_INCLUDE_DIRS (not cached)
 #  PerfMon_LIBRARIES
 
+if ($ENV{PerfMon_DIR})
+  set(PerfMon_DIR $ENV{PerfMon_DIR})
+endif()
+
 find_path(PerfMon_INCLUDE_DIR perfmon/pfmlib_perf_event.h 
-          HINTS /usr/local/include ${PerfMon_ROOT_DIR}/include $ENV{PerfMon_ROOT_DIR}/include)
+          HINTS /usr/local/include ${PerfMon_DIR}/include $ENV{PerfMon_DIR}/include)
 find_library(PerfMon_LIBRARY NAMES pfm 
-             HINTS /usr/local/lib ${PerfMon_ROOT_DIR}/lib $ENV{PerfMon_ROOT_DIR}/lib)
+             HINTS /usr/local/lib ${PerfMon_DIR}/lib $ENV{PerfMon_DIR}/lib)
 set(PerfMon_INCLUDE_DIRS ${PerfMon_INCLUDE_DIR})
 set(PerfMon_LIBRARIES ${PerfMon_LIBRARY})
 

@@ -35,13 +35,14 @@
 #endif
 
 void runApp(Genes<Double_t> &individual) {
-// GeantVFitness fitness;
-// fitness.LogMemoryFitness();
+  GeantVFitness fitness;
+  fitness.LogMemoryFitness();
 //#######################################
 #ifdef ENABLE_PERFMON
   PFMWatch perfcontrol;
 #endif
   //#######################################
+  PFMWatch.Start();
   const char *geomfile = "ExN03.root";
   const char *xsec = "xsec_FTFP_BERT.root";
   const char *fstate = "fstate_FTFP_BERT.root";
@@ -132,9 +133,12 @@ void runApp(Genes<Double_t> &individual) {
   // Monitor the application
   prop->fUseAppMonitoring = false;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
+  PFMWatch.Stop();
   delete prop;
   individual.SetFitness(0, prop->fTimer->RealTime());
-  // fitness.HistOutputFitness();
+  //individual.SetFitness(0, fitness->);
+  fitness.HistOutputFitness();
+  PFMWatch.printSummary();
   return;
 }
 
@@ -149,13 +153,13 @@ int main(int argc, char *argv[]) {
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
   nsga2->SetPMut(0.7);
-  nsga2->SetGenTotalNumber(2);
+  nsga2->SetGenTotalNumber(100);
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(6);
-  nsga2->SetNObjectives(2); // Memory, Time
+  nsga2->SetNObjectives(1); // Memory, Time
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
-  nsga2->SetPopulationSize(4);
+  nsga2->SetPopulationSize(10);
   nsga2->SetEtaMut(10);
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);

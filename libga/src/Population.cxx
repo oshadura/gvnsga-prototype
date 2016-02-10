@@ -261,7 +261,7 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
     exit(-1);
     }
   */
-  // Will be uncommented after installation of latest ROOT (> 15 September)
+  // Will be uncommented after installation of latest ROOT (> 15 September 2015)
   /*
   else {
     TFile *ffriend = new TFile("NSGA-friend.root", "RECREATE");

@@ -9,7 +9,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../cmake/modules")
 #find_package(VecGeom REQUIRED)
 #find_package(Vc REQUIRED)
 #find_package(Boost)
-#find_package(PerfMon QUIET)
+#----------------------------------------------------------------------------
+if(ENABLE_PERFMON)
+  find_package(PerfMon)
+endif()
+#----------------------------------------------------------------------------
 
 if(ENABLE_GEANTV)
   find_package(HepMC REQUIRED)

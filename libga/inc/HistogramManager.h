@@ -11,20 +11,23 @@
 
 class HistogramManager : public TObject {
 private:
-  TH1F *fPopulationSize;
-  TH1F *hAllev;
-  TH1F *hBuffev;
-  TH1F *hThread;
-  TH1F *hPriority;
-  TH1F *hSteps;
-  TH1F *hVector;
-  TH1F *hMemory;
-  TH1F *hTime;
+  //========= Individual ========//
+  TH1F *fPopulationSize; //#0
+  TH1F *hAllev;          //#1
+  TH1F *hBuffev;         //#3
+  TH1F *hThread;         //#4
+  TH1F *hPriority;       //#4
+  TH1F *hSteps;          //#5
+  TH1F *hVector;         //#6
+  TH1F *hMaxVector;      //#7
+  //========= Fitness ========//
+  TH1F *hMemory;         //#0
+  TH1F *hTime;           //#1
 
 public:
   HistogramManager(TDirectory *dir);
   virtual ~HistogramManager() {}
-  Bool_t HFill(Population<Double_t> &pop, char *file);
+  Bool_t HistoFill(Population<Double_t> &pop, char *file);
   Bool_t CheckValue(ROOT::Internal::TTreeReaderValueBase *value);
 
   ClassDef(HistogramManager, 1)
