@@ -17,7 +17,6 @@ set(HEPMC_LIBRARIES ${HEPMC_LIBRARY})
 
 # handle the QUIETLY and REQUIRED arguments and set HEPMC_FOUND to TRUE if
 # all listed variables are TRUE
-INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(HepMC DEFAULT_MSG HEPMC_INCLUDE_DIR HEPMC_LIBRARY)
-
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(HepMC DEFAULT_MSG HEPMC_INCLUDE_DIR HEPMC_LIBRARY)
 mark_as_advanced(HEPMC_FOUND HEPMC_INCLUDE_DIR HEPMC_LIBRARY)

@@ -2,18 +2,26 @@
 #define __GEANTVFITNESS__
 
 #include <typeinfo>
-#include <TSystem.h>
 #include <vector>
+
+#include "TSystem.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TH1F.h"
 
 class GeantVFitness {
 public:
-  GeantVFitness(): fMemoryVector(0) {}
+  GeantVFitness(): hfile(0), hMemVirt(0), hMemRes(0), fMemoryVector(0) {}
   virtual ~GeantVFitness() {}
+
   void LogMemoryFitness();
   void LogTimeFitness();
-  void HistOutputFitness();
+  void HistOutputFitness(std::string file);
 
 private:
+  TFile *hfile;
+  TH1F *hMemVirt;
+  TH1F *hMemRes;
   std::vector<ProcInfo_t> fMemoryVector;
 
   ClassDef(GeantVFitness, 1)

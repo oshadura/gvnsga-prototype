@@ -1,25 +1,25 @@
 #----------------------------------------------------------------------------
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 #----------------------------------------------------------------------------
 project(libGAExamples)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../cmake/modules")
+#list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../cmake/modules")
 #----------------------------------------------------------------------------
 #find_package(ROOT REQUIRED)
 #find_package(GeantV REQUIRED)
 #find_package(VecGeom REQUIRED)
 #find_package(Vc REQUIRED)
-#find_package(Boost)
+
 #----------------------------------------------------------------------------
-if(ENABLE_PERFMON)
-  find_package(PerfMon)
-endif()
+#if(ENABLE_PERFMON)
+#  find_package(PerfMon)
+#endif()
 #----------------------------------------------------------------------------
 
 if(ENABLE_GEANTV)
-  find_package(HepMC REQUIRED)
+  find_package(HepMC)
 endif()
 #---------------------------------------------------------------------------
-include_directories(${Vc_INCLUDE_DIR} ${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR})
+include_directories(${Vc_INCLUDE_DIR} ${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR} ${PerfMon_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
 include(${ROOT_USE_FILE})
 
@@ -35,17 +35,19 @@ message(STATUS "GEANTV_INCLUDE_DIR is ${GEANTV_INCLUDE_DIR}")
 message(STATUS "GEANTV_LIBRARIES is ${GEANTV_LIBRARIES}")
 message(STATUS "VECGEOM_LIBRARIES is ${VECGEOM_LIBRARIES}")
 message(STATUS "VECGEOM_INCLUDE_DIR is ${VECGEOM_INCLUDE_DIR}")
+message(STATUS "PerfMon_LIBRARY is ${PerfMon_LIBRARY}")
+message(STATUS "PerfMon_INCLUDE_DIR is ${PerfMon_INCLUDE_DIR}")
 
 #----------------------------------------------------------------------------
 macro(build_executables EXECUTABLES)
   foreach(EXECUTABLE ${EXECUTABLES})
     get_filename_component(TARGET_NAME ${EXECUTABLE} NAME_WE)
     add_executable(${TARGET_NAME} ${EXECUTABLE})
-    if(PerfMon_FOUND)
-    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARIES})
-    else()
-    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS})
-    endif()
+    #if(PERFMON_FOUND)
+    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY})
+    #else()
+    #	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS})
+    #endif()
     add_dependencies(${TARGET_NAME} GA)
   endforeach()
 endmacro()

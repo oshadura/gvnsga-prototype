@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 project(libga)
 
 find_package(ROOT REQUIRED)
@@ -21,7 +21,7 @@ endif()
 #-----------------------------------------------------------------------------
 
 if (GNU)
-  set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -std=c++11 -Wall -fPIC -g")
+  set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -Wall -fPIC -g")
   if (CMAKE_BUILD_TYPE MATCHES Debug)
     set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -ggdb -O0")
   else()
@@ -31,7 +31,7 @@ if (GNU)
     set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -fabi-version=6")
   endif()
 elseif(Intel)
-  set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -std=c++11 -Wall -fPIC -diag-disable 3438")
+  set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -Wall -fPIC -diag-disable 3438")
   if (CMAKE_BUILD_TYPE MATCHES Debug)
     set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -g -O0")
   else()
@@ -52,10 +52,23 @@ if(ENABLE_GEANTV)
   include_directories(${VECGEOM_INCLUDE_DIR})
   include_directories(${Vc_INCLUDE_DIR})
 endif()
+if(ENABLE_PERFMON)
+  include_directories(${PerfMon_INCLUDE_DIR})
+endif()
 #-----------------------------------------------------------------------------
 
 file(GLOB sources src/*.cxx)
-file(GLOB headers inc/Functions.h inc/TGenes.h inc/Population.h inc/AlgorithmNSGA.h inc/HistogramManager.h inc/ExceptionMessenger.h inc/invoke_cpp11.hpp inc/type_traits.hpp inc/GeantVFitness.h)
+file(GLOB headers inc/PFMWatch.h
+ inc/Functions.h
+ inc/TGenes.h
+ inc/Population.h
+ inc/AlgorithmNSGA.h
+ inc/HistogramManager.h
+ inc/ExceptionMessenger.h
+ inc/invoke_cpp11.hpp
+ inc/type_traits.hpp
+ inc/GeantVFitness.h
+ )
 #----------------------------------------------------------------------------
 # Generate the Dictionary
 

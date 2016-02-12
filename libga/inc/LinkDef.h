@@ -16,6 +16,7 @@
 #pragma link C++ class GeantVFitness + ;
 #pragma link C++ class PFMWatch + ;
 #pragma link C++ class ExceptionMessenger + ;
+#pragma link C++ class PFMWatch+;
 
 #pragma link C++ class std::vector < Double_t > +;
 #pragma link C++ class std::vector < double > +;

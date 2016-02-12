@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
 enable_language(CXX)
 set(CMAKE_CXX_STANDARD 11)
@@ -43,11 +43,13 @@ endif()
 
 #----------------------------------------------------------------------------
 option(ENABLE_PERFMON "Adding PerfMon support" ON)
-find_package(PerfMon QUIET)
-if(PerfMon_FOUND)
-  set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_PERFMON")
-endif()
 
+if(ENABLE_PERFMON)
+  #find_package(PerfMon)
+  #f(PERFMON_FOUND)
+    set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_PERFMON")
+  #endif()
+endif()
 #----------------------------------------------------------------------------
 option(ENABLE_GEANTV "We are using libGA already for GeantV" OFF)
 
@@ -106,13 +108,6 @@ SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 SET(CMAKE_INSTALL_RPATH "")
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 SET(CMAKE_INSTALL_RPATH ${CMAKE_BINARY_DIR})
-
-# When CMake 2.8.12 is required, change this default to 1.
-# When CMake 3.0.0 is required, remove this block (see CMP0042).
-if (NOT DEFINED CMAKE_MACOSX_RPATH)
-  set(CMAKE_MACOSX_RPATH 0)
-endif()
-
 #------------------Backend detection from CMake options------------------------
 function (getListOfVarsWith _prefix _varResult)
 	set (_variableName "${_prefix}")

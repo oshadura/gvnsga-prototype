@@ -1,9 +1,11 @@
 #include "GeantVFitness.h"
 #include "TH1F.h"
+#include "TTree.h"
+#include "TCanvas.h"
+#include "TFile.h"
 
 #include <algorithm>
 
-class TTree;
 
 ClassImp(GeantVFitness)
 
@@ -25,32 +27,29 @@ void GeantVFitness::LogMemoryFitness() {
   fMemoryVector.push_back(info);
 }
 
-void GeantVFitness::LogTimeFitness() {}
+void GeantVFitness::LogTimeFitness() {
+}
 
-void GeantVFitness::HistOutputFitness() {
-  // output->cd();
+void GeantVFitness::HistOutputFitness(std::string file) {
+  hfile = new TFile(file.c_str(),"RECREATE");
+  hfile->mkdir("Fitness");
+  hfile->cd("Fitness");
   int numBins = fMemoryVector.size();
-  TH1F hMemRes("memory_resident", "Resident memory usage", numBins, 0, numBins);
-  hMemRes.GetXaxis()->SetTitle("Gene");
-  hMemRes.GetYaxis()->SetTitle("Resident memory (GB)");
-
-  TH1F hMemVirt("memory_virtual", "Virtual memory usage", numBins, 0, numBins);
-  hMemVirt.GetXaxis()->SetTitle("Gene");
-  hMemVirt.GetYaxis()->SetTitle("Virtual memory (GB)");
-
-  // TH1F hTime("RT", "RT usage", numBins, 0, numBins);
-  // hTime.GetXaxis()->SetTitle("Gene");
-  // hTime.GetYaxis()->SetTitle("RT (min)");
-
+  hMemRes = new TH1F ("memory_resident", "Resident memory usage", numBins, 0, numBins);
+  hMemRes->GetXaxis()->SetTitle("Gene");
+  hMemRes->GetYaxis()->SetTitle("Resident memory (GB)");
+  hMemVirt = new TH1F("memory_virtual", "Virtual memory usage", numBins, 0, numBins);
+  hMemVirt->GetXaxis()->SetTitle("Gene");
+  hMemVirt->GetYaxis()->SetTitle("Virtual memory (GB)");
   int bin = 1;
   for (std::vector<ProcInfo_t>::iterator it = fMemoryVector.begin();
        it != fMemoryVector.end(); it++, bin++) {
     ProcInfo_t info = (*it);
-    hMemRes.SetBinContent(bin, info.fMemResident / (1024. * 1024.));
-    hMemVirt.SetBinContent(bin, info.fMemVirtual / (1024. * 1024.));
+    hMemRes->SetBinContent(bin, info.fMemResident / (1024. * 1024.));
+    hMemVirt->SetBinContent(bin, info.fMemVirtual / (1024. * 1024.));
   }
-  hMemRes.Write();
-  hMemVirt.Write();
+  hMemRes->Write();
+  hMemVirt->Write();
   double maxMemResident =
       (std::max_element(fMemoryVector.begin(), fMemoryVector.end(),
                         CompairMemResident()))
@@ -63,4 +62,10 @@ void GeantVFitness::HistOutputFitness() {
               (maxMemResident / (1024. * 1024.)));
   std::printf("Maximum virtual memory usage:%f\n",
               (maxMemVirtual / (1024. * 1024.)));
+  maxMemVirtual = 0;
+  maxMemResident = 0;
+  fMemoryVector.clean();
+  hfile->cd();
+  hfile->Write();
+  hfile->Close();
 }
