@@ -35,10 +35,11 @@ void GeantVFitness::HistOutputFitness(std::string file) {
   hfile->mkdir("Fitness");
   hfile->cd("Fitness");
   int numBins = fMemoryVector.size();
-  hMemRes = new TH1F ("memory_resident", "Resident memory usage", numBins, 0, numBins);
+  // Not a new  histogramm each time
+  hMemRes->SetBins(numBins, 0, numBins);
+  hMemVirt->SetBins(numBins, 0, numBins);
   hMemRes->GetXaxis()->SetTitle("Gene");
   hMemRes->GetYaxis()->SetTitle("Resident memory (GB)");
-  hMemVirt = new TH1F("memory_virtual", "Virtual memory usage", numBins, 0, numBins);
   hMemVirt->GetXaxis()->SetTitle("Gene");
   hMemVirt->GetYaxis()->SetTitle("Virtual memory (GB)");
   int bin = 1;
@@ -64,7 +65,7 @@ void GeantVFitness::HistOutputFitness(std::string file) {
               (maxMemVirtual / (1024. * 1024.)));
   maxMemVirtual = 0;
   maxMemResident = 0;
-  fMemoryVector.clean();
+  fMemoryVector.clear();
   hfile->cd();
   hfile->Write();
   hfile->Close();
