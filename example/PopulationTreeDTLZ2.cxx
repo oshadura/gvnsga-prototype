@@ -22,9 +22,9 @@
 static const double halfpi = boost::math::constants::pi<Double_t>() / 2.0;
 
 void DTLZ2(Genes<Double_t> &individual) {
-  Int_t n = individual.GetSetup()->GetNParam(); // 12
+  Int_t n = individual.GetSetup()->GetNParam();      // 12
   Int_t m = individual.GetSetup()->GetNObjectives(); // 3
-  Int_t k = n - m + 1; // 10
+  Int_t k = n - m + 1;                               // 10
 
   Double_t g = 0.0;
 
@@ -89,7 +89,9 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 #else
-  int main(int argc, char *argv[]) {
-    std::cout << "Numeric based test: disable Geant-V in cmake flags and re-run compilation"<< std::endl;
-  }
+int main(int argc, char *argv[]) {
+  std::cout << "Numeric based test: disable Geant-V in cmake flags and re-run "
+               "compilation"
+            << std::endl;
+}
 #endif

@@ -240,7 +240,7 @@ template <class T> Int_t Population<T>::Mutate() {
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
 
- // if (!file) {
+  // if (!file) {
   gSystem->Load("libga/libGA.so");
   TFile *f = new TFile(file, "RECREATE");
   TTree *tree = new TTree("GA", "Genetic Algorithm TTree");
@@ -250,10 +250,10 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
       tree->Branch("Genes", "Genes", &it);
     }
   }
-  //tree->Fill(); // Doesnt work!!!
+  // tree->Fill(); // Doesnt work!!!
   tree->Print();
   tree->Write();
-  fHisto->HistoFill(pop,file);
+  fHisto->HistoFill(pop, const_cast<char *>(file));
   //}
   /*
   else {
@@ -275,7 +275,6 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
     tree->Print();
   }
   */
-
 }
 
 template <class T>

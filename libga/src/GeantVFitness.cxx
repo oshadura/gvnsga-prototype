@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <iostream>
 
-
 ClassImp(GeantVFitness)
 
     struct CompairMemResident {
@@ -28,22 +27,22 @@ void GeantVFitness::LogMemoryFitness() {
   fMemoryVector.push_back(info);
 }
 
-void GeantVFitness::LogTimeFitness() {
-}
+void GeantVFitness::LogTimeFitness() {}
 
 void GeantVFitness::HistOutputFitness(std::string file) {
-  if(!hfile){
-    hfile = new TFile(file.c_str(),"RECREATE");
+  if (!hfile) {
+    hfile = new TFile(file.c_str(), "RECREATE");
     hfile->mkdir("Fitness");
     hfile->cd("Fitness");
-  }
-  else{
-    hfile = new TFile(file.c_str(),"UPDATE");
+  } else {
+    hfile = new TFile(file.c_str(), "UPDATE");
   }
   int numBins = fMemoryVector.size();
-  if(!hMemRes && !hMemRes){
-    hMemRes = new TH1F("memory_resident", "Resident memory usage", numBins, 0, numBins);
-    hMemVirt = new TH1F("memory_virtual", "Virtual memory usage", numBins, 0, numBins);
+  if (!hMemRes && !hMemRes) {
+    hMemRes = new TH1F("memory_resident", "Resident memory usage", numBins, 0,
+                       numBins);
+    hMemVirt =
+        new TH1F("memory_virtual", "Virtual memory usage", numBins, 0, numBins);
     hMemRes->GetXaxis()->SetTitle("Gene");
     hMemRes->GetYaxis()->SetTitle("Resident memory (GB)");
     hMemVirt->GetXaxis()->SetTitle("Gene");
@@ -71,7 +70,7 @@ void GeantVFitness::HistOutputFitness(std::string file) {
                         CompairMemVirtual()))
           ->fMemVirtual;
 
-  for(auto &i : fMemoryVector){
+  for (auto &i : fMemoryVector) {
     std::cout << i.fMemVirtual << std::endl;
   }
 

@@ -3,7 +3,7 @@
 // Sandro Wenzel - VecGeom
 //
 //
-
+#ifdef ENABLE_PERFMON
 #ifndef PFMWATCH_H
 #define PFMWATCH_H
 
@@ -28,7 +28,7 @@
 #include <perfmon/pfmlib_perf_event.h>
 #include <iomanip>
 
-#define GROUPSIZE 8 // 8 is the maximum number of counted events 
+#define GROUPSIZE 8 // 8 is the maximum number of counted events
 
 class PFMWatch {
 
@@ -44,7 +44,7 @@ public:
   uint64_t getCounter(unsigned int event) { return count[event]; }
   std::string getEventName(unsigned int event) { return EVENTSTRING[event]; }
   uint64_t getNumberOfEvents() { return GROUPSIZE; }
-  
+
 private:
   struct perf_event_attr attr[GROUPSIZE];
   int fd[GROUPSIZE];
@@ -58,4 +58,5 @@ private:
   //.ClassDef(PFMWatch,1)
 };
 
+#endif
 #endif

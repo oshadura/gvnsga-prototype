@@ -25,7 +25,8 @@
 #define INF 1e+14
 
 template <class T> class Genes;
-template <class T> class Population : public Genes<T>, public Functions, public HistogramManager {
+template <class T>
+class Population : public Genes<T>, public Functions, public HistogramManager {
 public:
   Population()
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fHisto(0),
@@ -78,16 +79,18 @@ public:
   void Merge(const Population &population1,
              const Population &population2); // Merging two populations
   Int_t Mutate();
-//#ifdef ENABLE_GEANTV
-//  void Evaluate(GeantPropagator* prop);
-//#else
+  //#ifdef ENABLE_GEANTV
+  //  void Evaluate(GeantPropagator* prop);
+  //#else
   void Evaluate();
-//#endif
+  //#endif
   void SetPopFunction(Functions::popfunctype f) { fPopFunction = f; }
   void ResetHistogramPointer() {
     fHisto->Reset();
   } // Function that reset histogram pointer
-  HistogramManager *GetHistograms() const { return fHisto; } // Return histosgrames
+  HistogramManager *GetHistograms() const {
+    return fHisto;
+  } // Return histosgrames
   void WritePopulationTree(Population &pop, const char *file);
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
@@ -124,18 +127,18 @@ public:
   std::vector<Genes<T>> fPopulation;
 
 private:
-//#ifdef ENABLE_GEANTV
-//  void Evaluation(GeantPropagator* prop);
-//  void EvaluationOpenMP(GeantPropagator* prop);
-//#else
+  //#ifdef ENABLE_GEANTV
+  //  void Evaluation(GeantPropagator* prop);
+  //  void EvaluationOpenMP(GeantPropagator* prop);
+  //#else
   void Evaluation();
   void EvaluationOpenMP();
-//#endif
+  //#endif
 
 private:
-//#ifdef ENABLE_GEANTV
-//  GeantPropagator *prop;
-//#endif
+  //#ifdef ENABLE_GEANTV
+  //  GeantPropagator *prop;
+  //#endif
   Functions setupPop;
   Functions::popfunctype fPopFunction;
   Int_t fSizePop;

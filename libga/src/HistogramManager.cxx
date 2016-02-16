@@ -7,11 +7,15 @@
 #include "TDirectory.h"
 #include "TObject.h"
 
+#include "TTreeReader.h"
+#include "TTreeReaderArray.h"
+#include "TTreeReaderValue.h"
+
 ClassImp(HistogramManager)
 
-HistogramManager* HistogramManager::HistoInstance = 0;
+    HistogramManager *HistogramManager::HistoInstance = 0;
 
-HistogramManager* HistogramManager::Instance(){
+HistogramManager *HistogramManager::Instance() {
   if (HistoInstance == 0)
     HistoInstance = new HistogramManager();
   return HistoInstance;
@@ -21,14 +25,12 @@ HistogramManager::HistogramManager() {
   hAllev = new TH1F("hAllev", "Totall number of events", 100, 50, 50);
   hBuffev = new TH1F("hBuffev", "Buffered events", 100, 50, 50);
   hThread = new TH1F("hThread", "Number of threads", 100, -16, 16);
-  hPriority = new  TH1F("hPriority", "Priority", 100, -1, 1);
+  hPriority = new TH1F("hPriority", "Priority", 100, -1, 1);
   hSteps = new TH1F("hSteps", "Number steps for learning", 1000, 0, 1000);
   hVector = new TH1F("hVector", "Vector size", 100, 0, 100);
 }
 
-HistogramManager::~HistogramManager(){
-  HistoInstance = 0;
-}
+HistogramManager::~HistogramManager() { HistoInstance = 0; }
 
 Bool_t
 HistogramManager::CheckValue(ROOT::Internal::TTreeReaderValueBase *value) {
@@ -97,14 +99,14 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *file) {
   return true;
 }
 
-  void HistogramManager::Reset(){
-    hAllev = 0;
-    hBuffev = 0;
-    hThread = 0;
-    hPriority = 0;
-    hSteps = 0;
-    hVector = 0;
-    hMaxVector = 0;
-    hMemory = 0;  
-    hTime= 0;
-  }
+void HistogramManager::Reset() {
+  hAllev = 0;
+  hBuffev = 0;
+  hThread = 0;
+  hPriority = 0;
+  hSteps = 0;
+  hVector = 0;
+  hMaxVector = 0;
+  hMemory = 0;
+  hTime = 0;
+}

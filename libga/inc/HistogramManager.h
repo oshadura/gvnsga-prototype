@@ -15,29 +15,29 @@
 class HistogramManager : public TObject {
 private:
   //========== TFile ===========//
-  //TFile *fHisto;
+  // TFile *fHisto;
   //========= Individual ======//
-  TH1F *hAllev;          //#1
-  TH1F *hBuffev;         //#3
-  TH1F *hThread;         //#4
-  TH1F *hPriority;       //#4
-  TH1F *hSteps;          //#5
-  TH1F *hVector;         //#6
-  TH1F *hMaxVector;      //#7
+  TH1F *hAllev;     //#1
+  TH1F *hBuffev;    //#3
+  TH1F *hThread;    //#4
+  TH1F *hPriority;  //#4
+  TH1F *hSteps;     //#5
+  TH1F *hVector;    //#6
+  TH1F *hMaxVector; //#7
   //========= Fitness ========//
-  TH1F *hMemory;         //#1
-  TH1F *hTime;           //#2
+  TH1F *hMemory; //#1
+  TH1F *hTime;   //#2
 
 public:
   HistogramManager();
-  HistogramManager* Instance();
-  ~HistogramManager();
+  HistogramManager *Instance();
+  virtual ~HistogramManager();
   Bool_t HistoFill(Population<Double_t> &pop, char *file);
   Bool_t CheckValue(ROOT::Internal::TTreeReaderValueBase *value);
   void Reset();
 
 private:
-  static HistogramManager* HistoInstance;
+  static HistogramManager *HistoInstance;
 
   ClassDef(HistogramManager, 1)
 };

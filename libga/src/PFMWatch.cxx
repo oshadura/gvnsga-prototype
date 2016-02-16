@@ -1,8 +1,9 @@
+#ifdef ENABLE_PERFMON
 #include "PFMWatch.h"
 
 #include <iostream>
 
-//ClassImp(PFMWatch)
+// ClassImp(PFMWatch)
 
 PFMWatch::PFMWatch() {
   EVENTSTRING.resize(GROUPSIZE);
@@ -164,6 +165,8 @@ void PFMWatch::printSummary() {
   std::cout << "# PFM Summary (for measured code section) " << std::endl;
   std::cout << "# --------------------------------------- " << std::endl;
   for (unsigned int i = 0; i < GROUPSIZE; i++) {
-    std::cout << std::left << "# " << std::setw(25) << EVENTSTRING[i] << "\t: " << count[i] << std::endl;
+    std::cout << std::left << "# " << std::setw(25) << EVENTSTRING[i]
+              << "\t: " << count[i] << std::endl;
   }
 }
+#endif

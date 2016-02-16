@@ -76,6 +76,6 @@ ROOT_GENERATE_DICTIONARY(GADict ${headers} MODULE GA LINKDEF LinkDef.h)
 ROOT_GENERATE_ROOTMAP(GADict LINKDEF LinkDef.h)
 
 add_library(GA SHARED ${sources} GADict.cxx)
-target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui)
+target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer)
 #set_target_properties(GA PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 #install(TARGETS GA DESTINATION ${CMAKE_BINARY_DIR})

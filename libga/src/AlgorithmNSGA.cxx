@@ -14,7 +14,7 @@
 // AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
 ClassImp(AlgorithmNSGA)
 
-  struct Sorting {
+    struct Sorting {
   const Population<Double_t> &pop;
   Sorting(Population<Double_t> &population) : pop(population){};
   bool operator()(Int_t i, Int_t j) {
@@ -36,7 +36,7 @@ AlgorithmNSGA::AlgorithmNSGA()
     : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0),
       fNMut(0), fNGen(0), fParentPop(0), fChildPop(0), fMixedPop(0),
       fSizePop(0), fNParam(0), fInterval(0), fNCons(0), fNObjectives(0),
-      fPMut(0), fEtaMut(0), fEpsilonC(0), fCrowdingObj(true) /*,fProp(0)*/{}
+      fPMut(0), fEtaMut(0), fEpsilonC(0), fCrowdingObj(true) /*,fProp(0)*/ {}
 #else
 AlgorithmNSGA::AlgorithmNSGA()
     : function(0), popfunction(0), fPCross(0), fEtaCross(0), fNCross(0),
@@ -133,15 +133,14 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   std::cout << "=================New generation #" << fGen
             << "================" << std::endl;
   fParentPop->Build();
-//#ifdef ENABLE_GEANTV
-//  fParentPop->Evaluate(fProp);
-//#else
+  //#ifdef ENABLE_GEANTV
+  //  fParentPop->Evaluate(fProp);
+  //#else
   fParentPop->Evaluate();
-//#endif
+  //#endif
   fParentPop->FastNonDominantSorting();
   fParentPop->CrowdingDistanceAll();
 }
-
 
 void AlgorithmNSGA::Selection(
     Population<Double_t> &oldpop,
@@ -294,11 +293,11 @@ void AlgorithmNSGA::NextStep() {
   // std::cout << "-==============================================-"<<
   // std::endl;
   fChildPop->GenCounter = fNGen + 1;
-//#ifdef ENABLE_GEANTV
-//  fChildPop->Evaluate(fProp);
-//#else
+  //#ifdef ENABLE_GEANTV
+  //  fChildPop->Evaluate(fProp);
+  //#else
   fChildPop->Evaluate();
-//#endif
+  //#endif
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
   fMixedPop->GenCounter = fGen + 1;

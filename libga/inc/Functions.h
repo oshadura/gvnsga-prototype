@@ -115,11 +115,11 @@ public:
   }
 
 public:
-//#ifdef ENABLE_GEANTV
-// typedef void (*functype)(GeantPropagator *, Genes<Double_t> &);
-//#else
+  //#ifdef ENABLE_GEANTV
+  // typedef void (*functype)(GeantPropagator *, Genes<Double_t> &);
+  //#else
   typedef void (*functype)(Genes<Double_t> &);
-//#endif
+  //#endif
   typedef void (*popfunctype)(
       Population<Double_t> &); // still dont know if to use in such way or not
   functype evfunc;

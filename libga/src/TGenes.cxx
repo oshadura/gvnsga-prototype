@@ -144,7 +144,7 @@ void Genes<T>::Evaluate(GeantPropagator *prop, Functions &setup,
   fEvaluated = true;
 }
 */
-//else
+// else
 template <class T>
 void Genes<T>::Evaluate(Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
@@ -172,7 +172,8 @@ template <class T> void Genes<T>::Clear(Option_t * /*option*/) {
 }
 
 template <class T>
-T Genes<T>::CheckDominance(Functions *setup, const Genes<T> *ind2) throw(ExceptionMessenger) {
+T Genes<T>::CheckDominance(Functions *setup,
+                           const Genes<T> *ind2) throw(ExceptionMessenger) {
   if (ConstViol < 0 && ind2->ConstViol < 0) {
     if (ConstViol > ind2->ConstViol)
       return 1; // ind1 less

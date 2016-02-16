@@ -160,7 +160,9 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 #else
-  int main(int argc, char *argv[]) {
-    std::cout << "Geant-V based test: enable Geant-V in cmake flags and re-run compilation"<< std::endl;
-  }
+int main(int argc, char *argv[]) {
+  std::cout << "Geant-V based test: enable Geant-V in cmake flags and re-run "
+               "compilation"
+            << std::endl;
+}
 #endif

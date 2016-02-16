@@ -18,7 +18,6 @@
 //  class GeantPropagator;
 //#endif
 
-
 class Functions;
 template <class T> class Population;
 template <class T> class Genes : public TObject {
@@ -43,16 +42,16 @@ public:
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
   void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
-  
-  #ifdef ENABLE_GEANTV
+
+#ifdef ENABLE_GEANTV
   void SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
-  #endif
-  
+#endif
+
   //#ifdef ENABLE_GEANTV
   //  void Evaluate(GeantPropagator *prop, Functions &setup,
   //                      Genes<T> &ind) throw(ExceptionMessenger);
   //#else
-    void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
   //#endif
 
   Int_t GetDominatedCounter() { return fDominationCounter; }
@@ -168,17 +167,17 @@ public:
 
 private:
   // Individual parts (Genes)
-  T fAllev;    // All events (after will be translated in GeantV namespace) #0
-  T fBuffev;   // Buffered events (after will be translated in GeantV
-               // namespace) #1
-  T fThread;   // Number of threads (after will be translated in GeantV
-               // namespace) #3
-  T fPriority; // Priority value (after will be translated in GeantV
-               // namespace) #4
-  T fSteps;    // Number of steps (after will be translated in GeantV
-               // namespace) #5
-  T fVector;   // Vector size (after will be translated in GeantV
-               // namespace) #6
+  T fAllev;     // All events (after will be translated in GeantV namespace) #0
+  T fBuffev;    // Buffered events (after will be translated in GeantV
+                // namespace) #1
+  T fThread;    // Number of threads (after will be translated in GeantV
+                // namespace) #3
+  T fPriority;  // Priority value (after will be translated in GeantV
+                // namespace) #4
+  T fSteps;     // Number of steps (after will be translated in GeantV
+                // namespace) #5
+  T fVector;    // Vector size (after will be translated in GeantV
+                // namespace) #6
   T fMaxVector; // Max VectorSize
   // Parts of fitness vector
   T fTime;                 // RT from GeantV (after will be translated in GeantV
@@ -198,9 +197,9 @@ private:
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
   const Functions *setup;
 
-//#ifdef ENABLE_GEANTV
-//  GeantPropagator *prop;
-//#endif
+  //#ifdef ENABLE_GEANTV
+  //  GeantPropagator *prop;
+  //#endif
   // Should we write a map to be sure about connection between Limits[] and
   // Genes[] || Fitmess[] and Constraint[]?
   // static std::multimap<Genes,Limits> fInputMap;
