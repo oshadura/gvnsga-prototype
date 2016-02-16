@@ -137,6 +137,7 @@ void runApp(Genes<Double_t> &individual) {
   delete prop;
   individual.SetFitness(0, prop->fTimer->RealTime());
   //individual.SetFitness(0, fitness->);
+  //SHIT!
   fitness.HistOutputFitness("fitness.root");
   perfcontrol.printSummary();
   return;
@@ -144,10 +145,13 @@ void runApp(Genes<Double_t> &individual) {
 
 int main(int argc, char *argv[]) {
   // Function definition
+
   Functions *geantv = new Functions();
   geantv->SetIntervalGeantV();
   std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);
+  std::cout << "-==============================================-" << std::endl;
+
   std::cout << "-==============================================-" << std::endl;
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();

@@ -3,6 +3,7 @@
 
 #include "TGenes.h"
 #include "ExceptionMessenger.h"
+#include "HistogramManager.h"
 
 //#ifdef ENABLE_GEANTV
 //#include "GeantPropagator.h"
@@ -24,13 +25,13 @@
 #define INF 1e+14
 
 template <class T> class Genes;
-template <class T> class Population : public Genes<T>, public Functions {
+template <class T> class Population : public Genes<T>, public Functions, public HistogramManager {
 public:
   Population()
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fH(0),
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fHisto(0),
         fPopFunction(NULL), setupPop() {}
   Population(Int_t size)
-      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fH(0),
+      : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fHisto(0),
         fPopFunction(NULL), setupPop() {
     fFront.reserve(size);
     fPopulation.reserve(size);
@@ -51,30 +52,25 @@ public:
       fFront = pop.fFront;
       fPopulation = pop.fPopulation;
       fSizePop = pop.fSizePop;
-      fH = pop.fH;
+      fHisto = pop.fHisto;
     }
     return *this;
   }
   std::vector<Genes<T>> operator=(Population<T> pop) { return fPopulation; }
 
   virtual ~Population() {}
-  /////
   Genes<T> &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
     fPopulation.emplace(fPopulation.begin() + i, value);
   }
   void PushGenes(const Genes<T> &value) { fPopulation.push_back(value); }
-  /////
   void SetPopulationSize(Int_t s) { fPopulation.resize(s); }
   Int_t GetPopulationSize() { return fPopulation.size(); }
   Int_t GetPopulationSetupSize() const { return fSizePop; }
-  /////
   std::vector<std::vector<Int_t>> GetFront() { return fFront; }
   std::vector<Int_t> &GetFront(Int_t i) { return fFront.at(i); }
-  /////
   Bool_t IsCrowdingObj() { return fCrowdingObj; }
   void SetCrowdingObj(Bool_t co) { fCrowdingObj = co; }
-  /////
   void Build() throw(ExceptionMessenger);
   void CrowdingDistanceAll();
   void CrowdingDistanceFront(Int_t i);
@@ -87,21 +83,16 @@ public:
 //#else
   void Evaluate();
 //#endif
-  /////
   void SetPopFunction(Functions::popfunctype f) { fPopFunction = f; }
-  /////
   void ResetHistogramPointer() {
-    fH = 0;
+    fHisto->Reset();
   } // Function that reset histogram pointer
-  TH1F *GetHistogram() const { return fH; } // Return histosgrames
-  /////
+  HistogramManager *GetHistograms() const { return fHisto; } // Return histosgrames
   void WritePopulationTree(Population &pop, const char *file);
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
-  /////
   Genes<T> operator[](Int_t i) { return fPopulation.at(i); }
-  /////
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop) {
     os << "Population: [\n";
     std::ostream_iterator<Genes<T>> fGenesOutIt(os, "\n");
@@ -148,7 +139,7 @@ private:
   Functions setupPop;
   Functions::popfunctype fPopFunction;
   Int_t fSizePop;
-  TH1F *fH;
+  HistogramManager *fHisto;
 
   ClassDef(Population, 1)
 };

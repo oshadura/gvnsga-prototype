@@ -5,20 +5,29 @@
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 #include "TDirectory.h"
+#include "TObject.h"
 
 ClassImp(HistogramManager)
 
-    HistogramManager::HistogramManager(TDirectory *dir) {
-  TDirectory *saved = gDirectory;
-  dir->cd();
-  TH1F hNIndividual("hNIndividual", "Number of individuals", 100, 500, 500);
-  TH1F hAllev("hAllev", "Totall number of events", 100, 50, 50);
-  TH1F hBuffev("hBuffev", "Buffered events", 100, 50, 50);
-  TH1F hThread("hThread", "Number of threads", 100, -16, 16);
-  TH1F hPriority("hPriority", "Priority", 100, -1, 1);
-  TH1F hSteps("hSteps", "Number steps for learning", 1000, 0, 1000);
-  TH1F hVector("hVector", "Vector size", 100, 0, 100);
-  saved->cd();
+HistogramManager* HistogramManager::HistoInstance = 0;
+
+HistogramManager* HistogramManager::Instance(){
+  if (HistoInstance == 0)
+    HistoInstance = new HistogramManager();
+  return HistoInstance;
+}
+
+HistogramManager::HistogramManager() {
+  hAllev = new TH1F("hAllev", "Totall number of events", 100, 50, 50);
+  hBuffev = new TH1F("hBuffev", "Buffered events", 100, 50, 50);
+  hThread = new TH1F("hThread", "Number of threads", 100, -16, 16);
+  hPriority = new  TH1F("hPriority", "Priority", 100, -1, 1);
+  hSteps = new TH1F("hSteps", "Number steps for learning", 1000, 0, 1000);
+  hVector = new TH1F("hVector", "Vector size", 100, 0, 100);
+}
+
+HistogramManager::~HistogramManager(){
+  HistoInstance = 0;
 }
 
 Bool_t
@@ -32,9 +41,8 @@ HistogramManager::CheckValue(ROOT::Internal::TTreeReaderValueBase *value) {
 }
 
 Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *file) {
-
-  TFile *ga = TFile::Open(file);
-  TTreeReader reader("Population", ga);
+  TFile *fHisto = TFile::Open(file);
+  TTreeReader reader("Population", fHisto);
   TTreeReaderArray<std::vector<std::vector<Double_t>>> Population(reader,
                                                                   "Population");
   if (!CheckValue(&Population)) {
@@ -46,6 +54,7 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *file) {
     } else {
       switch (reader.GetEntryStatus()) {
       case TTreeReader::kEntryValid:
+        std::cerr << "Errorrrrrrrrrrrrrr!\n";
         break;
       case TTreeReader::kEntryNotLoaded:
         std::cerr << "Error: TTreeReader has not loaded any data yet!\n";
@@ -82,4 +91,20 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *file) {
       hMaxVector->Fill(it->GetMaxVector(*it));
     }
   }
+  fHisto->cd();
+  fHisto->Write();
+  fHisto->Close();
+  return true;
 }
+
+  void HistogramManager::Reset(){
+    hAllev = 0;
+    hBuffev = 0;
+    hThread = 0;
+    hPriority = 0;
+    hSteps = 0;
+    hVector = 0;
+    hMaxVector = 0;
+    hMemory = 0;  
+    hTime= 0;
+  }

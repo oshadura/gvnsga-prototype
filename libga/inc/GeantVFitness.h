@@ -11,14 +11,14 @@
 
 class GeantVFitness {
 public:
-  GeantVFitness(): hfile(0), hMemVirt(0), hMemRes(0), fMemoryVector(0) {
-  	hMemRes = new TH1F("memory_resident", "Resident memory usage", 0, 0, 0);
-  	hMemVirt = new TH1F("memory_virtual", "Virtual memory usage", 0, 0, 0);
-  }
+  GeantVFitness(): hfile(0), hMemVirt(0), hMemRes(0), fMemoryVector(0) {}
 
   virtual ~GeantVFitness() {
-  	// think think!!!
-  }
+  	hfile->cd();
+  	hfile->Write();
+  	hfile->Close();
+  	delete hfile;
+ }
 
   void LogMemoryFitness();
   void LogTimeFitness();

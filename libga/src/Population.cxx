@@ -27,7 +27,7 @@ templateClassImp(Population)
         const Double_t fPMut, const Double_t fEtaMut,
         const std::vector<std::pair<Double_t, Double_t>> fInterval,
         const Functions::functype func) throw(ExceptionMessenger)
-    : fCrowdingObj(true), fPopFunction(NULL), setupPop() {
+    : fCrowdingObj(true), fPopFunction(NULL), setupPop(), fHisto(0) {
   setupPop.fNParam = fNParam;
   setupPop.fInterval = fInterval;
   setupPop.fNCons = fNCons;
@@ -71,7 +71,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
-  // WritePopulationTree(*this, "NSGA.root");
+  WritePopulationTree(*this, "NSGA.root");
 }
 #else
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
@@ -80,7 +80,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
-  // WritePopulationTree(*this, "NSGA.root");
+  WritePopulationTree(*this, "NSGA.root");
 }
 #endif
 
@@ -239,19 +239,21 @@ template <class T> Int_t Population<T>::Mutate() {
 
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
-  // if (!file) {
+
+ // if (!file) {
   gSystem->Load("libga/libGA.so");
   TFile *f = new TFile(file, "RECREATE");
-  TTree *tree = new TTree("Population", "Genetic Algorithm TTree");
-  tree->Branch("Population", "Population", &pop);
+  TTree *tree = new TTree("GA", "Genetic Algorithm TTree");
+  tree->Branch("Pop", "Pop", &pop);
   for (int i = 0; i < pop.GetPopulationSize(); ++i) {
     for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end(); ++it) {
       tree->Branch("Genes", "Genes", &it);
     }
   }
-  tree->Fill();
+  //tree->Fill(); // Doesnt work!!!
   tree->Print();
-  // tree->Write();
+  tree->Write();
+  fHisto->HistoFill(pop,file);
   //}
   /*
   else {
@@ -260,13 +262,12 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
     std::cout << "Error opening file" << std::endl;
     exit(-1);
     }
-  */
-  // Will be uncommented after installation of latest ROOT (> 15 September 2015)
+    */
   /*
   else {
-    TFile *ffriend = new TFile("NSGA-friend.root", "RECREATE");
-    TTree *treecopy = new TTree("Population", "Genetic Algorithm TTree");
-    treecopy->Branch("Population", "Population", &pop);
+    TFile *friend = new TFile("NSGA-friend.root", "RECREATE");
+    TTree *treecopy = new TTree("GA", "Genetic Algorithm TTree");
+    treecopy->Branch("Pop", "Pop", &pop);
     TFile *f = new TFile("NSGA.root");
     TTree *tree = (TTree *)f->Get("tree");
     tree->AddFriend("treecopy", "NSGA-friend.root");
@@ -274,6 +275,7 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
     tree->Print();
   }
   */
+
 }
 
 template <class T>
@@ -310,7 +312,7 @@ Int_t Population<T>::PrintTree(const char *file, const char *name) {
     tree->Print();
     return 0;
   } else {
-    Error("PrintTree()", "Cannot find tree  %s", tree);
+    printf("Cannot find tree  %s\n", tree);
     return -1;
   }
 }

@@ -14,7 +14,7 @@
 // AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
 ClassImp(AlgorithmNSGA)
 
-    struct Sorting {
+  struct Sorting {
   const Population<Double_t> &pop;
   Sorting(Population<Double_t> &population) : pop(population){};
   bool operator()(Int_t i, Int_t j) {
@@ -105,21 +105,18 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
             << "\nNumber of generations = " << fNGen
             << "\nNumber of objective functions = " << fNObjectives
             << "\nNumber of constraints = " << fNCons
-            << "\nNumber of variables = " << fNParam << std::endl;
+            << "\nNumber of variables = " << fNParam;
 
   if (fNParam != 0) {
     for (int i = 0; i < fNParam; ++i) {
       std::cout << "\nLower limit of real variable " << (i + 1) << " = "
-                << fInterval[i].first << std::endl;
+                << fInterval[i].first;
       std::cout << "\nUpper limit of real variable " << (i + 1) << " = "
-                << fInterval[i].second << std::endl;
+                << fInterval[i].second;
     }
-    std::cout << "\nProbability of crossover of real variable = " << fPCross
-              << std::endl;
-    std::cout << "\nProbability of mutation of real variable = " << fPMut
-              << std::endl;
-    std::cout << "\nDistribution index for crossover = " << fEtaCross
-              << std::endl;
+    std::cout << "\nProbability of crossover of real variable = " << fPCross;
+    std::cout << "\nProbability of mutation of real variable = " << fPMut;
+    std::cout << "\nDistribution index for crossover = " << fEtaCross;
     std::cout << "\nDistribution index for mutation = " << fEtaMut << "\n"
               << std::endl;
   }
