@@ -62,7 +62,7 @@ AlgorithmNSGA::~AlgorithmNSGA() {
 
 void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 
-  std::cout << "Let's check NSGA2 configuration..." << std::endl;
+  std::cout << "INITIALIZATION - Let's check NSGA2 configuration..." << std::endl;
 
   if (fSizePop < 0)
     throw ExceptionMessenger("You didn't enter size of Population");
@@ -128,7 +128,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 
   fParentPop->fCrowdingObj = fCrowdingObj;
   fMixedPop->fCrowdingObj = fCrowdingObj;
-  fMixedPop->fCrowdingObj = fCrowdingObj;
+  fChildPop->fCrowdingObj = fCrowdingObj;
   fGen = 1;
   std::cout << "=================New generation #" << fGen
             << "================" << std::endl;
@@ -138,8 +138,12 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   //#else
   fParentPop->Evaluate();
   //#endif
+  std::cout << "Calculation of FastNDS for parent population" << std::endl;
   fParentPop->FastNonDominantSorting();
+  std::cout << "-==============================================-" << std::endl;
+  std::cout << "Calculation of CD for parent population" << std::endl;
   fParentPop->CrowdingDistanceAll();
+  std::cout << "-==============================================-" << std::endl;
 }
 
 void AlgorithmNSGA::Selection(
@@ -184,7 +188,7 @@ Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
   Int_t fFlag = ind1.CheckDominance(const_cast<Functions *>(setupind), &ind2);
   if (fFlag == 1) // Yes
     return ind1;
-  else if (fFlag == -1) // Opposite
+  else if (fFlag == -1) // Oposite
     return ind2;
   else if (ind1.GetCrowdingDistance() > ind2.GetCrowdingDistance())
     return ind1;
@@ -287,11 +291,9 @@ void AlgorithmNSGA::NextStep() {
   std::cout << "New generation #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
   fNMut = fChildPop->Mutate();
-  // std::cout << "-==============================================-"<<
-  // std::endl;
-  // std::cout << "Number of mutations in whole generation " << fNMut << "\n";
-  // std::cout << "-==============================================-"<<
-  // std::endl;
+  std::cout << "-==============================================-"<<
+  std::endl;
+  std::cout << "Number of mutations in whole generation " << fNMut << "\n";
   fChildPop->GenCounter = fNGen + 1;
   //#ifdef ENABLE_GEANTV
   //  fChildPop->Evaluate(fProp);
@@ -300,53 +302,67 @@ void AlgorithmNSGA::NextStep() {
   //#endif
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
+  fMixedPop->Print();
   fMixedPop->GenCounter = fGen + 1;
+  std::cout << "Calculation of FastNDS for new mixed population" << std::endl;
   fMixedPop->FastNonDominantSorting();
+  std::cout << "-==============================================-" << std::endl;
   fParentPop->fPopulation.clear();
-  fParentPop->SetPopulationSize(0);
-  // until |Pt+1| + |Fi| <= N, until parent population is filled
+  //fParentPop->SetPopulationSize(0);
   Int_t i = 0;
   ///////////////////////////////////////////////////////////////
-  /*
   std::cout << "-==============================================-" << std::endl;
-  std::cout << "Front for fMixedPop Population fFront<T> = [";
   for (int i = 0; i < fMixedPop->fFront.size(); ++i) {
+  std::cout << CYAN << "MixedPop: fFront<" << i << "> = [";  
     for (auto &it : fMixedPop->fFront[i]) {
       std::cout << it << ' ';
     }
+    std::cout << "]"<< "\n" << RESET<< std::endl;
   }
-  std::cout << "]"<< "\n" << std::endl;
-  */
   ///////////////////////////////////////////////////////////////
-  // std::cout << "fParentPop->GetPopulationSize() = " <<
-  // fParentPop->GetPopulationSize() << std::endl;
-  // std::cout << "fMixedPop->GetFront(i).size() = "<<
-  // fMixedPop->GetFront(i).size() << std::endl;
-  // std::cout << "fSizePop = " << fSizePop << std::endl;
-  while (fParentPop->GetPopulationSize() + fMixedPop->GetFront(i).size() <
-         fSizePop) {
+  std::cout << "Next step: until |Pt+1| + |Fi| <= N" << std::endl;
+  while (fParentPop->GetPopulationSize() + fMixedPop->GetFront(i).size() < fSizePop) {
+    std::cout << "fParentPop->GetPopulationSize() = " << fParentPop->GetPopulationSize() << std::endl;
+    std::cout << "fMixedPop->GetFront(i).size() = "<< fMixedPop->GetFront(i).size() << std::endl;
+    std::cout << "fSizePop = " << fSizePop << std::endl;
+    std::cout << "-==============================================-" << std::endl;
     std::vector<Int_t> Fi = fMixedPop->GetFront(i);
+    std::cout << "Calculation of CD for new mixed population" << std::endl;
     fMixedPop->CrowdingDistanceFront(i);
+    std::cout << "-==============================================-" << std::endl;
     // calculate crowding in Fi
-    for (Int_t j = 0; j < Fi.size(); ++j)
-      // Pt+1 = Pt+1 U Fi
-      fParentPop->fPopulation.push_back(fMixedPop->GetGenes(Fi[j]));
+    std::cout << "Next step: Pt+1 = Pt+1 U Fi" << std::endl;
+    for (Int_t j = 0; j < Fi.size(); ++j){
+      Genes<Double_t>& ind = fMixedPop->GetGenes(Fi[j]);
+      //ind.printGenes(ind);
+      fParentPop->push_back(ind);
+    }
     i += 1;
   }
   fMixedPop->CrowdingDistanceFront(i);
   // calculate crowding in F
-  std::sort(fMixedPop->GetFront(i).begin(), fMixedPop->GetFront(i).end(),
-            Sorting(*fMixedPop));
-  const int extra = fSizePop - fParentPop->GetPopulationSize();
-  // Pt+1 = Pt+1 U Fi[1:N-|Pt+1|]
-  for (int j = 0; j < extra; ++j)
-    fParentPop->fPopulation.push_back(
-        fMixedPop->GetGenes(fMixedPop->GetFront(i)[j]));
-  fGen += 1;
+  std::sort(fMixedPop->GetFront(i).begin(), fMixedPop->GetFront(i).end(), Sorting(*fMixedPop));
+  const int extra = fSizePop - (fParentPop->GetPopulationSize());
+  std::cout << "Next step: Pt+1 = Pt+1 U Fi[1:N-|Pt+1|]" << std::endl;
+  for (int j = 0; j < extra; ++j){
+    std::vector<Int_t> thisFront = fMixedPop->GetFront(i);
+    Int_t i = thisFront[j];
+    Genes<Double_t>& indadd = fMixedPop->GetGenes(i);
+    fParentPop->push_back(indadd);
+  }
+  //std::cout << "-==============================================-" << std::endl;
+  //fMixedPop->Print();
+  //std::cout << "-==============================================-" << std::endl;
+  //fParentPop->Print();
+  //std::cout << "-==============================================-" << std::endl;
+  //fChildPop->Print();
+  //std::cout << "-==============================================-" << std::endl;
+  //fGen += 1;
 }
 
 void AlgorithmNSGA::Evolution() {
-  while (fGen <= GetGenTotalNumber()) {
+  while (fGen < GetGenTotalNumber()) {
+    std::cout << "Current generation is "<< fGen << " that < " << "number of requested generations " << GetGenTotalNumber() << std::endl;
     NextStep();
   } // Check through population object
 }

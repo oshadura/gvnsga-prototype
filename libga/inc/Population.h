@@ -1,6 +1,15 @@
 #ifndef __POPULATION__
 #define __POPULATION__
 
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+
 #include "TGenes.h"
 #include "ExceptionMessenger.h"
 #include "HistogramManager.h"
@@ -79,6 +88,7 @@ public:
   void Merge(const Population &population1,
              const Population &population2); // Merging two populations
   Int_t Mutate();
+  void Print();
   //#ifdef ENABLE_GEANTV
   //  void Evaluate(GeantPropagator* prop);
   //#else
@@ -119,6 +129,7 @@ public:
     std::cout << " ]\n" << std::endl;
   }
 
+  void push_back(Genes<T> &i) { return fPopulation.push_back(i); }
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
                        // false: crowding over real variable

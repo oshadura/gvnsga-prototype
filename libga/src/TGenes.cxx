@@ -148,9 +148,9 @@ void Genes<T>::Evaluate(GeantPropagator *prop, Functions &setup,
 template <class T>
 void Genes<T>::Evaluate(Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
-  std::cout << "-==============================================-" << std::endl;
-  std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
-  printGenes(ind);
+  //std::cout << "-==============================================-" << std::endl;
+  //std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
+  //printGenes(ind);
   (setup.evfunc)(ind);
   if (setup.fNCons) {
     ConstViol = 0;

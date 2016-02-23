@@ -78,18 +78,20 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     it->Genes<T>::Set(setupPop, *it);
     // fPopulation.emplace_back(&(*it).GetfGenes());
-    std::cout << " Creating new individual.." << std::endl;
+    std::cout << "Creating new individual.." << std::endl;
   }
-  WritePopulationTree(*this, "NSGA.root");
+  //WritePopulationTree(*this, "NSGA.root");
 }
 #endif
 
 template <class T> void Population<T>::CrowdingDistanceAll() {
+  // Doing for each front
   for (Int_t i = 0; i < fFront.size(); ++i)
     CrowdingDistanceFront(i);
 }
 
 template <class T> void Population<T>::CrowdingDistanceFront(Int_t front) {
+  std::cout <<"Crowding distance for Front<" << front << ">.."<< std::endl;
   std::vector<Int_t> &F = fFront[front];
   /*
   for(auto &i : F){
@@ -97,30 +99,37 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t front) {
   }
   */
   if (F.size() == 0)
+    std::cout << BLUE << "FRONT size = 0"<< RESET<< std::endl;
     return;
+  // Setting crowding distance as ZERO to all individuals
   for (Int_t i = 0; i < F.size(); ++i)
     GetGenes(F[i]).SetCrowdingDistance(0);
+  // Pushing to go only for through fitness functions
   Int_t limit = fCrowdingObj ? setupPop.fNObjectives : setupPop.fNParam;
-  // std::cout << "Limit for calculating CrowDist (setupPop.fNObjectives :
-  // setupPop.fNParam) = " << limit << std::endl;
+  // For each fitness function sort individuals according each front
+  //Int_t limit = setupPop.fNObjectives;
+  std::cout << "Limit for calculating CrowDist (setupPop.fNObjectives : setupPop.fNParam) = " << limit << std::endl;
   for (Int_t m = 0; m < limit; ++m) {
     std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
+    // Setting INF values for boundaries values (min, max) 
     GetGenes(F[0]).SetCrowdingDistance(INF);
     if (F.size() > 1)
       GetGenes(F[F.size() - 1]).SetCrowdingDistance(INF);
     std::cout << "-==============================================-"
               << std::endl;
-    std::cout << "Min in our front = " << GetGenes(F[0]).GetGene(0)
+    std::cout << "Min in our front #0 = " << GetGenes(F[0]).GetGene(0)
               << std::endl;
-    std::cout << "Max in our front = " << GetGenes(F[F.size() - 1]).GetGene(0)
+    std::cout << "Max in our front #"<<(F.size() - 1)<<" = " << GetGenes(F[F.size() - 1]).GetGene(0)
               << std::endl;
     std::cout << "-==============================================-"
               << std::endl;
+    // Setting values of crowding distance for other elements
     for (Int_t i = 1; i < F.size() - 1; ++i) {
       if (GetGenes(F[i]).GetCrowdingDistance() != INF) {
         if (IsCrowdingObj() &&
             GetGenes(F[F.size() - 1]).GetFitness(m) !=
                 GetGenes(F[0]).GetFitness(m)) {
+          std::cout<<"Crowding distance is defined over objectives..."<<std::endl;
           Double_t dist = (GetGenes(F[i + 1]).GetFitness(m) -
                            GetGenes(F[i - 1]).GetFitness(m)) /
                           (GetGenes(F[F.size() - 1]).GetFitness(m) -
@@ -129,6 +138,7 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t front) {
         } else if (!IsCrowdingObj() &&
                    GetGenes(F[F.size() - 1]).GetGene(m) !=
                        GetGenes(F[0]).GetGene(m)) {
+          std::cout<<"Crowding distance is defined over parameters.."<<std::endl;
           Double_t dist =
               (GetGenes(F[i + 1]).GetGene(m) - GetGenes(F[i - 1]).GetGene(m)) /
               (GetGenes(F[F.size() - 1]).GetGene(m) -
@@ -139,11 +149,12 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t front) {
     }
   }
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    auto position = std::distance(fPopulation.begin(), it);
     std::cout << "-==============================================-"
               << std::endl;
     std::cout << "-==============================================-"
               << std::endl;
-    std::cout << "Printout after crowding distance steps:" << std::endl;
+    std::cout << "Printout gene # "<< position + 1 <<" after crowding distance steps:" << std::endl;
     Genes<T>::printGenes(*it);
     std::cout << "-==============================================-"
               << std::endl;
@@ -153,14 +164,18 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t front) {
 }
 
 template <class T> void Population<T>::FastNonDominantSorting() {
-  // std::cout << fPopulation.size() <<std::endl;
+  std::cout << "-==============================================-\n" << "Non-dominant sorting started - F[0] is filled.."<< std::endl;
   fFront.resize(1);
   fFront[0].clear();
 #pragma omp parallel for
   // Dominance checking for each Gene
   for (int i = 0; i < fPopulation.size(); ++i) {
+    //std::cout << "\nSize of population = "<< fPopulation.size() << std::endl;
+    // vector of individuals that dominated by p {selected individual}
     std::vector<Int_t> fDom;
+    // number of individuals that dominate p {selected individual} 
     Int_t fDomCount = 0;
+    // Selected individual p (passing through loop)
     Genes<T> &p = fPopulation[i];
     for (Int_t j = 0; j < fPopulation.size(); ++j) {
       Genes<T> &q = fPopulation[j];
@@ -174,8 +189,15 @@ template <class T> void Population<T>::FastNonDominantSorting() {
 #pragma omp critical
     {
       p.SetDominatedCounter(fDomCount);
+      //std::cout << "fDomCount for " << i << " individual, counter value = " << RED << fDomCount << RESET << std::endl;
       p.GetDominated().clear();
       p.SetDominated(fDom);
+      /*
+      for (auto i = fDom.begin(); i != fDom.end(); ++i){
+        std::cout << CYAN << *i << ' ' << RESET;
+      }
+      std::cout << "\n" << std::endl; 
+      */
       if (p.GetDominatedCounter() == 0) {
         p.SetRank(1);
         fFront[0].push_back(i);
@@ -185,13 +207,14 @@ template <class T> void Population<T>::FastNonDominantSorting() {
   std::sort(fFront[0].begin(), fFront[0].end());
   int fi = 1;
   while (fFront[fi - 1].size() > 0) {
-    std::vector<Int_t> &fronti = fFront[fi - 1];
+    std::cout << "Checking next fronts.." << std::endl;
     std::vector<Int_t> Q;
+    std::vector<Int_t> &fronti = fFront[fi - 1];
     for (Int_t i = 0; i < fronti.size(); ++i) {
       Genes<T> &p = fPopulation[fronti[i]];
       for (Int_t j = 0; j < p.GetDominated().size(); ++j) {
         Genes<T> &q = fPopulation[p.GetDominated(j)];
-        q.SetDominatedCounter(-1); // -= 1;
+        q.SetDominatedCounter((q.GetDominatedCounter() - 1));
         if (q.GetDominatedCounter() == 0) {
           q.SetRank(fi + 1);
           Q.push_back(p.GetDominated(j));
@@ -199,17 +222,23 @@ template <class T> void Population<T>::FastNonDominantSorting() {
       }
     }
     fi += 1;
-    fFront.push_back(Q);
+    if(Q.size() > 0){
+      fFront.push_back(Q);
+    }
+    else {
+      std::cout << "We have no more fronts to checkout.."<< std::endl;
+      return;
+    }
   }
   std::cout << "-==============================================-" << std::endl;
-  std::cout << "Front for Population fFront<T> = [";
   for (int i = 0; i < fFront.size(); ++i) {
+  std::cout << RED << "fFront<" << i << "> = [";  
     for (auto &it : fFront[i]) {
       std::cout << it << ' ';
     }
+    std::cout << "]"<< "\n" << RESET<< std::endl;
   }
-  std::cout << "]"
-            << "\n" << std::endl;
+  std::cout << "-==============================================-" << std::endl;
 }
 
 template <class T>
@@ -232,7 +261,7 @@ template <class T> Int_t Population<T>::Mutate() {
     //             "Population::Mutation() "
     //          << (*it).GetSetup()->GetNObjectives() << std::endl;
     tmp += it->Genes<T>::Mutate(setupind);
-    // this->printGenes(*it);
+    //this->printGenes(*it);
   }
   return tmp;
 }
@@ -350,11 +379,12 @@ template <class T> void Population<T>::Evaluate() {
 */
 template <class T> void Population<T>::Evaluation() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    auto position = std::distance(fPopulation.begin(), it);
     Genes<T>::Evaluate(setupPop, *it);
-    std::cout << "-==============================================-"
-              << std::endl;
-    std::cout << "Printout after sequence evaluation:" << std::endl;
-    Genes<T>::printGenes(*it);
+    //std::cout << "-==============================================-"
+    //          << std::endl;
+    //std::cout << "Printout of gene " << position + 1 << " after sequence evaluation:" << std::endl;
+    //Genes<T>::printGenes(*it);
   }
 }
 //#endif
@@ -377,13 +407,23 @@ template <class T> void Population<T>::EvaluationOpenMP() {
 #pragma omp parallel for
   for (int i = 0; i < GetPopulationSize(); ++i) {
     fPopulation[i].Evaluate(setupPop, fPopulation[i]);
-    std::cout << "-==============================================-"
-              << std::endl;
-    std::cout << "Printout after OPENMP evaluation:" << std::endl;
-    Genes<T>::printGenes(fPopulation[i]);
+    //std::cout << "-==============================================-"
+    //          << std::endl;
+    //std::cout << "Printout after OPENMP evaluation:" << std::endl;
+    //Genes<T>::printGenes(fPopulation[i]);
   }
 }
 //#endif
+
+template <class T> void Population<T>::Print(){
+    for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    auto position = std::distance(fPopulation.begin(), it);
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout of gene " << position + 1 << " for population:" << std::endl;
+    Genes<T>::printGenes(*it);
+  }
+}
 
 // Ugly instantiation
 template class Population<Double_t>;

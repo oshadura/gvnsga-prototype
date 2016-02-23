@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
   nsga2->SetNObjectives(2); // Memory, Time
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
-  nsga2->SetPopulationSize(12);
+  nsga2->SetPopulationSize(100);
   nsga2->SetEtaMut(10);
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);

@@ -78,16 +78,16 @@ int main(int argc, char *argv[]) {
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(1.0);
   nsga2->SetPMut(0.14285714);
-  nsga2->SetGenTotalNumber(300);
+  nsga2->SetGenTotalNumber(10);
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(7);
   nsga2->SetNObjectives(3); // Memory, Time
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
-  nsga2->SetPopulationSize(4);
+  nsga2->SetPopulationSize(100);
   nsga2->SetEtaMut(20);
   nsga2->SetEtaCross(15);
-  nsga2->SetEpsilonC(0.7);
+  nsga2->SetEpsilonC(0.01);
   nsga2->SetLimit(geantv->fInterval);
   nsga2->SetFunction(&DTLZ1);
   nsga2->Initialize();
