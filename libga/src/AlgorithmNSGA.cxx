@@ -1,6 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
+#include <random>
 
 #include "TRandom.h"
 #include "TRandom3.h"
@@ -64,7 +65,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 
   std::cout << "INITIALIZATION - Let's check NSGA2 configuration..." << std::endl;
 
-  if (fSizePop < 0)
+  if (fSizePop < 4 && fSizePop %4 !=0)
     throw ExceptionMessenger("You didn't enter size of Population");
   if (fNParam < 0)
     throw ExceptionMessenger("And what is about number of parameters?");
@@ -149,7 +150,8 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 void AlgorithmNSGA::Selection(
     Population<Double_t> &oldpop,
     Population<Double_t> &newpop) throw(ExceptionMessenger) {
-  static TRandom rand;
+  std::random_device rd;
+  std::mt19937 gen(rd());
   const Int_t PopSizeCheck = oldpop.GetPopulationSize();
   if ((newpop.GetPopulationSize()) != PopSizeCheck)
     throw ExceptionMessenger("OMG! New population has wrong size");
@@ -158,43 +160,44 @@ void AlgorithmNSGA::Selection(
     Population1[i] = Population2[i] = i;
   }
   for (Int_t i = 0; i < PopSizeCheck; ++i) {
-    std::swap(Population1[rand.Integer(PopSizeCheck - 1)], Population1[i]);
-    std::swap(Population1[rand.Integer(PopSizeCheck - 1)], Population2[i]);
+    std::uniform_int_distribution<> dist(i, PopSizeCheck - 1); 
+    //std::swap(Population1[rand.Integer(PopSizeCheck - 1)], Population1[i]);
+    //std::swap(Population2[rand.Integer(PopSizeCheck - 1)], Population2[i]);
+    //Int_t rand1 = rand() % (PopSizeCheck - 1) + i;
+    //std::swap(Population1[rand1], Population1[i]);
+    //Int_t rand2 = rand() % (PopSizeCheck - 1) + i;
+    //std::swap(Population2[rand2], Population2[i]);
+    std::swap(Population1[dist(gen)], Population1[i]);
+    std::swap(Population2[dist(gen)], Population2[i]);
   }
   for (Int_t i = 0; i < PopSizeCheck; i += 4) {
-    Genes<Double_t> &Combination11 = Tournament(
-        oldpop.GetGenes(Population1[i]), oldpop.GetGenes(Population1[i + 1]));
-    Genes<Double_t> &Combination12 =
-        Tournament(oldpop.GetGenes(Population1[i + 2]),
-                   oldpop.GetGenes(Population1[i + 3]));
-    Crossover(Combination11, Combination12, newpop.GetGenes(i),
-              newpop.GetGenes(i + 1));
-    Genes<Double_t> &Combination21 = Tournament(
-        oldpop.GetGenes(Population2[i]), oldpop.GetGenes(Population2[i + 1]));
-    Genes<Double_t> &Combination22 =
-        Tournament(oldpop.GetGenes(Population2[i + 2]),
-                   oldpop.GetGenes(Population2[i + 3]));
-    Crossover(Combination21, Combination22, newpop.GetGenes(i + 2),
-              newpop.GetGenes(i + 3));
+    Genes<Double_t> &Combination11 = Tournament(oldpop.GetGenes(Population1[i]), oldpop.GetGenes(Population1[i + 1]));
+    Genes<Double_t> &Combination12 = Tournament(oldpop.GetGenes(Population1[i + 2]), oldpop.GetGenes(Population1[i + 3]));
+    Crossover(Combination11, Combination12, newpop.GetGenes(i), newpop.GetGenes(i + 1));
+    Genes<Double_t> &Combination21 = Tournament(oldpop.GetGenes(Population2[i]), oldpop.GetGenes(Population2[i + 1]));
+    Genes<Double_t> &Combination22 = Tournament(oldpop.GetGenes(Population2[i + 2]), oldpop.GetGenes(Population2[i + 3]));
+    Crossover(Combination21, Combination22, newpop.GetGenes(i + 2), newpop.GetGenes(i + 3));
   }
 }
 
 Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
                                            Genes<Double_t> &ind2) const {
-  static TRandom rnd;
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> dist(0,1);
   const Functions *setupind = ind1.GetSetup();
   // std::cout << "So so, just to be sure - number of objectives on Tournament()
   // " << ind1.GetSetup()->GetNObjectives() << std::endl;
   Int_t fFlag = ind1.CheckDominance(const_cast<Functions *>(setupind), &ind2);
   if (fFlag == 1) // Yes
     return ind1;
-  else if (fFlag == -1) // Oposite
+  else if (fFlag == -1) // Opposite
     return ind2;
   else if (ind1.GetCrowdingDistance() > ind2.GetCrowdingDistance())
     return ind1;
   else if (ind2.GetCrowdingDistance() > ind1.GetCrowdingDistance())
     return ind2;
-  else if (rnd.Rndm() <= 0.5)
+  else if (dist(gen) <= 0.5)
     return ind1;
   else
     return ind2;
@@ -204,12 +207,15 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
                               const Genes<Double_t> &parent2,
                               Genes<Double_t> &child1,
                               Genes<Double_t> &child2) {
-  static TRandom rnd;
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_real_distribution<> dist(0,1);
   Double_t Component1, Component2, LimitDown, LimitUp;
   Double_t Crossover1, Crossover2;
   Double_t Alpha, Beta, Betaq;
-  Int_t Rand = rnd.Rndm();
-  if (Rand <= GetPCross()) { // WTF?
+  //Int_t Rand = rnd.Rndm();
+  Int_t Rand = dist(gen);
+  if (Rand <= GetPCross()) {
     fNCross++;
     for (Int_t i = 0; i < fNParam; ++i) {
       if (fabs(parent1.GetGene(i) - parent2.GetGene(i)) > EPS) {
@@ -247,7 +253,7 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
         // std::cout << "DEBUG: Crossover1 = "<< Crossover2 << std::endl;
         Crossover2 = fmin(fmax(Crossover2, LimitDown), LimitUp);
         // std::cout << "DEBUG: Crossover2 = "<< Crossover2 << std::endl;
-        if (rnd.Uniform() <= 0.5) {
+        if (Rand <= 0.5) {
           child1.SetGene(i, Crossover2);
           // std::cout << "==============DEBUG=================" << std::endl;
           // child1.Genes<Double_t>::printGenes(child1);
@@ -290,10 +296,11 @@ void AlgorithmNSGA::NextStep() {
             << "\n" << std::endl;
   std::cout << "New generation #" << fGen + 1 << std::endl;
   Selection(*fParentPop, *fChildPop);
+  fChildPop->Print();
   fNMut = fChildPop->Mutate();
   std::cout << "-==============================================-"<<
   std::endl;
-  std::cout << "Number of mutations in whole generation " << fNMut << "\n";
+  std::cout << "Number of mutations in ChildPop: " << fNMut << "\n";
   fChildPop->GenCounter = fNGen + 1;
   //#ifdef ENABLE_GEANTV
   //  fChildPop->Evaluate(fProp);
@@ -302,7 +309,6 @@ void AlgorithmNSGA::NextStep() {
   //#endif
   // fNMut += fNMut;
   fMixedPop->Merge(*fParentPop, *fChildPop);
-  fMixedPop->Print();
   fMixedPop->GenCounter = fGen + 1;
   std::cout << "Calculation of FastNDS for new mixed population" << std::endl;
   fMixedPop->FastNonDominantSorting();
@@ -310,7 +316,6 @@ void AlgorithmNSGA::NextStep() {
   fParentPop->fPopulation.clear();
   //fParentPop->SetPopulationSize(0);
   Int_t i = 0;
-  ///////////////////////////////////////////////////////////////
   std::cout << "-==============================================-" << std::endl;
   for (int i = 0; i < fMixedPop->fFront.size(); ++i) {
   std::cout << CYAN << "MixedPop: fFront<" << i << "> = [";  
@@ -319,7 +324,6 @@ void AlgorithmNSGA::NextStep() {
     }
     std::cout << "]"<< "\n" << RESET<< std::endl;
   }
-  ///////////////////////////////////////////////////////////////
   std::cout << "Next step: until |Pt+1| + |Fi| <= N" << std::endl;
   while (fParentPop->GetPopulationSize() + fMixedPop->GetFront(i).size() < fSizePop) {
     std::cout << "fParentPop->GetPopulationSize() = " << fParentPop->GetPopulationSize() << std::endl;
@@ -357,7 +361,7 @@ void AlgorithmNSGA::NextStep() {
   //std::cout << "-==============================================-" << std::endl;
   //fChildPop->Print();
   //std::cout << "-==============================================-" << std::endl;
-  //fGen += 1;
+  fGen += 1;
 }
 
 void AlgorithmNSGA::Evolution() {
