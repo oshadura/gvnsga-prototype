@@ -36,6 +36,7 @@ public:
   void Evolution();
   Double_t GetPCross() const { return fPCross; }
   Double_t GetEtaCross() const { return fEtaCross; }
+  Int_t GetNParam() const { return fNParam; }
   void SetPCross(Double_t pcross) { fPCross = pcross; }
   void SetEtaCross(Double_t etacross) { fEtaCross = etacross; }
   Int_t GetGenTotalNumber() const { return fNGen; }
@@ -105,6 +106,7 @@ public:
   Population<Double_t> *fParentPop;
   Population<Double_t> *fChildPop;
   Population<Double_t> *fMixedPop;
+  
 
   ClassDef(AlgorithmNSGA, 1)
 };

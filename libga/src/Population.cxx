@@ -80,7 +80,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << "Creating new individual.." << std::endl;
   }
-  //WritePopulationTree(*this, "NSGA.root");
+  WritePopulationTree(*this, "NSGA.root");
 }
 #endif
 
@@ -252,18 +252,18 @@ void Population<T>::Merge(const Population<T> &population1,
 }
 
 template <class T> Int_t Population<T>::Mutate() {
-  Int_t tmp;
+  Int_t mutvalue;
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     const Functions *setupind = (*it).GetSetup();
-    // std::cout << "-==============================================-"
-    //          << std::endl;
+    //std::cout << "-==============================================-" << std::endl;
     // std::cout << "So so, just to be sure -> number of objectives in "
     //             "Population::Mutation() "
     //          << (*it).GetSetup()->GetNObjectives() << std::endl;
-    tmp += it->Genes<T>::Mutate(setupind);
+    mutvalue += it->Genes<T>::Mutate(setupind);
     //this->printGenes(*it);
   }
-  return tmp;
+  std::cout << "Print number of mutations in Population: " << mutvalue << std::endl;
+  return mutvalue;
 }
 
 template <class T>

@@ -66,10 +66,10 @@ int main(int argc, char *argv[]) {
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
   nsga2->SetPMut(0.7);
-  nsga2->SetGenTotalNumber(300);
+  nsga2->SetGenTotalNumber(10);
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(6);
-  nsga2->SetNObjectives(2); // Memory, Time
+  nsga2->SetNObjectives(3); // Memory, Time
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
   nsga2->SetPopulationSize(100);

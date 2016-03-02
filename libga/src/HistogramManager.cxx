@@ -13,7 +13,7 @@
 
 ClassImp(HistogramManager)
 
-    HistogramManager *HistogramManager::HistoInstance = 0;
+HistogramManager *HistogramManager::HistoInstance = 0;
 
 HistogramManager *HistogramManager::Instance() {
   if (HistoInstance == 0)
@@ -21,14 +21,24 @@ HistogramManager *HistogramManager::Instance() {
   return HistoInstance;
 }
 
-HistogramManager::HistogramManager() {
+#ifdef ENABLE_GEANTV
+HistogramManager::HistogramManager():hAllev(0),hBuffev(0),hThread(0), hPriority(0), hSteps(0) {
+/*
   hAllev = new TH1F("hAllev", "Totall number of events", 100, 50, 50);
   hBuffev = new TH1F("hBuffev", "Buffered events", 100, 50, 50);
   hThread = new TH1F("hThread", "Number of threads", 100, -16, 16);
   hPriority = new TH1F("hPriority", "Priority", 100, -1, 1);
   hSteps = new TH1F("hSteps", "Number steps for learning", 1000, 0, 1000);
   hVector = new TH1F("hVector", "Vector size", 100, 0, 100);
+*/
 }
+#else
+HistogramManager::HistogramManager():hx(0) {
+/*
+  hx = new TH1F("hx", "DTLZx benchmark", 100, 50, 50);
+*/
+}
+#endif
 
 HistogramManager::~HistogramManager() { HistoInstance = 0; }
 
@@ -83,7 +93,31 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *file) {
       }
       return false;
     }
+    // Creating monitoring canvas
     for (auto it = pop.fPopulation.begin(); it != pop.fPopulation.end(); ++it) {
+#ifdef ENABLE_GEANTV
+    hAllev = new TH1F("hAllev", "Totall number of events", 100, 50, 50);
+    hAllev->GetYaxis()->SetRangeUser(0, 1);
+    hAllev->GetXaxis()->SetNdivisions(nthreads + 1, true);
+    hAllev->GetYaxis()->SetNdivisions(10, true);
+    hAllev->SetFillColor(kGreen);
+    hAllev->SetLineColor(0);
+    hAllev->SetStats(false);
+    hAllev->Draw();
+
+    hBuffev = new TH1F("hBuffev", "Buffered events", 100, 50, 50);
+    hBuffev->SetFillColor(kRed);
+    hBuffev->SetFillStyle(3001);
+    hBuffev->SetLineColor(0);
+    hBuffev->SetStats(false);
+    //cmon->cd(++ipad);
+    hBuffev->Draw();
+#else
+
+#endif
+
+    for (auto it = pop.fPopulation.begin(); it != pop.fPopulation.end(); ++it) {
+#ifdef ENABLE_GEANTV
       hAllev->Fill(it->GetAllev(*it));
       hBuffev->Fill(it->GetBuffev(*it));
       hThread->Fill(it->GetThread(*it));
@@ -91,6 +125,9 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *file) {
       hSteps->Fill(it->GetSteps(*it));
       hVector->Fill(it->GetVector(*it));
       hMaxVector->Fill(it->GetMaxVector(*it));
+#else
+      hx->Fill(it->GetGene(0));
+#endif
     }
   }
   fHisto->cd();
@@ -100,6 +137,7 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *file) {
 }
 
 void HistogramManager::Reset() {
+#ifdef ENABLE_GEANTV
   hAllev = 0;
   hBuffev = 0;
   hThread = 0;
@@ -107,6 +145,8 @@ void HistogramManager::Reset() {
   hSteps = 0;
   hVector = 0;
   hMaxVector = 0;
-  hMemory = 0;
-  hTime = 0;
+#else
+  hx = 0;
+#endif
+
 }

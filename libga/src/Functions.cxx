@@ -20,7 +20,7 @@ ClassImp(Functions)
 
 void Functions::SetInterval() {
   for (Int_t i = 0; i < fNParam; ++i) {
-    SetIntervalLimit(i, 1, 100);
+    SetIntervalLimit(i, 0, 1);
   }
 }
 

@@ -17,6 +17,7 @@ private:
   //========== TFile ===========//
   // TFile *fHisto;
   //========= Individual ======//
+#ifdef ENABLE_GEANTV
   TH1F *hAllev;     //#1
   TH1F *hBuffev;    //#3
   TH1F *hThread;    //#4
@@ -24,10 +25,10 @@ private:
   TH1F *hSteps;     //#5
   TH1F *hVector;    //#6
   TH1F *hMaxVector; //#7
-  //========= Fitness ========//
-  TH1F *hMemory; //#1
-  TH1F *hTime;   //#2
-
+#else
+  TH1F *hx;
+#endif
+  
 public:
   HistogramManager();
   HistogramManager *Instance();
@@ -38,6 +39,9 @@ public:
 
 private:
   static HistogramManager *HistoInstance;
+
+  HistogramManager(const HistogramManager &);
+  HistogramManager &operator=(const HistogramManager &);
 
   ClassDef(HistogramManager, 1)
 };
