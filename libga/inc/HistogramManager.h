@@ -14,8 +14,6 @@
 
 class HistogramManager : public TObject {
 private:
-  //========== TFile ===========//
-  // TFile *fHisto;
   //========= Individual ======//
 #ifdef ENABLE_GEANTV
   TH1F *hAllev;     //#1
@@ -28,12 +26,12 @@ private:
 #else
   TH1F *hx;
 #endif
-  
+
 public:
   HistogramManager();
   HistogramManager *Instance();
   virtual ~HistogramManager();
-  Bool_t HistoFill(Population<Double_t> &pop, char *file);
+  Bool_t HistoFill(Population<Double_t> &pop, char *hfile);
   Bool_t CheckValue(ROOT::Internal::TTreeReaderValueBase *value);
   void Reset();
 

@@ -71,7 +71,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
-  WritePopulationTree(*this, "NSGA.root");
+  //WritePopulationTree(*this, "NSGA.root");
 }
 #else
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
@@ -80,7 +80,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << "Creating new individual.." << std::endl;
   }
-  WritePopulationTree(*this, "NSGA.root");
+  //WritePopulationTree(*this, "NSGA.root");
 }
 #endif
 
@@ -268,42 +268,41 @@ template <class T> Int_t Population<T>::Mutate() {
 
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
-
-  // if (!file) {
-  gSystem->Load("libga/libGA.so");
-  TFile *f = new TFile(file, "RECREATE");
-  TTree *tree = new TTree("GA", "Genetic Algorithm TTree");
-  tree->Branch("Pop", "Pop", &pop);
-  for (int i = 0; i < pop.GetPopulationSize(); ++i) {
-    for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end(); ++it) {
-      tree->Branch("Genes", "Genes", &it);
+  if (!file) {
+    gSystem->Load("libga/libGA.so");
+    TFile *f = new TFile(file, "RECREATE");
+    TTree *tree = new TTree("GA", "Genetic Algorithm TTree");
+    tree->Branch("Pop", "Pop", &pop);
+    for (int i = 0; i < pop.GetPopulationSize(); ++i) {
+      for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end(); ++it) {
+        tree->Branch("Genes", "Genes", &it);
+      }
     }
+    tree->Print();
+    tree->Write();
+    f->cd();
+    f->Close();
+    fHisto = HistogramManager::Instance();
+    fHisto->HistoFill(pop, const_cast<char *>(file));
   }
-  // tree->Fill(); // Doesnt work!!!
-  tree->Print();
-  tree->Write();
-  fHisto->HistoFill(pop, const_cast<char *>(file));
-  //}
-  /*
   else {
-    TFile *f = TFile::Open(file, "RECREATE");
-    if (f->IsZombie()) {
-    std::cout << "Error opening file" << std::endl;
-    exit(-1);
-    }
-    */
-  /*
-  else {
-    TFile *friend = new TFile("NSGA-friend.root", "RECREATE");
+    TFile *friendtree = new TFile("NSGA-friend.root", "RECREATE");
     TTree *treecopy = new TTree("GA", "Genetic Algorithm TTree");
     treecopy->Branch("Pop", "Pop", &pop);
-    TFile *f = new TFile("NSGA.root");
+    TFile *f = TFile::Open("NSGA.root");
+    if (f->IsZombie()) {
+      std::cout << "Error opening file" << std::endl;
+      exit(-1);
+    }
     TTree *tree = (TTree *)f->Get("tree");
     tree->AddFriend("treecopy", "NSGA-friend.root");
     tree->Fill();
     tree->Print();
+    f->cd();
+    f->Close();
+    friendtree->cd();
+    friendtree->Close();
   }
-  */
 }
 
 template <class T>

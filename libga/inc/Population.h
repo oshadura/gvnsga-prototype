@@ -21,6 +21,10 @@
 #include "TH1.h"
 #include "TFile.h"
 #include "TObject.h"
+#include "TDirectory.h"
+#include "TCanvas.h"
+#include "TSystem.h"
+#include "TROOT.h"
 
 #include <vector>
 #include <iostream>
@@ -68,7 +72,10 @@ public:
   }
   std::vector<Genes<T>> operator=(Population<T> pop) { return fPopulation; }
 
-  virtual ~Population() {}
+  virtual ~Population() {
+    delete fHisto;
+  }
+
   Genes<T> &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
     fPopulation.emplace(fPopulation.begin() + i, value);
