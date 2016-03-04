@@ -44,7 +44,6 @@ void DTLZ3(Genes<Double_t> &individual) {
     }
     individual.SetFitness((i - 1), f);
   }
-
   return;
 }
 
