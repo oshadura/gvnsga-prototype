@@ -344,7 +344,7 @@ void AlgorithmNSGA::NextStep() {
   fMixedPop->FastNonDominantSorting();
   std::cout << "-==============================================-" << std::endl;
   fParentPop->fPopulation.clear();
-  //fParentPop->SetPopulationSize(0);
+  fParentPop->SetPopulationSize(0);
   Int_t i = 0;
   std::cout << "-==============================================-" << std::endl;
   for (int i = 0; i < fMixedPop->fFront.size(); ++i) {
@@ -392,7 +392,8 @@ void AlgorithmNSGA::NextStep() {
   //fChildPop->Print();
   //std::cout << "-==============================================-" << std::endl;
   fGen += 1;
-}
+  fParentPop->Print();
+ }
 
 void AlgorithmNSGA::Evolution() {
   while (fGen < GetGenTotalNumber()) {

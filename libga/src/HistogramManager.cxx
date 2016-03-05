@@ -45,6 +45,7 @@ HistogramManager::CheckValue(ROOT::Internal::TTreeReaderValueBase *value) {
 }
 
 Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
+  std::cout << "Filling histograms.." << std::endl;
   TFile *file = TFile::Open(hfile);
   TTreeReader reader("Population", file);
   TTreeReaderArray<std::vector<std::vector<Double_t>>> Population(reader,

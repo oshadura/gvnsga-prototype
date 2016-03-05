@@ -262,14 +262,35 @@ template <class T> Int_t Population<T>::Mutate() {
     mutvalue += it->Genes<T>::Mutate(setupind);
     //this->printGenes(*it);
   }
-  std::cout << "Print number of mutations in Population: " << mutvalue << std::endl;
+  //std::cout << "Print number of mutations in Population: " << mutvalue << std::endl;
   return mutvalue;
 }
 
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
-  if (!file) {
-    gSystem->Load("libga/libGA.so");
+  fHisto = HistogramManager::Instance();
+  if (!gSystem->AccessPathName(file, kFileExists)) {
+    TFile *friendtree = new TFile("NSGApopulations.root", "RECREATE");
+    TTree *treecopy = new TTree("GAnew", "Genetic Algorithm TTree");
+    treecopy->Branch("Pop", "Pop", &pop);
+    TFile *f = TFile::Open("NSGA.root");
+    if (f->IsZombie()) {
+      std::cout << "Error opening file" << std::endl;
+      exit(-1);
+    }
+    //TTree *tree = (TTree *)f->Get("tree");
+    TTree *tree = (TTree *)f->Get("GA");
+    //tree->AddFriend("treecopy", "NSGA-friend.root");
+    tree->AddFriend("GAnew", "NSGApopulations.root");
+    tree->Fill();
+    //tree->Print();
+    tree->Write();
+    fHisto->HistoFill(pop, "NSGApopulations.root");
+    f->cd();
+    f->Close();
+    friendtree->cd();
+    friendtree->Close();
+  } else {
     TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("GA", "Genetic Algorithm TTree");
     tree->Branch("Pop", "Pop", &pop);
@@ -278,30 +299,11 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
         tree->Branch("Genes", "Genes", &it);
       }
     }
-    tree->Print();
+    //tree->Print();
     tree->Write();
-    f->cd();
-    f->Close();
-    fHisto = HistogramManager::Instance();
     fHisto->HistoFill(pop, const_cast<char *>(file));
-  }
-  else {
-    TFile *friendtree = new TFile("NSGA-friend.root", "RECREATE");
-    TTree *treecopy = new TTree("GA", "Genetic Algorithm TTree");
-    treecopy->Branch("Pop", "Pop", &pop);
-    TFile *f = TFile::Open("NSGA.root");
-    if (f->IsZombie()) {
-      std::cout << "Error opening file" << std::endl;
-      exit(-1);
-    }
-    TTree *tree = (TTree *)f->Get("tree");
-    tree->AddFriend("treecopy", "NSGA-friend.root");
-    tree->Fill();
-    tree->Print();
     f->cd();
     f->Close();
-    friendtree->cd();
-    friendtree->Close();
   }
 }
 

@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(1.0);
   nsga2->SetPMut(0.14285714);
-  nsga2->SetGenTotalNumber(10);
+  nsga2->SetGenTotalNumber(100);
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(7);
   nsga2->SetNObjectives(3); // Memory, Time
