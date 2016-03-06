@@ -141,7 +141,7 @@ void runApp(Genes<Double_t> &individual) {
 #endif
   delete prop;
   individual.SetFitness(0, prop->fTimer->RealTime());
-  individual.SetFitness(0, fitness->);
+  individual.SetFitness(1, fitness->GetmaxMemoryResident());
   // SHIT!
   fitness.HistOutputFitness("fitness.root");
 #ifdef ENABLE_PERFMON

@@ -19,7 +19,7 @@ public:
     hfile->Close();
     delete hfile;
   }
-
+  Double_t GetmaxMemResident() const { return maxMemResident; }
   void LogMemoryFitness();
   void LogTimeFitness();
   void HistOutputFitness(std::string file);
@@ -29,6 +29,7 @@ private:
   TH1F *hMemVirt;
   TH1F *hMemRes;
   std::vector<ProcInfo_t> fMemoryVector;
+  Double_t maxMemResident;
 
   ClassDef(GeantVFitness, 1)
 };
