@@ -249,7 +249,7 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
         }
         if(hThread){
           mon->cd(++ipad);
-          nThread->Draw();
+          hThread->Draw();
         }
         if(hPriority){
           mon->cd(++ipad);
