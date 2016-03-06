@@ -30,35 +30,32 @@
 #define COPROCESSOR_REQUEST false
 #endif
 
-static const double halfpi = boost::math::constants::pi<Double_t>() / 2.0;
+static const double pi = boost::math::constants::pi<Double_t>();
 
-void DTLZ5(Genes<Double_t> &individual) {
-  Int_t n = individual.GetSetup()->GetNParam();      // 12
+void DTLZ7(Genes<Double_t> &individual) {
+  Int_t n = individual.GetSetup()->GetNParam();      // 30
   Int_t m = individual.GetSetup()->GetNObjectives(); // 3
   //
-  Int_t k = n - m + 1;                               // 10
+  Int_t k = n - m + 1;                               // 28
   //
   Double_t g = 0.0;
   //
-  for (Int_t i = m - 1; i < n; ++i) {
+  for (Int_t i = 0; i < m - 1; ++i) {
     individual.SetFitness(i, individual.GetGene(i));
   }
   //
-  for(Int_t i = 1; i < theta.size(); i+=1){
-    theta[i] = halfpi/(2*(1 + g))*(1 + 2*g*individual.GetGene(i));
+  for(Int_t i = m - 1; i < n; ++i){
+    g += individual.GetGene(i);
   }
   //
-  for (Int_t i = 0; i < m; ++i) {
-    Double_t f = (1 + g);
-    size_t i = 0;
-    for (; i + m <= m - 2; ++j) {
-      f *= cos(theta[i]);
-    }
-    if (m > 0) {
-      f *= sin(theta[i]);
-    }
-    individual.SetFitness(i, f);
+  g = 1 + 9*g/k;
+  //
+  Double_t h = m;
+  //
+  for (Int_t j = 0; j < m -1; ++j) {
+    h -=individual.GetGene(j)/(1 + g)*(1 + sin(3*pi*individual.GetGene(j)));
   }
+  individual.SetFitness(m -1, (1 + g)*h);
   return;
 }
 
@@ -67,6 +64,29 @@ int main(int argc, char *argv[]) {
   Functions *geantv = new Functions();
   // geantv->SetInterval(); // don't work because we initialize fNparam after...
   // STUPID SOLUTION // change on .emplace()
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
+  geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
   geantv->fInterval.push_back(std::make_pair(0, 1));
@@ -85,10 +105,10 @@ int main(int argc, char *argv[]) {
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(1.0);
-  nsga2->SetPMut(0.14285714);
-  nsga2->SetGenTotalNumber(100);
+  nsga2->SetPMut(0.033333);
+  nsga2->SetGenTotalNumber(500);
   nsga2->SetNCons(0); // First version will be constrainless
-  nsga2->SetNParam(7);
+  nsga2->SetNParam(30);
   nsga2->SetNObjectives(3); // Memory, Time
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
@@ -97,7 +117,7 @@ int main(int argc, char *argv[]) {
   nsga2->SetEtaCross(15);
   nsga2->SetEpsilonC(0.01);
   nsga2->SetLimit(geantv->fInterval);
-  nsga2->SetFunction(&DTLZ5);
+  nsga2->SetFunction(&DTLZ7);
   nsga2->Initialize();
   nsga2->Evolution();
   return 0;

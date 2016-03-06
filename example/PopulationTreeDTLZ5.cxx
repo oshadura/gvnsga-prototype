@@ -27,9 +27,7 @@ void DTLZ5(Genes<Double_t> &individual) {
   Int_t n = individual.GetSetup()->GetNParam();      // 10
   Int_t m = individual.GetSetup()->GetNObjectives(); // 3
   Int_t k = n - m + 1;                               // 10
-
   Double_t g = 0.0;
-
   for (Int_t i = m - 1; i < n; ++i) {
     g += pow(individual.GetGene(i) - 0.5, 2);
   }
@@ -37,18 +35,18 @@ void DTLZ5(Genes<Double_t> &individual) {
   std::vector<Double_t> theta(n);
   theta[0] = individual.GetGene(0)*halfpi;
   for(Int_t i = 1; i < theta.size(); ++i){
-    theta[i] = halfpi/(2*(1 + g))*(1 + 2*g*individual.GetGene(i));
+    theta[i] = (halfpi/(2*(1 + g)))*(1 + 2*g*individual.GetGene(i));
   }
-  for (Int_t i = 0; i < m; ++i) {
+  for (Int_t l = 0; l < m; ++l) {
     Double_t f = (1 + g);
     Int_t j = 0;
-    for (; j + m <= m - 2; ++j) {
+    for (; j + l <= m - 2; ++j) {
       f *= cos(theta[j]);
     }
-    if (i > 0) {
+    if (l > 0) {
       f *= sin(theta[j]);
     }
-    individual.SetFitness(i, f);
+    individual.SetFitness(l, f);
   }
   return;
 }
