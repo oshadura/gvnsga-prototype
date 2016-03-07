@@ -63,9 +63,10 @@ AlgorithmNSGA::~AlgorithmNSGA() {
 
 void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
 
-  std::cout << "INITIALIZATION - Let's check NSGA2 configuration..." << std::endl;
+  std::cout << "INITIALIZATION - Let's check NSGA2 configuration..."
+            << std::endl;
 
-  if (fSizePop < 4 && fSizePop %4 !=0)
+  if (fSizePop < 4 && fSizePop % 4 != 0)
     throw ExceptionMessenger("You didn't enter size of Population");
   if (fNParam < 0)
     throw ExceptionMessenger("And what is about number of parameters?");
@@ -160,33 +161,45 @@ void AlgorithmNSGA::Selection(
     Population1[i] = Population2[i] = i;
   }
   for (Int_t i = 0; i < PopSizeCheck; ++i) {
-    std::uniform_int_distribution<> dist(i, PopSizeCheck - 1); 
-    //std::swap(Population1[rand.Integer(PopSizeCheck - 1)], Population1[i]);
-    //std::swap(Population2[rand.Integer(PopSizeCheck - 1)], Population2[i]);
-    //Int_t rand1 = rand() % (PopSizeCheck - 1) + i;
-    //std::swap(Population1[rand1], Population1[i]);
-    //Int_t rand2 = rand() % (PopSizeCheck - 1) + i;
-    //std::swap(Population2[rand2], Population2[i]);
+    std::uniform_int_distribution<> dist(i, PopSizeCheck - 1);
+    // std::swap(Population1[rand.Integer(PopSizeCheck - 1)], Population1[i]);
+    // std::swap(Population2[rand.Integer(PopSizeCheck - 1)], Population2[i]);
+    // Int_t rand1 = rand() % (PopSizeCheck - 1) + i;
+    // std::swap(Population1[rand1], Population1[i]);
+    // Int_t rand2 = rand() % (PopSizeCheck - 1) + i;
+    // std::swap(Population2[rand2], Population2[i]);
     std::swap(Population1[dist(gen)], Population1[i]);
     std::swap(Population2[dist(gen)], Population2[i]);
   }
   for (Int_t i = 0; i < PopSizeCheck; i += 4) {
-    Genes<Double_t> &Combination11 = Tournament(oldpop.GetGenes(Population1[i]), oldpop.GetGenes(Population1[i + 1]));
-    Genes<Double_t> &Combination12 = Tournament(oldpop.GetGenes(Population1[i + 2]), oldpop.GetGenes(Population1[i + 3]));
-    //std::cout << "-================== Combination11 & Combination12 ============================-" << std::endl;
-    //Combination11.Genes<Double_t>::printGenes(Combination11);
-    //std::cout << "-==============================================-" << std::endl;
-    //Combination12.Genes<Double_t>::printGenes(Combination12);
-    Crossover(Combination11, Combination12, newpop.GetGenes(i), newpop.GetGenes(i + 1));
-    Genes<Double_t> &Combination21 = Tournament(oldpop.GetGenes(Population2[i]), oldpop.GetGenes(Population2[i + 1]));
-    Genes<Double_t> &Combination22 = Tournament(oldpop.GetGenes(Population2[i + 2]), oldpop.GetGenes(Population2[i + 3]));
-    //std::cout << "-================== Combination21 & Combination22 ============================-" << std::endl;
-    //Combination21.Genes<Double_t>::printGenes(Combination21);
-    //std::cout << "-==============================================-" << std::endl;
-    //Combination22.Genes<Double_t>::printGenes(Combination22);
-    //std::cout << "-==============================================-" << std::endl;
-    Crossover(Combination21, Combination22, newpop.GetGenes(i + 2), newpop.GetGenes(i + 3));
-
+    Genes<Double_t> &Combination11 = Tournament(
+        oldpop.GetGenes(Population1[i]), oldpop.GetGenes(Population1[i + 1]));
+    Genes<Double_t> &Combination12 =
+        Tournament(oldpop.GetGenes(Population1[i + 2]),
+                   oldpop.GetGenes(Population1[i + 3]));
+    // std::cout << "-================== Combination11 & Combination12
+    // ============================-" << std::endl;
+    // Combination11.Genes<Double_t>::printGenes(Combination11);
+    // std::cout << "-==============================================-" <<
+    // std::endl;
+    // Combination12.Genes<Double_t>::printGenes(Combination12);
+    Crossover(Combination11, Combination12, newpop.GetGenes(i),
+              newpop.GetGenes(i + 1));
+    Genes<Double_t> &Combination21 = Tournament(
+        oldpop.GetGenes(Population2[i]), oldpop.GetGenes(Population2[i + 1]));
+    Genes<Double_t> &Combination22 =
+        Tournament(oldpop.GetGenes(Population2[i + 2]),
+                   oldpop.GetGenes(Population2[i + 3]));
+    // std::cout << "-================== Combination21 & Combination22
+    // ============================-" << std::endl;
+    // Combination21.Genes<Double_t>::printGenes(Combination21);
+    // std::cout << "-==============================================-" <<
+    // std::endl;
+    // Combination22.Genes<Double_t>::printGenes(Combination22);
+    // std::cout << "-==============================================-" <<
+    // std::endl;
+    Crossover(Combination21, Combination22, newpop.GetGenes(i + 2),
+              newpop.GetGenes(i + 3));
   }
 }
 
@@ -194,7 +207,7 @@ Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
                                            Genes<Double_t> &ind2) const {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<> dist(0,1);
+  std::uniform_real_distribution<> dist(0, 1);
   const Functions *setupind = ind1.GetSetup();
   // std::cout << "So so, just to be sure - number of objectives on Tournament()
   // " << ind1.GetSetup()->GetNObjectives() << std::endl;
@@ -219,7 +232,7 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
                               Genes<Double_t> &child2) {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<> dist(0,1);
+  std::uniform_real_distribution<> dist(0, 1);
   Double_t Component1, Component2, LimitDown, LimitUp;
   Double_t Crossover1, Crossover2;
   Double32_t Alpha, Beta, Betaq;
@@ -231,86 +244,101 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
       if (fabs(parent1.GetGene(i) - parent2.GetGene(i)) > EPS) {
         if (parent1.GetGene(i) < parent2.GetGene(i)) {
           Component1 = parent1.GetGene(i);
-          //std::cout << "Component1 = " << Component1 << std::endl;
+          // std::cout << "Component1 = " << Component1 << std::endl;
           Component2 = parent2.GetGene(i);
-          //std::cout << "Component2 = " << Component2 << std::endl;
+          // std::cout << "Component2 = " << Component2 << std::endl;
         } else {
           Component1 = parent2.GetGene(i);
-          //std::cout << "Component1 = " << Component1 << std::endl;
+          // std::cout << "Component1 = " << Component1 << std::endl;
           Component2 = parent1.GetGene(i);
-          //std::cout << "Component2 = " << Component2 << std::endl;
+          // std::cout << "Component2 = " << Component2 << std::endl;
         }
         LimitDown = fInterval[i].first;
         LimitUp = fInterval[i].second;
-        //std::cout << "-======================= Preparations before Crossover1 =======================-"<< std::endl;
+        // std::cout << "-======================= Preparations before Crossover1
+        // =======================-"<< std::endl;
         Beta =
             1.0 + (2.0 * (Component1 - LimitDown) / (Component2 - Component1));
-        //std::cout << "Beta = " << Beta << std::endl;
+        // std::cout << "Beta = " << Beta << std::endl;
         Alpha = 2.0 - pow(Beta, -(GetEtaCross() + 1.0));
-        //std::cout << "Alpha = " << Alpha << std::endl;
+        // std::cout << "Alpha = " << Alpha << std::endl;
 
-        if (Rand <= (1/Alpha)) { // This is a contracting crossover
+        if (Rand <= (1 / Alpha)) { // This is a contracting crossover
           Betaq = pow((Rand * Alpha), (1.0 / (GetEtaCross() + 1.0)));
-          //std::cout << "Betaq = " << Betaq << std::endl;
+          // std::cout << "Betaq = " << Betaq << std::endl;
         } else { // This is an expanding crossover
           Betaq =
               pow((1.0 / (2.0 - Rand * Alpha)), (1.0 / (GetEtaCross() + 1.0)));
-          //std::cout << "Betaq = " << Betaq << std::endl;
+          // std::cout << "Betaq = " << Betaq << std::endl;
         }
         Crossover1 = 0.5 * ((Component1 + Component2) -
                             Betaq * (Component2 - Component1));
-        //std::cout << "-======================= Preparations before Crossover2 =======================-"<< std::endl;
+        // std::cout << "-======================= Preparations before Crossover2
+        // =======================-"<< std::endl;
         Beta = 1.0 + (2.0 * (LimitUp - Component2) / (Component2 - Component1));
-        //std::cout << "Beta = " << Beta << std::endl;
+        // std::cout << "Beta = " << Beta << std::endl;
         Alpha = 2.0 - pow(Beta, -(GetEtaCross() + 1.0));
-        //std::cout << "Alpha = " << Alpha << std::endl;
-        if (Rand <= (1/Alpha)) { // This is a contracting crossover
+        // std::cout << "Alpha = " << Alpha << std::endl;
+        if (Rand <= (1 / Alpha)) { // This is a contracting crossover
           Betaq = pow((Rand * Alpha), (1.0 / (GetEtaCross() + 1.0)));
-          //std::cout << "Betaq = " << Betaq << std::endl;
+          // std::cout << "Betaq = " << Betaq << std::endl;
         } else { // This is an expanding crossover
           Betaq =
               pow((1.0 / (2.0 - Rand * Alpha)), (1.0 / (GetEtaCross() + 1.0)));
-          //std::cout << "Betaq = " << Betaq << std::endl;
+          // std::cout << "Betaq = " << Betaq << std::endl;
         }
         Crossover2 = 0.5 * ((Component1 + Component2) +
                             Betaq * (Component2 - Component1));
         //////////////////////////////////////////////////////////////////////
         Crossover1 = fmin(fmax(Crossover1, LimitDown), LimitUp);
-        //std::cout << "-======================= Time for a new Crossover() =======================-"<< std::endl;
-        //std::cout << "DEBUG: Crossover1 = "<< Crossover1 << std::endl;
+        // std::cout << "-======================= Time for a new Crossover()
+        // =======================-"<< std::endl;
+        // std::cout << "DEBUG: Crossover1 = "<< Crossover1 << std::endl;
         Crossover2 = fmin(fmax(Crossover2, LimitDown), LimitUp);
-        //std::cout << "DEBUG: Crossover2 = "<< Crossover2 << std::endl;
+        // std::cout << "DEBUG: Crossover2 = "<< Crossover2 << std::endl;
         if (Rand <= 0.5) {
           child1.SetGene(i, Crossover2);
-          //std::cout << "============== DEBUG Child1: SetGene(i,Crossover2) on i-parameter place =================" << std::endl;
-          //child1.Genes<Double_t>::printGenes(child1);
+          // std::cout << "============== DEBUG Child1: SetGene(i,Crossover2) on
+          // i-parameter place =================" << std::endl;
+          // child1.Genes<Double_t>::printGenes(child1);
           child2.SetGene(i, Crossover1);
-          //std::cout << "============== DEBUG Child2: SetGene(i,Crossover1) on i-parameter place =================" << std::endl;
-          //child2.Genes<Double_t>::printGenes(child2);
+          // std::cout << "============== DEBUG Child2: SetGene(i,Crossover1) on
+          // i-parameter place =================" << std::endl;
+          // child2.Genes<Double_t>::printGenes(child2);
         } else {
           child1.SetGene(i, Crossover1);
-          //std::cout << "============== DEBUG Child1: SetGene(i,Crossover1) on i-parameter place =================" << std::endl;
-          //child1.Genes<Double_t>::printGenes(child1);
+          // std::cout << "============== DEBUG Child1: SetGene(i,Crossover1) on
+          // i-parameter place =================" << std::endl;
+          // child1.Genes<Double_t>::printGenes(child1);
           child2.SetGene(i, Crossover2);
-          //std::cout << "============== DEBUG Child2: SetGene(i,Crossover2) on i-parameter place =================" << std::endl;
-          //child2.Genes<Double_t>::printGenes(child2);
+          // std::cout << "============== DEBUG Child2: SetGene(i,Crossover2) on
+          // i-parameter place =================" << std::endl;
+          // child2.Genes<Double_t>::printGenes(child2);
         }
       } else {
         child1.SetGene(i, parent1.GetGene(i));
-        std::cout << "============== DEBUG Child1: SetGene(i,Parent1-i-Genes) on i-parameter place =================" << std::endl;
+        std::cout << "============== DEBUG Child1: SetGene(i,Parent1-i-Genes) "
+                     "on i-parameter place ================="
+                  << std::endl;
         child1.Genes<Double_t>::printGenes(child1);
         child2.SetGene(i, parent2.GetGene(i));
-        std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes) on i-parameter place =================" << std::endl;
+        std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes) "
+                     "on i-parameter place ================="
+                  << std::endl;
         child2.Genes<Double_t>::printGenes(child2);
       }
     }
   } else {
     for (Int_t i = 0; i < fNParam; i++) {
       child1.SetGene(i, parent1.GetGene(i));
-      std::cout << "============== DEBUG Child1: SetGene(i,Parent1-i-Genes) on i-parameter place =================" << std::endl;
+      std::cout << "============== DEBUG Child1: SetGene(i,Parent1-i-Genes) on "
+                   "i-parameter place ================="
+                << std::endl;
       child1.Genes<Double_t>::printGenes(child1);
       child2.SetGene(i, parent2.GetGene(i));
-      std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes) on i-parameter place =================" << std::endl;
+      std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes) on "
+                   "i-parameter place ================="
+                << std::endl;
       child2.Genes<Double_t>::printGenes(child1);
     }
   }
@@ -326,10 +354,9 @@ void AlgorithmNSGA::NextStep() {
   // Writing new Parent population in root file!
   fParentPop->WritePopulationTree(*fParentPop, "NSGA.root");
   // Printing ChildPop output
-  //fChildPop->Print();
+  // fChildPop->Print();
   fNMut = fChildPop->Mutate();
-  std::cout << "-==============================================-"<<
-  std::endl;
+  std::cout << "-==============================================-" << std::endl;
   std::cout << "Number of mutations in ChildPop: " << fNMut << "\n";
   fChildPop->GenCounter = fNGen + 1;
   //#ifdef ENABLE_GEANTV
@@ -348,58 +375,71 @@ void AlgorithmNSGA::NextStep() {
   Int_t i = 0;
   std::cout << "-==============================================-" << std::endl;
   for (int i = 0; i < fMixedPop->fFront.size(); ++i) {
-  std::cout << CYAN << "MixedPop: fFront<" << i << "> = [";  
+    std::cout << CYAN << "MixedPop: fFront<" << i << "> = [";
     for (auto &it : fMixedPop->fFront[i]) {
       std::cout << it << ' ';
     }
-    std::cout << "]"<< "\n" << RESET<< std::endl;
+    std::cout << "]"
+              << "\n" << RESET << std::endl;
   }
   std::cout << "Next step: until |Pt+1| + |Fi| <= N" << std::endl;
-  while (fParentPop->GetPopulationSize() + fMixedPop->GetFront(i).size() < fSizePop) {
-    std::cout << "fParentPop->GetPopulationSize() = " << fParentPop->GetPopulationSize() << std::endl;
-    std::cout << "fMixedPop->GetFront(i).size() = "<< fMixedPop->GetFront(i).size() << std::endl;
+  while (fParentPop->GetPopulationSize() + fMixedPop->GetFront(i).size() <
+         fSizePop) {
+    std::cout << "fParentPop->GetPopulationSize() = "
+              << fParentPop->GetPopulationSize() << std::endl;
+    std::cout << "fMixedPop->GetFront(i).size() = "
+              << fMixedPop->GetFront(i).size() << std::endl;
     std::cout << "fSizePop = " << fSizePop << std::endl;
-    std::cout << "-==============================================-" << std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
     std::vector<Int_t> Fi = fMixedPop->GetFront(i);
     std::cout << "Calculation of CD for new mixed population" << std::endl;
     fMixedPop->CrowdingDistanceFront(i);
-    std::cout << "-==============================================-" << std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
     // calculate crowding in Fi
     std::cout << "Next step: Pt+1 = Pt+1 U Fi" << std::endl;
-    for (Int_t j = 0; j < Fi.size(); ++j){
-      Genes<Double_t>& ind = fMixedPop->GetGenes(Fi[j]);
-      //ind.printGenes(ind);
+    for (Int_t j = 0; j < Fi.size(); ++j) {
+      Genes<Double_t> &ind = fMixedPop->GetGenes(Fi[j]);
+      // ind.printGenes(ind);
       fParentPop->push_back(ind);
     }
     i += 1;
   }
   fMixedPop->CrowdingDistanceFront(i);
   // calculate crowding in F
-  std::sort(fMixedPop->GetFront(i).begin(), fMixedPop->GetFront(i).end(), Sorting(*fMixedPop));
+  std::sort(fMixedPop->GetFront(i).begin(), fMixedPop->GetFront(i).end(),
+            Sorting(*fMixedPop));
   const int extra = fSizePop - (fParentPop->GetPopulationSize());
   std::cout << "Next step: Pt+1 = Pt+1 U Fi[1:N-|Pt+1|]" << std::endl;
-  for (int j = 0; j < extra; ++j){
+  for (int j = 0; j < extra; ++j) {
     std::vector<Int_t> thisFront = fMixedPop->GetFront(i);
     Int_t i = thisFront[j];
-    Genes<Double_t>& indadd = fMixedPop->GetGenes(i);
+    Genes<Double_t> &indadd = fMixedPop->GetGenes(i);
     fParentPop->push_back(indadd);
   }
-  //std::cout << "-==============================================-" << std::endl;
-  //fMixedPop->Print();
-  //std::cout << "-==============================================-" << std::endl;
-  //fParentPop->Print();
-  //std::cout << "-==============================================-" << std::endl;
-  //fChildPop->Print();
-  //std::cout << "-==============================================-" << std::endl;
+  // std::cout << "-==============================================-" <<
+  // std::endl;
+  // fMixedPop->Print();
+  // std::cout << "-==============================================-" <<
+  // std::endl;
+  // fParentPop->Print();
+  // std::cout << "-==============================================-" <<
+  // std::endl;
+  // fChildPop->Print();
+  // std::cout << "-==============================================-" <<
+  // std::endl;
   fGen += 1;
   fParentPop->Print();
- }
+}
 
 void AlgorithmNSGA::Evolution() {
   while (fGen < GetGenTotalNumber()) {
-    std::cout << "Current generation is "<< fGen << " that < " << "number of requested generations " << GetGenTotalNumber() << std::endl;
+    std::cout << "Current generation is " << fGen << " that < "
+              << "number of requested generations " << GetGenTotalNumber()
+              << std::endl;
     NextStep();
   } // Check through population object
-  if(fGen == GetGenTotalNumber())
+  if (fGen == GetGenTotalNumber())
     std::cout << "Finishing work.." << std::endl;
 }

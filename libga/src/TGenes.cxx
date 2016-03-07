@@ -148,9 +148,10 @@ void Genes<T>::Evaluate(GeantPropagator *prop, Functions &setup,
 template <class T>
 void Genes<T>::Evaluate(Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
-  //std::cout << "-==============================================-" << std::endl;
-  //std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
-  //printGenes(ind);
+  // std::cout << "-==============================================-" <<
+  // std::endl;
+  // std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
+  // printGenes(ind);
   (setup.evfunc)(ind);
   if (setup.fNCons) {
     ConstViol = 0;
@@ -222,7 +223,7 @@ T Genes<T>::CheckDominance(Functions *setup,
 template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<> rand(0,1);
+  std::uniform_real_distribution<> rand(0, 1);
   Double_t fRnd, fDelta1, fDelta2, fMutPow, fDelta, fValue;
   Double_t y, LimitDown, LimitUp, xy;
   Int_t fNMut = 0;
@@ -247,7 +248,7 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
         fDelta = 1.0 - (pow(fValue, fMutPow));
       }
       y = y + fDelta * (LimitUp - LimitDown);
-      //std::cout << "New part of Gene<T> for Mutation() " << y << std::endl;
+      // std::cout << "New part of Gene<T> for Mutation() " << y << std::endl;
       if (y < LimitDown)
         y = LimitDown;
       if (y > LimitUp)
@@ -256,7 +257,7 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
       fNMut = fNMut + 1;
     }
   }
-  //std::cout << "Print number of mutations in Gene: " << fNMut << std::endl;
+  // std::cout << "Print number of mutations in Gene: " << fNMut << std::endl;
   return fNMut;
 }
 

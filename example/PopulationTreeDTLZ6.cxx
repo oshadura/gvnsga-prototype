@@ -35,12 +35,12 @@ void DTLZ6(Genes<Double_t> &individual) {
   }
   // individual.GetFitnessVector().resize(m, 0);
   std::vector<Double_t> theta(n);
-  theta[0] = individual.GetGene(0)*halfpi;
+  theta[0] = individual.GetGene(0) * halfpi;
 
-  for(Int_t i = 1; i < theta.size(); ++i){
-    theta[i] = halfpi/(2*(1 + g))*(1 + 2*g*individual.GetGene(i));
+  for (Int_t i = 1; i < theta.size(); ++i) {
+    theta[i] = halfpi / (2 * (1 + g)) * (1 + 2 * g * individual.GetGene(i));
   }
-  
+
   for (Int_t i = 0; i < m; ++i) {
     Double_t f = (1 + g);
     Int_t j = 0;

@@ -1,14 +1,14 @@
 #ifndef __POPULATION__
 #define __POPULATION__
 
-#define RESET   "\033[0m"
-#define BLACK   "\033[30m"      /* Black */
-#define RED     "\033[31m"      /* Red */
-#define GREEN   "\033[32m"      /* Green */
-#define YELLOW  "\033[33m"      /* Yellow */
-#define BLUE    "\033[34m"      /* Blue */
-#define MAGENTA "\033[35m"      /* Magenta */
-#define CYAN    "\033[36m"      /* Cyan */
+#define RESET "\033[0m"
+#define BLACK "\033[30m"   /* Black */
+#define RED "\033[31m"     /* Red */
+#define GREEN "\033[32m"   /* Green */
+#define YELLOW "\033[33m"  /* Yellow */
+#define BLUE "\033[34m"    /* Blue */
+#define MAGENTA "\033[35m" /* Magenta */
+#define CYAN "\033[36m"    /* Cyan */
 
 #include "TGenes.h"
 #include "ExceptionMessenger.h"
@@ -72,9 +72,7 @@ public:
   }
   std::vector<Genes<T>> operator=(Population<T> pop) { return fPopulation; }
 
-  virtual ~Population() {
-    delete fHisto;
-  }
+  virtual ~Population() { delete fHisto; }
 
   Genes<T> &GetGenes(Int_t i) { return fPopulation.at(i); }
   void SetGenes(Int_t i, const Genes<T> &value) {
@@ -137,6 +135,7 @@ public:
   }
 
   void push_back(Genes<T> &i) { return fPopulation.push_back(i); }
+
 public:
   Bool_t fCrowdingObj; // true: crowding over objective (default)
                        // false: crowding over real variable

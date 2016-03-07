@@ -16,7 +16,7 @@
 
 ClassImp(HistogramManager)
 
-HistogramManager *HistogramManager::HistoInstance = 0;
+    HistogramManager *HistogramManager::HistoInstance = 0;
 
 HistogramManager *HistogramManager::Instance() {
   if (HistoInstance == 0)
@@ -25,14 +25,13 @@ HistogramManager *HistogramManager::Instance() {
 }
 
 #ifdef ENABLE_GEANTV
-HistogramManager::HistogramManager():hAllev(0),hBuffev(0),hThread(0), hPriority(0), hSteps(0) {}
+HistogramManager::HistogramManager()
+    : hAllev(0), hBuffev(0), hThread(0), hPriority(0), hSteps(0) {}
 #else
-HistogramManager::HistogramManager():hx(0){}
+HistogramManager::HistogramManager() : hx(0) {}
 #endif
 
-HistogramManager::~HistogramManager() {
-  HistoInstance = 0; 
-}
+HistogramManager::~HistogramManager() { HistoInstance = 0; }
 
 Bool_t
 HistogramManager::CheckValue(ROOT::Internal::TTreeReaderValueBase *value) {
@@ -86,13 +85,14 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
       }
       return false;
     }
-    TCanvas *mon = (TCanvas *)gROOT->GetListOfCanvases()->FindObject("Monitoring");
+    TCanvas *mon =
+        (TCanvas *)gROOT->GetListOfCanvases()->FindObject("Monitoring");
     if (pop.GetNParam() == 1)
       mon->Divide(1, 1);
     else
       mon->Divide(2, pop.GetNParam());
     int ipad = 0;
-    // Creating monitoring canvas
+// Creating monitoring canvas
 #ifdef ENABLE_GEANTV
     hAllev = new TH1F("hAllev", "Totall number of events", 100, 0, 100);
     hAllev->SetLineColor(kMagenta);
@@ -100,58 +100,58 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     mon->cd(++ipad);
     hAllev->Draw("SAME");
     // Check also SCAT
-//////////////////////////
+    //////////////////////////
     hBuffev = new TH1F("hBuffev", "Buffered events", 100, 0, 99);
-    //hBuffev->SetFillColor(kRed);
-    //hBuffev->SetFillStyle(3001);
+    // hBuffev->SetFillColor(kRed);
+    // hBuffev->SetFillStyle(3001);
     hBuffev->SetLineColor(0);
     hBuffev->SetStats(false);
     mon->cd(++ipad);
     hBuffev->Draw("SAME");
-/////////////////////////
+    /////////////////////////
     hThread = new TH1F("hThread", "Number of threads", 100, 0, 16);
-    //hThread->SetFillColor(kRed);
-    //hThread->SetFillStyle(3001);
+    // hThread->SetFillColor(kRed);
+    // hThread->SetFillStyle(3001);
     hThread->SetLineColor(0);
     hThread->SetStats(false);
     mon->cd(++ipad);
     hThread->Draw("SAME");
-//////////////////////////
+    //////////////////////////
     hPriority = new TH1F("hPriority", "Priority", 100, 0, 1);
-    //hPriority->SetFillColor(kRed);
-    //hPriority->SetFillStyle(3001);
+    // hPriority->SetFillColor(kRed);
+    // hPriority->SetFillStyle(3001);
     hPriority->SetLineColor(0);
     hPriority->SetStats(false);
     mon->cd(++ipad);
     hPriority->Draw("SAME");
-//////////////////////////
+    //////////////////////////
     hSteps = new TH1F("hSteps", "Number steps for learning", 10000, 0, 10000);
-    //hSteps->SetFillColor(kRed);
-    //hSteps->SetFillStyle(3001);
+    // hSteps->SetFillColor(kRed);
+    // hSteps->SetFillStyle(3001);
     hSteps->SetLineColor(0);
     hSteps->SetStats(false);
     mon->cd(++ipad);
     hSteps->Draw("SAME");
-//////////////////////////
+    //////////////////////////
     hVector = new TH1F("hVector", "Vector size", 64, 0, 64);
-    //hVector->SetFillColor(kRed);
-    //hVector->SetFillStyle(3001);
+    // hVector->SetFillColor(kRed);
+    // hVector->SetFillStyle(3001);
     hVector->SetLineColor(0);
     hVector->SetStats(false);
     mon->cd(++ipad);
     hVector->Draw("SAME");
-//////////////////////////
+    //////////////////////////
     hMaxVector = new TH1F("hMaxVector", "Max Vector size", 512, 0, 512);
-    //hMaxVector->SetFillColor(kRed);
-    //hMaxVector->SetFillStyle(3001);
+    // hMaxVector->SetFillColor(kRed);
+    // hMaxVector->SetFillStyle(3001);
     hMaxVector->SetLineColor(0);
     hMaxVector->SetStats(false);
     mon->cd(++ipad);
     hMaxVector->Draw("SAME");
 #else
     hx = new TH1F("hx", "DTLZx benchmark", 100, 0, 1);
-    //hx->SetFillColor(kRed);
-    //hx->SetFillStyle(3001);
+    // hx->SetFillColor(kRed);
+    // hx->SetFillStyle(3001);
     hx->SetLineColor(0);
     hx->SetStats(false);
     mon->cd(++ipad);
@@ -166,109 +166,110 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
       ipad = 0;
       gSystem->Sleep(50); // millisec
       // Fill histograms
-      for (auto it = pop.fPopulation.begin(); it != pop.fPopulation.end(); ++it) {
+      for (auto it = pop.fPopulation.begin(); it != pop.fPopulation.end();
+           ++it) {
         if (stamp > 100) {
 #ifdef ENABLE_GEANTV
-          if(hAllev) {
+          if (hAllev) {
             hAllev->GetXaxis()->Set(100, stamp - 100, stamp);
             for (j = 0; j < 100; j++)
               hAllev->SetBinContent(j + 1, it->GetAllev(*it));
           }
-          if(hBuffev){
+          if (hBuffev) {
             hBuffev->GetXaxis()->Set(100, stamp - 100, stamp);
             for (j = 0; j < 100; j++)
               hBuffev->SetBinContent(j + 1, it->GetBuffev(*it));
           }
-          if(hThread){
+          if (hThread) {
             hThread->GetXaxis()->Set(100, stamp - 100, stamp);
             for (j = 0; j < 100; j++)
               hThread->SetBinContent(j + 1, it->GetThread(*it));
           }
-          if(hPriority){
+          if (hPriority) {
             hPriority->GetXaxis()->Set(100, stamp - 100, stamp);
             for (j = 0; j < 100; j++)
               hAllev->SetBinContent(j + 1, it->GetPriority(*it));
           }
-          if(hSteps){
+          if (hSteps) {
             hSteps->GetXaxis()->Set(100, stamp - 100, stamp);
             for (j = 0; j < 100; j++)
               hSteps->SetBinContent(j + 1, it->GetSteps(*it));
           }
-          if(hVector){
+          if (hVector) {
             hVector->GetXaxis()->Set(100, stamp - 100, stamp);
             for (j = 0; j < 100; j++)
               hAllev->SetBinContent(j + 1, it->GetVector(*it));
           }
-          if(hMaxVector){
+          if (hMaxVector) {
             hMaxVector->GetXaxis()->Set(100, stamp - 100, stamp);
             for (j = 0; j < 100; j++)
               hAllev->SetBinContent(j + 1, it->GetMaxVector(*it));
           }
 #else
-          if(hx){
+          if (hx) {
             hx->SetBinContent(i + 1, it->GetGene(0));
           }
 #endif
-        }else{
+        } else {
 #ifdef ENABLE_GEANTV
-          if(hAllev) {
+          if (hAllev) {
             hAllev->SetBinContent(i + 1, it->GetAllev(*it));
           }
-          if(hBuffev){
+          if (hBuffev) {
             hBuffev->SetBinContent(i + 1, it->GetBuffev(*it));
           }
-          if(hThread){
+          if (hThread) {
             hThread->SetBinContent(i + 1, it->GetThread(*it));
           }
-          if(hPriority){
+          if (hPriority) {
             hPriority->SetBinContent(i + 1, it->GetPriority(*it));
           }
-          if(hSteps){
+          if (hSteps) {
             hSteps->SetBinContent(i + 1, it->GetSteps(*it));
           }
-          if(hVector){
+          if (hVector) {
             hVector->SetBinContent(i + 1, it->GetVector(*it));
           }
-          if(hMaxVector){
+          if (hMaxVector) {
             hMaxVector->SetBinContent(i + 1, it->GetMaxVector(*it));
           }
 #else
-          if(hx){
+          if (hx) {
             hx->SetBinContent(i + 1, it->GetGene(0));
           }
 #endif
         }
 #ifdef ENABLE_GEANTV
-        if(hAllev) {
+        if (hAllev) {
           mon->cd(++ipad);
           hAllev->Draw();
         }
-        if(hBuffev){
+        if (hBuffev) {
           mon->cd(++ipad);
           hBuffev->Draw();
         }
-        if(hThread){
+        if (hThread) {
           mon->cd(++ipad);
           hThread->Draw();
         }
-        if(hPriority){
+        if (hPriority) {
           mon->cd(++ipad);
           hThread->Draw();
         }
-        if(hSteps){
+        if (hSteps) {
           mon->cd(++ipad);
           hSteps->Draw();
         }
-        if(hVector){
+        if (hVector) {
           mon->cd(++ipad);
           hVector->Draw();
         }
-        if(hMaxVector){
+        if (hMaxVector) {
           mon->cd(++ipad);
           hMaxVector->Draw();
         }
 #else
-        if(hx){
+        if (hx) {
           mon->cd(++ipad);
           hx->Draw();
         }

@@ -14,7 +14,7 @@
 
 class HistogramManager : public TObject {
 private:
-  //========= Individual ======//
+//========= Individual ======//
 #ifdef ENABLE_GEANTV
   TH1F *hAllev;     //#1
   TH1F *hBuffev;    //#3
