@@ -112,7 +112,7 @@ public:
   void push_back(T i) { return fGenes.push_back(i); }
   void resize(Int_t i) { return fGenes.resize(i); }
   void reserve(Int_t i){return fGenes.reserve(i);}
-  void empty(){return fGenes.empty();}
+  Bool_t empty(){return fGenes.empty();}
   // Pointless thing
   T GetAllev() const { return fAllev; }
   T GetBuffev() const { return fBuffev; }
