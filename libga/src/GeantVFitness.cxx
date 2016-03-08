@@ -22,9 +22,12 @@ struct CompairMemVirtual {
 };
 
 void GeantVFitness::LogMemoryFitness() {
-  ProcInfo_t info;
-  gSystem->GetProcInfo(&info);
-  fMemoryVector.push_back(info);
+  if(1){
+    ProcInfo_t info;
+    gSystem->GetProcInfo(&info);
+    fMemoryVector.push_back(info);
+    sleep(1);
+  }
 }
 
 void GeantVFitness::LogTimeFitness() {}
@@ -62,23 +65,19 @@ void GeantVFitness::HistOutputFitness(std::string file) {
   hMemRes->Write();
   hMemVirt->Write();
   double maxMemResident =
-      (std::max_element(fMemoryVector.begin(), fMemoryVector.end(),
-                        CompairMemResident()))
-          ->fMemResident;
+      ((std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemResident()))->fMemResident) - maxMemResident;
   double maxMemVirtual =
-      (std::max_element(fMemoryVector.begin(), fMemoryVector.end(),
-                        CompairMemVirtual()))
-          ->fMemVirtual;
+      ((std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemVirtual()))->fMemVirtual) - maxMemVirtual;
 
-  //for (auto &i : fMemoryVector) {
-  //  std::cout << i.fMemVirtual << std::endl;
-  //}
+  for (auto &i : fMemoryVector) {
+    std::cout << "DEBUG: " << i.fMemResident / (1024. * 1024.) << " GB" << std::endl;
+  }
 
   std::printf("Maximum resident memory usage:%f\n",
               (maxMemResident / (1024. * 1024.)));
   std::printf("Maximum virtual memory usage:%f\n",
               (maxMemVirtual / (1024. * 1024.)));
   // Cleaning vector of memory
-  fMemoryVector.clear();
+  fMemoryVector.empty();
   fMemoryVector.resize(0);
 }

@@ -35,8 +35,7 @@
 #endif
 
 void runApp(Genes<Double_t> &individual) {
-  //GeantVFitness fitness;
-  //fitness.LogMemoryFitness();
+  GeantVFitness *fitness = new GeantVFitness();
 #ifdef ENABLE_PERFMON
   PFMWatch perfcontrol;
   perfcontrol.Start();
@@ -140,17 +139,18 @@ void runApp(Genes<Double_t> &individual) {
   perfcontrol.Stop();
 #endif
   individual.SetFitness(0, prop->fTimer->RealTime());
-  //individual.SetFitness(1, fitness.GetmaxMemResident());
   // Getting maximum primaries transported
   individual.SetFitness(1, -(prop->fNprimaries.load()));
   individual.SetFitness(2, perfcontrol.GetNInstructions());
   individual.SetFitness(3, perfcontrol.GetBranchMisses());
-  //individual.SetFitness(4, );
-  //fitness.HistOutputFitness("fitness.root");
+  individual.SetFitness(4, fitness->GetmaxMemResident());
+  fitness->LogMemoryFitness();
+  fitness->HistOutputFitness("fitness.root");
 #ifdef ENABLE_PERFMON
   perfcontrol.printSummary();
 #endif
   delete prop;
+  delete fitness;
   return;
 }
 
@@ -164,6 +164,7 @@ int main(int argc, char *argv[]) {
   std::cout << "-==============================================-" << std::endl;
 
   std::cout << "-==============================================-" << std::endl;
+
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
