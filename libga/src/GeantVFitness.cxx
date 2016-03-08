@@ -65,9 +65,9 @@ void GeantVFitness::HistOutputFitness(std::string file) {
   hMemRes->Write();
   hMemVirt->Write();
   double maxMemResident =
-      ((std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemResident()))->fMemResident) - maxMemResident;
+      (std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemResident()))->fMemResident;
   double maxMemVirtual =
-      ((std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemVirtual()))->fMemVirtual) - maxMemVirtual;
+      (std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemVirtual()))->fMemVirtual;
 
   for (auto &i : fMemoryVector) {
     std::cout << "DEBUG: " << i.fMemResident / (1024. * 1024.) << " GB" << std::endl;

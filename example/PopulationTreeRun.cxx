@@ -40,7 +40,7 @@ void runApp(Genes<Double_t> &individual) {
   PFMWatch perfcontrol;
   perfcontrol.Start();
 #endif
-  fitness->LogMemoryFitness();
+  //fitness->LogMemoryFitness();
   const char *geomfile = "ExN03.root";
   const char *xsec = "xsec_FTFP_BERT.root";
   const char *fstate = "fstate_FTFP_BERT.root";
@@ -136,6 +136,7 @@ void runApp(Genes<Double_t> &individual) {
   // Monitor the application
   prop->fUseAppMonitoring = false;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
+  fitness->LogMemoryFitness();
 #ifdef ENABLE_PERFMON
   perfcontrol.Stop();
 #endif
@@ -156,15 +157,12 @@ void runApp(Genes<Double_t> &individual) {
 
 int main(int argc, char *argv[]) {
   // Function definition
-
   Functions *geantv = new Functions();
   geantv->SetIntervalGeantV();
   std::cout << "-==============================================-" << std::endl;
   geantv->PrintLimit(geantv->fInterval);
   std::cout << "-==============================================-" << std::endl;
-
   std::cout << "-==============================================-" << std::endl;
-
   // Algorithm  definition
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
