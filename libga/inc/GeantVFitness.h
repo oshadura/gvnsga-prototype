@@ -11,14 +11,16 @@
 
 class GeantVFitness {
 public:
-  GeantVFitness() : hfile(0), hMemVirt(0), hMemRes(0), fMemoryVector(0) {}
+  GeantVFitness() : hfile(0), hMemVirt(0), hMemRes(0), fMemoryVector(0), maxMemResident(0) {}
 
   virtual ~GeantVFitness() {
     hfile->cd();
     hfile->Write();
     hfile->Close();
     delete hfile;
+    maxMemResident = 0;
   }
+  
   Double_t GetmaxMemResident() const { return maxMemResident; }
   void LogMemoryFitness();
   void LogTimeFitness();

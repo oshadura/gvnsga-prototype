@@ -44,6 +44,8 @@ public:
   uint64_t getCounter(unsigned int event) { return count[event]; }
   std::string getEventName(unsigned int event) { return EVENTSTRING[event]; }
   uint64_t getNumberOfEvents() { return GROUPSIZE; }
+  uint64_t GetNInstructions() const {return this->getCounter(3);}
+  uint64_t GetBranchMisses() const {return this->getCounter(4);}
 
 private:
   struct perf_event_attr attr[GROUPSIZE];

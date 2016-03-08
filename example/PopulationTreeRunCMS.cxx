@@ -127,9 +127,8 @@ void CMSApp(Genes<Double_t> &individual) {
     prop->fUseStdScoring = false;
   prop->fUseMonitoring = graphics;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
-  delete prop;
   individual.SetFitness(0, prop->fTimer->RealTime());
-  // fitness.HistOutputFitness();
+  delete prop;
   return;
 }
 

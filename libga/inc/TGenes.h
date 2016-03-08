@@ -96,6 +96,7 @@ public:
   std::vector<T> GetfGenes() const { return fGenes; }
   const Functions *GetSetup() const { return setup; }
   void SetDominated(std::vector<Int_t> &d) { fDominated = d; }
+  // faster access 
   Int_t capacity() { return fGenes.capacity(); }
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
@@ -108,43 +109,30 @@ public:
   }
   T operator[](Int_t i) const { return fGenes.at(i); }
   void clear() { fGenes.clear(); }
-  void push_back(Int_t i) { return fGenes.push_back(i); }
+  void push_back(T i) { return fGenes.push_back(i); }
   void resize(Int_t i) { return fGenes.resize(i); }
-
+  void reserve(Int_t i){return fGenes.reserve(i);}
+  void empty(){return fGenes.empty();}
+  // Pointless thing
   T GetAllev() const { return fAllev; }
-
   T GetBuffev() const { return fBuffev; }
-
   T GetThread() const { return fThread; }
-
   T GetPriority() const { return fPriority; }
-
   T GetSteps() const { return fSteps; }
-
   T GetVector() const { return fVector; }
-
   T GetTime() const { return fTime; }
-
   T GetMemory() const { return fMemory; }
-
+  //
   T GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
-
   T GetBuffev(Genes<T> &ind) const { return ind.GetGene(1); }
-
   T GetThread(Genes<T> &ind) const { return ind.GetGene(2); }
-
   T GetPriority(Genes<T> &ind) const { return ind.GetGene(3); }
-
   T GetSteps(Genes<T> &ind) const { return ind.GetGene(4); }
-
   T GetVector(Genes<T> &ind) const { return ind.GetGene(5); }
-
   T GetMaxVector(Genes<T> &ind) const { return ind.GetGene(6); }
-
   T GetTime(Genes<T> &ind) const { return ind.GetFitness(0); }
-
   T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
-
+  //
   void printGenes(Genes<T> &g) {
 
     std::cout << "Individual rank = " << g.GetRank() << "\n" << std::endl;

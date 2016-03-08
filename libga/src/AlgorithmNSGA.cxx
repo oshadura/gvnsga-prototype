@@ -317,29 +317,29 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
         }
       } else {
         child1.SetGene(i, parent1.GetGene(i));
-        std::cout << "============== DEBUG Child1: SetGene(i,Parent1-i-Genes) "
-                     "on i-parameter place ================="
-                  << std::endl;
-        child1.Genes<Double_t>::printGenes(child1);
+        //std::cout << "============== DEBUG Child1: SetGene(i,Parent1-i-Genes) "
+        //             "on i-parameter place ================="
+        //          << std::endl;
+        //child1.Genes<Double_t>::printGenes(child1);
         child2.SetGene(i, parent2.GetGene(i));
-        std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes) "
-                     "on i-parameter place ================="
-                  << std::endl;
-        child2.Genes<Double_t>::printGenes(child2);
+        //std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes) "
+        //             "on i-parameter place ================="
+        //          << std::endl;
+        //child2.Genes<Double_t>::printGenes(child2);
       }
     }
   } else {
     for (Int_t i = 0; i < fNParam; i++) {
       child1.SetGene(i, parent1.GetGene(i));
-      std::cout << "============== DEBUG Child1: SetGene(i,Parent1-i-Genes) on "
-                   "i-parameter place ================="
-                << std::endl;
-      child1.Genes<Double_t>::printGenes(child1);
+      //std::cout << "============== DEBUG Child1: SetGene(i,Parent1-i-Genes) on "
+      //             "i-parameter place ================="
+      //          << std::endl;
+      //child1.Genes<Double_t>::printGenes(child1);
       child2.SetGene(i, parent2.GetGene(i));
-      std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes) on "
-                   "i-parameter place ================="
-                << std::endl;
-      child2.Genes<Double_t>::printGenes(child1);
+      //std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes) on "
+      //             "i-parameter place ================="
+      //          << std::endl;
+      //child2.Genes<Double_t>::printGenes(child1);
     }
   }
   child1.SetEvaluated(false);

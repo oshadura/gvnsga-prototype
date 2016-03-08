@@ -38,8 +38,8 @@ Genes<T>::Genes(const Functions &config) throw(ExceptionMessenger)
       fCrowdingDistance(0), fEvaluated(false), fDominated(), ConstViol(0),
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
       fVector(0), fTime(0), fMemory(0), setup(&config), fConstraines() {
-
-  fGenes.resize(setup->fNParam, 0);
+  // Creating it but empty, working after with push_back
+  fGenes.reserve(setup->fNParam);
   fFitness.resize(setup->fNObjectives, 0);
   fConstraines.resize(setup->fNCons, 0);
 }
@@ -71,15 +71,16 @@ template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
 template <class T>
 void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   // Lets imagine that we have only one limit #0 for all parameters
+  ind.empty();
+  ind.reserve(setup.fNParam);
   ind = Genes<T>(setup);
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
-  ind.resize(setup.fNParam);
   std::uniform_real_distribution<T> dist(setup.fInterval[0].first,
                                          setup.fInterval[0].second);
   auto gen = std::bind(dist, mersenne_engine);
-  std::generate(std::begin(ind), std::end(ind), gen);
-
+  //std::generate(std::begin(ind), std::end(ind), gen);
+  ind.push_back(gen());
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
   }
@@ -92,36 +93,21 @@ void Genes<T>::SetGeantV(Functions &setup,
   // FIX GENERATORS
   // 1. Consider value that ([0] - 1) should be always smaller [0]
   // 2. Consider that [5] and [6] are generated in diferent way (new generator)
+  ind.empty();
+  ind.reserve(setup.fNParam);
   ind = Genes<T>(setup);
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
-  ind.resize(setup.fNParam);
   for (Int_t i = 0; i <= (setup.fNParam); ++i) {
     std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
                                            setup.fInterval[i].second);
     auto gen = std::bind(dist, mersenne_engine);
-    std::generate_n(std::begin(ind) + i, 1, gen);
+    //std::generate_n(std::begin(ind) + i, 1, gen());
+    ind.push_back(gen());
   }
-
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
   }
-  /*
-  TRandom rand;
-  rand.SetSeed(5000);
-  ind = Genes<T>(setup);
-  ind.resize(setup.fNParam);
-  rand.SetSeed(time(NULL));
-  for (Int_t i = 0; i < (setup.fNParam); ++i) {
-     fGenes[i] = rand.Uniform(setup .fInterval[i].first,
-                             setup.fInterval[i].second);
-     //fGenes.emplace(fGenes.begin() + i, value);
-  }
-
-  for (auto i : ind) {
-    std::cout << "| " << i << " = element of gene |";
-  }
-  */
 }
 #endif
 

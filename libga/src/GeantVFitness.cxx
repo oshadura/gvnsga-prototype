@@ -70,12 +70,15 @@ void GeantVFitness::HistOutputFitness(std::string file) {
                         CompairMemVirtual()))
           ->fMemVirtual;
 
-  for (auto &i : fMemoryVector) {
-    std::cout << i.fMemVirtual << std::endl;
-  }
+  //for (auto &i : fMemoryVector) {
+  //  std::cout << i.fMemVirtual << std::endl;
+  //}
 
   std::printf("Maximum resident memory usage:%f\n",
               (maxMemResident / (1024. * 1024.)));
   std::printf("Maximum virtual memory usage:%f\n",
               (maxMemVirtual / (1024. * 1024.)));
+  // Cleaning vector of memory
+  fMemoryVector.clear();
+  fMemoryVector.resize(0);
 }

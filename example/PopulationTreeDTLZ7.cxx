@@ -12,6 +12,7 @@
 //
 //
 
+
 #ifdef NUMERIC_LIB
 
 #include "Population.h"
@@ -35,7 +36,7 @@ void DTLZ7(Genes<Double_t> &individual) {
   Int_t n = individual.GetSetup()->GetNParam();      // 30
   Int_t m = individual.GetSetup()->GetNObjectives(); // 3
   //
-  Int_t k = n - m + 1; // 28
+  Int_t k = n - m + 1;                               // 28
   //
   Double_t g = 0.0;
   //
@@ -43,19 +44,18 @@ void DTLZ7(Genes<Double_t> &individual) {
     individual.SetFitness(i, individual.GetGene(i));
   }
   //
-  for (Int_t i = m - 1; i < n; ++i) {
+  for(Int_t i = m - 1; i < n; ++i){
     g += individual.GetGene(i);
   }
   //
-  g = 1 + 9 * g / k;
+  g = 1 + 9*g/k;
   //
   Double_t h = m;
   //
-  for (Int_t j = 0; j < m - 1; ++j) {
-    h -= individual.GetGene(j) / (1 + g) *
-         (1 + sin(3 * pi * individual.GetGene(j)));
+  for (Int_t j = 0; j < m -1; ++j) {
+    h -=individual.GetGene(j)/(1 + g)*(1 + sin(3*pi*individual.GetGene(j)));
   }
-  individual.SetFitness(m - 1, (1 + g) * h);
+  individual.SetFitness(m -1, (1 + g)*h);
   return;
 }
 

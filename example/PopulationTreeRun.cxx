@@ -35,8 +35,8 @@
 #endif
 
 void runApp(Genes<Double_t> &individual) {
-  GeantVFitness fitness;
-  fitness.LogMemoryFitness();
+  //GeantVFitness fitness;
+  //fitness.LogMemoryFitness();
 #ifdef ENABLE_PERFMON
   PFMWatch perfcontrol;
   perfcontrol.Start();
@@ -139,14 +139,18 @@ void runApp(Genes<Double_t> &individual) {
 #ifdef ENABLE_PERFMON
   perfcontrol.Stop();
 #endif
-  delete prop;
   individual.SetFitness(0, prop->fTimer->RealTime());
-  individual.SetFitness(1, fitness.GetmaxMemResident());
-  // SHIT!
-  fitness.HistOutputFitness("fitness.root");
+  //individual.SetFitness(1, fitness.GetmaxMemResident());
+  // Getting maximum primaries transported
+  individual.SetFitness(1, -(prop->fNprimaries.load()));
+  individual.SetFitness(2, perfcontrol.GetNInstructions());
+  individual.SetFitness(3, perfcontrol.GetBranchMisses());
+  //individual.SetFitness(4, );
+  //fitness.HistOutputFitness("fitness.root");
 #ifdef ENABLE_PERFMON
   perfcontrol.printSummary();
 #endif
+  delete prop;
   return;
 }
 
@@ -164,13 +168,13 @@ int main(int argc, char *argv[]) {
   AlgorithmNSGA *nsga2 = new AlgorithmNSGA();
   nsga2->SetPCross(0.5);
   nsga2->SetPMut(0.7);
-  nsga2->SetGenTotalNumber(100);
+  nsga2->SetGenTotalNumber(5);
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(6);
-  nsga2->SetNObjectives(1); // Memory, Time
+  nsga2->SetNObjectives(4); // Memory, Time , etc.
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
-  nsga2->SetPopulationSize(10);
+  nsga2->SetPopulationSize(12);
   nsga2->SetEtaMut(10);
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);
