@@ -40,6 +40,7 @@ void runApp(Genes<Double_t> &individual) {
   PFMWatch perfcontrol;
   perfcontrol.Start();
 #endif
+  fitness->LogMemoryFitness();
   const char *geomfile = "ExN03.root";
   const char *xsec = "xsec_FTFP_BERT.root";
   const char *fstate = "fstate_FTFP_BERT.root";
@@ -144,7 +145,6 @@ void runApp(Genes<Double_t> &individual) {
   individual.SetFitness(2, perfcontrol.GetNInstructions());
   individual.SetFitness(3, perfcontrol.GetBranchMisses());
   individual.SetFitness(4, fitness->GetmaxMemResident());
-  fitness->LogMemoryFitness();
   fitness->HistOutputFitness("fitness.root");
 #ifdef ENABLE_PERFMON
   perfcontrol.printSummary();
