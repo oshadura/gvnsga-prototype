@@ -40,7 +40,7 @@ void runApp(Genes<Double_t> &individual) {
   PFMWatch perfcontrol;
   perfcontrol.Start();
 #endif
-  //fitness->LogMemoryFitness();
+  //fitness->LogMemoryFitness("fitness.root");
   const char *geomfile = "ExN03.root";
   const char *xsec = "xsec_FTFP_BERT.root";
   const char *fstate = "fstate_FTFP_BERT.root";
@@ -136,17 +136,17 @@ void runApp(Genes<Double_t> &individual) {
   // Monitor the application
   prop->fUseAppMonitoring = false;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
-  fitness->LogMemoryFitness();
+  fitness->SetMemorySwitch(false);
+  fitness->TemporarySolution();
+  fitness->LogMemoryFitness("fitness.root");
 #ifdef ENABLE_PERFMON
   perfcontrol.Stop();
 #endif
   individual.SetFitness(0, prop->fTimer->RealTime());
-  // Getting maximum primaries transported
   individual.SetFitness(1, -(prop->fNprimaries.load()));
   individual.SetFitness(2, perfcontrol.GetNInstructions());
   individual.SetFitness(3, perfcontrol.GetBranchMisses());
   individual.SetFitness(4, fitness->GetmaxMemResident());
-  fitness->HistOutputFitness("fitness.root");
 #ifdef ENABLE_PERFMON
   perfcontrol.printSummary();
 #endif

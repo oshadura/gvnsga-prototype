@@ -71,7 +71,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
-  // WritePopulationTree(*this, "NSGA.root");
+  WritePopulationTree(*this, "NSGA.root");
 }
 #else
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
@@ -80,7 +80,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << "Creating new individual.." << std::endl;
   }
-  // WritePopulationTree(*this, "NSGA.root");
+  WritePopulationTree(*this, "NSGA.root");
 }
 #endif
 
@@ -278,20 +278,29 @@ template <class T> Int_t Population<T>::Mutate() {
 template <class T>
 void Population<T>::WritePopulationTree(Population &pop, const char *file) {
   fHisto = HistogramManager::Instance();
+  //////////////////////////////////////
   if (!gSystem->AccessPathName(file, kFileExists)) {
     TFile *friendtree = new TFile("NSGApopulations.root", "RECREATE");
-    TTree *treecopy = new TTree("GAnew", "Genetic Algorithm TTree");
+    TTree *treecopy = new TTree("GA", "Genetic Algorithm TTree");
     treecopy->Branch("Pop", "Pop", &pop);
+    /*
+    for (int i = 0; i < pop.GetPopulationSize(); ++i) {
+      for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end();
+           ++it) {
+        treecopy->Branch("Genes", "Genes", &it);
+      }
+    }
+    */
+    ////////////////////////////////////
     TFile *f = TFile::Open("NSGA.root");
     if (f->IsZombie()) {
       std::cout << "Error opening file" << std::endl;
       exit(-1);
     }
-    // TTree *tree = (TTree *)f->Get("tree");
     TTree *tree = (TTree *)f->Get("GA");
-    // tree->AddFriend("treecopy", "NSGA-friend.root");
-    tree->AddFriend("GAnew", "NSGApopulations.root");
+    tree->AddFriend("GA", "NSGApopulations.root");
     tree->Fill();
+    ////////////////////////////////////
     // tree->Print();
     tree->Write();
     fHisto->HistoFill(pop, "NSGApopulations.root");
@@ -299,21 +308,27 @@ void Population<T>::WritePopulationTree(Population &pop, const char *file) {
     f->Close();
     friendtree->cd();
     friendtree->Close();
+    gROOT->cd();
   } else {
+    ///////////////////////////////////
     TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("GA", "Genetic Algorithm TTree");
     tree->Branch("Pop", "Pop", &pop);
+    /*
     for (int i = 0; i < pop.GetPopulationSize(); ++i) {
       for (auto it = pop.GetGenes(i).begin(); it != pop.GetGenes(i).end();
            ++it) {
         tree->Branch("Genes", "Genes", &it);
       }
     }
-    // tree->Print();
+    */
+    tree->Fill();
     tree->Write();
     fHisto->HistoFill(pop, const_cast<char *>(file));
     f->cd();
     f->Close();
+    gROOT->cd();
+    ///////////////////////////////////
   }
 }
 
