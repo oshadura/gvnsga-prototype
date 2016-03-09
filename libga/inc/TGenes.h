@@ -93,10 +93,11 @@ public:
   void ReadGenesTree(Genes<T> &ind, Population<T> &pop, const char *file);
   void SetConstrain(Int_t i, T value);
   std::vector<T> GetConstraines() const { return fConstraines; }
+  T GetConstrain(Int_t i) const { return fConstraines.at(i); }
   std::vector<T> GetfGenes() const { return fGenes; }
   const Functions *GetSetup() const { return setup; }
   void SetDominated(std::vector<Int_t> &d) { fDominated = d; }
-  // faster access 
+  // faster access
   Int_t capacity() { return fGenes.capacity(); }
   Int_t size() { return fGenes.size(); }
   typename std::vector<T>::iterator begin() {
@@ -111,8 +112,8 @@ public:
   void clear() { fGenes.clear(); }
   void push_back(T i) { return fGenes.push_back(i); }
   void resize(Int_t i) { return fGenes.resize(i); }
-  void reserve(Int_t i){return fGenes.reserve(i);}
-  Bool_t empty(){return fGenes.empty();}
+  void reserve(Int_t i) { return fGenes.reserve(i); }
+  Bool_t empty() { return fGenes.empty(); }
   // Pointless thing
   T GetAllev() const { return fAllev; }
   T GetBuffev() const { return fBuffev; }

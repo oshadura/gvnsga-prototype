@@ -5,6 +5,10 @@
 #include <iostream>  // std::cout
 #include <iterator>  // std::ostream_iterator
 #include <algorithm> // std::copy
+#include <iostream>
+#include <list>
+#include <sstream>
+#include <fstream>
 
 #include "TRandom.h"
 #include "TRandom3.h"
@@ -450,6 +454,48 @@ template <class T> void Population<T>::Print() {
     std::cout << "Printout of gene " << position + 1
               << " for population:" << std::endl;
     Genes<T>::printGenes(*it);
+  }
+}
+
+template <class T>
+void Population<T>::Store(const std::string &file, const Population<T> &pop) {
+  std::ofstream *ofstream = new std::ofstream{file};
+  // for (auto it = const_cast<Population<T> &>(pop).begin();it !=
+  // const_cast<Population<T> &>(pop).end(); ++it) {
+  for (int j = 0; j < pop.GetPopulationSetupSize(); ++j) {
+    if (setupPop.fNObjectives > 0) {
+      for (int i = 0; i < setupPop.fNObjectives; ++i) {
+        const T &fitvalue =
+            const_cast<Population<T> &>(pop).GetGenes(j).GetFitness(i);
+        ofstream->write(reinterpret_cast<const char *>(&fitvalue),
+                        sizeof(Double_t) * setupPop.fNObjectives);
+      }
+    }
+    if (setupPop.fNCons > 0) {
+      for (int i = 0; i < setupPop.fNCons; ++i) {
+        const T &consvalue =
+            const_cast<Population<T> &>(pop).GetGenes(j).GetConstrain(i);
+        ofstream->write(reinterpret_cast<const char *>(&consvalue),
+                        sizeof(Double_t) * setupPop.fNCons);
+      }
+    }
+    if (setupPop.fNParam > 0) {
+      for (int i = 0; i < setupPop.fNParam; ++i) {
+        const T &value =
+            const_cast<Population<T> &>(pop).GetGenes(j).GetGene(i);
+        ofstream->write(reinterpret_cast<const char *>(&value),
+                        sizeof(Double_t) * setupPop.fNParam);
+      }
+    }
+    const T &constviol =
+        const_cast<Population<T> &>(pop).GetGenes(j).GetConsViol();
+    const T &cdist =
+        const_cast<Population<T> &>(pop).GetGenes(j).GetCrowdingDistance();
+    const Int_t &rank = const_cast<Population<T> &>(pop).GetGenes(j).GetRank();
+    ofstream->write(reinterpret_cast<const char *>(&constviol),
+                    sizeof(Double_t));
+    ofstream->write(reinterpret_cast<const char *>(&rank), sizeof(Int_t));
+    ofstream->write(reinterpret_cast<const char *>(&cdist), sizeof(Double_t));
   }
 }
 

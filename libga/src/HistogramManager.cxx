@@ -97,7 +97,6 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     hAllev = new TH1F("hAllev", "Totall number of events", 100, 0, 100);
     hAllev->SetLineColor(kMagenta);
     hAllev->SetStats(false);
-    hAllev->Fill();
     mon->cd(++ipad);
     hAllev->Draw("SAME");
     // Check also SCAT
@@ -107,7 +106,6 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     // hBuffev->SetFillStyle(3001);
     hBuffev->SetLineColor(0);
     hBuffev->SetStats(false);
-    hBuffev->Fill();
     mon->cd(++ipad);
     hBuffev->Draw("SAME");
     /////////////////////////
@@ -116,7 +114,6 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     // hThread->SetFillStyle(3001);
     hThread->SetLineColor(0);
     hThread->SetStats(false);
-    hThread->FIll();
     mon->cd(++ipad);
     hThread->Draw("SAME");
     //////////////////////////
@@ -125,7 +122,6 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     // hPriority->SetFillStyle(3001);
     hPriority->SetLineColor(0);
     hPriority->SetStats(false);
-    hPriority->Fill();
     mon->cd(++ipad);
     hPriority->Draw("SAME");
     //////////////////////////
@@ -134,7 +130,6 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     // hSteps->SetFillStyle(3001);
     hSteps->SetLineColor(0);
     hSteps->SetStats(false);
-    hSteps->Fill();
     mon->cd(++ipad);
     hSteps->Draw("SAME");
     //////////////////////////
@@ -143,7 +138,6 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     // hVector->SetFillStyle(3001);
     hVector->SetLineColor(0);
     hVector->SetStats(false);
-    hVector->Fill();
     mon->cd(++ipad);
     hVector->Draw("SAME");
     //////////////////////////
@@ -152,7 +146,6 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     // hMaxVector->SetFillStyle(3001);
     hMaxVector->SetLineColor(0);
     hMaxVector->SetStats(false);
-    hMaxVector->Fill();
     mon->cd(++ipad);
     hMaxVector->Draw("SAME");
 #else
@@ -161,7 +154,6 @@ Bool_t HistogramManager::HistoFill(Population<Double_t> &pop, char *hfile) {
     // hx->SetFillStyle(3001);
     hx->SetLineColor(0);
     hx->SetStats(false);
-    hx->Fill();
     mon->cd(++ipad);
     hx->Draw("SAME");
 #endif

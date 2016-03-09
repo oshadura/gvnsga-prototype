@@ -110,6 +110,7 @@ public:
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
+  void Store(const std::string &file, const Population<T> &pop);
   Genes<T> operator[](Int_t i) { return fPopulation.at(i); }
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop) {
     os << "Population: [\n";
@@ -133,7 +134,7 @@ public:
     }
     std::cout << " ]\n" << std::endl;
   }
-//
+  //
   void push_back(Genes<T> &i) { return fPopulation.push_back(i); }
 
 public:
