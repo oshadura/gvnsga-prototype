@@ -76,11 +76,13 @@ void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   ind = Genes<T>(setup);
   std::random_device rnd_device;
   std::mt19937 mersenne_engine(rnd_device());
-  std::uniform_real_distribution<T> dist(setup.fInterval[0].first,
-                                         setup.fInterval[0].second);
-  auto gen = std::bind(dist, mersenne_engine);
-  //std::generate(std::begin(ind), std::end(ind), gen);
-  ind.push_back(gen());
+  for (Int_t i = 0; i <= (setup.fNParam); ++i) {
+    std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
+                                           setup.fInterval[i].second);
+    auto gen = std::bind(dist, mersenne_engine);
+    // std::generate(std::begin(ind), std::end(ind), gen);
+    ind.push_back(gen());
+  }
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
   }
@@ -92,7 +94,8 @@ void Genes<T>::SetGeantV(Functions &setup,
                          Genes<T> &ind) throw(ExceptionMessenger) {
   // FIX GENERATORS
   // 1. Consider value that ([0] - 1) should be always smaller [0]
-  // 2. Consider that [5] and [6] are generated in diferent way (new generator)
+  // 2. Consider that [5] and [6] are generated in diferent way (new
+  // generator)
   ind.empty();
   ind.reserve(setup.fNParam);
   ind = Genes<T>(setup);
@@ -102,7 +105,7 @@ void Genes<T>::SetGeantV(Functions &setup,
     std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
                                            setup.fInterval[i].second);
     auto gen = std::bind(dist, mersenne_engine);
-    //std::generate_n(std::begin(ind) + i, 1, gen());
+    // std::generate_n(std::begin(ind) + i, 1, gen());
     ind.push_back(gen());
   }
   for (auto i : ind) {
@@ -120,7 +123,8 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
 template <class T>
 void Genes<T>::Evaluate(GeantPropagator *prop, Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
-  std::cout << "-==============================================-" << std::endl;
+  std::cout << "-==============================================-" <<
+std::endl;
   std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
   printGenes(ind);
   (setup.evfunc)(prop, ind);
