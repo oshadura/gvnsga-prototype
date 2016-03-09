@@ -75,7 +75,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << " Creating new individual.." << std::endl;
   }
-  WritePopulationTree(*this, "NSGA.root");
+ // WritePopulationTree(*this, "NSGA.root");
 }
 #else
 template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
@@ -84,7 +84,7 @@ template <class T> void Population<T>::Build() throw(ExceptionMessenger) {
     // fPopulation.emplace_back(&(*it).GetfGenes());
     std::cout << "Creating new individual.." << std::endl;
   }
-  WritePopulationTree(*this, "NSGA.root");
+ // WritePopulationTree(*this, "NSGA.root");
 }
 #endif
 
