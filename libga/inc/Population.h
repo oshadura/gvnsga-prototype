@@ -33,6 +33,7 @@
 #include <utility>
 #include <memory>
 #include <algorithm>
+#include <ios>
 
 #define EPS 1e-14
 #define INF 1e+14
@@ -43,10 +44,10 @@ class Population : public Genes<T>, public Functions, public HistogramManager {
 public:
   Population()
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fHisto(0),
-        fPopFunction(NULL), setupPop() {}
+        fPopFunction(NULL), setupPop(){}
   Population(Int_t size)
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(size), fHisto(0),
-        fPopFunction(NULL), setupPop() {
+        fPopFunction(NULL), setupPop(){
     fFront.reserve(size);
     fPopulation.reserve(size);
   }
@@ -94,6 +95,8 @@ public:
              const Population &population2); // Merging two populations
   Int_t Mutate();
   void Print();
+  std::ofstream& CreateCVS(std::string file);
+  void CVSOutput(std::ofstream &populationcvs, const Population<T> &pop);
   //#ifdef ENABLE_GEANTV
   //  void Evaluate(GeantPropagator* prop);
   //#else
@@ -110,7 +113,7 @@ public:
   void UpdatePopulationTree(Population &pop, const char *file);
   void ReadPopulationTree(Population &pop, const char *file);
   Int_t PrintTree(const char *file, const char *name);
-  void Store(const std::string &file, const Population<T> &pop);
+  void Store(const char *file, const Population<T> &pop);
   Genes<T> operator[](Int_t i) { return fPopulation.at(i); }
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop) {
     os << "Population: [\n";

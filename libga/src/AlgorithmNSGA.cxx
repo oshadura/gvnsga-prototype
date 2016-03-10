@@ -336,12 +336,6 @@ void AlgorithmNSGA::NextStep() {
   std::cout << "-==============================================-"
             << "\n" << std::endl;
   std::cout << "New generation #" << fGen + 1 << std::endl;
-  //fParentPop->Print();
-  //std::cout << "-==============================================-" <<
-  //std::endl;
-  //fChildPop->Print();
-  //std::cout << "-==============================================-" <<
-  //std::endl;
   Selection(*fParentPop, *fChildPop);
   // Writing new Parent population in root file!
   //fParentPop->WritePopulationTree(*fParentPop, "NSGA.root");
@@ -422,8 +416,15 @@ void AlgorithmNSGA::NextStep() {
   // std::cout << "-==============================================-" <<
   // std::endl;
   fGen += 1;
+  // Print new population
   fParentPop->Print();
-  fParentPop->Store("ParentPop.csv", *fParentPop);
+  //Dump
+  fParentPop->Store("ParentPop.backup", *fParentPop);
+  //Write current populations in file
+  std::ofstream populationcvs;
+  populationcvs.open("Populations.cvs", std::fstream::app);
+  //fParentPop->CVSOutput(fParentPop->CreateCVS("Population.csv"), *fParentPop);
+  fParentPop->CVSOutput(populationcvs, *fParentPop);
 }
 
 void AlgorithmNSGA::Evolution() {

@@ -460,16 +460,18 @@ template <class T> void Population<T>::Print() {
 }
 
 template <class T>
-void Population<T>::Store(const std::string &file, const Population<T> &pop) {
-  std::ofstream *ofstream = new std::ofstream{file};
-  // for (auto it = const_cast<Population<T> &>(pop).begin();it !=
-  // const_cast<Population<T> &>(pop).end(); ++it) {
-  for (int j = 0; j < pop.GetPopulationSetupSize(); ++j) {
+void Population<T>::Store(const char *file, const Population<T> &pop) {
+  std::ofstream ofstream(file, std::ios::binary);
+  std::cout << "Printing Genes in file.." << std::endl;
+  std::cout << "Printing Constraints in file.." << std::endl;
+  std::cout << "Printing Fitness in file.." << std::endl;
+  //std::ofstream *ofstream = new std::ofstream{file};
+  for (int j = 0; j < pop.GetPopulationSize(); ++j) {
     if (setupPop.fNObjectives > 0) {
       for (int i = 0; i < setupPop.fNObjectives; ++i) {
         const T &fitvalue =
             const_cast<Population<T> &>(pop).GetGenes(j).GetFitness(i);
-        ofstream->write(reinterpret_cast<const char *>(&fitvalue),
+        ofstream.write(reinterpret_cast<const char *>(&fitvalue),
                         sizeof(Double_t) * setupPop.fNObjectives);
       }
     }
@@ -477,7 +479,7 @@ void Population<T>::Store(const std::string &file, const Population<T> &pop) {
       for (int i = 0; i < setupPop.fNCons; ++i) {
         const T &consvalue =
             const_cast<Population<T> &>(pop).GetGenes(j).GetConstrain(i);
-        ofstream->write(reinterpret_cast<const char *>(&consvalue),
+        ofstream.write(reinterpret_cast<const char *>(&consvalue),
                         sizeof(Double_t) * setupPop.fNCons);
       }
     }
@@ -485,7 +487,7 @@ void Population<T>::Store(const std::string &file, const Population<T> &pop) {
       for (int i = 0; i < setupPop.fNParam; ++i) {
         const T &value =
             const_cast<Population<T> &>(pop).GetGenes(j).GetGene(i);
-        ofstream->write(reinterpret_cast<const char *>(&value),
+        ofstream.write(reinterpret_cast<const char *>(&value),
                         sizeof(Double_t) * setupPop.fNParam);
       }
     }
@@ -494,12 +496,45 @@ void Population<T>::Store(const std::string &file, const Population<T> &pop) {
     const T &cdist =
         const_cast<Population<T> &>(pop).GetGenes(j).GetCrowdingDistance();
     const Int_t &rank = const_cast<Population<T> &>(pop).GetGenes(j).GetRank();
-    ofstream->write(reinterpret_cast<const char *>(&constviol),
+    ofstream.write(reinterpret_cast<const char *>(&constviol),
                     sizeof(Double_t));
-    ofstream->write(reinterpret_cast<const char *>(&rank), sizeof(Int_t));
-    ofstream->write(reinterpret_cast<const char *>(&cdist), sizeof(Double_t));
+    ofstream.write(reinterpret_cast<const char *>(&rank), sizeof(Int_t));
+    ofstream.write(reinterpret_cast<const char *>(&cdist), sizeof(Double_t));
   }
+  ofstream.flush();
+  ofstream.close();
 }
 
-// Ugly instantiation
+template <class T>
+std::ofstream& Population<T>::CreateCVS(std::string file) {
+  std::ofstream populationcvs;
+  populationcvs.open(file.c_str(), std::fstream::app);
+}
+
+template <class T> void Population<T>::CVSOutput(std::ofstream &populationcvs, const Population<T> &pop){
+  populationcvs << "Fitness#1, Fitness#1, Fitness#1, Gene#1, Gene#2, Gene#3, Gene#4, Gene#5, Gene#6, Gene#7, ConstrainViolation,Crowdingdistance, Rank\n";
+for (int j = 0; j < pop.GetPopulationSize(); ++j) {
+    if (setupPop.fNObjectives > 0) {
+      for (int i = 0; i < setupPop.fNObjectives; ++i) {
+        populationcvs << const_cast<Population<T> &>(pop).GetGenes(j).GetFitness(i) << ",";
+
+      }
+    }
+    if (setupPop.fNCons > 0) {
+      for (int i = 0; i < setupPop.fNCons; ++i) {
+      populationcvs <<  const_cast<Population<T> &>(pop).GetGenes(j).GetConstrain(i) << ",";
+      }
+    }
+    if (setupPop.fNParam > 0) {
+      for (int i = 0; i < setupPop.fNParam; ++i) {
+        populationcvs << const_cast<Population<T> &>(pop).GetGenes(j).GetGene(i) << ",";
+      }
+    }
+    populationcvs << const_cast<Population<T> &>(pop).GetGenes(j).GetConsViol() << ",";
+    populationcvs << const_cast<Population<T> &>(pop).GetGenes(j).GetCrowdingDistance() << ",";
+    populationcvs << const_cast<Population<T> &>(pop).GetGenes(j).GetRank()<< "," << "\n";
+  }
+  populationcvs << "-=============================================================================-\n";
+}
+
 template class Population<Double_t>;
