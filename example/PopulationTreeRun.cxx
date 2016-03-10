@@ -35,6 +35,7 @@
 #endif
 
 void runApp(Genes<Double_t> &individual) {
+  gROOT->Reset();
   GeantVFitness *fitness = new GeantVFitness();
 #ifdef ENABLE_PERFMON
   PFMWatch perfcontrol;
@@ -152,6 +153,10 @@ void runApp(Genes<Double_t> &individual) {
 #endif
   delete prop;
   delete fitness;
+  // How to clean?
+  gROOT->GetListOfGlobals()->Delete();
+  gROOT->GetListOfGeometries()->Delete();
+ //
   return;
 }
 

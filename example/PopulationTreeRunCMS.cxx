@@ -36,14 +36,11 @@
 
 // Forget about constrains now!
 void CMSApp(Genes<Double_t> &individual) {
+  GeantVFitness *fitness = new GeantVFitness();
 #ifdef ENABLE_PERFMON
   PFMWatch perfcontrol;
+  perfcontrol.Start();
 #endif
-  // GeantVFitness fitness;
-  // std::cout << "xxxxxxxxxxxxxxxxxxxxxxx Example runCMS.C
-  // xxxxxxxxxxxxxxxxxxxxxxxx" << std::endl;
-  // We need to modify perfomance counter header GeantVFitness.h
-  // XXXXXXXXXXXXXXXX Take a fitness from individual.GetFitness()
   std::cout << "Lets pass it to GeantV propagator.." << std::endl;
   bool performance = true;
   const char *geomfile = "cms2015.root";
@@ -127,8 +124,29 @@ void CMSApp(Genes<Double_t> &individual) {
     prop->fUseStdScoring = false;
   prop->fUseMonitoring = graphics;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
+#ifdef ENABLE_PERFMON
+  perfcontrol.Stop();
+#endif
+  fitness->SetMemorySwitch(false);
+  fitness->TemporarySolution();
+  fitness->LogMemoryFitness("fitness.root");
   individual.SetFitness(0, prop->fTimer->RealTime());
+  individual.SetFitness(1, -(prop->fNprimaries.load()));
+  individual.SetFitness(2, perfcontrol.GetNInstructions());
+  individual.SetFitness(3, perfcontrol.GetBranchMisses());
+  individual.SetFitness(4, fitness->GetmaxMemResident());
+#ifdef ENABLE_PERFMON
+  perfcontrol.printSummary();
+#endif
   delete prop;
+  delete fitness;
+  gROOT->Reset();
+  // How to clean?
+  gROOT->GetListOfGlobals()->Delete();
+  gROOT->GetListOfGeometries()->Delete();
+  gROOT->GetListOfSpecials()->Delete();
+  gROOT->GetListOfStreamerInfo()->Delete();
+ //
   return;
 }
 
@@ -146,7 +164,7 @@ int main(int argc, char *argv[]) {
   nsga2->SetGenTotalNumber(2);
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(6);
-  nsga2->SetNObjectives(2); // Memory, Time
+  nsga2->SetNObjectives(5); // Memory, Time
   nsga2->SetCrowdingObj(false);
   nsga2->SetPopulationSize(4);
   nsga2->SetEtaMut(10);

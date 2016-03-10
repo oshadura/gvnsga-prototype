@@ -422,7 +422,7 @@ void AlgorithmNSGA::NextStep() {
   fParentPop->Store("ParentPop.backup", *fParentPop);
   //Write current populations in file
   std::ofstream populationcvs;
-  populationcvs.open("Populations.cvs", std::fstream::app);
+  populationcvs.open("GeantV.cvs", std::fstream::app);
   //fParentPop->CVSOutput(fParentPop->CreateCVS("Population.csv"), *fParentPop);
   fParentPop->CVSOutput(populationcvs, *fParentPop);
 }

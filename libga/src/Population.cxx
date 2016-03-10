@@ -512,8 +512,10 @@ std::ofstream& Population<T>::CreateCVS(std::string file) {
 }
 
 template <class T> void Population<T>::CVSOutput(std::ofstream &populationcvs, const Population<T> &pop){
-  populationcvs << "Fitness#1, Fitness#1, Fitness#1, Gene#1, Gene#2, Gene#3, Gene#4, Gene#5, Gene#6, Gene#7, ConstrainViolation,Crowdingdistance, Rank\n";
+  populationcvs << "Fitness1, Fitness1, Fitness1, Gene1, Gene2, Gene3, Gene4, Gene5, Gene6, Gene7, ConstrainViolation,Crowdingdistance, Rank\n";
 for (int j = 0; j < pop.GetPopulationSize(); ++j) {
+  // CVS format for R
+    populationcvs << j << ",";
     if (setupPop.fNObjectives > 0) {
       for (int i = 0; i < setupPop.fNObjectives; ++i) {
         populationcvs << const_cast<Population<T> &>(pop).GetGenes(j).GetFitness(i) << ",";

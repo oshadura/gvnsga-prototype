@@ -79,7 +79,7 @@ public:
     return fFitness.at(i);
   } // Get Fitness at i position
   void SetFitness(std::vector<T> fitness) { fFitness = fitness; }
-  void SetFitness(Int_t i, T value) { fFitness[i] = value; }
+  void SetFitness(Int_t i, T value) { fFitness.at(i) = value; }
   T GetCrowdingDistance() const { return fCrowdingDistance; }
   void SetCrowdingDistance(T dist) { fCrowdingDistance = dist; }
   Int_t GetRank() const { return fRank; }
@@ -116,7 +116,6 @@ public:
   void reserve(Int_t i) { return fGenes.reserve(i); }
   Bool_t empty() { return fGenes.empty(); }
   T at(Int_t i){ return fGenes.at(i);}
-  void assign(Int_t i, T value){return fGenes.assign(i, value);}
   // Pointless thing
   T GetAllev() const { return fAllev; }
   T GetBuffev() const { return fBuffev; }
