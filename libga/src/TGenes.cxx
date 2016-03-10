@@ -5,7 +5,8 @@
 #include <random>
 #include <algorithm>
 #include <stdexcept>
-
+#include <chrono>
+#include <ctime>
 // Map for Genes[x]<->Limits[x] (?)
 #include <map>
 
@@ -39,7 +40,7 @@ Genes<T>::Genes(const Functions &config) throw(ExceptionMessenger)
       fGenes(), fAllev(0), fBuffev(0), fThread(0), fPriority(0), fSteps(0),
       fVector(0), fTime(0), fMemory(0), setup(&config), fConstraines() {
   // Creating it but empty, working after with push_back
-  fGenes.reserve(setup->fNParam);
+  fGenes.resize(setup->fNParam, 0);
   fFitness.resize(setup->fNObjectives, 0);
   fConstraines.resize(setup->fNCons, 0);
 }
@@ -70,18 +71,19 @@ template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
 
 template <class T>
 void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
-  // Lets imagine that we have only one limit #0 for all parameters
   ind.empty();
   ind.reserve(setup.fNParam);
   ind = Genes<T>(setup);
   std::random_device rnd_device;
-  std::mt19937 mersenne_engine(rnd_device());
-  for (Int_t i = 0; i <= (setup.fNParam); ++i) {
+  auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  std::mt19937 mersenne_engine(seed);
+  //std::mt19937 mersenne_engine(rnd_device());
+  for (Int_t i = 0; i < (setup.fNParam); ++i) {
     std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
                                            setup.fInterval[i].second);
-    auto gen = std::bind(dist, mersenne_engine);
+    auto gen = std::bind(dist, std::ref(mersenne_engine));
     // std::generate(std::begin(ind), std::end(ind), gen);
-    ind.push_back(gen());
+    ind.SetGene(i, gen());
   }
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
@@ -100,13 +102,16 @@ void Genes<T>::SetGeantV(Functions &setup,
   ind.reserve(setup.fNParam);
   ind = Genes<T>(setup);
   std::random_device rnd_device;
-  std::mt19937 mersenne_engine(rnd_device());
-  for (Int_t i = 0; i <= (setup.fNParam); ++i) {
+  auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  //std::mt19937 mersenne_engine(rnd_device());
+  std::mt19937 mersenne_engine(seed);
+  for (Int_t i = 0; i < (setup.fNParam); ++i) {
     std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
                                            setup.fInterval[i].second);
-    auto gen = std::bind(dist, mersenne_engine);
+    auto gen = std::bind(dist, std::ref(mersenne_engine));
     // std::generate_n(std::begin(ind) + i, 1, gen());
-    ind.push_back(gen());
+    ind.SetGene(i, gen());
+
   }
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";

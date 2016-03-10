@@ -136,16 +136,16 @@ void runApp(Genes<Double_t> &individual) {
   // Monitor the application
   prop->fUseAppMonitoring = false;
   prop->PropagatorGeom(geomfile, nthreads, graphics);
-  fitness->SetMemorySwitch(false);
-  fitness->TemporarySolution();
-  fitness->LogMemoryFitness("fitness.root");
 #ifdef ENABLE_PERFMON
   perfcontrol.Stop();
 #endif
+  fitness->SetMemorySwitch(false);
+  fitness->TemporarySolution();
+  fitness->LogMemoryFitness("fitness.root");
   individual.SetFitness(0, prop->fTimer->RealTime());
   individual.SetFitness(1, -(prop->fNprimaries.load()));
-  // individual.SetFitness(2, perfcontrol.GetNInstructions());
-  // individual.SetFitness(3, perfcontrol.GetBranchMisses());
+  individual.SetFitness(2, perfcontrol.GetNInstructions());
+  individual.SetFitness(3, perfcontrol.GetBranchMisses());
   individual.SetFitness(4, fitness->GetmaxMemResident());
 #ifdef ENABLE_PERFMON
   perfcontrol.printSummary();

@@ -32,6 +32,8 @@ templateClassImp(Population)
         const std::vector<std::pair<Double_t, Double_t>> fInterval,
         const Functions::functype func) throw(ExceptionMessenger)
     : fCrowdingObj(true), fPopFunction(NULL), setupPop(), fHisto(0) {
+  fFront.reserve(fSizePop);
+  fPopulation.reserve(fSizePop);
   setupPop.fNParam = fNParam;
   setupPop.fInterval = fInterval;
   setupPop.fNCons = fNCons;

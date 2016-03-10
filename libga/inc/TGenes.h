@@ -70,7 +70,8 @@ public:
   T GetDominated(Int_t i) { return fDominated.at(i); }
   T SetDominatedCounter(Int_t dc) { return fDominationCounter = dc; }
   T GetGene(Int_t i) const { return fGenes.at(i); }
-  void SetGene(Int_t i, T value) { fGenes[i] = value; }
+  //void SetGene(Int_t i, T value) { fGenes[i] = value; }
+  void SetGene(Int_t i, T value) {fGenes.at(i) = value;}
   std::vector<T> GetFitnessVector() const {
     return fFitness;
   } // Get a vector of fTime and fMemory
@@ -114,6 +115,8 @@ public:
   void resize(Int_t i) { return fGenes.resize(i); }
   void reserve(Int_t i) { return fGenes.reserve(i); }
   Bool_t empty() { return fGenes.empty(); }
+  T at(Int_t i){ return fGenes.at(i);}
+  void assign(Int_t i, T value){return fGenes.assign(i, value);}
   // Pointless thing
   T GetAllev() const { return fAllev; }
   T GetBuffev() const { return fBuffev; }
