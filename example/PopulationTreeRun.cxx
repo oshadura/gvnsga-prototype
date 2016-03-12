@@ -145,10 +145,10 @@ void runApp(Genes<Double_t> &individual) {
   fitness->LogMemoryFitness("fitness.root");
   individual.SetFitness(0, prop->fTimer->RealTime());
   individual.SetFitness(1, -(prop->fNprimaries.load()));
-  individual.SetFitness(2, perfcontrol.GetNInstructions());
-  individual.SetFitness(3, perfcontrol.GetBranchMisses());
-  individual.SetFitness(4, fitness->GetmaxMemResident());
+  individual.SetFitness(2, fitness->GetmaxMemResident());
 #ifdef ENABLE_PERFMON
+  individual.SetFitness(3, perfcontrol.GetNInstructions());
+  individual.SetFitness(4, perfcontrol.GetBranchMisses());
   perfcontrol.printSummary();
 #endif
   delete prop;
@@ -156,7 +156,7 @@ void runApp(Genes<Double_t> &individual) {
   // How to clean?
   gROOT->GetListOfGlobals()->Delete();
   gROOT->GetListOfGeometries()->Delete();
- //
+  //
   return;
 }
 
@@ -175,7 +175,11 @@ int main(int argc, char *argv[]) {
   nsga2->SetGenTotalNumber(5);
   nsga2->SetNCons(0); // First version will be constrainless
   nsga2->SetNParam(6);
-  nsga2->SetNObjectives(4); // Memory, Time , etc.
+#ifdef ENABLE_PERFMON
+  nsga2->SetNObjectives(5); // Memory, Time , etc.
+#else
+  nsga2->SetNObjectives(3);
+#endif
   // nsga2->SetInterval(); // Testing intervals between [0,100]
   nsga2->SetCrowdingObj(false);
   nsga2->SetPopulationSize(12);
