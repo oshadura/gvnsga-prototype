@@ -19,6 +19,7 @@
 //#endif
 
 #include <vector>
+#include <memory>
 
 #include "Functions.h"
 #include "ExceptionMessenger.h"
@@ -45,10 +46,10 @@ public:
   virtual ~Genes() {}
   // Function building Genes (moved in Population and Functions)
   void Clear(Option_t *option = "");
-  T CheckDominance(Functions *setup,
-                   const Genes<T> *ind2) throw(ExceptionMessenger);
-  Int_t Mutate(const Functions *setup);
-  void StoreGenesTree(Genes<T> *ind);
+  T CheckDominance(std::shared_ptr<Functions> setup,
+                   const std::shared_ptr<Genes<T>> ind2) throw(ExceptionMessenger);
+  Int_t Mutate(const std::shared_ptr<Functions> setup);
+  void StoreGenesTree(std::shared_ptr<Genes<T>> ind);
   Genes<T> &operator=(const Genes<T> &gen);
   void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
 
@@ -96,7 +97,7 @@ public:
   std::vector<T> GetConstraines() const { return fConstraines; }
   T GetConstrain(Int_t i) const { return fConstraines.at(i); }
   std::vector<T> GetfGenes() const { return fGenes; }
-  const Functions *GetSetup() const { return setup; }
+  const std::shared_ptr<Functions> GetSetup() const { return setup; }
   void SetDominated(std::vector<Int_t> &d) { fDominated = d; }
   // faster access
   Int_t capacity() { return fGenes.capacity(); }
@@ -195,7 +196,7 @@ private:
   Double_t ConstViol;            // Violation of constraints
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
-  const Functions *setup;
+  const std::shared_ptr<Functions> setup;
 
   //#ifdef ENABLE_GEANTV
   //  GeantPropagator *prop;

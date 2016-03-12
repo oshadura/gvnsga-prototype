@@ -160,7 +160,7 @@ private:
   //#ifdef ENABLE_GEANTV
   //  GeantPropagator *prop;
   //#endif
-  Functions setupPop;
+  std::shared_ptr<Functions> setupPop;
   Functions::popfunctype fPopFunction;
   Int_t fSizePop;
   HistogramManager *fHisto;

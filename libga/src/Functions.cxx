@@ -9,6 +9,7 @@
 #include <ostream>
 #include <string>
 #include <utility>
+#include <memory>
 
 using namespace std::placeholders;
 

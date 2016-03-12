@@ -66,7 +66,7 @@ template <class T> Genes<T> &Genes<T>::operator=(const Genes<T> &gen) {
     setup = gen.setup;
     fConstraines = gen.fConstraines;
   }
-  return *this;
+  return std::shared_ptr<Genes<T>> this;
 }
 
 template <class T>
@@ -168,8 +168,8 @@ template <class T> void Genes<T>::Clear(Option_t * /*option*/) {
 }
 
 template <class T>
-T Genes<T>::CheckDominance(Functions *setup,
-                           const Genes<T> *ind2) throw(ExceptionMessenger) {
+T Genes<T>::CheckDominance(std::shared_ptr<Functions> setup,
+                           const std::shared_ptr<Genes<T>> ind2) throw(ExceptionMessenger) {
   if (ConstViol < 0 && ind2->ConstViol < 0) {
     if (ConstViol > ind2->ConstViol)
       return 1; // ind1 less
@@ -215,7 +215,7 @@ T Genes<T>::CheckDominance(Functions *setup,
 }
 
 // Polynomial mutation
-template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
+template <class T> Int_t Genes<T>::Mutate(const std::shared_ptr<Functions> setup) {
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution<> rand(0, 1);

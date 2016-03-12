@@ -12,7 +12,9 @@
 
 #include "TObject.h"
 #include "Functions.h"
+
 #include <vector>
+#include <memory>
 
 //#ifdef ENABLE_GEANTV
 //#include "GeantPropagator.h"
@@ -103,9 +105,9 @@ private:
   //================= User defined parameters ================//
 
 public:
-  Population<Double_t> *fParentPop;
-  Population<Double_t> *fChildPop;
-  Population<Double_t> *fMixedPop;
+  std::shared_ptr<Population<Double_t>> fParentPop;
+  std::shared_ptr<Population<Double_t>> fChildPop;
+  std::shared_ptr<Population<Double_t>> fMixedPop;
 
   ClassDef(AlgorithmNSGA, 1)
 };

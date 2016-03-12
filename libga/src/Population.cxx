@@ -118,7 +118,7 @@ template <class T> void Population<T>::CrowdingDistanceFront(Int_t front) {
                "setupPop.fNParam) = "
             << limit << std::endl;
   for (Int_t m = 0; m < limit; ++m) {
-    std::sort(F.begin(), F.end(), Comparing<T>(*this, m));
+    std::sort(F.begin(), F.end(), Comparing<T>((*this), m));
     // Setting INF values for boundaries values (min, max)
     GetGenes(F[0]).SetCrowdingDistance(INF);
     if (F.size() > 1)
@@ -267,7 +267,7 @@ void Population<T>::Merge(const Population<T> &population1,
 template <class T> Int_t Population<T>::Mutate() {
   Int_t mutvalue;
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
-    const Functions *setupind = (*it).GetSetup();
+    const std::shared_ptr<Functions> setupind = (*it).GetSetup();
     // std::cout << "-==============================================-" <<
     // std::endl;
     // std::cout << "So so, just to be sure -> number of objectives in "

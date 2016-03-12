@@ -48,15 +48,15 @@ AlgorithmNSGA::AlgorithmNSGA()
 
 AlgorithmNSGA::~AlgorithmNSGA() {
   if (fChildPop) {
-    delete fChildPop;
+    //delete fChildPop;
     fChildPop = 0;
   }
   if (fParentPop) {
-    delete fParentPop;
+    //delete fParentPop;
     fParentPop = 0;
   }
   if (fMixedPop) {
-    delete fMixedPop;
+    //delete fMixedPop;
     fMixedPop = 0;
   }
 }
@@ -92,13 +92,13 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
         "Here I will not talk anymore with you: no function - no job");
 
   fChildPop =
-      new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
+      new std::shared_ptr<Population<Double_t>>(fSizePop, fNParam, fNCons, fNObjectives,
                                fEpsilonC, fPMut, fEtaMut, fInterval, function);
   fParentPop =
-      new Population<Double_t>(fSizePop, fNParam, fNCons, fNObjectives,
+      new std::shared_ptr<Population<Double_t>>(fSizePop, fNParam, fNCons, fNObjectives,
                                fEpsilonC, fPMut, fEtaMut, fInterval, function);
   fMixedPop =
-      new Population<Double_t>(fSizePop * 2, fNParam, fNCons, fNObjectives,
+      new std::shared_ptr<Population<Double_t>>(fSizePop * 2, fNParam, fNCons, fNObjectives,
                                fEpsilonC, fPMut, fEtaMut, fInterval, function);
   // Missing check of input variables and creation of population with them
   // Report(configuration);
@@ -208,10 +208,10 @@ Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_real_distribution<> dist(0, 1);
-  const Functions *setupind = ind1.GetSetup();
+  const std::shared_ptr<Functions> setupind = ind1.GetSetup();
   // std::cout << "So so, just to be sure - number of objectives on Tournament()
   // " << ind1.GetSetup()->GetNObjectives() << std::endl;
-  Int_t fFlag = ind1.CheckDominance(const_cast<Functions *>(setupind), &ind2);
+  Int_t fFlag = ind1.CheckDominance(const_cast<std::shared_ptr<Functions>>(setupind), &ind2);
   if (fFlag == 1) // Yes
     return ind1;
   else if (fFlag == -1) // Opposite
