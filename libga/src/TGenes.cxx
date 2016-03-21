@@ -9,6 +9,11 @@
 #include <ctime>
 // Map for Genes[x]<->Limits[x] (?)
 #include <map>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #include "TRandom3.h"
 #include "TFile.h"
@@ -147,7 +152,36 @@ void Genes<T>::Evaluate(Functions &setup,
   // std::endl;
   // std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
   // printGenes(ind);
-  (setup.evfunc)(ind);
+  // Lets consider that we have inly 2 pipes
+  const int fNumberChildren = 1;
+  int pipeGA[fNumberChildren + 1];
+  //Array of pids to be dead
+  pid_t fArrayDead[fNumberChildren]; 
+  //
+  pid_t cpid;
+  pipe(pipeGA);
+  cpid = fork();
+  std::vector<T> buffer;
+  for (int i = 0; i < fNumberChildren; ++i){
+    if (cpid == 0) {
+    (setup.evfunc)(ind);
+    while (read(pipe[0], &buffer, 1) > 0){
+      write(1, &buffer, 1);
+    }
+    write(1, "\n", 1);
+    close(pipe[0]); // close the read-end of the pipe
+    exit(EXIT_SUCCESS);
+    break;
+  }
+  else{
+    fArrayDead[i] = cpid;
+    close(pipeGA[0]);
+    write(pipeGA[1], &buffer, 1);
+    close(pipeGA[1]); // close the read-end of the pipe
+    wait(NULL);
+    exit(EXIT_SUCCESS);
+  }
+  }
   if (setup.fNCons) {
     ConstViol = 0;
   }
