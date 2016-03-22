@@ -9,11 +9,11 @@
 #include <ctime>
 // Map for Genes[x]<->Limits[x] (?)
 #include <map>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <unistd.h>
-#include <sys/wait.h>
+#include <string.h>
 
 #include "TRandom3.h"
 #include "TFile.h"
@@ -28,6 +28,9 @@
 #include "TGenes.h"
 #include "Population.h"
 #include "HistogramManager.h"
+///////////////////
+#include "Process.h"
+
 
 templateClassImp(Genes)
 
@@ -144,48 +147,73 @@ std::endl;
   fEvaluated = true;
 }
 */
-// else
+
+
+  /**
+   * @brief [brief description]
+   * @details 
+  Create pipe
+  Fork
+  In parent:
+    Close read end of pipe
+    Write data to be evaluated down write end of pipe
+    Close write end of pipe
+    Wait for child to die
+  In child
+    Close write end of pipe
+    Duplicate read end of pipe to stdin
+    Close read end of pipe
+    Exec the evaluate program
+    Exit with an error if the exec returns
+   */
 template <class T>
 void Genes<T>::Evaluate(Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
+
   // std::cout << "-==============================================-" <<
   // std::endl;
   // std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
   // printGenes(ind);
   // Lets consider that we have inly 2 pipes
+  size_t sizeofFitness = sizeof(fFitness) + sizeof(T)* fFitness.capacity();
   const int fNumberChildren = 1;
   int pipeGA[fNumberChildren + 1];
   //Array of pids to be dead
   pid_t fArrayDead[fNumberChildren]; 
-  //
   pid_t cpid;
   pipe(pipeGA);
   cpid = fork();
-  std::vector<T> buffer;
   for (int i = 0; i < fNumberChildren; ++i){
     if (cpid == 0) {
+    std::cout << "Starting child.."<< std::endl;
+    close(pipeGA[1]); // close the write-end of the pipe 
     (setup.evfunc)(ind);
-    while (read(pipe[0], &buffer, 1) > 0){
-      write(1, &buffer, 1);
+    while (read(pipeGA[0], &fFitness, sizeofFitness) > 0){
+      write(pipeGA[1], &fFitness, 1);
     }
-    write(1, "\n", 1);
-    close(pipe[0]); // close the read-end of the pipe
+    close(pipeGA[0]); // close the read-end of the pipe
     exit(EXIT_SUCCESS);
-    break;
   }
   else{
     fArrayDead[i] = cpid;
     close(pipeGA[0]);
-    write(pipeGA[1], &buffer, 1);
+    write(pipeGA[1], &fFitness, sizeofFitness);
     close(pipeGA[1]); // close the read-end of the pipe
-    wait(NULL);
-    exit(EXIT_SUCCESS);
+    for (int i = 0; i < fNumberChildren; ++i){
+      std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.." << std::endl;
+      waitpid(fArrayDead[i], NULL, 0);
+      std::cout << "PID: " << fArrayDead[i] << " has shut down.." << std::endl;
+    }
+    //wait(NULL);
+    std::cout << "WE ARE BACK TO MASTER JOB::"<< std::endl;
   }
   }
   if (setup.fNCons) {
     ConstViol = 0;
   }
   fEvaluated = true;
+  // Cleaning array of previos pids
+  fArrayDead[fNumberChildren] = NULL;
 }
 //#endif
 
