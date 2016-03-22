@@ -68,6 +68,7 @@ file(GLOB headers inc/PFMWatch.h
  inc/invoke_cpp11.hpp
  inc/type_traits.hpp
  inc/GeantVFitness.h
+ inc/Process.h
  )
 #----------------------------------------------------------------------------
 # Generate the Dictionary

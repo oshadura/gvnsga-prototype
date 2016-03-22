@@ -321,7 +321,7 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
 template <class T>
 void Genes<T>::WriteGenesTree(Genes<T> &ind, Population<T> &pop,
                               const char *file) {
-  R__LOAD_LIBRARY(libGa);
+  //R__LOAD_LIBRARY(libGa);
   if (!file) {
     TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
@@ -340,7 +340,7 @@ template <class T>
 void Genes<T>::UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2,
                                Population<T> &pop, const char *file) {
   // Looks it is not possible update existing events, lets update the tree
-  R__LOAD_LIBRARY(libGa);
+  //R__LOAD_LIBRARY(libGa);
   TFile *f = TFile::Open(file, "RECREATE");
   if (!f) {
     return;
@@ -356,7 +356,7 @@ void Genes<T>::UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2,
 template <class T>
 void Genes<T>::ReadGenesTree(Genes<T> &ind, Population<T> &pop,
                              const char *file) {
-  R__LOAD_LIBRARY(libGa);
+  //R__LOAD_LIBRARY(libGa);
   TFile *f = TFile::Open(file, "RECREATE");
   TTree *tree = (TTree *)f->Get("gvga");
   tree->SetBranchAddress("Population", &pop);

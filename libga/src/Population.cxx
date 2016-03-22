@@ -413,11 +413,9 @@ template <class T> void Population<T>::Evaluation() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     auto position = std::distance(fPopulation.begin(), it);
     Genes<T>::Evaluate(setupPop, *it);
-    // std::cout << "-==============================================-"
-    //          << std::endl;
-    // std::cout << "Printout of gene " << position + 1 << " after sequence
-    // evaluation:" << std::endl;
-    // Genes<T>::printGenes(*it);
+    std::cout << "-==============================================-"<< std::endl;
+    std::cout << "Printout of gene " << position + 1 << " after sequence evaluation:" << std::endl;
+    Genes<T>::printGenes(*it);
   }
 }
 //#endif
