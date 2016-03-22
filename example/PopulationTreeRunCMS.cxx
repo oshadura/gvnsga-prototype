@@ -35,7 +35,7 @@
 #endif
 
 // Forget about constrains now!
-void CMSApp(Genes<Double_t> &individual) {
+std::vector<Double_t> CMSApp(Genes<Double_t> &individual) {
   gROOT->Reset();
   GeantVFitness *fitness = new GeantVFitness();
 #ifdef ENABLE_PERFMON
@@ -141,7 +141,7 @@ void CMSApp(Genes<Double_t> &individual) {
 #endif
   delete prop;
   delete fitness;
-  return;
+  return individual.GetFitnessVector();
 }
 
 int main(int argc, char *argv[]) {

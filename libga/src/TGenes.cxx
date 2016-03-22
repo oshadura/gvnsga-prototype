@@ -31,6 +31,8 @@
 ///////////////////
 #include "Process.h"
 
+#define READ 0
+#define WRITE 1
 
 templateClassImp(Genes)
 
@@ -83,9 +85,10 @@ void Genes<T>::Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger) {
   ind.reserve(setup.fNParam);
   ind = Genes<T>(setup);
   std::random_device rnd_device;
-  auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  auto seed =
+      std::chrono::high_resolution_clock::now().time_since_epoch().count();
   std::mt19937 mersenne_engine(seed);
-  //std::mt19937 mersenne_engine(rnd_device());
+  // std::mt19937 mersenne_engine(rnd_device());
   for (Int_t i = 0; i < (setup.fNParam); ++i) {
     std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
                                            setup.fInterval[i].second);
@@ -110,8 +113,9 @@ void Genes<T>::SetGeantV(Functions &setup,
   ind.reserve(setup.fNParam);
   ind = Genes<T>(setup);
   std::random_device rnd_device;
-  auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-  //std::mt19937 mersenne_engine(rnd_device());
+  auto seed =
+      std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  // std::mt19937 mersenne_engine(rnd_device());
   std::mt19937 mersenne_engine(seed);
   for (Int_t i = 0; i < (setup.fNParam); ++i) {
     std::uniform_real_distribution<T> dist(setup.fInterval[i].first,
@@ -119,7 +123,6 @@ void Genes<T>::SetGeantV(Functions &setup,
     auto gen = std::bind(dist, std::ref(mersenne_engine));
     // std::generate_n(std::begin(ind) + i, 1, gen());
     ind.SetGene(i, gen());
-
   }
   for (auto i : ind) {
     std::cout << "| " << i << " = element of gene |";
@@ -148,24 +151,23 @@ std::endl;
 }
 */
 
-
-  /**
-   * @brief [brief description]
-   * @details 
-  Create pipe
-  Fork
-  In parent:
-    Close read end of pipe
-    Write data to be evaluated down write end of pipe
-    Close write end of pipe
-    Wait for child to die
-  In child
-    Close write end of pipe
-    Duplicate read end of pipe to stdin
-    Close read end of pipe
-    Exec the evaluate program
-    Exit with an error if the exec returns
-   */
+/**
+ * @brief [brief description]
+ * @details
+Create pipe
+Fork
+In parent:
+  Close read end of pipe
+  Write data to be evaluated down write end of pipe
+  Close write end of pipe
+  Wait for child to die
+In child
+  Close write end of pipe
+  Duplicate read end of pipe to stdin
+  Close read end of pipe
+  Exec the evaluate program
+  Exit with an error if the exec returns
+ */
 template <class T>
 void Genes<T>::Evaluate(Functions &setup,
                         Genes<T> &ind) throw(ExceptionMessenger) {
@@ -175,45 +177,82 @@ void Genes<T>::Evaluate(Functions &setup,
   // std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
   // printGenes(ind);
   // Lets consider that we have inly 2 pipes
-  size_t sizeofFitness = sizeof(fFitness) + sizeof(T)* fFitness.capacity();
+  size_t sizeofFitness = sizeof(fFitness) + sizeof(T) * fFitness.capacity();
   const int fNumberChildren = 1;
   int pipeGA[fNumberChildren + 1];
-  //Array of pids to be dead
-  pid_t fArrayDead[fNumberChildren]; 
+  int pipeGAOpposite[fNumberChildren + 1];
+  // Array of pids to be killed after
+  pid_t fArrayDead[fNumberChildren];
+  // Pid
   pid_t cpid;
+  // Creating pipes
   pipe(pipeGA);
+  pipe(pipeGAOpposite);
+  // Forking a child process - should be in loop too
   cpid = fork();
-  for (int i = 0; i < fNumberChildren; ++i){
-    if (cpid == 0) {
-    std::cout << "Starting child.."<< std::endl;
-    close(pipeGA[1]); // close the write-end of the pipe 
-    ind.SetFitness((setup.evfunc)(ind));
-    while (read(pipeGA[0], &fFitness, sizeofFitness) > 0){
-      write(pipeGA[1], &fFitness, sizeofFitness);
+  // Loop if we have more children
+  for (int i = 0; i < fNumberChildren; ++i) {
+    //  cpid = fork();
+    if (cpid > 0) {
+      fArrayDead[i] = cpid;
+      close(pipeGA[READ]);
+      write(pipeGA[WRITE], &fFitness, sizeofFitness);
+      std::cout << "=======Parent writes:========" << std::endl;
+      for (auto it = ind.GetFitnessVector().begin();
+           it != ind.GetFitnessVector().end(); ++it) {
+        std::cout << *it << std::endl;
+      }
+      std::cout << "===============" << std::endl;
+      close(pipeGA[WRITE]); // close the read-end of the pipe
+      close(pipeGAOpposite[WRITE]);
+      std::cout << "=======Parent reads:========" << std::endl;
+      for (auto it = ind.GetFitnessVector().begin();
+           it != ind.GetFitnessVector().end(); ++it) {
+        std::cout << *it << std::endl;
+      }
+      std::cout << "===============" << std::endl;
+      read(pipeGAOpposite[READ], &fFitness, sizeofFitness);
+      close(pipeGAOpposite[READ]);
+      for (int i = 0; i < fNumberChildren; ++i) {
+        std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
+                  << std::endl;
+        waitpid(fArrayDead[i], NULL, 0);
+        std::cout << "PID: " << fArrayDead[i] << " has shut down.."
+                  << std::endl;
+      }
+    } else if (cpid < 0) {
+      std::cerr << "Fork for evaluation was failed." << std::endl;
+    } else {
+      std::cout << "Starting child.." << std::endl;
+      ind.SetFitness((setup.evfunc)(ind));
+      close(pipeGA[WRITE]);
+      std::cout << "=======Child reads:========" << std::endl;
+      for (auto it = ind.GetFitnessVector().begin();
+           it != ind.GetFitnessVector().end(); ++it) {
+        std::cout << *it << std::endl;
+      }
+      std::cout << "===============" << std::endl;
+      read(pipeGA[READ], &fFitness, sizeofFitness);
+      close(pipeGA[READ]); // close the read-end of the pipe
+      close(pipeGAOpposite[READ]);
+      std::cout << "=======Child writes:========" << std::endl;
+      for (auto it = ind.GetFitnessVector().begin();
+           it != ind.GetFitnessVector().end(); ++it) {
+        std::cout << *it << std::endl;
+      }
+      std::cout << "===============" << std::endl;
+      write(pipeGAOpposite[WRITE], &fFitness, sizeofFitness);
+      close(pipeGAOpposite[WRITE]); // close the read-end of the pipe
+      exit(EXIT_SUCCESS);
     }
-    close(pipeGA[0]); // close the read-end of the pipe
-    exit(EXIT_SUCCESS);
-  }
-  else{
-    fArrayDead[i] = cpid;
-    close(pipeGA[0]);
-    write(pipeGA[1], &fFitness, sizeofFitness);
-    close(pipeGA[1]); // close the read-end of the pipe
-    for (int i = 0; i < fNumberChildren; ++i){
-      std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.." << std::endl;
-      waitpid(fArrayDead[i], NULL, 0);
-      std::cout << "PID: " << fArrayDead[i] << " has shut down.." << std::endl;
-    }
-    //wait(NULL);
-    std::cout << "WE ARE BACK TO MASTER JOB::"<< std::endl;
-  }
+    std::cout << "We are back to master job::" << std::endl;
   }
   if (setup.fNCons) {
     ConstViol = 0;
   }
   fEvaluated = true;
   // Cleaning array of previos pids
-  fArrayDead[fNumberChildren] = NULL;
+  fArrayDead[fNumberChildren] = 0;
 }
 //#endif
 
@@ -321,7 +360,7 @@ template <class T> Int_t Genes<T>::Mutate(const Functions *setup) {
 template <class T>
 void Genes<T>::WriteGenesTree(Genes<T> &ind, Population<T> &pop,
                               const char *file) {
-  //R__LOAD_LIBRARY(libGa);
+  // R__LOAD_LIBRARY(libGa);
   if (!file) {
     TFile *f = new TFile(file, "RECREATE");
     TTree *tree = new TTree("gvga", "Genetic Algorithm TTree");
@@ -340,7 +379,7 @@ template <class T>
 void Genes<T>::UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2,
                                Population<T> &pop, const char *file) {
   // Looks it is not possible update existing events, lets update the tree
-  //R__LOAD_LIBRARY(libGa);
+  // R__LOAD_LIBRARY(libGa);
   TFile *f = TFile::Open(file, "RECREATE");
   if (!f) {
     return;
@@ -356,7 +395,7 @@ void Genes<T>::UpdateGenesTree(Genes<T> &ind1, Genes<T> &ind2,
 template <class T>
 void Genes<T>::ReadGenesTree(Genes<T> &ind, Population<T> &pop,
                              const char *file) {
-  //R__LOAD_LIBRARY(libGa);
+  // R__LOAD_LIBRARY(libGa);
   TFile *f = TFile::Open(file, "RECREATE");
   TTree *tree = (TTree *)f->Get("gvga");
   tree->SetBranchAddress("Population", &pop);
