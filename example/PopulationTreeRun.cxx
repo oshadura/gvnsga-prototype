@@ -34,7 +34,7 @@
 #define COPROCESSOR_REQUEST false
 #endif
 
-void runApp(Genes<Double_t> &individual) {
+std::vector<Double_t> runApp(Genes<Double_t> &individual) {
   gROOT->Reset();
   GeantVFitness *fitness = new GeantVFitness();
 #ifdef ENABLE_PERFMON
@@ -157,7 +157,7 @@ void runApp(Genes<Double_t> &individual) {
   gROOT->GetListOfGlobals()->Delete();
   gROOT->GetListOfGeometries()->Delete();
   //
-  return;
+  return individual.GetFitnessVector();
 }
 
 int main(int argc, char *argv[]) {
@@ -187,7 +187,9 @@ int main(int argc, char *argv[]) {
   nsga2->SetEtaCross(10);
   nsga2->SetEpsilonC(0.7);
   nsga2->SetLimit(geantv->fInterval);
+  ///////////////////
   nsga2->SetFunction(&runApp);
+  //////////////////
   nsga2->Initialize();
   nsga2->Evolution();
   return 0;

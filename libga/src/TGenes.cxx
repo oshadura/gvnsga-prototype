@@ -188,8 +188,8 @@ void Genes<T>::Evaluate(Functions &setup,
     std::cout << "Starting child.."<< std::endl;
     close(pipeGA[1]); // close the write-end of the pipe 
     (setup.evfunc)(ind);
-    while (read(pipeGA[0], &fFitness, sizeofFitness) > 0){
-      write(pipeGA[1], &fFitness, 1);
+    while (read(pipeGA[0], &(ind.GetFitnessVector()), sizeofFitness) > 0){
+      write(pipeGA[1], &(ind.GetFitnessVector()), sizeofFitness);
     }
     close(pipeGA[0]); // close the read-end of the pipe
     exit(EXIT_SUCCESS);
@@ -197,7 +197,7 @@ void Genes<T>::Evaluate(Functions &setup,
   else{
     fArrayDead[i] = cpid;
     close(pipeGA[0]);
-    write(pipeGA[1], &fFitness, sizeofFitness);
+    write(pipeGA[1], &(ind.GetFitnessVector()), sizeofFitness);
     close(pipeGA[1]); // close the read-end of the pipe
     for (int i = 0; i < fNumberChildren; ++i){
       std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.." << std::endl;

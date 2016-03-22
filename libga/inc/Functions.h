@@ -118,9 +118,9 @@ public:
   //#ifdef ENABLE_GEANTV
   // typedef void (*functype)(GeantPropagator *, Genes<Double_t> &);
   //#else
-  typedef void (*functype)(Genes<Double_t> &);
+  typedef std::vector<double> (*functype)(Genes<Double_t> &);
   //#endif
-  typedef void (*popfunctype)(
+  typedef std::vector<double> (*popfunctype)(
       Population<Double_t> &); // still dont know if to use in such way or not
   functype evfunc;
   std::vector<std::pair<Double_t, Double_t>> fInterval;
