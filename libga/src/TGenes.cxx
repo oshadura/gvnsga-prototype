@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <fcntl.h>
 
 #include "TRandom3.h"
 #include "TFile.h"
@@ -210,12 +211,10 @@ void Genes<T>::Evaluate(Functions &setup,
       close(pipeGAOpposite[WRITE]);
       std::vector<T> tempFitness;
       tempFitness.resize(ind.setup->fNObjectives, 0);
-
       std::cout << "=======New fitness just created:========" << std::endl;
       for (auto i: tempFitness)
         std::cout << i << ' ';
       std::cout << "===============" << std::endl;
-      
       read(pipeGAOpposite[READ], &tempFitness, sizeofFitness);
       ind.SetFitness(tempFitness);
 
@@ -251,15 +250,14 @@ void Genes<T>::Evaluate(Functions &setup,
       close(pipeGA[READ]); // close the read-end of the pipe
       close(pipeGAOpposite[READ]);
       write(pipeGAOpposite[WRITE], &fFitness, sizeofFitness);
-
       std::cout << "=======Child writes:========" << std::endl;
       for (auto it = ind.GetFitnessVector().begin();
            it != ind.GetFitnessVector().end(); ++it) {
         std::cout << *it << std::endl;
       }
       std::cout << "===============" << std::endl;
-
       close(pipeGAOpposite[WRITE]); // close the read-end of the pipe
+      std::cout << "exit of child ->" << std::endl;
       exit(EXIT_SUCCESS);
     }
     std::cout << "We are back to master job::" << std::endl;
