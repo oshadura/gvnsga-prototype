@@ -179,16 +179,17 @@ void Genes<T>::Evaluate(Functions &setup,
   // printGenes(ind);
   // Lets consider that we have inly 2 pipes
   size_t sizeofFitness = sizeof(fFitness) + sizeof(T) * fFitness.capacity();
+  std::cout << "Size of expected buffer for fitness is :" << sizeofFitness << std::endl;
   const int fNumberChildren = 1;
   int pipeGA[fNumberChildren + 1];
-  int pipeGAOpposite[fNumberChildren + 1];
   // Array of pids to be killed after
   pid_t fArrayDead[fNumberChildren];
   // Pid
   pid_t cpid;
-  // Creating pipes
+  ssize_t result;
   pipe(pipeGA);
-  pipe(pipeGAOpposite);
+  std::vector<T> tempFitness;
+  tempFitness.resize(ind.setup->fNObjectives);
   // Forking a child process - should be in loop too
   cpid = fork();
   // Loop if we have more children
@@ -197,34 +198,23 @@ void Genes<T>::Evaluate(Functions &setup,
     if (cpid > 0) {
       std::cout << "Starting father.." << std::endl;
       fArrayDead[i] = cpid;
-      close(pipeGA[READ]);
-      write(pipeGA[WRITE], &fFitness, sizeofFitness);
-      /*
-      std::cout << "=======Parent writes:========" << std::endl;
-      for (auto it = ind.GetFitnessVector().begin();
-           it != ind.GetFitnessVector().end(); ++it) {
-        std::cout << *it << std::endl;
-      }
-      std::cout << "===============" << std::endl;
-      */
-      close(pipeGA[WRITE]); // close the read-end of the pipe
-      close(pipeGAOpposite[WRITE]);
-      std::vector<T> tempFitness;
-      tempFitness.resize(ind.setup->fNObjectives, 0);
+      close(pipeGA[WRITE]);
       std::cout << "=======New fitness just created:========" << std::endl;
       for (auto i: tempFitness)
-        std::cout << i << ' ';
+        std::cout << i << ' '<< std::endl;
       std::cout << "===============" << std::endl;
-      read(pipeGAOpposite[READ], &tempFitness, sizeofFitness);
-      ind.SetFitness(tempFitness);
-
-      std::cout << "=======Parent reads:========" << std::endl;
-      for (auto it = tempFitness.begin(); it != tempFitness.end(); ++it) {
-        std::cout << *it << std::endl;
+      //////////////////////////////////////
+      std::cout << "We are starting to read.."<<std::endl;
+      while (read(pipeGA[READ], &tempFitness, sizeofFitness*2) > 0){
+        std::cout << "=======Parent reads:========" << std::endl;
+        for (auto i: tempFitness)
+          std::cout << i << ' '<< std::endl;
+        std::cout << "===============" << std::endl;
+        ind.SetFitness(tempFitness);
       }
       std::cout << "===============" << std::endl;
-
-      close(pipeGAOpposite[READ]);
+      std::cout << "We are stoping to read.."<<std::endl;
+      close(pipeGA[READ]);
       for (int i = 0; i < fNumberChildren; ++i) {
         std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
                   << std::endl;
@@ -234,30 +224,21 @@ void Genes<T>::Evaluate(Functions &setup,
       }
     } else if (cpid < 0) {
       std::cerr << "Fork for evaluation was failed." << std::endl;
+      exit(EXIT_FAILURE);
     } else {
       std::cout << "Starting child.." << std::endl;
-      close(pipeGA[WRITE]);
-      read(pipeGA[READ], &fFitness, sizeofFitness);
-      /*
-      std::cout << "=======Child reads:========" << std::endl;
-      for (auto it = ind.GetFitnessVector().begin();
-           it != ind.GetFitnessVector().end(); ++it) {
-        std::cout << *it << std::endl;
-      }
-      std::cout << "===============" << std::endl;
-      */
       ind.SetFitness((setup.evfunc)(ind));
-      close(pipeGA[READ]); // close the read-end of the pipe
-      close(pipeGAOpposite[READ]);
-      write(pipeGAOpposite[WRITE], &fFitness, sizeofFitness);
+      close(pipeGA[READ]);
+      tempFitness = ind.GetFitnessVector();
+      write(pipeGA[WRITE], &tempFitness, sizeofFitness);
       std::cout << "=======Child writes:========" << std::endl;
       for (auto it = ind.GetFitnessVector().begin();
            it != ind.GetFitnessVector().end(); ++it) {
         std::cout << *it << std::endl;
       }
       std::cout << "===============" << std::endl;
-      close(pipeGAOpposite[WRITE]); // close the read-end of the pipe
-      std::cout << "exit of child ->" << std::endl;
+      close(pipeGA[WRITE]); // close the read-end of the pipe
+      wait(NULL);
       exit(EXIT_SUCCESS);
     }
     std::cout << "We are back to master job::" << std::endl;
