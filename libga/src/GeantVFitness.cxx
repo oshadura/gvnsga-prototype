@@ -35,14 +35,12 @@ void GeantVFitness::LogMemoryFitness(std::string file) {
   } else {
     hfile = new TFile(file.c_str(), "UPDATE");
   }
-  /*
   if(fMemorySwitch = true){
     ProcInfo_t info;
     gSystem->GetProcInfo(&info);
     fMemoryVector.push_back(info);
     sleep(10);
   }
-  */
   for (auto &i : fMemoryVector) {
     std::cout << "DEBUG: " << i.fMemResident / (1024. * 1024.) << " GB" << std::endl;
   }

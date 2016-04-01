@@ -177,7 +177,7 @@ void Genes<T>::Evaluate(Functions &setup,
   // std::endl;
   // std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
   // printGenes(ind);
-  // Lets consider that we have inly 2 pipes
+
   size_t sizeofFitness = sizeof(fFitness) + sizeof(T) * fFitness.capacity();
   std::cout << "Size of expected buffer for fitness is :" << sizeofFitness << std::endl;
   const int fNumberChildren = 1;
@@ -190,6 +190,8 @@ void Genes<T>::Evaluate(Functions &setup,
   pipe(pipeGA);
   std::vector<T> tempFitness;
   tempFitness.resize(ind.setup->fNObjectives);
+  /////////////////////////////////////////
+  Double_t fitness;
   // Forking a child process - should be in loop too
   cpid = fork();
   // Loop if we have more children
@@ -199,20 +201,14 @@ void Genes<T>::Evaluate(Functions &setup,
       std::cout << "Starting father.." << std::endl;
       fArrayDead[i] = cpid;
       close(pipeGA[WRITE]);
-      std::cout << "=======New fitness just created:========" << std::endl;
-      for (auto i: tempFitness)
-        std::cout << i << ' '<< std::endl;
-      std::cout << "===============" << std::endl;
-      //////////////////////////////////////
       std::cout << "We are starting to read.."<<std::endl;
-      while (read(pipeGA[READ], &tempFitness, sizeofFitness*2) > 0){
-        std::cout << "=======Parent reads:========" << std::endl;
-        for (auto i: tempFitness)
-          std::cout << i << ' '<< std::endl;
-        std::cout << "===============" << std::endl;
-        ind.SetFitness(tempFitness);
+      memset (&tempFitness, 0, sizeof(tempFitness));
+      for (int i = 0; i < ind.setup->fNObjectives; i++) {
+        read(pipeGA[READ], &fitness, sizeof(T));
+        tempFitness.push_back(fitness);
+        std::cout << "Parent read next value: " << fitness << std::endl;
       }
-      std::cout << "===============" << std::endl;
+      ind.SetFitness(tempFitness);
       std::cout << "We are stoping to read.."<<std::endl;
       close(pipeGA[READ]);
       for (int i = 0; i < fNumberChildren; ++i) {
@@ -229,14 +225,11 @@ void Genes<T>::Evaluate(Functions &setup,
       std::cout << "Starting child.." << std::endl;
       ind.SetFitness((setup.evfunc)(ind));
       close(pipeGA[READ]);
-      tempFitness = ind.GetFitnessVector();
-      write(pipeGA[WRITE], &tempFitness, sizeofFitness);
-      std::cout << "=======Child writes:========" << std::endl;
-      for (auto it = ind.GetFitnessVector().begin();
-           it != ind.GetFitnessVector().end(); ++it) {
-        std::cout << *it << std::endl;
+      memset (&tempFitness, 0, sizeof(tempFitness));
+      for (auto it = ind.GetFitnessVector().begin(); it != ind.GetFitnessVector().end(); ++it) {
+        write(pipeGA[WRITE], &(*it), sizeof(T));
+        std::cout << "Vector part to be send: " << *it << std::endl;
       }
-      std::cout << "===============" << std::endl;
       close(pipeGA[WRITE]); // close the read-end of the pipe
       wait(NULL);
       exit(EXIT_SUCCESS);

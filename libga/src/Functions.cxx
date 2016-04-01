@@ -32,7 +32,7 @@ void Functions::SetIntervalGeantV() {
   // FIX -> get max value from (GetValue[0] - 1)
   SetIntervalLimit(1, 1, 99);
   // for GetThread(Genes<T> &ind) const { return ind.GetGene(2); }
-  SetIntervalLimit(2, 1, 4);
+  SetIntervalLimit(2, 1, 1);
   // for GetPriority(Genes<T> &ind) const { return ind.GetGene(3); }
   SetIntervalLimit(3, 0, 0.1);
   // for GetSteps(Genes<T> &ind) const { return ind.GetGene(4); }
