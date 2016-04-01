@@ -8,14 +8,16 @@ ReferencePoint::~ReferencePoint(){
 
 }
 void ReferencePoint::ClearRP(){
+	fMemberSize = 0;
+	fPossibleSolutions.clear();
 
 }
 
 void ReferencePoint::AddMemberRP(){
-
+	fMemberSize += 1;
 }
 
-void ReferencePoint::AddPotentiolMemberRP(std::size_t ind, Double_t distance){
+void ReferencePoint::AddPotentialMemberRP(std::size_t ind, Double_t distance){
 
 }
 

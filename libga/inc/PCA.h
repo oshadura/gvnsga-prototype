@@ -4,7 +4,7 @@
 class PCA
 {
 public:
-	PCA(arguments);
+	PCA();
 	~PCA();
 };
 

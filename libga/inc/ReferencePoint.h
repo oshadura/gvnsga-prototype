@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <utility>
+#include <limits>
 
 #include "TObject.h"
 
@@ -12,7 +13,7 @@ public:
 	~ReferencePoint();
 	void ClearRP();
 	void AddMemberRP();
-	void AddPotentiolMemberRP(std::size_t ind, Double_t distance);
+	void AddPotentialMemberRP(std::size_t ind, Double_t distance);
 	Int_t FindClosestMemberRP();
 	Int_t RandomMemberRP();
 	void RemovePotentialMemberRP(std::size_t ind);

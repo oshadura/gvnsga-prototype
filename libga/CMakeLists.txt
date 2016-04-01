@@ -58,6 +58,9 @@ endif()
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
+if(MLPACK_FOUND)
+  include_directories(${MLPACK_INCLUDE_DIRS})
+endif()
 #-----------------------------------------------------------------------------
 
 file(GLOB sources src/*.cxx)
@@ -75,6 +78,8 @@ file(GLOB headers inc/PFMWatch.h
  #inc/MPIServer.h
  #inc/MPIClient.h
  #inc/MPIEvaluate.h
+ #inc/PCA.h
+ #inc/AlgorithmNSGA3.h
  )
 #----------------------------------------------------------------------------
 # Generate the Dictionary

@@ -98,6 +98,18 @@ if(ENABLE_VC)
 		endif()
 endif()
 #----------------------------------------------------------------------------
+option(ENABLE_MLPACK "If we are using libGA already with MLPACK" ON)
+
+if(ENABLE_MLPACK)
+  find_package(MLPACK)
+  if(MLPACK_FOUND)
+      set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_MLPACK")
+      set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${MLPACK_CXX_FLAGS}")
+    endif()
+endif()
+
+
+#----------------------------------------------------------------------------
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GA_CXX_FLAGS} ${GVNSGA_COMPILATION_FLAGS}")
 message(STATUS "Compiling GA with C++ flags: ${CMAKE_CXX_FLAGS}")
