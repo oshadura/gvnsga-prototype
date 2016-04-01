@@ -203,7 +203,7 @@ void Genes<T>::Evaluate(Functions &setup,
       close(pipeGA[WRITE]);
       std::cout << "We are starting to read.."<<std::endl;
       memset (&tempFitness, 0, sizeof(tempFitness));
-      for (int i = 0; i < ind.setup->fNObjectives; i++) {
+      for (int i = 0; i < ind.setup->fNObjectives; ++i) {
         read(pipeGA[READ], &fitness, sizeof(T));
         tempFitness.push_back(fitness);
         std::cout << "Parent read next value: " << fitness << std::endl;
@@ -226,9 +226,9 @@ void Genes<T>::Evaluate(Functions &setup,
       ind.SetFitness((setup.evfunc)(ind));
       close(pipeGA[READ]);
       memset (&tempFitness, 0, sizeof(tempFitness));
-      for (auto it = ind.GetFitnessVector().begin(); it != ind.GetFitnessVector().end(); ++it) {
-        write(pipeGA[WRITE], &(*it), sizeof(T));
-        std::cout << "Vector part to be send: " << *it << std::endl;
+      for (auto it : ind.GetFitnessVector()) {
+        write(pipeGA[WRITE], &it, sizeof(T));
+        std::cout << "Vector part to be send: " << it << std::endl;
       }
       close(pipeGA[WRITE]); // close the read-end of the pipe
       wait(NULL);
