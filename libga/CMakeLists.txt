@@ -55,6 +55,9 @@ endif()
 if(ENABLE_PERFMON)
   include_directories(${PerfMon_INCLUDE_DIR})
 endif()
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
 #-----------------------------------------------------------------------------
 
 file(GLOB sources src/*.cxx)
@@ -69,6 +72,9 @@ file(GLOB headers inc/PFMWatch.h
  inc/type_traits.hpp
  inc/GeantVFitness.h
  inc/Process.h
+ #inc/MPIServer.h
+ #inc/MPIClient.h
+ #inc/MPIEvaluate.h
  )
 #----------------------------------------------------------------------------
 # Generate the Dictionary

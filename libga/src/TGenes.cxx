@@ -29,8 +29,6 @@
 #include "TGenes.h"
 #include "Population.h"
 #include "HistogramManager.h"
-///////////////////
-#include "Process.h"
 
 #define READ 0
 #define WRITE 1
