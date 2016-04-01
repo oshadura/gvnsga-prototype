@@ -24,7 +24,7 @@ public:
   Double_t GetmaxMemResident() const { return maxMemResident; }
   Bool_t SetMemorySwitch() const { return fMemorySwitch; }
   void SetMemorySwitch(Bool_t i){fMemorySwitch = i;}
-  void LogMemoryFitness(std::string file);
+  Double_t LogMemoryFitness(std::string file);
   void LogTimeFitness();
   void TemporarySolution();
 

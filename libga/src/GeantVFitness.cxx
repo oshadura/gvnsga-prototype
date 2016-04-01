@@ -27,7 +27,7 @@ void GeantVFitness::TemporarySolution(){
     fMemoryVector.push_back(info);
 }
 
-void GeantVFitness::LogMemoryFitness(std::string file) {
+Double_t GeantVFitness::LogMemoryFitness(std::string file) {
   if (!hfile) {
     hfile = new TFile(file.c_str(), "RECREATE");
     hfile->mkdir("Fitness");
@@ -77,6 +77,7 @@ void GeantVFitness::LogMemoryFitness(std::string file) {
               (maxMemResident / (1024. * 1024.)));
   std::printf("Maximum virtual memory usage:%f\n",
               (maxMemVirtual / (1024. * 1024.))); 
+  return maxMemResident;
 }
 
 void GeantVFitness::LogTimeFitness() {}
