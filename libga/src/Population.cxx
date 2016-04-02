@@ -391,7 +391,11 @@ template <class T> void Population<T>::Evaluate(GeantPropagator *prop) {
 template <class T> void Population<T>::Evaluate() {
 #ifdef ENABLE_OPENMP
   EvaluationOpenMP();
-#else
+#elif ENABLE_MPI
+  EvaluationMPI();
+#elif ENABLE_SLURM
+  EvaluationSLURM();
+#else 
   Evaluation();
 #endif
 }
@@ -445,6 +449,26 @@ template <class T> void Population<T>::EvaluationOpenMP() {
   }
 }
 //#endif
+
+template <class T> void Population<T>::EvaluationMPI() {
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    auto position = std::distance(fPopulation.begin(), it);
+    Genes<T>::Evaluate(setupPop, *it);
+    std::cout << "-==============================================-"<< std::endl;
+    std::cout << "Printout of gene " << position + 1 << " after sequence evaluation:" << std::endl;
+    Genes<T>::printGenes(*it);
+  }
+}
+
+template <class T> void Population<T>::EvaluationSLURM() {
+  for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
+    auto position = std::distance(fPopulation.begin(), it);
+    Genes<T>::Evaluate(setupPop, *it);
+    std::cout << "-==============================================-"<< std::endl;
+    std::cout << "Printout of gene " << position + 1 << " after sequence evaluation:" << std::endl;
+    Genes<T>::printGenes(*it);
+  }
+}
 
 template <class T> void Population<T>::Print() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {

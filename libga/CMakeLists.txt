@@ -60,7 +60,9 @@ if(Boost_FOUND)
 endif()
 if(MLPACK_FOUND)
   include_directories(${MLPACK_INCLUDE_DIRS})
+  include_directories(/usr/include/libxml2/)
 endif()
+include_directories(/usr/include/libxml2/)
 #-----------------------------------------------------------------------------
 
 file(GLOB sources src/*.cxx)

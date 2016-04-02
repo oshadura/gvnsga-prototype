@@ -154,6 +154,8 @@ private:
   //#else
   void Evaluation();
   void EvaluationOpenMP();
+  void EvaluationMPI();
+  void EvaluationSLURM();
   //#endif
 
 private:
