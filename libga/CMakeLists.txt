@@ -62,6 +62,7 @@ if(MLPACK_FOUND)
   include_directories(${MLPACK_INCLUDE_DIRS})
   include_directories(/usr/include/libxml2/)
 endif()
+# Temporary solution - cmake MLPACK doesnt work
 include_directories(/usr/include/libxml2/)
 #-----------------------------------------------------------------------------
 
