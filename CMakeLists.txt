@@ -101,6 +101,7 @@ endif()
 option(ENABLE_MLPACK "If we are using libGA already with MLPACK" ON)
 
 if(ENABLE_MLPACK)
+  find_package(Armadillo)
   find_package(MLPACK)
   if(MLPACK_FOUND)
       set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_MLPACK")

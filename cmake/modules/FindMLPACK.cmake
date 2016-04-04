@@ -5,15 +5,20 @@
 # MLPACK_INCLUDE_DIRS    - the MLPACK include directories
 # MLPACK_LIBRARIES       - Link these to use MLPACK
 
-IF (MLPACK_INCLUDE_DIRS)
+if ($ENV{MLPACK_ROOT_DIR})
+  set(MLPACK_ROOT_DIR $ENV{MLPACK_ROOT_DIR})
+endif()
+
+#IF (MLPACK_INCLUDE_DIRS)
   # Already in cache, be silent
-  SET(MLPACK_FIND_QUIETLY TRUE)
-ENDIF (MLPACK_INCLUDE_DIRS)
+#  SET(MLPACK_FIND_QUIETLY TRUE)
+#ENDIF (MLPACK_INCLUDE_DIRS)
 
 FIND_PATH(MLPACK_INCLUDE_DIR core.hpp
 	  PATHS
-    /usr/local/include/mlpack
-    /usr/include/mlpack
+#    /usr/local/include/mlpack
+#    /usr/include/mlpack
+    ${MLPACK_ROOT_DIR}/include/mlpack
     )
 
 SET(MLPACK_LIBRARY_DIR NOTFOUND CACHE PATH "The directory where the MLPACK libraries can be found.")
@@ -23,7 +28,7 @@ SET(SEARCH_PATHS
     "${MLPACK_LIBRARY_DIR}")
 FIND_LIBRARY(MLPACK_LIBRARY NAMES mlpack PATHS ${SEARCH_PATHS})
 
-INCLUDE (FindPackageHandleStandardArgs)
+INCLUDE(FindPackageHandleStandardArgs)
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(mlpack DEFAULT_MSG MLPACK_LIBRARY MLPACK_INCLUDE_DIR)
 
@@ -34,4 +39,3 @@ ENDIF (MLPACK_FOUND)
 
 message(STATUS "MLPACK_LIBRARY is ${MLPACK_LIBRARY}")
 message(STATUS "MLPACK_INCLUDE_DIR is ${PMLPACK_INCLUDE_DIR}")
-
