@@ -108,7 +108,16 @@ if(ENABLE_MLPACK)
       set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${MLPACK_CXX_FLAGS}")
     endif()
 endif()
+#----------------------------------------------------------------------------
+option(ENABLE_CMAES "If we are using libGA already with libcmaes" ON)
 
+if(ENABLE_CMAES)
+  find_package(Libcmaes)
+  if(CMAES_FOUND)
+      set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_CMAES")
+      set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${CMAES_CXX_FLAGS}")
+    endif()
+endif()
 
 #----------------------------------------------------------------------------
 

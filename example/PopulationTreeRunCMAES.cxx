@@ -1,5 +1,4 @@
 #ifdef ENABLE_CMAES
-//////////////////
 #include <cmath>
 #include <iostream>
 #include <iterator>
@@ -30,13 +29,15 @@
 #include "ExN03Application.h"
 #include "GeantVApplication.h"
 
+#include "cmaes.h"
+
 #ifndef COPROCESSOR_REQUEST
 #define COPROCESSOR_REQUEST false
 #endif
 
 using namespace libcmaes;
 
-FitFunc runApp(Genes<Double_t> &individual) {
+FitFunc runApp = [](Genes<Double_t> &individual) {
   gROOT->Reset();
   GeantVFitness *fitness = new GeantVFitness();
 #ifdef ENABLE_PERFMON
@@ -156,15 +157,17 @@ FitFunc runApp(Genes<Double_t> &individual) {
   delete fitness;
   gROOT->GetListOfGlobals()->Delete();
   gROOT->GetListOfGeometries()->Delete();
-  return;
+
+  return individual.GetFitnessVector();
+
 }
 
 int main(int argc, char *argv[]) {
-  int dim = 10; // problem dimensions.
-  std::vector<double> x0(dim, 10.0);
+  int dim = 7; // problem dimensions.
+  Genes<Double_t> x0(dim, 7.0);
   double sigma = 0.1;
-  // int lambda = 100; // offsprings at each generation.
-  CMAParameters<> cmaparams(x0, sigma);
+  int lambda = 100; // offsprings at each generation.
+  CMAParameters<> cmaparams(x0, sigma, lambda);
   // cmaparams.set_algo(BIPOP_CMAES);
   CMASolutions cmasols = cmaes<>(runApp, cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
@@ -172,3 +175,6 @@ int main(int argc, char *argv[]) {
             << " seconds\n";
   return cmasols.run_status();
 }
+
+#endif
+#endif

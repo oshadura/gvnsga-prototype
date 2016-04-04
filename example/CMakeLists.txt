@@ -44,7 +44,7 @@ macro(build_executables EXECUTABLES)
     get_filename_component(TARGET_NAME ${EXECUTABLE} NAME_WE)
     add_executable(${TARGET_NAME} ${EXECUTABLE})
     #if(PERFMON_FOUND)
-    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY})
+    	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY} ${MLPACK_LIBRARY})
     #else()
     #	target_link_libraries(${TARGET_NAME} GA ${ROOT_LIBRARIES} Hist RIO Tree Gui ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS})
     #endif()
@@ -63,6 +63,7 @@ set(LIBGA_EXAMPLES
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ7.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunNSGA2.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
+   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMAES.cxx
    #${CMAKE_SOURCE_DIR}/example/PopulationCMSTest.cxx
 )
 
