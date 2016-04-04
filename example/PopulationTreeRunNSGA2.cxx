@@ -142,7 +142,7 @@ std::vector<Double_t> runApp(Genes<Double_t> &individual) {
 #endif
   fitness->SetMemorySwitch(false);
   fitness->TemporarySolution();
-  //fitness->LogMemoryFitness("fitness.root");
+  // fitness->LogMemoryFitness("fitness.root");
   individual.SetFitness(0, prop->fTimer->RealTime());
   individual.SetFitness(1, -(prop->fNprimaries.load()));
   individual.SetFitness(2, fitness->LogMemoryFitness("fitness.root"));

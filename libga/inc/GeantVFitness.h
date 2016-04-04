@@ -11,7 +11,9 @@
 
 class GeantVFitness {
 public:
-  GeantVFitness() : hfile(0), hMemVirt(0), hMemRes(0), fMemoryVector(0), maxMemResident(0), fMemorySwitch(true) {}
+  GeantVFitness()
+      : hfile(0), hMemVirt(0), hMemRes(0), fMemoryVector(0), maxMemResident(0),
+        fMemorySwitch(true) {}
 
   virtual ~GeantVFitness() {
     hfile->cd();
@@ -20,10 +22,10 @@ public:
     delete hfile;
     maxMemResident = 0;
   }
-  
+
   Double_t GetmaxMemResident() const { return maxMemResident; }
   Bool_t SetMemorySwitch() const { return fMemorySwitch; }
-  void SetMemorySwitch(Bool_t i){fMemorySwitch = i;}
+  void SetMemorySwitch(Bool_t i) { fMemorySwitch = i; }
   Double_t LogMemoryFitness(std::string file);
   void LogTimeFitness();
   void TemporarySolution();

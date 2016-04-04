@@ -143,7 +143,7 @@ FitFunc runApp(Genes<Double_t> &individual) {
 #endif
   fitness->SetMemorySwitch(false);
   fitness->TemporarySolution();
-  //fitness->LogMemoryFitness("fitness.root");
+  // fitness->LogMemoryFitness("fitness.root");
   individual.SetFitness(0, prop->fTimer->RealTime());
   individual.SetFitness(1, -(prop->fNprimaries.load()));
   individual.SetFitness(2, fitness->LogMemoryFitness("fitness.root"));
@@ -159,15 +159,16 @@ FitFunc runApp(Genes<Double_t> &individual) {
   return;
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[]) {
   int dim = 10; // problem dimensions.
-  std::vector<double> x0(dim,10.0);
+  std::vector<double> x0(dim, 10.0);
   double sigma = 0.1;
-  //int lambda = 100; // offsprings at each generation.
-  CMAParameters<> cmaparams(x0,sigma);
-  //cmaparams.set_algo(BIPOP_CMAES);
-  CMASolutions cmasols = cmaes<>(runApp,cmaparams);
+  // int lambda = 100; // offsprings at each generation.
+  CMAParameters<> cmaparams(x0, sigma);
+  // cmaparams.set_algo(BIPOP_CMAES);
+  CMASolutions cmasols = cmaes<>(runApp, cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0
+            << " seconds\n";
   return cmasols.run_status();
 }

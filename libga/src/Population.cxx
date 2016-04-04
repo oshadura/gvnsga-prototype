@@ -395,7 +395,7 @@ template <class T> void Population<T>::Evaluate() {
   EvaluationMPI();
 #elif ENABLE_SLURM
   EvaluationSLURM();
-#else 
+#else
   Evaluation();
 #endif
 }
@@ -417,8 +417,10 @@ template <class T> void Population<T>::Evaluation() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     auto position = std::distance(fPopulation.begin(), it);
     Genes<T>::Evaluate(setupPop, *it);
-    std::cout << "-==============================================-"<< std::endl;
-    std::cout << "Printout of gene " << position + 1 << " after sequence evaluation:" << std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout of gene " << position + 1
+              << " after sequence evaluation:" << std::endl;
     Genes<T>::printGenes(*it);
   }
 }
@@ -454,8 +456,10 @@ template <class T> void Population<T>::EvaluationMPI() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     auto position = std::distance(fPopulation.begin(), it);
     Genes<T>::Evaluate(setupPop, *it);
-    std::cout << "-==============================================-"<< std::endl;
-    std::cout << "Printout of gene " << position + 1 << " after sequence evaluation:" << std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout of gene " << position + 1
+              << " after sequence evaluation:" << std::endl;
     Genes<T>::printGenes(*it);
   }
 }
@@ -464,8 +468,10 @@ template <class T> void Population<T>::EvaluationSLURM() {
   for (auto it = fPopulation.begin(); it != fPopulation.end(); ++it) {
     auto position = std::distance(fPopulation.begin(), it);
     Genes<T>::Evaluate(setupPop, *it);
-    std::cout << "-==============================================-"<< std::endl;
-    std::cout << "Printout of gene " << position + 1 << " after sequence evaluation:" << std::endl;
+    std::cout << "-==============================================-"
+              << std::endl;
+    std::cout << "Printout of gene " << position + 1
+              << " after sequence evaluation:" << std::endl;
     Genes<T>::printGenes(*it);
   }
 }

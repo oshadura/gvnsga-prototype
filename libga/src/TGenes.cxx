@@ -177,7 +177,8 @@ void Genes<T>::Evaluate(Functions &setup,
   // printGenes(ind);
 
   size_t sizeofFitness = sizeof(fFitness) + sizeof(T) * fFitness.capacity();
-  std::cout << "Size of expected buffer for fitness is :" << sizeofFitness << std::endl;
+  std::cout << "Size of expected buffer for fitness is :" << sizeofFitness
+            << std::endl;
   const int fNumberChildren = 1;
   int pipeGA[fNumberChildren + 1];
   // Array of pids to be killed after
@@ -199,15 +200,15 @@ void Genes<T>::Evaluate(Functions &setup,
       std::cout << "Starting father.." << std::endl;
       fArrayDead[i] = cpid;
       close(pipeGA[WRITE]);
-      std::cout << "We are starting to read.."<<std::endl;
-      memset (&tempFitness, 0, sizeof(tempFitness));
+      std::cout << "We are starting to read.." << std::endl;
+      memset(&tempFitness, 0, sizeof(tempFitness));
       for (int i = 0; i < ind.setup->fNObjectives; ++i) {
         read(pipeGA[READ], &fitness, sizeof(T));
         tempFitness.push_back(fitness);
         std::cout << "Parent read next value: " << fitness << std::endl;
       }
       ind.SetFitness(tempFitness);
-      std::cout << "We are stoping to read.."<<std::endl;
+      std::cout << "We are stoping to read.." << std::endl;
       close(pipeGA[READ]);
       for (int i = 0; i < fNumberChildren; ++i) {
         std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
@@ -223,7 +224,7 @@ void Genes<T>::Evaluate(Functions &setup,
       std::cout << "Starting child.." << std::endl;
       ind.SetFitness((setup.evfunc)(ind));
       close(pipeGA[READ]);
-      memset (&tempFitness, 0, sizeof(tempFitness));
+      memset(&tempFitness, 0, sizeof(tempFitness));
       for (auto it : ind.GetFitnessVector()) {
         write(pipeGA[WRITE], &it, sizeof(T));
         std::cout << "Vector part to be send: " << it << std::endl;

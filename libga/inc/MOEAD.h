@@ -1,13 +1,12 @@
 #ifndef __MOED__
 #define __MOED__
 
-class MOEAD
-{
+class MOEAD {
 public:
-	MOEAD(arguments);
-	~MOEAD();
+  MOEAD(arguments);
+  ~MOEAD();
 
-	/* data */
+  /* data */
 };
 
 #endif

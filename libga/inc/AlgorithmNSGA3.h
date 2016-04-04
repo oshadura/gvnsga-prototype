@@ -21,11 +21,10 @@
 template <class T> class Population;
 template <class T> class Genes;
 
-class AlgorithmNSGA3
-{
+class AlgorithmNSGA3 {
 public:
-	AlgorithmNSGA3();
-	virtual ~AlgorithmNSGA3();
+  AlgorithmNSGA3();
+  virtual ~AlgorithmNSGA3();
   void Initialize() throw(ExceptionMessenger);
   void Selection(Population<Double_t> &oldpop,
                  Population<Double_t> &newpop) throw(ExceptionMessenger);
@@ -113,4 +112,3 @@ public:
 };
 
 #endif
-

@@ -21,10 +21,10 @@ struct CompairMemVirtual {
   }
 };
 
-void GeantVFitness::TemporarySolution(){
-    ProcInfo_t info;
-    gSystem->GetProcInfo(&info);
-    fMemoryVector.push_back(info);
+void GeantVFitness::TemporarySolution() {
+  ProcInfo_t info;
+  gSystem->GetProcInfo(&info);
+  fMemoryVector.push_back(info);
 }
 
 Double_t GeantVFitness::LogMemoryFitness(std::string file) {
@@ -35,14 +35,15 @@ Double_t GeantVFitness::LogMemoryFitness(std::string file) {
   } else {
     hfile = new TFile(file.c_str(), "UPDATE");
   }
-  if(fMemorySwitch = true){
+  if (fMemorySwitch = true) {
     ProcInfo_t info;
     gSystem->GetProcInfo(&info);
     fMemoryVector.push_back(info);
     sleep(10);
   }
   for (auto &i : fMemoryVector) {
-    std::cout << "DEBUG: " << i.fMemResident / (1024. * 1024.) << " GB" << std::endl;
+    std::cout << "DEBUG: " << i.fMemResident / (1024. * 1024.) << " GB"
+              << std::endl;
   }
   int numBins = fMemoryVector.size();
   if (!hMemRes && !hMemRes) {
@@ -69,14 +70,18 @@ Double_t GeantVFitness::LogMemoryFitness(std::string file) {
   hMemRes->Write();
   hMemVirt->Write();
   double maxMemResident =
-      (std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemResident()))->fMemResident;
+      (std::max_element(fMemoryVector.begin(), fMemoryVector.end(),
+                        CompairMemResident()))
+          ->fMemResident;
   double maxMemVirtual =
-      (std::max_element(fMemoryVector.begin(), fMemoryVector.end(), CompairMemVirtual()))->fMemVirtual;
+      (std::max_element(fMemoryVector.begin(), fMemoryVector.end(),
+                        CompairMemVirtual()))
+          ->fMemVirtual;
 
   std::printf("Maximum resident memory usage:%f\n",
               (maxMemResident / (1024. * 1024.)));
   std::printf("Maximum virtual memory usage:%f\n",
-              (maxMemVirtual / (1024. * 1024.))); 
+              (maxMemVirtual / (1024. * 1024.)));
   return maxMemResident;
 }
 
