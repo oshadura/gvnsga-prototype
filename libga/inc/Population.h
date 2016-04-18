@@ -95,9 +95,9 @@ public:
              const Population &population2); // Merging two populations
   Int_t Mutate();
   void Print();
-  void LoadCVS(std::istream& populationcvs, const Population<T> &pop);
+  void LoadCSV(std::istream& populationcvs, const Population<T> &pop);
   std::ofstream &CreateCVS(std::string file);
-  void CVSOutput(std::ofstream &populationcvs, const Population<T> &pop);
+  void CSVOutput(std::ofstream &populationcvs, const Population<T> &pop);
   //#ifdef ENABLE_GEANTV
   //  void Evaluate(GeantPropagator* prop);
   //#else
