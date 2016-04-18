@@ -79,6 +79,7 @@ file(GLOB headers inc/PFMWatch.h
  inc/type_traits.hpp
  inc/GeantVFitness.h
  inc/Process.h
+ inc/cvs.h
  #inc/MPIServer.h
  #inc/MPIClient.h
  #inc/MPIEvaluate.h

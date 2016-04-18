@@ -95,6 +95,7 @@ public:
              const Population &population2); // Merging two populations
   Int_t Mutate();
   void Print();
+  void LoadCVS(std::istream& populationcvs, const Population<T> &pop);
   std::ofstream &CreateCVS(std::string file);
   void CVSOutput(std::ofstream &populationcvs, const Population<T> &pop);
   //#ifdef ENABLE_GEANTV
@@ -103,6 +104,7 @@ public:
   void Evaluate();
   //#endif
   void SetPopFunction(Functions::popfunctype f) { fPopFunction = f; }
+
   void ResetHistogramPointer() {
     fHisto->Reset();
   } // Function that reset histogram pointer
@@ -115,6 +117,7 @@ public:
   Int_t PrintTree(const char *file, const char *name);
   void Store(const char *file, const Population<T> &pop);
   Genes<T> operator[](Int_t i) { return fPopulation.at(i); }
+
   friend std::ostream &operator<<(std::ostream &os, Population<T> &pop) {
     os << "Population: [\n";
     std::ostream_iterator<Genes<T>> fGenesOutIt(os, "\n");

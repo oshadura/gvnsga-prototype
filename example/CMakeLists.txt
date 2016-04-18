@@ -22,6 +22,8 @@ endif()
 include_directories(${Vc_INCLUDE_DIR} ${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR} ${PerfMon_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
 include(${ROOT_USE_FILE})
+include_directories(${LIBCMAES_INCLUDE_DIR})
+include_directories(/usr/include/eigen3/)
 
 #---------------------------------------------------------------------------
 
@@ -63,7 +65,7 @@ set(LIBGA_EXAMPLES
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ7.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunNSGA2.cxx
    ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMAES.cxx
+   #${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMAES.cxx
    #${CMAKE_SOURCE_DIR}/example/PopulationCMSTest.cxx
 )
 

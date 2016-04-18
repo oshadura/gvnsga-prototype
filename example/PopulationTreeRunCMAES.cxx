@@ -1,4 +1,4 @@
-#ifdef ENABLE_CMAES
+//#ifdef ENABLE_CMAES
 #include <cmath>
 #include <iostream>
 #include <iterator>
@@ -157,9 +157,7 @@ FitFunc runApp = [](Genes<Double_t> &individual) {
   delete fitness;
   gROOT->GetListOfGlobals()->Delete();
   gROOT->GetListOfGeometries()->Delete();
-
   return individual.GetFitnessVector();
-
 }
 
 int main(int argc, char *argv[]) {
@@ -171,10 +169,9 @@ int main(int argc, char *argv[]) {
   // cmaparams.set_algo(BIPOP_CMAES);
   CMASolutions cmasols = cmaes<>(runApp, cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0
-            << " seconds\n";
+  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   return cmasols.run_status();
 }
 
 #endif
-#endif
+//#endif

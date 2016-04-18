@@ -542,7 +542,7 @@ template <class T> std::ofstream &Population<T>::CreateCVS(std::string file) {
 template <class T>
 void Population<T>::CVSOutput(std::ofstream &populationcvs,
                               const Population<T> &pop) {
-  populationcvs << "Fitness1, Fitness1, Fitness1, Gene1, Gene2, Gene3, Gene4, "
+  populationcvs << "Fitness1, Fitness2, Fitness3, Gene1, Gene2, Gene3, Gene4, "
                    "Gene5, Gene6, Gene7, ConstrainViolation,Crowdingdistance, "
                    "Rank\n";
   for (int j = 0; j < const_cast<Population<T> &>(pop).GetPopulationSize();
@@ -583,6 +583,38 @@ void Population<T>::CVSOutput(std::ofstream &populationcvs,
   }
   populationcvs << "-=========================================================="
                    "===================-\n";
+}
+
+template <class T> void Population<T>::LoadCVS(std::istream& populationcvs, const Population<T> &pop) {
+/*
+for (int j = 0; j < const_cast<Population<T> &>(pop).GetPopulationSize();
+       ++j) {
+
+        if (ind_config.nobj > 0)
+            os.read(reinterpret_cast<char*>(&(it->obj[0])),
+                     sizeof(double)*ind_config.nobj);
+
+        if (ind_config.ncon > 0)
+            os.read(reinterpret_cast<char*>(&(it->constr[0])),
+                     sizeof(double)*ind_config.ncon);
+
+        if (ind_config.nreal > 0)
+            os.read(reinterpret_cast<char*>(&(it->xreal[0])),
+                     sizeof(double)*ind_config.nreal);
+
+        for (int j = 0; j < ind_config.nbin; ++j)
+            os.read(reinterpret_cast<char*>(&(it->gene[j][0])),
+                     sizeof(int)*ind_config.nbits[j]);
+
+        os.read(reinterpret_cast<char*>(&(it->constr_violation)),
+                 sizeof(double));
+        os.read(reinterpret_cast<char*>(&(it->rank)),
+                 sizeof(int));
+        os.read(reinterpret_cast<char*>(&(it->crowd_dist)),
+                 sizeof(double));
+
+    }
+*/
 }
 
 template class Population<Double_t>;
