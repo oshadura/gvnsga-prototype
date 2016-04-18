@@ -21,6 +21,7 @@
 #include "Functions.h"
 #include "Population.h"
 #include "HistogramManager.h"
+#include "csv.h"
 
 templateClassImp(Population)
 
@@ -585,6 +586,15 @@ void Population<T>::CSVOutput(std::ofstream &populationcvs,
                    "===================-\n";
 }
 
-template <class T> void Population<T>::LoadCSV(std::istream& populationcvs, const Population<T> &pop) {}
+template <class T> void Population<T>::LoadCSV(std::istream& populationcvs, const Population<T> &pop) {
+  io::CSVReader<13> in("PopulationDTLZ1.cvs");
+  in.read_header(io::ignore_extra_column,"Fitness1", "Fitness2","Fitness3", "Gene1", "Gene2", "Gene3", "Gene4", "Gene5", "Gene6", "Gene7", "ConstrainViolation","Crowdingdistance", "Rank");
+  std::string vendor;
+  int size;
+  double speed;
+  while(in.read_row(vendor, size, speed)){
+    // do stuff with the data
+  }
+}
 
 template class Population<Double_t>;
