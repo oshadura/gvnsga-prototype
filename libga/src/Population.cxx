@@ -540,6 +540,7 @@ template <class T> std::ofstream &Population<T>::CreateCVS(std::string file) {
   populationcvs.open(file.c_str(), std::fstream::app);
 }
 
+//Better to do it in variadic way..
 template <class T>
 void Population<T>::CSVOutput(std::ofstream &populationcvs,
                               const Population<T> &pop) {
@@ -586,14 +587,13 @@ void Population<T>::CSVOutput(std::ofstream &populationcvs,
                    "===================-\n";
 }
 
-template <class T> void Population<T>::LoadCSV(std::istream& populationcvs, const Population<T> &pop) {
+// Better to do it in variadic way..
+template <class T> void Population<T>::LoadCSV(const Population<T> &pop) {
   io::CSVReader<13> in("PopulationDTLZ1.cvs");
   in.read_header(io::ignore_extra_column,"Fitness1", "Fitness2","Fitness3", "Gene1", "Gene2", "Gene3", "Gene4", "Gene5", "Gene6", "Gene7", "ConstrainViolation","Crowdingdistance", "Rank");
-  std::string vendor;
-  int size;
-  double speed;
-  while(in.read_row(vendor, size, speed)){
-    // do stuff with the data
+  Double_t Fitness1, Fitness2, Fitness3, Gene1, Gene2, Gene3, Gene4, Gene5, Gene6, Gene7, ConstrainViolation,Crowdingdistance, Rank;
+  while(in.read_row(Fitness1, Fitness2, Fitness3, Gene1, Gene2, Gene3, Gene4, Gene5, Gene6, Gene7, ConstrainViolation,Crowdingdistance, Rank)){
+    std::cout << "Reading " << Fitness1 << std::endl;
   }
 }
 
