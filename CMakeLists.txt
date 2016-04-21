@@ -138,7 +138,7 @@ endfunction()
 
 #----------------------------Debug macros-------------------------------------
 macro(debug msg)
-	message(STATUS "Debug ${msg}")
+	message(STATUS "DEBUG: ${msg}")
 endmacro()
 
 macro(debugValue _variableName)
@@ -159,4 +159,5 @@ message(STATUS "Check which is backend of VecGeom/GeantV: ${BACKEND} backend")
 
 add_subdirectory(libga)
 add_subdirectory(example)
+add_subdirectory(tests)
 #----------------------------------------------------------------------------

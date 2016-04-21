@@ -42,3 +42,7 @@ CERN based submission
 
 4. MLPACK:
 http://www.mlpack.org
+
+5. Google test
+
+(self build)
