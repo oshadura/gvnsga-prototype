@@ -28,7 +28,7 @@ cmake ../ -DCMAKE_INSTALL_PREFIX=/home/geant/Install/gvnsga-prototype -DVc_DIR=/
 ####### BUILD with numerical examples #############
 
 cmake ../ -DCMAKE_INSTALL_PREFIX=/home/geant/Install/gvnsga-prototype -DVc_DIR=/home/geant/Install/Vc/lib/cmake/Vc/ -DGeantV_DIR=/home/geant/Install/GeantV/cmake/ -DCMAKE_PREFIX_PATH=/home/geant/Install/HepMC/ -DCMAKE_CXX_FLAGS="-fdiagnostics-color=auto -fpermissive -fabi-version=6 -fext-numeric-literals" -DVecGeom_DIR=/home/geant/Install/VecGeom/lib/CMake/VecGeom/ -DCMAKE_BUILD_TYPE=Debug -DBOOST_ROOT=/home/geant/Install/boost/ -DENABLE_GEANTV=OFF -DNUMERIC_LIB=ON
-=====================================================
+
 DEPENDENCES:
 
 1. CMA-ES:
