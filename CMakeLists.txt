@@ -158,6 +158,7 @@ message(STATUS "Check which is backend of VecGeom/GeantV: ${BACKEND} backend")
 #----------------------------------------------------------------------------
 
 add_subdirectory(libga)
+add_subdirectory(libinstrument)
 add_subdirectory(example)
 add_subdirectory(tests)
 #----------------------------------------------------------------------------

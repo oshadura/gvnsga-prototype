@@ -3,14 +3,13 @@
 #include "AlgorithmNSGA.h"
 #include "HistogramManager.h"
 #include "Functions.h"
-#include "invoke_cpp11.hpp"
 
 #include <vector>
 #include <ostream>
 #include <string>
 #include <utility>
 
-using namespace std::placeholders;
+//using namespace std::placeholders;
 
 ClassImp(Functions)
 
