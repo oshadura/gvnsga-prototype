@@ -133,22 +133,6 @@ template <class T> void Genes<T>::SetConstrain(Int_t i, T value) {
   fConstraines.emplace(fConstraines.begin() + i, value);
 }
 
-//#ifdef ENABLE_GEANTV
-/*
-template <class T>
-void Genes<T>::Evaluate(GeantPropagator *prop, Functions &setup,
-                        Genes<T> &ind) throw(ExceptionMessenger) {
-  std::cout << "-==============================================-" <<
-std::endl;
-  std::cout << "Again debug from Genes<T>::Evaluate():\n" << std::endl;
-  printGenes(ind);
-  (setup.evfunc)(prop, ind);
-  if (setup.fNCons) {
-    ConstViol = 0;
-  }
-  fEvaluated = true;
-}
-*/
 
 /**
  * @brief [brief description]

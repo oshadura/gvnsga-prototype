@@ -135,11 +135,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   std::cout << "=================New generation #" << fGen
             << "================" << std::endl;
   fParentPop->Build();
-  //#ifdef ENABLE_GEANTV
-  //  fParentPop->Evaluate(fProp);
-  //#else
   fParentPop->Evaluate();
-  //#endif
   std::cout << "Calculation of FastNDS for parent population" << std::endl;
   fParentPop->FastNonDominantSorting();
   std::cout << "-==============================================-" << std::endl;

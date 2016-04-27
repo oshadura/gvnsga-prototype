@@ -14,10 +14,6 @@
 #include "generic/Functions.h"
 #include <vector>
 
-//#ifdef ENABLE_GEANTV
-//#include "GeantPropagator.h"
-//#endif
-
 template <class T> class Population;
 template <class T> class Genes;
 
@@ -54,9 +50,7 @@ public:
   void SetLimit(std::vector<std::pair<Double_t, Double_t>> lim) {
     this->fInterval = lim;
   }
-  //#ifdef ENABLE_GEANTV
-  //  void SetPropagator(GeantPropagator *prop) { this->fProp = prop; }
-  //#endif
+
   void Report(std::ostream &os) const {
     os << "Population size = " << fSizePop
        << "Number of generations = " << fNGen
@@ -79,9 +73,6 @@ public:
   }
 
 private:
-  //#ifdef ENABLE_GEANTV
-  //  GeantPropagator *fProp;
-  //#endif
   Functions::functype function;
   Functions::popfunctype popfunction;
   Int_t fGen; // count

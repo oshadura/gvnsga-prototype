@@ -2,11 +2,6 @@
 #define __FUNCTIONS__
 
 #include "generic/TGenes.h"
-
-//#ifdef ENABLE_GEANTV
-//#include "GeantPropagator.h"
-//#endif
-
 #include <vector>
 #include <limits>
 #include <functional>

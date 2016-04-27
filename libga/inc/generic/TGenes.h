@@ -23,10 +23,6 @@
 #include "generic/Functions.h"
 #include "generic/ExceptionMessenger.h"
 
-//#ifdef ENABLE_GEANTV
-//  class GeantPropagator;
-//#endif
-
 class Functions;
 template <class T> class Population;
 template <class T> class Genes : public TObject {
@@ -56,13 +52,7 @@ public:
   void SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
 #endif
 
-  //#ifdef ENABLE_GEANTV
-  //  void Evaluate(GeantPropagator *prop, Functions &setup,
-  //                      Genes<T> &ind) throw(ExceptionMessenger);
-  //#else
   void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
-  //#endif
-
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<Int_t> GetDominated() {
     return fDominated;

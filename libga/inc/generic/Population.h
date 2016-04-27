@@ -14,10 +14,6 @@
 #include "generic/ExceptionMessenger.h"
 #include "output/HistogramManager.h"
 
-//#ifdef ENABLE_GEANTV
-//#include "GeantPropagator.h"
-//#endif
-
 #include "TH1.h"
 #include "TFile.h"
 #include "TObject.h"
@@ -98,13 +94,8 @@ public:
   void LoadCSV(const Population<T> &pop);
   std::ofstream &CreateCVS(std::string file);
   void CSVOutput(std::ofstream &populationcvs, const Population<T> &pop);
-  //#ifdef ENABLE_GEANTV
-  //  void Evaluate(GeantPropagator* prop);
-  //#else
   void Evaluate();
-  //#endif
   void SetPopFunction(Functions::popfunctype f) { fPopFunction = f; }
-
   void ResetHistogramPointer() {
     fHisto->Reset();
   } // Function that reset histogram pointer
@@ -151,20 +142,12 @@ public:
   std::vector<Genes<T>> fPopulation;
 
 private:
-  //#ifdef ENABLE_GEANTV
-  //  void Evaluation(GeantPropagator* prop);
-  //  void EvaluationOpenMP(GeantPropagator* prop);
-  //#else
   void Evaluation();
   void EvaluationOpenMP();
   void EvaluationMPI();
   void EvaluationSLURM();
-  //#endif
 
 private:
-  //#ifdef ENABLE_GEANTV
-  //  GeantPropagator *prop;
-  //#endif
   Functions setupPop;
   Functions::popfunctype fPopFunction;
   Int_t fSizePop;
