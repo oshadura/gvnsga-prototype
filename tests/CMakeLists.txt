@@ -14,33 +14,48 @@ ExternalProject_Add(googletest
     LOG_BUILD ON
 )
 
-# Specify include dir
+#-------------------
+# Specify includes 
+#-------------------
 ExternalProject_Get_Property(googletest source_dir)
 message(STATUS "DEBUG: source_dir for GoogleTest = ${source_dir}")
 set(GTEST_INCLUDE_DIRS ${source_dir}/googletest/include)
+set(GMOCK_INCLUDE_DIRS ${source_dir}/googlemock/include) 
 
-# Specify MainTest's link libraries
+#-------------------
+# Specify libraries 
+#-------------------
 ExternalProject_Get_Property(googletest binary_dir)
 message(STATUS "DEBUG: binary_dir for GoogleTest = ${binary_dir}")
 set(GTEST_LIBS_DIR ${binary_dir}/googlemock/gtest)
+set(GMOCK_LIBS_DIR ${binary_dir}/googlemock/)
 
 #-------------------
 # Includes 
 #-------------------
 
-include_directories(${GTEST_INCLUDE_DIRS})
+include_directories(${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
+include_directories(inc)
+include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
 
 #-------------------
 # Testing GA library
 #-------------------
 enable_testing()
-set(PROJECT_TEST_NAME ${PROJECT_NAME_STR}_test)
-file(GLOB TEST_SRC_FILES ${CMAKE_SOURCE_DIR}/tests/*.cxx)
-add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES})
-add_dependencies(${PROJECT_TEST_NAME} googletest)
 
-target_link_libraries(${PROJECT_TEST_NAME}
+file(GLOB_RECURSE TEST_FILES "*.cxx")
+add_executable(gagtests ${TEST_FILES})
+
+
+target_link_libraries(gagtests
         ${GTEST_LIBS_DIR}/libgtest.a
-        ${GTEST_LIBS_DIR}/libgtest_main.a)
+        ${GTEST_LIBS_DIR}/libgtest_main.a
+        ${GMOCK_LIBS_DIR}/libgmock.a
+        ${GMOCK_LIBS_DIR}/libgmock_main.a
+        GA
+        #Instrument
+        # Fix this
+        ${MLPACK_LIBRARY}
+        )
 
-add_test(csvtest ${PROJECT_TEST_NAME})
+#add_test(csvtest ${PROJECT_TEST_NAME})
