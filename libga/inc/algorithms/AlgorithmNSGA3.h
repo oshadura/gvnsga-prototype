@@ -11,7 +11,7 @@
 #define CYAN "\033[36m"    /* Cyan */
 
 #include "TObject.h"
-#include "Functions.h"
+#include "generic/Functions.h"
 #include <vector>
 
 //#ifdef ENABLE_GEANTV

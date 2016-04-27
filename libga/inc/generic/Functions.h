@@ -1,7 +1,7 @@
 #ifndef __FUNCTIONS__
 #define __FUNCTIONS__
 
-#include "TGenes.h"
+#include "generic/TGenes.h"
 
 //#ifdef ENABLE_GEANTV
 //#include "GeantPropagator.h"

@@ -1,4 +1,4 @@
-#include "ReferencePoint.h"
+#include "generic/ReferencePoint.h"
 
 ReferencePoint::ReferencePoint() {}
 

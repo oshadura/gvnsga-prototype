@@ -3,9 +3,10 @@
 
 class MOEAD {
 public:
+	/*
   MOEAD(arguments);
   ~MOEAD();
-
+	*/
   /* data */
 };
 

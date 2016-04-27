@@ -6,8 +6,8 @@
 #include <limits>
 
 #include "TObject.h"
-#include "Population.h"
-#include "TGenes.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
 
 template <class T> class Population;
 template <class T> class Genes;

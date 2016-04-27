@@ -2,7 +2,7 @@
 #define MPIServer_h
 
 #include <boost/mpi.hpp>
-#include "TGenes.h"
+#include "generic/TGenes.h"
 
 class MPIServer {
 public:

@@ -17,11 +17,11 @@
 #include "TStopwatch.h"
 #include "TSystem.h"
 
-#include "TGenes.h"
-#include "Functions.h"
-#include "Population.h"
-#include "HistogramManager.h"
-#include "csv.h"
+#include "generic/TGenes.h"
+#include "generic/Functions.h"
+#include "generic/Population.h"
+#include "output/HistogramManager.h"
+#include "output/csv.h"
 
 templateClassImp(Population)
 

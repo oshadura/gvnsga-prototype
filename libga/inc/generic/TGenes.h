@@ -20,8 +20,8 @@
 
 #include <vector>
 
-#include "Functions.h"
-#include "ExceptionMessenger.h"
+#include "generic/Functions.h"
+#include "generic/ExceptionMessenger.h"
 
 //#ifdef ENABLE_GEANTV
 //  class GeantPropagator;

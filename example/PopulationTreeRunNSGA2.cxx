@@ -6,12 +6,12 @@
 
 #ifdef ENABLE_GEANTV
 
-#include "Population.h"
-#include "Functions.h"
-#include "HistogramManager.h"
-#include "TGenes.h"
-#include "AlgorithmNSGA.h"
-#include "GeantVFitness.h"
+#include "generic/Population.h"
+#include "generic/Functions.h"
+#include "output/HistogramManager.h"
+#include "generic/TGenes.h"
+#include "algorithms/AlgorithmNSGA.h"
+#include "instrument/GeantVFitness.h"
 
 #ifdef ENABLE_PERFMON
 #include "PFMWatch.h"

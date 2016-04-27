@@ -2,8 +2,8 @@
 #define MPIEvaluate_h
 
 #include <boost/mpi.hpp>
-#include "Population.h"
-#include "TGenes.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
 
 class MPIEvaluate {
 protected:

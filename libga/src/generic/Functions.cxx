@@ -1,8 +1,8 @@
-#include "TGenes.h"
-#include "Population.h"
-#include "AlgorithmNSGA.h"
-#include "HistogramManager.h"
-#include "Functions.h"
+#include "generic/TGenes.h"
+#include "generic/Population.h"
+#include "generic/Functions.h"
+#include "algorithms/AlgorithmNSGA.h"
+#include "output/HistogramManager.h"
 
 #include <vector>
 #include <ostream>

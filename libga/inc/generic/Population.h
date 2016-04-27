@@ -10,9 +10,9 @@
 #define MAGENTA "\033[35m" /* Magenta */
 #define CYAN "\033[36m"    /* Cyan */
 
-#include "TGenes.h"
-#include "ExceptionMessenger.h"
-#include "HistogramManager.h"
+#include "generic/TGenes.h"
+#include "generic/ExceptionMessenger.h"
+#include "output/HistogramManager.h"
 
 //#ifdef ENABLE_GEANTV
 //#include "GeantPropagator.h"

@@ -47,8 +47,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${_build_type}} ${INST
 message(STATUS "Compiling with C++ flags: ${CMAKE_CXX_FLAGS}")
 #--------------------------------------------------------------------------
 
-# Check src/*.c alsos to be compiled
-#file(GLOB sources src/*.c src/*.cpp)
 include_directories(inc)
 file(GLOB sources src/*.cxx)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -W -Wall -ansi -ldl")

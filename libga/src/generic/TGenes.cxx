@@ -25,10 +25,10 @@
 #include "TTreeReader.h"
 #include "TTreeReaderArray.h"
 
-#include "Functions.h"
-#include "TGenes.h"
-#include "Population.h"
-#include "HistogramManager.h"
+#include "generic/Functions.h"
+#include "generic/TGenes.h"
+#include "generic/Population.h"
+#include "output/HistogramManager.h"
 
 #define READ 0
 #define WRITE 1

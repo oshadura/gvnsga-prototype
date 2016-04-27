@@ -1,9 +1,10 @@
 #include <vector>
 
-#include "TGenes.h"
-#include "Population.h"
-#include "AlgorithmNSGA.h"
-#include "HistogramManager.h"
+#include "generic/TGenes.h"
+#include "generic/Population.h"
+#include "algorithms/AlgorithmNSGA.h"
+#include "output/HistogramManager.h"
+
 #include "TDirectory.h"
 #include "TCanvas.h"
 #include "TObject.h"

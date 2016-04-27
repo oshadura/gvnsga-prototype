@@ -67,25 +67,8 @@ endif()
 include_directories(/usr/include/libxml2/)
 #-----------------------------------------------------------------------------
 
-file(GLOB sources src/*.cxx)
-file(GLOB headers inc/PFMWatch.h
- inc/Functions.h
- inc/TGenes.h
- inc/Population.h
- inc/AlgorithmNSGA.h
- inc/HistogramManager.h
- inc/ExceptionMessenger.h
- inc/invoke_cpp11.hpp
- inc/type_traits.hpp
- inc/GeantVFitness.h
- inc/Process.h
- inc/cvs.h
- #inc/MPIServer.h
- #inc/MPIClient.h
- #inc/MPIEvaluate.h
- #inc/PCA.h
- #inc/AlgorithmNSGA3.h
- )
+file(GLOB sources src/algorithms/*.cxx src/generic/*.cxx src/instrument/*.cxx src/mva/*.cxx src/output/*.cxx)
+file(GLOB headers inc/algorithms/*.h inc/generic/*.h inc/instrument/*.h inc/mva/*.h inc/output/*.h)
 #----------------------------------------------------------------------------
 # Generate the Dictionary
 
@@ -94,5 +77,5 @@ ROOT_GENERATE_ROOTMAP(GADict LINKDEF LinkDef.h)
 
 add_library(GA SHARED ${sources} GADict.cxx)
 target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer)
-#set_target_properties(GA PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-#install(TARGETS GA DESTINATION ${CMAKE_BINARY_DIR})
+set_target_properties(GA PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+install(TARGETS GA DESTINATION ${CMAKE_BINARY_DIR})

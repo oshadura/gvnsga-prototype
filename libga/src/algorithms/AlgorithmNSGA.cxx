@@ -6,11 +6,11 @@
 #include "TRandom.h"
 #include "TRandom3.h"
 //
-#include "Functions.h"
-#include "TGenes.h"
-#include "Population.h"
-#include "AlgorithmNSGA.h"
-#include "HistogramManager.h"
+#include "generic/Functions.h"
+#include "generic/TGenes.h"
+#include "generic/Population.h"
+#include "algorithms/AlgorithmNSGA.h"
+#include "output/HistogramManager.h"
 
 // AlgorithmNSGA *AlgorithmNSGA::fgNSGA2 = 0;
 ClassImp(AlgorithmNSGA)
