@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 project(libga)
 
+#-------------------
+# Requirements 
+#-------------------
+
 find_package(ROOT REQUIRED)
 include(${ROOT_USE_FILE})
-#----------------------------------------------------------------------------
+
+#-------------------
+# Compiler & Language 
+#-------------------
 
 enable_language(CXX)
 set(CMAKE_CXX_STANDARD 11)
@@ -18,7 +25,10 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
       message(STATUS "Detecting: MSVC")
 endif()
-#-----------------------------------------------------------------------------
+
+#-------------------
+# Flags 
+#-------------------
 
 if (GNU)
   set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -Wall -fPIC -g")
@@ -46,6 +56,10 @@ else(Clang)
   endif()
 endif()
 
+#-------------------
+# Includes 
+#-------------------
+
 include_directories(inc)
 if(ENABLE_GEANTV)
   include_directories(${GEANTV_INCLUDE_DIR})
@@ -63,17 +77,40 @@ if(MLPACK_FOUND)
   include_directories(${MLPACK_INCLUDE_DIRS})
   include_directories(/usr/include/libxml2/)
 endif()
-# Temporary solution - cmake MLPACK doesnt work
+# Temporary solution - cmake MLPACK doesnt work..
 include_directories(/usr/include/libxml2/)
-#-----------------------------------------------------------------------------
 
-file(GLOB sources src/algorithms/*.cxx src/generic/*.cxx src/instrument/*.cxx src/mva/*.cxx src/output/*.cxx)
-file(GLOB headers inc/algorithms/*.h inc/generic/*.h inc/instrument/*.h inc/mva/*.h inc/output/*.h)
-#----------------------------------------------------------------------------
-# Generate the Dictionary
+#-------------------
+# Files 
+#-------------------
+
+file(GLOB sources src/algorithms/*.cxx
+                  src/generic/*.cxx
+                  src/instrumentation/*.cxx
+                  src/mva/*.cxx
+                  src/output/*.cxx
+                  src/problem/*.cxx
+                  src/tools/*cxx
+                  )
+file(GLOB headers inc/algorithms/*.h
+                  inc/generic/*.h
+                  inc/instrumentation/*.h
+                  inc/mva/*.h
+                  inc/output/*.h
+                  inc/problem/*.h
+                  inc/tools/*.h
+                  )
+
+#-------------------
+# Dictionary generation
+#-------------------
 
 ROOT_GENERATE_DICTIONARY(GADict ${headers} MODULE GA LINKDEF LinkDef.h)
 ROOT_GENERATE_ROOTMAP(GADict LINKDEF LinkDef.h)
+
+#-------------------
+# Library 
+#-------------------
 
 add_library(GA SHARED ${sources} GADict.cxx)
 target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer)

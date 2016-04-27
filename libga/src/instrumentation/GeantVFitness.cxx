@@ -1,4 +1,4 @@
-#include "instrument/GeantVFitness.h"
+#include "instrumentation/GeantVFitness.h"
 
 #include "TH1F.h"
 #include "TTree.h"
