@@ -64,3 +64,4 @@ target_link_libraries(gagtests
         )
 
 add_test(gagtests gagtests)
+install(TARGETS gagtests DESTINATION ${CMAKE_BINARY_DIR})

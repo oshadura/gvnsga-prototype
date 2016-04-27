@@ -11,7 +11,7 @@
 #include "output/HistogramManager.h"
 #include "generic/TGenes.h"
 #include "algorithms/AlgorithmNSGA.h"
-#include "instrument/GeantVFitness.h"
+#include "instrumenation/GeantVFitness.h"
 
 #ifdef ENABLE_PERFMON
 #include "PFMWatch.h"
