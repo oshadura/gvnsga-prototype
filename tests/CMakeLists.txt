@@ -39,9 +39,14 @@ include_directories(inc)
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
 
 #-------------------
+# Setting up Ctest also
+#-------------------
+include(CTest)
+enable_testing()
+
+#-------------------
 # Testing GA library
 #-------------------
-enable_testing()
 
 file(GLOB_RECURSE TEST_FILES "*.cxx")
 add_executable(gagtests ${TEST_FILES})
@@ -58,4 +63,4 @@ target_link_libraries(gagtests
         ${MLPACK_LIBRARY}
         )
 
-#add_test(csvtest ${PROJECT_TEST_NAME})
+add_test(gagtests gagtests)
