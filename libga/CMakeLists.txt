@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
-project(libga)
-
+#project(libga)
 #-------------------
 # Requirements 
 #-------------------
-
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 find_package(ROOT REQUIRED)
 include(${ROOT_USE_FILE})
+# Dependency for MVA
+find_package(Eigen3 REQUIRED)
 
 #-------------------
 # Compiler & Language 
@@ -77,8 +78,12 @@ if(MLPACK_FOUND)
   include_directories(${MLPACK_INCLUDE_DIRS})
   include_directories(/usr/include/libxml2/)
 endif()
-# Temporary solution - cmake MLPACK doesnt work..
+if(Eigen_FOUND)
+  include_directories(${EIGEN3_INCLUDE_DIR})
+endif()
+# Temporary solution - cmake MLPACK & Eigen3 doesnt work..
 include_directories(/usr/include/libxml2/)
+include_directories(/usr/include/eigen3)
 
 #-------------------
 # Files 
@@ -113,6 +118,6 @@ ROOT_GENERATE_ROOTMAP(GADict LINKDEF LinkDef.h)
 #-------------------
 
 add_library(GA SHARED ${sources} GADict.cxx)
-target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer)
+target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer ${})
 set_target_properties(GA PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 install(TARGETS GA DESTINATION ${CMAKE_BINARY_DIR})

@@ -19,9 +19,11 @@ class ProblemDTLZ1 : public Problem<ProblemDTLZ1> {
 public:
   typedef Genes<double> InputType;
   typedef std::vector<double> OutputType;
-  constexpr static const double pi = boost::math::constants::pi<double>();
+  //constexpr static 
+  const double pi = boost::math::constants::pi<double>();
 
-  static OutputType Evaluate(InputType &individual) {
+  //static 
+  OutputType Evaluate(InputType &individual) {
     Int_t n = individual.GetSetup()->GetNParam();      // 7
     Int_t m = individual.GetSetup()->GetNObjectives(); // 3
     Int_t k = n - m + 1;                               // 5

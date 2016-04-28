@@ -37,6 +37,7 @@ set(GMOCK_LIBS_DIR ${binary_dir}/googlemock/)
 include_directories(${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
 include_directories(inc)
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
+include_directories(/usr/include/eigen3)
 
 #-------------------
 # Setting up Ctest also

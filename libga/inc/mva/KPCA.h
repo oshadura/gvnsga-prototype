@@ -1,0 +1,56 @@
+// Kernel PCA using the Eigen library, by Tim Nugent 2014
+// Modified by oksana.shadura@cern.ch
+
+#include <fstream>
+#include <iostream>
+#include <Eigen/Dense>
+#include <Eigen/Eigenvalues>
+
+#include "PCA.h"
+
+using namespace Eigen;
+
+class KPCA : public PCA<KPCA> {
+
+public:
+  KPCA()
+      : components(2), kernel_type(1), normalise(0), gamma(0.001),
+        constant(1.0), order(2.0) {}
+  explicit KPCA(MatrixXd &d)
+      : components(2), kernel_type(1), normalise(0), gamma(0.001),
+        constant(1.0), order(2.0) {
+    X = d;
+  }
+  void LoadData(const char *data, char sep = ',');
+  void UploadPopulation(Population<double> &pop);
+  void SetComponents(const int i) {
+    components = i;
+  };
+  void SetKernel(const int i) {
+    kernel_type = i;
+  };
+  void SetNormalise(const int i) {
+    normalise = i;
+  };
+  void SetGamma(const double i) {
+    gamma = i;
+  };
+  void SetConstant(const double i) {
+    constant = i;
+  };
+  void SetOrder(const double i) {
+    order = i;
+  };
+  MatrixXd &GetTransformed() { return transformed; }
+  void RunKpca();
+  void Print();
+  void WriteTransformed(std::string);
+  void WriteEigenvectors(std::string);
+
+private:
+  double Kernel(const VectorXd &a, const VectorXd &b);
+  MatrixXd X, Xcentered, C, K, eigenvectors, transformed;
+  VectorXd eigenvalues, cumulative;
+  unsigned int components, kernel_type, normalise;
+  double gamma, constant, order;
+};
