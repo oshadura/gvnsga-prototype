@@ -4,9 +4,10 @@
 
 static std::vector<Weights> Weights::GetWeights(int n) {
   auto rndWeight = []() {
-    //Checkout correct values!
-    //auto r = Random::getInstance();
-    //std::vector<double> v = { r->rndDouble(), r->rndDouble(), r->rndDouble() };
+    // Checkout correct values!
+    // auto r = Random::getInstance();
+    // std::vector<double> v = { r->rndDouble(), r->rndDouble(), r->rndDouble()
+    // };
     std::vector<double> v;
     v.resize(3);
     //
@@ -56,8 +57,9 @@ std::vector<double> Weights::GetDistanceAll(const std::vector<Weights> &w) {
   return d;
 }
 
-std::vector<int> Weights::GetNearestNeighborByIndex(const std::vector<Weights> &w,
-                                           unsigned int numOfNearest) {
+std::vector<int>
+Weights::GetNearestNeighborByIndex(const std::vector<Weights> &w,
+                                   unsigned int numOfNearest) {
   std::vector<double> d = GetDistanceAll(w);
   auto index = Sort::GetIndex(w.size());
   std::sort(index.begin(), index.end(),
@@ -68,11 +70,10 @@ std::vector<int> Weights::GetNearestNeighborByIndex(const std::vector<Weights> &
 }
 
 static double Weights::GetWeightedSum(const Weights &w,
-                             const std::vector<double> &output) {
+                                      const std::vector<double> &output) {
   double sum = 0;
   for (unsigned int i = 0; i < w.size(); ++i) {
     sum += w[i] * output[i];
   }
   return sum;
 }
-

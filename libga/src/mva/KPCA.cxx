@@ -28,9 +28,19 @@ void KPCA::LoadData(const char *data, char sep) {
   }
 }
 
-void KPCA::UploadPopulation(Population<double> &pop){
-
+void KPCA::UploadPopulation(Population<double> &pop) {
+  for (int i = 0; i < pop.GetPopulationSize(); ++i) {
+    for (int j = 0; j < pop.GetGenes(i).size(); ++j){
+          auto ind = pop.GetGenes(i);
+          auto gene = ind.GetGene(j);
+          X.row(i) = VectorXd::Map(&gene, sizeof(gene));
+    }
+  }
 }
+
+void KPCA::LoadUpdatedPopulation(Population<double> &pop) {
+}
+
 
 double KPCA::Kernel(const VectorXd &a, const VectorXd &b) {
   switch (kernel_type) {

@@ -21,8 +21,10 @@ public:
         constant(1.0), order(2.0) {
     X = d;
   }
+  virtual ~KPCA(){}
   void LoadData(const char *data, char sep = ',');
   void UploadPopulation(Population<double> &pop);
+  void LoadUpdatedPopulation(Population<double> &pop);
   void SetComponents(const int i) {
     components = i;
   };

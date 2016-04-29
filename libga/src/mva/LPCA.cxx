@@ -3,10 +3,12 @@
 void LPCA::LoadData(const char *data, char sep) {
   // Read data
   unsigned int row = 0;
-  std::ifstream file(data);
-  if (file.is_open()) {
+  // std::ifstream file(data);
+  std::ifstream reader;
+  reader.open(data);
+  if (reader.is_open()) {
     std::string line, token;
-    while (std::getline(file, line)) {
+    while (std::getline(reader, line)) {
       std::stringstream tmp(line);
       unsigned int col = 0;
       while (std::getline(tmp, token, sep)) {
@@ -21,18 +23,28 @@ void LPCA::LoadData(const char *data, char sep) {
       }
       row++;
     }
-    file.close();
+    reader.close();
     Xcentered.resize(X.rows(), X.cols());
   } else {
     std::cout << "Failed to read file " << data << std::endl;
   }
 }
 
-void LPCA::UploadPopulation(Population<double> &pop){
-  
+void LPCA::UploadPopulation(Population<double> &pop) {
+  for (int i = 0; i < pop.GetPopulationSize(); ++i) {
+    for (int j = 0; j < pop.GetGenes(i).size(); ++j){
+          auto ind = pop.GetGenes(i);
+          auto gene = ind.GetGene(j);
+          X.row(i) = VectorXd::Map(&gene, sizeof(gene));
+    }
+  }
 }
 
-void LPCA::RunPca() {
+void LPCA::LoadUpdatedPopulation(Population<double> &pop) {
+}
+
+
+void LPCA::RunLPCA() {
   Xcentered = X.rowwise() - X.colwise().mean();
   C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
   EigenSolver<MatrixXd> edecomp(C);
@@ -49,7 +61,8 @@ void LPCA::RunPca() {
     eigen_pairs.push_back(std::make_pair(eigenvalues(i), eigenvectors.col(i)));
   }
   std::sort(eigen_pairs.begin(), eigen_pairs.end(),
-            [](const std::pair<double, VectorXd> a, const std::pair<double, VectorXd> b)
+            [](const std::pair<double, VectorXd> a,
+               const std::pair<double, VectorXd> b)
                 ->bool { return (a.first > b.first); });
   for (unsigned int i = 0; i < eigen_pairs.size(); i++) {
     eigenvalues(i) = eigen_pairs[i].first;

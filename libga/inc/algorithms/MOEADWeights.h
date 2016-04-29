@@ -10,7 +10,7 @@
 #include "tools/Sort.h"
 #include "tools/Generator.h"
 
-class Weights: public std::vector<double>{
+class Weights : public std::vector<double> {
 
 public:
   Weights(std::initializer_list<double> list) : std::vector<double>(list) {}
