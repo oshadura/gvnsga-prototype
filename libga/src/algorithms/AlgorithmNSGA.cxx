@@ -144,6 +144,7 @@ void AlgorithmNSGA::Initialize() throw(ExceptionMessenger) {
   std::cout << "-==============================================-" << std::endl;
 }
 
+/**
 void AlgorithmNSGA::Selection(
     Population<Double_t> &oldpop,
     Population<Double_t> &newpop) throw(ExceptionMessenger) {
@@ -198,6 +199,7 @@ void AlgorithmNSGA::Selection(
               newpop.GetGenes(i + 3));
   }
 }
+**/
 
 Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
                                            Genes<Double_t> &ind2) const {
@@ -222,6 +224,7 @@ Genes<Double_t> &AlgorithmNSGA::Tournament(Genes<Double_t> &ind1,
     return ind2;
 }
 
+/*
 void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
                               const Genes<Double_t> &parent2,
                               Genes<Double_t> &child1,
@@ -338,6 +341,7 @@ void AlgorithmNSGA::Crossover(const Genes<Double_t> &parent1,
   child1.SetEvaluated(false);
   child2.SetEvaluated(false);
 }
+*/
 
 void AlgorithmNSGA::NextStep() {
   std::cout << "-==============================================-"

@@ -18,9 +18,24 @@ template <class T> class Genes;
 
 class AlgorithmNSGA {
 public:
+  /**
+   * @brief Constructor NSGA-II
+   */
   AlgorithmNSGA();
+
+  /**
+   * @brief Destructor NSGA-II
+   * @details [long description]
+   */
   virtual ~AlgorithmNSGA();
+
+  /**
+   * @brief Initialization of NSGA-II algorithm
+   * @details [long description]
+
+   */
   void Initialize() throw(ExceptionMessenger);
+  
   void Selection(Population<Double_t> &oldpop,
                  Population<Double_t> &newpop) throw(ExceptionMessenger);
   Genes<Double_t> &Tournament(Genes<Double_t> &ind1,
@@ -50,7 +65,7 @@ public:
     this->fInterval = lim;
   }
 
-  void Report(std::ostream &os) const {
+  void Print(std::ostream &os) const {
     os << "Population size = " << fSizePop
        << "Number of generations = " << fNGen
        << "Number of objective functions = " << fNObjectives

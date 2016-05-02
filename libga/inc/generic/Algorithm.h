@@ -4,55 +4,27 @@
 #include <iostream>
 #include "PF.h"
 
-template <typename DerivedClass, typename Trait> class Algorithm {
+template <typename Derived, typename F> class Algorithm {
 
 private:
-  Trait problem;
+  F fFunction;
 
 public:
+  Algorithm(F fFunction) : fFunction(fFunction) {}
 
-  Algorithm(Trait problem) : problem(problem) {}
+  F GetProblem() const { return fFunction; }
 
-  /*
-  virtual ParetoFront<Trait> solve(std::ostream *sInfo = nullptr,
-                                   std::ostream *sOut = nullptr) {
-    initialize();
-    for (int i = 0; i < maxGeneration; ++i) {
-      if (sOut != nullptr)
-        front().json(jsonFront);
-      next();
-      if (sInfo != nullptr) {
-        *sInfo << "generation: " << i << " -> ";
-        info(*sInfo);
-      }
-    }
-    if (sOut != nullptr)
-      *sOut << jsonFront;
-    return front();
-  }
-  */
+  void SetProblem(F fFunction) { this->fFunction = fFunction; }
 
-  Trait getProblem() const { return problem; }
+  void Evolution() { return static_cast<Derived *>(this)->Evolution(); }
 
-  void setProblem(Trait problem) { this->problem = problem; }
+  void Initialize() { return static_cast<Derived *>(this)->Initialize(); }
 
-  static void waitForKey() {
-    do {
-      std::cout << '\n' << "Press a key to continue...";
-    } while (std::cin.get() != '\n');
+  void Print(std::ostream &os) {
+    return static_cast<Derived *>(this)->Print(os);
   }
 
-  void next() { return static_cast<DerivedClass *>(this)->next_(); }
-
-  void initialize() { return static_cast<DerivedClass *>(this)->init_(); }
-
-  void info(std::ostream &os) {
-    return static_cast<DerivedClass *>(this)->info_(os);
-  }
-
-  PF<Trait> front() {
-    return static_cast<DerivedClass *>(this)->front_();
-  }
+  PF<F> GetParetoFront() { return static_cast<Derived *>(this)->GetParetoFront(); }
 };
 
 #endif

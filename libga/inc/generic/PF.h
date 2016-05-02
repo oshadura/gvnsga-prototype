@@ -2,7 +2,7 @@
 #define PF_H
 
 
-template <typename Trait> class PF
+template <typename F> class PF
 {
 public:
 	/*
