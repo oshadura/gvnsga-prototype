@@ -14,16 +14,16 @@
 #include <cmath>
 #include <utility>
 
-class ProblemDTLZ1 : public Problem<ProblemDTLZ1> {
+class ProblemDTLZ1 : public Functions<ProblemDTLZ1> {
 
 public:
-  typedef Genes<double> InputType;
-  typedef std::vector<double> OutputType;
+  typedef GaVector<RandomDouble> Input;
+  typedef std::vector<double> Output;
   //constexpr static 
   const double pi = boost::math::constants::pi<double>();
 
   //static 
-  OutputType Evaluate(InputType &individual) {
+  Output Evaluate(Input &individual) {
     Int_t n = individual.GetSetup()->GetNParam();      // 7
     Int_t m = individual.GetSetup()->GetNObjectives(); // 3
     Int_t k = n - m + 1;                               // 5
