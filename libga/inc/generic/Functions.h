@@ -12,7 +12,13 @@ template <class T> class Population;
 #define EPS 1e-14
 #define INF 1e+14
 
-class Functions {
+template <typename Derived> class Functions {
+
+typedef Functions<Derived> AlgorithmType;
+
+protected:
+
+Derived fAlgorithm;
 
 public:
   /**

@@ -23,8 +23,9 @@
 #include "generic/Functions.h"
 #include "generic/ExceptionMessenger.h"
 
-class Functions;
+template <class Derived> class Functions;
 template <class T> class Population;
+
 template <class T> class Genes : public TObject {
 
 protected:
@@ -33,7 +34,7 @@ protected:
 public:
   // Constructor
   Genes() throw();
-  Genes(const Functions &config) throw(ExceptionMessenger);
+  Genes(const Functions<Derived> &config) throw(ExceptionMessenger);
   // Copy constructor
   Genes(const Genes<T> &copy) =
       default; // Copy operator for vector of Individual
@@ -41,18 +42,18 @@ public:
   virtual ~Genes() {}
   // Function building Genes (moved in Population and Functions)
   void Clear(Option_t *option = "");
-  T CheckDominance(Functions *setup,
+  T CheckDominance(Functions<Derived> *setup,
                    const Genes<T> *ind2) throw(ExceptionMessenger);
-  Int_t Mutate(const Functions *setup);
+  Int_t Mutate(const Functions<Derived> *setup);
   void StoreGenesTree(Genes<T> *ind);
   Genes<T> &operator=(const Genes<T> &gen);
-  void Set(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  void Set(Functions<Derived> &setup, Genes<T> &ind) throw(ExceptionMessenger);
 
 #ifdef ENABLE_GEANTV
-  void SetGeantV(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  void SetGeantV(Functions<Derived> &setup, Genes<T> &ind) throw(ExceptionMessenger);
 #endif
 
-  void Evaluate(Functions &setup, Genes<T> &ind) throw(ExceptionMessenger);
+  void Evaluate(Functions<Derived> &setup, Genes<T> &ind) throw(ExceptionMessenger);
   Int_t GetDominatedCounter() { return fDominationCounter; }
   std::vector<Int_t> GetDominated() {
     return fDominated;
@@ -86,7 +87,7 @@ public:
   std::vector<T> GetConstraines() const { return fConstraines; }
   T GetConstrain(Int_t i) const { return fConstraines.at(i); }
   std::vector<T> GetfGenes() const { return fGenes; }
-  const Functions *GetSetup() const { return setup; }
+  const Functions<Derived> *GetSetup() const { return setup; }
   void SetDominated(std::vector<Int_t> &d) { fDominated = d; }
   // faster access
   Int_t capacity() { return fGenes.capacity(); }
@@ -185,7 +186,7 @@ private:
   Double_t ConstViol;            // Violation of constraints
   std::vector<T> fGenes;
   std::vector<T> fConstraines; // Vector of constraines for NSGA2
-  const Functions *setup;
+  const Functions<Derived> *setup;
 
   //#ifdef ENABLE_GEANTV
   //  GeantPropagator *prop;

@@ -6,8 +6,8 @@
 class PolynomialMutation : public Mutation<PolynomialMutation> {
 
 public:
-  template <typename F, typename T>
-  static void MutateGA(const Functions *setup) {
+  template <typename F>
+  static void MutateGA(const F *setup) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> rand(0, 1);

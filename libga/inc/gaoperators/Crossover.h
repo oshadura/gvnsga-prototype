@@ -6,7 +6,7 @@
 template <typename Derived> class Crossover {
 
 public:
-  template <typename F, typename T>
+  template <typename T>
   static void CrossoverGA(Genes<T> &p1, Genes<T> &p2, Genes<T> &ch1,
                             Genes<T> &ch2) {
     Derived::CrossoverGA(p1, p2, ch1, ch2);

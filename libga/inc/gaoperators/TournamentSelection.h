@@ -6,7 +6,7 @@
 class TournamentSelection : public Selection<TournamentSelection> {
 
 public:
-  template <typename F, typename T>
+  template <typename T>
   static void
   SelectionGA(Population<T> &oldpop,
               Population<T> &newpop) throw(ExceptionMessenger) {

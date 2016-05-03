@@ -36,7 +36,7 @@
 
 template <class T> class Genes;
 template <class T>
-class Population : public Genes<T>, public Functions, public HistogramManager {
+class Population : public Genes<T>, public Functions<Derived>, public HistogramManager {
 public:
   Population()
       : fFront(), fPopulation(), fCrowdingObj(true), fSizePop(0), fHisto(0),
