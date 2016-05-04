@@ -17,12 +17,12 @@ public:
 
   void Print(std::ostream &os) { os << fGen << std::endl; }
 
-  PF<double> GetParetoFront() { return fFront; }
+  PF<F> GetParetoFront() { return fFront; }
 
 private:
-  Population<double> pop;
+  Population<F> pop;
 
-  PF<double> fFront;
+  PF<F> fFront;
 
   int fGen;
 

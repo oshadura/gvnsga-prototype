@@ -25,40 +25,72 @@ private:
   typename F::Input fGenes;
   typename F::Output fFitness;
 
-public:
+  Genes() {}
+  Genes(const typename F::fGenes &i, bool fEvaluated = true) : fGenes(i) {
+    if (fEvaluated)
+      Evaluate();
+  };
+
+  bool IsDominating(const Genes &other) const {
+    for (unsigned int i = 0; i < GetOutput().size(); ++i) {
+      if (fFitness[i] > other.fFitness[i])
+        return false;
+    }
+    return !isEqual(other);
+  }
+
+  bool IsDominated(const Genes &other) const {
+    for (unsigned int i = 0; i < GetOutput().size(); ++i) {
+      if (fFitness[i] < other.fFitness[i])
+        return false;
+    }
+    return !isEqual(other);
+  }
+
+  bool IsEqual(const Genes &other) const {
+    for (unsigned int i = 0; i < GetOutput().size(); ++i) {
+      if (other.fFitness[i] != fFitness[i])
+        return false;
+    }
+    return true;
+  }
+
+  void Evaluate() { fFitness = F::Evaluate(fGenes); }
+
+  const typename F::Input &GetInput() const { return fGenes; }
+
+  const typename F::Output &GetOutput() const { return fFitness; }
+
 private:
+  /*
+  T GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
+  T GetBuffev(Genes<T> &ind) const { return ind.GetGene(1); }
+  T GetThread(Genes<T> &ind) const { return ind.GetGene(2); }
+  T GetPriority(Genes<T> &ind) const { return ind.GetGene(3); }
+  T GetSteps(Genes<T> &ind) const { return ind.GetGene(4); }
+  T GetVector(Genes<T> &ind) const { return ind.GetGene(5); }
+  T GetMaxVector(Genes<T> &ind) const { return ind.GetGene(6); }
+  T GetTime(Genes<T> &ind) const { return ind.GetFitness(0); }
+  T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
 
-
-
-/*
-T GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
-T GetBuffev(Genes<T> &ind) const { return ind.GetGene(1); }
-T GetThread(Genes<T> &ind) const { return ind.GetGene(2); }
-T GetPriority(Genes<T> &ind) const { return ind.GetGene(3); }
-T GetSteps(Genes<T> &ind) const { return ind.GetGene(4); }
-T GetVector(Genes<T> &ind) const { return ind.GetGene(5); }
-T GetMaxVector(Genes<T> &ind) const { return ind.GetGene(6); }
-T GetTime(Genes<T> &ind) const { return ind.GetFitness(0); }
-T GetMemory(Genes<T> &ind) const { return ind.GetFitness(1); }
-
-T fAllev;     // All events (after will be translated in GeantV namespace) #0
-T fBuffev;    // Buffered events (after will be translated in GeantV
-          // namespace) #1
-T fThread;    // Number of threads (after will be translated in GeantV
-          // namespace) #3
-T fPriority;  // Priority value (after will be translated in GeantV
-          // namespace) #4
-T fSteps;     // Number of steps (after will be translated in GeantV
-          // namespace) #5
-T fVector;    // Vector size (after will be translated in GeantV
-          // namespace) #6
-T fMaxVector; // Max VectorSize
-T fTime;                 // RT from GeantV (after will be translated in GeantV
-                     // namespace)
-T fMemory;               // RT from GeantV (after will be translated in GeantV
-                     // namespace)
-*/
-	ClassDef(Genes, 1)
+  T fAllev;     // All events (after will be translated in GeantV namespace) #0
+  T fBuffev;    // Buffered events (after will be translated in GeantV
+            // namespace) #1
+  T fThread;    // Number of threads (after will be translated in GeantV
+            // namespace) #3
+  T fPriority;  // Priority value (after will be translated in GeantV
+            // namespace) #4
+  T fSteps;     // Number of steps (after will be translated in GeantV
+            // namespace) #5
+  T fVector;    // Vector size (after will be translated in GeantV
+            // namespace) #6
+  T fMaxVector; // Max VectorSize
+  T fTime;                 // RT from GeantV (after will be translated in GeantV
+                       // namespace)
+  T fMemory;               // RT from GeantV (after will be translated in GeantV
+                       // namespace)
+  */
+  ClassDef(Genes, 1)
 };
 
 #endif
