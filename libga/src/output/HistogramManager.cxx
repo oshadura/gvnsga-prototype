@@ -2,7 +2,7 @@
 
 #include "generic/TGenes.h"
 #include "generic/Population.h"
-#include "algorithms/AlgorithmNSGA.h"
+#include "algorithms/NSGA.h"
 #include "output/HistogramManager.h"
 
 #include "TDirectory.h"
@@ -16,6 +16,8 @@
 #include "TTreeReaderValue.h"
 
 ClassImp(HistogramManager)
+
+/*
 
     HistogramManager *HistogramManager::HistoInstance = 0;
 
@@ -299,3 +301,4 @@ void HistogramManager::Reset() {
 #endif
   HistoInstance = 0;
 }
+*/

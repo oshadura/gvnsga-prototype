@@ -28,9 +28,9 @@ private:
 #endif
 
 public:
-  HistogramManager();
+  HistogramManager(){}
   HistogramManager *Instance();
-  virtual ~HistogramManager();
+  virtual ~HistogramManager(){}
   Bool_t HistoFill(Population<Double_t> &pop, char *hfile);
   Bool_t CheckValue(ROOT::Internal::TTreeReaderValueBase *value);
   void Reset();
@@ -38,8 +38,8 @@ public:
 private:
   static HistogramManager *HistoInstance;
 
-  HistogramManager(const HistogramManager &);
-  HistogramManager &operator=(const HistogramManager &);
+  HistogramManager(const HistogramManager &) = delete;
+  HistogramManager &operator=(const HistogramManager &) =delete;
 
   ClassDef(HistogramManager, 1)
 };

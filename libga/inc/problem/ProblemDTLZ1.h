@@ -2,11 +2,10 @@
 #define PROBLEMDTLZ_H
 
 #include "generic/TGenes.h"
-#include "generic/Problem.h"
 #include "generic/Population.h"
 #include "generic/Functions.h"
 #include "output/HistogramManager.h"
-#include "algorithms/AlgorithmNSGA.h"
+#include "algorithms/NSGA.h"
 #include "instrumentation/GeantVFitness.h"
 
 #include <boost/math/constants/constants.hpp>
@@ -22,10 +21,12 @@ public:
   //constexpr static 
   const double pi = boost::math::constants::pi<double>();
 
-  //static 
+  /*
+
+  static 
   Output Evaluate(Input &individual) {
-    Int_t n = individual.GetSetup()->GetNParam();      // 7
-    Int_t m = individual.GetSetup()->GetNObjectives(); // 3
+    //Int_t n = individual.GetSetup()->GetNParam();      // 7
+    //Int_t m = individual.GetSetup()->GetNObjectives(); // 3
     Int_t k = n - m + 1;                               // 5
 
     Double_t g = 0.0;
@@ -48,6 +49,7 @@ public:
     }
     return individual.GetFitnessVector();
   }
+  */
 
   //static InputType GetInput() { return 0; }
 

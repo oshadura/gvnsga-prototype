@@ -3,8 +3,8 @@
 
 #include "generic/Algorithm.h"
 #include "generic/TGenes.h"
-#include "generic/Population.h"
-#include "generic/PF.h"
+//#include "generic/Population.h"
+//#include "generic/PF.h"
 
 template <typename F> class CMAES : public Algorithm<CMAES<F>, F> {
 

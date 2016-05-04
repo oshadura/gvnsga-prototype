@@ -1,3 +1,7 @@
+#ifndef __LPCA__
+#define __LPCA__
+
+
 #include <fstream>
 #include <iostream>
 #include <Eigen/Dense>
@@ -15,8 +19,8 @@ public:
   explicit LPCA(MatrixXd &d) : normalise(0) { X = d; }
   virtual ~LPCA(){}
   void LoadData(const char *data, char sep = ',');
-  void UploadPopulation(Population<double> &pop);
-  void LoadUpdatedPopulation(Population<double> &pop);
+  template <typename F> void UploadPopulation(Population<F> &pop);
+  template <typename F> void LoadUpdatedPopulation(Population<F> &pop);
   void SetNormalise(const int i) {
     normalise = i;
   };
@@ -32,3 +36,6 @@ private:
   VectorXd eigenvalues, cumulative;
   unsigned int normalise;
 };
+
+
+#endif

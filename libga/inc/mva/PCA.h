@@ -6,8 +6,8 @@
 template <typename DerivedClass> class PCA {
 public:
 
-	template <typename T> Population<T> select(const Population<T> &population) {
-            return static_cast<DerivedClass*>(this)->Select(population);
+	template <typename F> Population<F> MVA(const Population<F> &population) {
+            return static_cast<DerivedClass*>(this)->MVA(population);
         }
 
 };

@@ -1,7 +1,6 @@
 #include "generic/TGenes.h"
 #include "generic/Population.h"
 #include "generic/Functions.h"
-#include "algorithms/AlgorithmNSGA.h"
 #include "output/HistogramManager.h"
 
 #include <vector>
@@ -9,22 +8,23 @@
 #include <string>
 #include <utility>
 
-//using namespace std::placeholders;
+// using namespace std::placeholders;
 
-ClassImp(Functions)
+templateClassImp(Functions)
 
-    Functions::Functions(const Functions &func)
+template <class F>
+Functions<F>::Functions(const Functions &func)
     : fNParam(func.fNParam), fNCons(func.fNCons), fInterval(func.fInterval),
       fNObjectives(func.fNObjectives), fPMut(func.fPMut), fEtaMut(func.fPMut) {}
 
-void Functions::SetInterval() {
+template <class F> void Functions<F>::SetInterval() {
   for (Int_t i = 0; i < fNParam; ++i) {
     SetIntervalLimit(i, 0, 1);
   }
 }
 
 #ifdef ENABLE_GEANTV
-void Functions::SetIntervalGeantV() {
+template <class F> void Functions<F>::SetIntervalGeantV() {
   // for GetAllev(Genes<T> &ind) const { return ind.GetGene(0); }
   SetIntervalLimit(0, 1, 100);
   // for GetBuffev(Genes<T> &ind) const { return ind.GetGene(1); }
@@ -44,7 +44,8 @@ void Functions::SetIntervalGeantV() {
 #endif
 
 // Implementation that doesnt allow to change number of parameters
-void Functions::SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax) {
+template <class F>
+void Functions<F>::SetIntervalLimit(Int_t i, Double_t fMin, Double_t fMax) {
   auto value = std::make_pair(fMin, fMax);
   fInterval.emplace(fInterval.begin() + i, value);
 }

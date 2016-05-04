@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <limits>
+#include <cmath>
 
 #include "TObject.h"
 #include "generic/Population.h"

@@ -30,7 +30,7 @@ void LPCA::LoadData(const char *data, char sep) {
   }
 }
 
-void LPCA::UploadPopulation(Population<double> &pop) {
+template <typename F> void LPCA::UploadPopulation(Population<F> &pop) {
   for (int i = 0; i < pop.GetPopulationSize(); ++i) {
     for (int j = 0; j < pop.GetGenes(i).size(); ++j){
           auto ind = pop.GetGenes(i);
@@ -40,7 +40,7 @@ void LPCA::UploadPopulation(Population<double> &pop) {
   }
 }
 
-void LPCA::LoadUpdatedPopulation(Population<double> &pop) {
+template <typename F> void LPCA::LoadUpdatedPopulation(Population<F> &pop) {
 
 
 }

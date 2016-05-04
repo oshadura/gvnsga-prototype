@@ -5,11 +5,11 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
-#pragma link C++ class Population < Double_t > +;
-#pragma link C++ class Population < double > +;
+//#pragma link C++ class Population < Double_t > +;
+//#pragma link C++ class Population < double > +;
 #pragma link C++ class HistogramManager + ;
-#pragma link C++ class Genes < Double_t > +;
-#pragma link C++ class Genes < double > +;
+//#pragma link C++ class Genes < Double_t > +;
+//#pragma link C++ class Genes < double > +;
 #pragma link C++ class AlgorithmNSGA + ;
 #pragma link C++ class Functions + ;
 #pragma link C++ class ExceptionMessenger + ;

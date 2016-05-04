@@ -1,3 +1,7 @@
+#ifndef __KPCA__
+#define __KPCA__
+
+
 // Kernel PCA using the Eigen library, by Tim Nugent 2014
 // Modified by oksana.shadura@cern.ch
 
@@ -23,8 +27,8 @@ public:
   }
   virtual ~KPCA(){}
   void LoadData(const char *data, char sep = ',');
-  void UploadPopulation(Population<double> &pop);
-  void LoadUpdatedPopulation(Population<double> &pop);
+  template <typename F> void UploadPopulation(Population<F> &pop);
+  template <typename F> void LoadUpdatedPopulation(Population<F> &pop);
   void SetComponents(const int i) {
     components = i;
   };
@@ -56,3 +60,6 @@ private:
   unsigned int components, kernel_type, normalise;
   double gamma, constant, order;
 };
+
+
+#endif

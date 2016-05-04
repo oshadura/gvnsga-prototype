@@ -4,10 +4,12 @@
 #include "generic/Algorithm.h"
 #include "generic/TGenes.h"
 #include "generic/Population.h"
+#include "generic/PF.h"
 #include "MOEADWeights.h"
 #include "gaoperators/SBXCrossover.h"
 #include "gaoperators/PolynomialMutation.h"
 #include "gaoperators/TournamentSelection.h"
+
 
 template <typename F>
 class MOEAD : public Algorithm<MOEAD<F>, F> {
@@ -23,7 +25,7 @@ public:
 
   void Print(std::ostream &os) { os << fGen << std::endl; }
 
-  PF<double> GetParetoFront() { return fFront; }
+  PF<F> GetParetoFront() { return fFront; }
   /////////////////////////////////////////////////////////
   static void UpdateReferencePoint(std::vector<double> &ref,
                                    const Genes<double> &ind) {
@@ -36,7 +38,7 @@ public:
     */
   }
 
-  static std::vector<double> GetReferencePoint(const Population<double> &pop) {
+  static std::vector<double> GetReferencePoint(const Population<F> &pop) {
     int fNObjectives = F::GetNObjectives();
     std::vector<double> ref(fNObjectives);
     // WRONG !
@@ -57,7 +59,7 @@ public:
   // Output suppose to be fFitness
   double GetTchebichew(const Weights &w, const std::vector<double> &output) {
     double maxDistance = 0;
-    for (int i = 0; i < T::getNumOfObjectives(); ++i) {
+    for (int i = 0; i < F::GetNumOfObjectives(); ++i) {
       maxDistance = std::max(maxDistance, w[i] * (output[i] - fRefPoint[i]));
     }
     return maxDistance;
@@ -71,9 +73,9 @@ private:
   // Can we add this in a Reference point class?
   std::vector<double> fRefPoint;
 
-  Population<double> pop;
+  Population<F> pop;
 
-  PF<double> fFront;
+  PF<F> fFront;
 
   TournamentSelection fSelection;
 

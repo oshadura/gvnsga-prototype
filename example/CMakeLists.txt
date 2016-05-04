@@ -57,15 +57,15 @@ endmacro()
 
 #----------------------------------------------------------------------------
 set(LIBGA_EXAMPLES
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ1.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ2.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ3.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ4.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ5.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ6.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ7.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunNSGA2.cxx
-   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ1.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ2.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ3.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ4.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ5.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ6.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeDTLZ7.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunNSGA2.cxx
+#   ${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMS.cxx
    #${CMAKE_SOURCE_DIR}/example/PopulationTreeRunCMAES.cxx
    #${CMAKE_SOURCE_DIR}/example/PopulationCMSTest.cxx
 )
@@ -77,14 +77,14 @@ set(LIBGA_EXAMPLES
 
 build_executables("${LIBGA_EXAMPLES}")
 install(TARGETS
-  PopulationTreeDTLZ1
-  PopulationTreeDTLZ2
-  PopulationTreeDTLZ3
-  PopulationTreeDTLZ4
-  PopulationTreeDTLZ5
-  PopulationTreeDTLZ6
-  PopulationTreeDTLZ7
-  PopulationTreeRunNSGA2
-  PopulationTreeRunCMS
+#  PopulationTreeDTLZ1
+#  PopulationTreeDTLZ2
+#  PopulationTreeDTLZ3
+#  PopulationTreeDTLZ4
+#  PopulationTreeDTLZ5
+#  PopulationTreeDTLZ6
+#  PopulationTreeDTLZ7
+#  PopulationTreeRunNSGA2
+#  PopulationTreeRunCMS
   #PopulationCMSTest
  DESTINATION ${CMAKE_BINARY_DIR})

@@ -2,7 +2,6 @@
 #define ALGORITHM_H
 
 #include <iostream>
-#include "PF.h"
 
 template <typename Derived, typename F> class Algorithm {
 
@@ -23,8 +22,6 @@ public:
   void Print(std::ostream &os) {
     return static_cast<Derived *>(this)->Print(os);
   }
-
-  PF<F> GetParetoFront() { return static_cast<Derived *>(this)->GetParetoFront(); }
 };
 
 #endif

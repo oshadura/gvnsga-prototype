@@ -6,6 +6,7 @@
 class PolynomialMutation : public Mutation<PolynomialMutation> {
 
 public:
+  /*
   template <typename F>
   static void MutateGA(const F *setup) {
     std::random_device rd;
@@ -47,6 +48,7 @@ public:
     // std::cout << "Print number of mutations in Gene: " << fNMut << std::endl;
     return fNMut;
   }
+  */
 };
 
 #endif

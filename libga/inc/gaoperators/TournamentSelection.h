@@ -6,6 +6,7 @@
 class TournamentSelection : public Selection<TournamentSelection> {
 
 public:
+  /*
   template <typename T>
   static void
   SelectionGA(Population<T> &oldpop,
@@ -61,6 +62,7 @@ public:
                 newpop.GetGenes(i + 3));
     }
   }
+  */
 };
 
 #endif

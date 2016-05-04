@@ -28,7 +28,7 @@ void KPCA::LoadData(const char *data, char sep) {
   }
 }
 
-void KPCA::UploadPopulation(Population<double> &pop) {
+template <typename F> void KPCA::UploadPopulation(Population<F> &pop) {
   for (int i = 0; i < pop.GetPopulationSize(); ++i) {
     for (int j = 0; j < pop.GetGenes(i).size(); ++j){
           auto ind = pop.GetGenes(i);
@@ -38,7 +38,7 @@ void KPCA::UploadPopulation(Population<double> &pop) {
   }
 }
 
-void KPCA::LoadUpdatedPopulation(Population<double> &pop) {
+template <typename F> void KPCA::LoadUpdatedPopulation(Population<F> &pop) {
 }
 
 

@@ -2,8 +2,12 @@
 #define __SBXCROSSOVER__
 
 #include "Crossover.h"
+#include "generic/TGenes.h"
+//#include "generic/Population.h"
 
-class Functions;
+#include "random"
+
+template <class Derived> class Functions;
 
 class SBXCrossover : public Crossover<SBXCrossover> {
 
@@ -15,10 +19,12 @@ public:
 * @param
 *
 */
-  template <typename F, typename T>
-  static void CrossoverGA(const Genes<T> &parent1,
-                                       const Genes<T> &parent2,
-                                       Genes<T> &child1, Genes<T> &child2) {
+
+/*
+  template <typename F>
+  static void CrossoverGA(const Genes<F> &parent1,
+                                       const Genes<F> &parent2,
+                                       Genes<F> &child1, Genes<F> &child2) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dist(0, 1);
@@ -138,6 +144,7 @@ public:
     child1.SetEvaluated(false);
     child2.SetEvaluated(false);
   }
+*/
 };
 
 #endif

@@ -12,12 +12,14 @@ public:
   KPCA kpca;
 };
 
+/*
 TEST_F(AllPCA, UploadPopulationLPCA){
   Population<double> pop;
   lpca.UploadPopulation(pop);
   ASSERT_EQ(lpca.GetX().rows(), pop.GetPopulationSize());
   ASSERT_EQ(lpca.GetX().cols(), pop.GetSetup()->GetNParam());
 }
+*/
 
 TEST_F(AllPCA, LoadingDataLPCA) {
   lpca.LoadData("data");

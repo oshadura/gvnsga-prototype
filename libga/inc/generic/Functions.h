@@ -5,6 +5,7 @@
 #include <vector>
 #include <limits>
 #include <functional>
+#include <iostream>
 
 template <class T> class Genes;
 template <class T> class Population;
@@ -18,7 +19,7 @@ typedef Functions<Derived> AlgorithmType;
 
 protected:
 
-Derived fAlgorithm;
+//Derived fAlgorithm;
 
 public:
   /**
