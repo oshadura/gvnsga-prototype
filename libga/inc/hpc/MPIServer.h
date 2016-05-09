@@ -1,5 +1,5 @@
-#ifndef MPIServer_h
-#define MPIServer_h
+#ifndef __MPISERVER__
+#define __MPISERVER__
 
 #include <boost/mpi.hpp>
 #include "generic/TGenes.h"

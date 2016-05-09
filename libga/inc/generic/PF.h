@@ -2,6 +2,7 @@
 #define __PF__
 
 #include <list>
+#include <generic/Population.h>
 
 template <typename F> class PF {
 
@@ -16,19 +17,40 @@ public:
   }
 
   bool AddIndToPF(const std::shared_ptr<Genes<F> > &ind) {
-    // for every element of front
     for (auto it = fFront.begin(); it != fFront.end();) {
-      // of one elements dominates ind -> does not belong to front
-      if ((*it)->isDominating(*ind) || (*it)->isEqual(*ind))
+      if ((*it)->IsDominating(*ind) || (*it)->IsEqual(*ind))
         return false;
-      // else remove all elements that are dominated by ind
-      if ((*it)->isDominatedBy(*ind))
+      if ((*it)->IsDominated(*ind))
         fFront.erase(it++);
       else
         ++it;
     }
     fFront.push_back(ind);
     return true;
+  }
+
+  static Population<F> GetPF(const Population<F> &pop) {
+    std::list<std::shared_ptr<Genes<F>>> fFront;
+    if (pop.empty())
+      return Population<F>();
+    auto fFunction = [&fFront](const std::shared_ptr<Genes<F> > &ind) {
+      for (auto it = fFront.begin(); it != fFront.end();) {
+        if ((*it)->IsDominating(*ind))
+          return false;
+        if ((*it)->IsDominatedBy(*ind))
+          fFront.erase(it++);
+        else
+          ++it;
+      }
+      fFront.push_back(ind);
+      return true;
+    };
+    for (unsigned int i = 0; i < pop.size(); ++i)
+      fFunction(pop[i]);
+    Population<F> fResult;
+    for (auto ind : fFront)
+      fResult.push_back(ind);
+    return fResult;
   }
 };
 

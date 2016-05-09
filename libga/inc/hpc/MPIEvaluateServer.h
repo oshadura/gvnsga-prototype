@@ -1,5 +1,5 @@
-#ifndef MPIEvaluateServer_h
-#define MPIEvaluateServer_h
+#ifndef __MPIEVALUATESERVER__
+#define __MPIEVALUATESERVER__
 
 #include <boost/mpi.hpp>
 #include "generic/Population.h"

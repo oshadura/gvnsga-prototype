@@ -1,5 +1,5 @@
-#ifndef PROBLEMDTLZ_H
-#define PROBLEMDTLZ_H
+#ifndef __PROBLEMDTLZ1__
+#define __PROBLEMDTLZ1__
 
 #include "generic/TGenes.h"
 #include "generic/Population.h"

@@ -16,104 +16,102 @@ class Population : public std::vector<std::shared_ptr<Genes<F> > > {
   // class ContUpdatedParetoFront;
 
 public:
-  /*
-Population(std::initializer_list<std::shared_ptr<Genes<F>> > fList)
-  : std::vector<std::shared_ptr<Genes<F>> >(fList) {}
-  */
+  Population(std::initializer_list<std::shared_ptr<Genes<F> > > fList)
+      : std::vector<std::shared_ptr<Genes<F> > >(fList) {}
   Population() : std::vector<std::shared_ptr<Genes<F> > >() {}
 
   Population(const std::vector<std::shared_ptr<Genes<F> > > &ind)
       : std::vector<std::shared_ptr<Genes<F> > >(ind) {}
 
   Population(int n) {
-  	//Different...
+    // Different...
     for (int i = 0; i < n; ++i) {
-      typename F::Input ind = F::GetInput().random();
-      auto individual = std::make_shared<Genes<F> >(ind);
-      this->push_back(individual);
+      typename F::Input fRandomInd = F::GetInput().random();
+      auto fIndividual = std::make_shared<Genes<F> >(fRandomInd);
+      this->push_back(fIndividual);
     }
   }
 
-  bool IsNonDominated(const std::shared_ptr<Genes<F> > &ind) const {
-    for (auto entry : *this) {
-      if (ind->IsDominated(*entry))
+  bool IsNonDominated(const std::shared_ptr<Genes<F> > &individual) const {
+    for (auto fEntry : *this) {
+      if (individual->IsDominated(*fEntry))
         return true;
     }
     return false;
   }
 
   const std::shared_ptr<Genes<F> > PopBack() {
-    std::shared_ptr<Genes<F> > a = this->back();
+    std::shared_ptr<Genes<F> > individual = this->back();
     this->pop_back();
-    return a;
+    return individual;
   }
 
   void Remove(const Population<F> &pop) {
-    for (auto entry : pop) {
-      this->erase(std::remove(this->begin(), this->end(), entry), this->end());
+    for (auto fEntry : pop) {
+      this->erase(std::remove(this->begin(), this->end(), fEntry), this->end());
     }
   }
 
-  typename F::OutputType GetObjective(int objective) const {
-    typename F::OutputType v;
+  typename F::OutputType GetObjective(int fObjective) const {
+    typename F::OutputType fVector;
     for (unsigned int j = 0; j < this->size(); ++j)
-      v.push_back(GetValue(j, objective));
-    return v;
+      fVector.push_back(GetValue(j, fObjective));
+    return fVector;
   }
 
-  double GetValue(int index, int objective) const {
-    return (*this)[index]->GetOutput()[objective];
+  double GetValue(int fIndex, int fObjective) const {
+    return (*this)[fIndex]->GetOutput()[fObjective];
   }
 
   template <typename T>
-  void Sort(const std::vector<T> &v, bool isDescending = false) {
-    std::unordered_map<std::shared_ptr<Genes<F> >, T> m;
+  void SortVector(const std::vector<T> &fVector, bool IsDescending = false) {
+    std::unordered_map<std::shared_ptr<Genes<F> >, T> fMap;
     for (int i = 0; i < this->size(); ++i)
-      m[(*this)[i]] = v[i];
-    Sort(m, isDescending);
+      fMap[(*this)[i]] = fVector[i];
+    SortMap(fMap, IsDescending);
   }
 
   template <typename T>
-  void Sort(std::unordered_map<std::shared_ptr<Genes<F> >, T> &m,
-            bool isDescending = false) {
-    if (isDescending) {
+  void SortMap(std::unordered_map<std::shared_ptr<Genes<F> >, T> &fMap,
+            bool IsDescending = false) {
+    if (IsDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const std::shared_ptr<Genes<F> > &lhs,
+                [&fMap](const std::shared_ptr<Genes<F> > &lhs,
                      const std::shared_ptr<Genes<F> > &rhs) {
-        return m[lhs] > m[rhs];
+        return fMap[lhs] > fMap[rhs];
       });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const std::shared_ptr<Genes<F> > &lhs,
+                [&fMap](const std::shared_ptr<Genes<F> > &lhs,
                      const std::shared_ptr<Genes<F> > &rhs) {
-        return m[lhs] < m[rhs];
+        return fMap[lhs] < fMap[rhs];
       });
   }
 
-  void Sort(int objective, bool isDescending = false) {
-    Sort(GetObjective(objective), isDescending);
+  void SortObjective(int fObjective, bool IsDescending = false) {
+    SortVector(GetObjective(fObjective), IsDescending);
   }
 
   template <typename T>
-  std::vector<int> SortIndex(const std::vector<T> &v,
-                             bool isDescending = false) const {
-    std::vector<int> index = GetIndex();
-    if (isDescending) {
+  std::vector<int> SortIndex(const std::vector<T> &fVector,
+                             bool IsDescending = false) const {
+    std::vector<int> fIndex = GetIndex();
+    if (IsDescending) {
       std::sort(
-          index.begin(), index.end(),
-          [&v](const int &lhs, const int &rhs) { return v[lhs] > v[rhs]; });
+          fIndex.begin(), fIndex.end(),
+          [&fVector](const int &lhs, const int &rhs) { return fVector[lhs] > fVector[rhs]; });
     } else
       std::sort(
-          index.begin(), index.end(),
-          [&v](const int &lhs, const int &rhs) { return v[lhs] < v[rhs]; });
-    return index;
+          fIndex.begin(), fIndex.end(),
+          [&fVector](const int &lhs, const int &rhs) { return fVector[lhs] < fVector[rhs]; });
+    return fIndex;
   }
 
   std::vector<int> GetIndex() const {
-    std::vector<int> index(this->size());
+    std::vector<int> fIndex(this->size());
     for (unsigned int k = 0; k < this->size(); ++k)
-      index[k] = k;
-    return index;
+      fIndex[k] = k;
+    return fIndex;
   }
 
   friend std::ostream &operator<<(std::ostream &s, const Population<F> &pop) {

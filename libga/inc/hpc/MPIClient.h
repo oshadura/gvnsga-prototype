@@ -1,4 +1,4 @@
-#ifndef MPIClient_h
-#define MPIClient_h
+#ifndef __MPICLIENT__
+#define __MPICLIENT__
 
 #endif

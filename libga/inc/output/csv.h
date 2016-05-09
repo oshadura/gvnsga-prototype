@@ -29,8 +29,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef CSV_H
-#define CSV_H
+#ifndef __CSV__
+#define __CSV__
 
 #include <vector>
 #include <string>

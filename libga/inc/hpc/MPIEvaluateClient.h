@@ -1,7 +1,8 @@
-#ifndef MPIEvaluateClient_h
-#define MPIEvaluateClient_h
+#ifndef __MPIEVALUATECLIENT__
+#define __MPIEVALUATECLIENT__
 
 #include <boost/mpi.hpp>
+
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 

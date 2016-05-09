@@ -1,5 +1,5 @@
-#ifndef MPIEvaluate_h
-#define MPIEvaluate_h
+#ifndef __MPIEVALUETE__
+#define __MPIEVALUETE__
 
 #include <boost/mpi.hpp>
 #include "generic/Population.h"

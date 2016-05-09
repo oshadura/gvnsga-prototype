@@ -1,5 +1,5 @@
-#ifndef ALGORITHM_H
-#define ALGORITHM_H
+#ifndef __ALGORITHM__
+#define __ALGORITHM__
 
 #include <iostream>
 
