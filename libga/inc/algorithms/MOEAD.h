@@ -26,45 +26,43 @@ public:
   void Print(std::ostream &os) { os << fGen << std::endl; }
 
   PF<F> GetParetoFront() { return fFront; }
-  /////////////////////////////////////////////////////////
-  static void UpdateReferencePoint(std::vector<double> &ref,
+
+  /*
+
+  static void UpdateReferencePoint(std::vector<double> &fRef,
                                    const Genes<double> &ind) {
     int fNObjectives = F::GetNObjectives();
-    /*
-    auto v = ind->getOutput();
+    auto fFitVector = ind->GetOutput();
     for (int i = 0; i < fNObjectives; ++i) {
-      ref[i] = std::min(ref[i], v[i]);
+      fRef[i] = std::min(ref[i], fFitVector[i]);
     }
-    */
   }
 
   static std::vector<double> GetReferencePoint(const Population<F> &pop) {
     int fNObjectives = F::GetNObjectives();
-    std::vector<double> ref(fNObjectives);
-    // WRONG !
-    /*
+    std::vector<double> fRef(fNObjectives);
     for (int i = 0; i < fNObjectives; ++i) {
-      auto v = pop.GetFitness(i);
-      ref[i] = *(std::min_element(v.begin(), v.end()));
+      auto fFitVector = pop.GetFitness(i);
+      fRef[i] = *(std::min_element(fFitVector.begin(), fFitVector.end()));
     }
-    */
     return ref;
   }
 
   // Output suppose to be fFitness
-  double GetFitness(const Weights &w, const std::vector<double> &output) {
-    return GetTchebichew(w, output);
+  double GetFitness(const Weights &fWeight, const std::vector<double> &fFitVector) {
+    return GetTchebichew(fWeight, fFitVector);
   }
 
   // Output suppose to be fFitness
-  double GetTchebichew(const Weights &w, const std::vector<double> &output) {
-    double maxDistance = 0;
+  double GetTchebichew(const Weights &fWeight, const std::vector<double> &fFitVector) {
+    double fMaxDistance = 0;
     for (int i = 0; i < F::GetNumOfObjectives(); ++i) {
-      maxDistance = std::max(maxDistance, w[i] * (output[i] - fRefPoint[i]));
+      fMaxDistance = std::max(fMaxDistance, fWeight[i] * (fWeight[i] - fRefPoint[i]));
     }
-    return maxDistance;
+    return fMaxDistance;
   }
-
+  
+  */
 private:
   std::vector<Weights> fWeights;
 
@@ -77,26 +75,10 @@ private:
 
   PF<F> fFront;
 
-  TournamentSelection fSelection;
-
   int fGen;
 
-  //================= User defined parameters ================//
-  Double_t fPCross;
-  Double_t fEtaCross;
-  Int_t fNCross;
-  Int_t fNMut;
-  Int_t fNGen;
-  Int_t fSizePop;
-  Int_t fNParam;
-  std::vector<std::pair<Double_t, Double_t> > fInterval;
-  Int_t fNCons;
-  Int_t fNObjectives;
-  Double_t fPMut;
-  Double_t fEtaMut;
-  Double_t fEpsilonC;
-  Bool_t fCrowdingObj;
-  //================= User defined parameters ================//
+  //RandomSelection selection;
+
 };
 
 #endif

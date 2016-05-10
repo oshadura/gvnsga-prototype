@@ -52,8 +52,8 @@ public:
     }
   }
 
-  typename F::OutputType GetObjective(int fObjective) const {
-    typename F::OutputType fVector;
+  typename F::Output GetObjective(int fObjective) const {
+    typename F::Output fVector;
     for (unsigned int j = 0; j < this->size(); ++j)
       fVector.push_back(GetValue(j, fObjective));
     return fVector;
@@ -120,7 +120,7 @@ public:
     std::cout << "---------------------------\n";
     for (int i = 0; i < pop.size(); ++i) {
       auto entry = pop[i];
-      std::cout << entry->getOutput()[0] << ", " << entry->getOutput()[1]
+      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1]
                 << std::endl;
     }
     std::cout << "---------------------------\n";

@@ -3,8 +3,6 @@
 
 #include <vector>
 
-/// What is this?
-
 class Sort {
 
 public:

@@ -10,7 +10,7 @@
 #include <algorithm>
 
 
-class GACD : public <GACD, double> {
+class GACD : public GACounter<GACD, double> {
 
   template <typename F>
   using Map = std::unordered_map<std::shared_ptr<Genes<F>>, double>;

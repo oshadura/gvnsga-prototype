@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iostream>
 
+/*
 ClassImp(GeantVFitness)
 
     struct CompairMemResident {
@@ -87,3 +88,5 @@ Double_t GeantVFitness::LogMemoryFitness(std::string file) {
 }
 
 void GeantVFitness::LogTimeFitness() {}
+
+*/

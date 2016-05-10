@@ -26,22 +26,6 @@ private:
 
   int fGen;
 
-  //================= User defined parameters ================//
-  Double_t fPCross;
-  Double_t fEtaCross;
-  Int_t fNCross;
-  Int_t fNMut;
-  Int_t fNGen;
-  Int_t fSizePop;
-  Int_t fNParam;
-  std::vector<std::pair<Double_t, Double_t> > fInterval;
-  Int_t fNCons;
-  Int_t fNObjectives;
-  Double_t fPMut;
-  Double_t fEtaMut;
-  Double_t fEpsilonC;
-  Bool_t fCrowdingObj;
-  //================= User defined parameters ================//
-};
+ };
 
 #endif

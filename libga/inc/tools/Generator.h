@@ -4,20 +4,31 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Re-think templated...
-
 class Generator {
+public:
+
+  static Generator& GetInstance(){
+  	static Generator Instance;
+  	return Instance;
+  }
+
+  Generator(){}
+  ~Generator();
+
+  Generator(Generator const&);
+  void operator=(Generator const&);
 
 public:
-  void GeneratorDouble();
-  void GeneratorDouble(int fMin, int fMax);
-  void GeneratorDoubleVector(int fMin, int fMax);
-  void GeneratorInt();
-  void GeneratorInt(int fMin, int fMax);
-  void GeneratorIntVector(int fMin, int fMax);
-  void GeneratorVector();
-  void GeneratorSIMD(int fMin, int fMax);
-  void GeneratorSIMDVector(int fMin, int fMax);
+  double RNGDouble();
+  double RNGDouble(int fMin, int fMax);
+  std::vector<double> RNGDoubleVector(int fMin, int fMax);
+  int RNGInt();
+  int RNGInt(int fMin, int fMax);
+  std::vector<int> RNGIntVector(int fMin, int fMax);
+  std::vector<int> RNGVector();
+  // Special case for 2^x rnd generator
+  int RNGSIMD(int fMin, int fMax);
+  std::vector<int> RNGSIMDVector(int fMin, int fMax);
 };
 
 #endif

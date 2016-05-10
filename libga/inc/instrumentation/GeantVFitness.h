@@ -1,6 +1,8 @@
 #ifndef __GEANTVFITNESS__
 #define __GEANTVFITNESS__
 
+/*
+
 #include <typeinfo>
 #include <vector>
 
@@ -39,6 +41,9 @@ private:
   Bool_t fMemorySwitch;
 
   ClassDef(GeantVFitness, 1)
+
 };
+
+*/
 
 #endif

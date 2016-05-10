@@ -6,12 +6,9 @@
 #include <limits>
 #include <cmath>
 
-#include "TObject.h"
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 
-template <class T> class Population;
-template <class T> class Genes;
 
 class ReferencePoint {
 public:
