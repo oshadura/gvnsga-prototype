@@ -23,14 +23,17 @@ class ProblemDTLZ1 : public Functions<ProblemDTLZ1> {
 public:
   typedef GaVector<RandomDouble> Input;
   typedef std::vector<double> Output;
-  //constexpr static const double pi = static_cast<double>(boost::math::constants::pi<double>());
+  // constexpr static const double pi =
+  // static_cast<double>(boost::math::constants::pi<double>());
 
-  constexpr static double pi() { return std::atan(1)*4; }
+  // constexpr
+  static double pi() { return std::atan(1) * 4; }
 
   static Output Evaluate(Input &individual) {
     std::vector<double> fFitness;
     std::vector<double> fParameters;
-    for(auto parameter : individual) fParameters.push_back(parameter.GetValue());
+    for (auto parameter : individual)
+      fParameters.push_back(parameter.GetValue());
     int n = 7;
     int m = 3;
     Int_t k = n - m + 1; // 5

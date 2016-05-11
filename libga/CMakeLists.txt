@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 #project(libga)
 #-------------------
-# Requirements 
+# Requirements
 #-------------------
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 find_package(ROOT REQUIRED)
 include(${ROOT_USE_FILE})
 # Dependency for MVA
-find_package(Eigen3 REQUIRED)
+#find_package(Eigen3 REQUIRED)
 
 #-------------------
-# Compiler & Language 
+# Compiler & Language
 #-------------------
 
 enable_language(CXX)
@@ -28,7 +28,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
 #-------------------
-# Flags 
+# Flags
 #-------------------
 
 if (GNU)
@@ -58,7 +58,7 @@ else(Clang)
 endif()
 
 #-------------------
-# Includes 
+# Includes
 #-------------------
 
 include_directories(inc)
@@ -84,9 +84,11 @@ endif()
 # Temporary solution - cmake MLPACK & Eigen3 doesnt work..
 include_directories(/usr/include/libxml2/)
 include_directories(/usr/include/eigen3)
+# Mac OS X
+include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 
 #-------------------
-# Files 
+# Files
 #-------------------
 
 file(GLOB sources src/algorithms/*.cxx
@@ -114,7 +116,7 @@ ROOT_GENERATE_DICTIONARY(GADict ${headers} MODULE GA LINKDEF LinkDef.h)
 ROOT_GENERATE_ROOTMAP(GADict LINKDEF LinkDef.h)
 
 #-------------------
-# Library 
+# Library
 #-------------------
 
 add_library(GA SHARED ${sources} GADict.cxx)

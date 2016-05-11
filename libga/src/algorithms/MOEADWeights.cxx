@@ -2,7 +2,8 @@
 
 #include <algorithm>
 
-static std::vector<Weights> Weights::GetWeights(int n) {
+// static
+std::vector<Weights> Weights::GetWeights(int n) {
   auto rndWeight = []() {
     // Checkout correct values!
     // auto r = Random::getInstance();
@@ -17,7 +18,7 @@ static std::vector<Weights> Weights::GetWeights(int n) {
     for (unsigned int i = 0; i < v.size(); ++i)
       v[i] /= sum;
 
-    return Weights{ v[0], v[1], v[2] };
+    return Weights{v[0], v[1], v[2]};
   };
 
   std::vector<Weights> weights;
@@ -29,7 +30,7 @@ static std::vector<Weights> Weights::GetWeights(int n) {
         v[0] = i / (double)n;
         v[1] = j / (double)n;
         v[2] = k / (double)n;
-        Weights w{ v[0], v[1], v[2] };
+        Weights w{v[0], v[1], v[2]};
         // std::cout << v[0]<< ", " << v[1]<< ", " << v[2] << std::endl;
         weights.push_back(w);
       }
@@ -69,8 +70,9 @@ Weights::GetNearestNeighborByIndex(const std::vector<Weights> &w,
   return index;
 }
 
-static double Weights::GetWeightedSum(const Weights &w,
-                                      const std::vector<double> &output) {
+// static
+double Weights::GetWeightedSum(const Weights &w,
+                               const std::vector<double> &output) {
   double sum = 0;
   for (unsigned int i = 0; i < w.size(); ++i) {
     sum += w[i] * output[i];

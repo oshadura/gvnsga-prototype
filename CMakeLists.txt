@@ -20,7 +20,7 @@ include(${ROOT_USE_FILE})
 
 #----------------------------------------------------------------------------
 # export OMP_NUM_THREADS=1
-option(ENABLE_OPENMP "Adding OpenMP support" ON)
+option(ENABLE_OPENMP "Adding OpenMP support" OFF)
 find_package(OpenMP)
 if(OPENMP_FOUND)
   #set(GVNSGA_COMPILATION_FLAGS " ${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_OPENMP")
@@ -28,7 +28,7 @@ if(OPENMP_FOUND)
 endif()
 
 #----------------------------------------------------------------------------
-option(ENABLE_MPI "Adding MPI support" ON)
+option(ENABLE_MPI "Adding MPI support" OFF)
 find_package(MPI)
 if(MPI_CXX_FOUND)
   set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_MPI")
@@ -42,7 +42,7 @@ if(BOOST_FOUND)
 endif()
 
 #----------------------------------------------------------------------------
-option(ENABLE_PERFMON "Adding PerfMon support" ON)
+option(ENABLE_PERFMON "Adding PerfMon support" OFF)
 
 if(ENABLE_PERFMON)
   #find_package(PerfMon)
@@ -98,18 +98,18 @@ if(ENABLE_VC)
 		endif()
 endif()
 #----------------------------------------------------------------------------
-option(ENABLE_MLPACK "If we are using libGA already with MLPACK" ON)
+option(ENABLE_MLPACK "If we are using libGA already with MLPACK" OFF)
 
 if(ENABLE_MLPACK)
-  find_package(Armadillo)
-  find_package(MLPACK)
+  #find_package(Armadillo)
+  #find_package(MLPACK)
   if(MLPACK_FOUND)
       set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_MLPACK")
       set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${MLPACK_CXX_FLAGS}")
     endif()
 endif()
 #----------------------------------------------------------------------------
-option(ENABLE_CMAES "If we are using libGA already with libcmaes" ON)
+option(ENABLE_CMAES "If we are using libGA already with libcmaes" OFF)
 
 if(ENABLE_CMAES)
   #find_package(Libcmaes)

@@ -14,13 +14,14 @@ class Weights : public std::vector<double> {
 
 public:
   Weights(std::initializer_list<double> list) : std::vector<double>(list) {}
-  static std::vector<Weights> GetWeights(int n);
+  // static
+  std::vector<Weights> GetWeights(int n);
   double GetDistance(const Weights &w);
   std::vector<double> GetDistanceAll(const std::vector<Weights> &w);
   std::vector<int> GetNearestNeighborByIndex(const std::vector<Weights> &w,
                                              unsigned int numOfNearest);
-  static double GetWeightedSum(const Weights &w,
-                               const std::vector<double> &output);
+  // static
+  double GetWeightedSum(const Weights &w, const std::vector<double> &output);
 };
 
 #endif
