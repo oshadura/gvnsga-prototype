@@ -4,18 +4,23 @@
 template <typename F> class GAComparator {
 
 public:
-  std::unordered_map<std::shared_ptr<Genes<F>>, int> *fRank;
-  std::unordered_map<std::shared_ptr<Genes<F>>, double> *fCrowDist;
+  std::unordered_map<individual_t<F>, int> *fRank;
+  std::unordered_map<individual_t<F>, double> *fCrowDist;
 
   GAComparator(
-      std::unordered_map<std::shared_ptr<Genes<F>>, int> *fIndividualRank,
-      std::unordered_map<std::shared_ptr<Genes<F>>, double> *fIndividualCrowDist) {
+      std::unordered_map<individual_t<F>, int> *fIndividualRank,
+      std::unordered_map<individual_t<F>, double> *fIndividualCrowDist) {
     fRank = fIndividualRank;
     fCrowDist = fIndividualCrowDist;
   }
 
-  bool operator()(std::shared_ptr<Genes<F>> individual1,
-                  std::shared_ptr<Genes<F>> individual2) {
+  ~GAComparator() {}
+
+  GAComparator(GAComparator const &) = default;
+
+  void operator=(GAComparator const &);
+
+  bool operator()(individual_t<F> individual1, individual_t<F> individual2) {
     if (fRank->find(individual1) == fRank->end() ||
         fRank->find(individual2) == fRank->end())
       throw std::runtime_error(

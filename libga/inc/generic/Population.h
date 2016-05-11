@@ -10,18 +10,17 @@
 #include <iostream>
 #include <unordered_map>
 
-template <typename F>
-class Population : public std::vector<std::shared_ptr<Genes<F> > > {
+template <typename F> class Population : public std::vector<individual_t<F>> {
 
   class PF;
 
 public:
-  Population(std::initializer_list<std::shared_ptr<Genes<F> > > fList)
-      : std::vector<std::shared_ptr<Genes<F> > >(fList) {}
-  Population() : std::vector<std::shared_ptr<Genes<F> > >() {}
+  Population(std::initializer_list<individual_t<F>> fList)
+      : std::vector<individual_t<F>>(fList) {}
+  Population() : std::vector<individual_t<F>>() {}
 
-  Population(const std::vector<std::shared_ptr<Genes<F> > > &ind)
-      : std::vector<std::shared_ptr<Genes<F> >>(ind) {}
+  Population(const std::vector<individual_t<F>> &ind)
+      : std::vector<individual_t<F>>(ind) {}
 
   Population(int n) {
     // Different...
@@ -32,7 +31,7 @@ public:
     }
   }
 
-  bool IsNonDominated(const std::shared_ptr<Genes<F> > &individual) const {
+  bool IsNonDominated(const individual_t<F> &individual) const {
     for (auto fEntry : *this) {
       if (individual->IsDominated(*fEntry))
         return true;
@@ -40,8 +39,8 @@ public:
     return false;
   }
 
-  const std::shared_ptr<Genes<F> > PopBack() {
-    std::shared_ptr<Genes<F> > individual = this->back();
+  const individual_t<F> PopBack() {
+    individual_t<F> individual = this->back();
     this->pop_back();
     return individual;
   }
@@ -65,27 +64,27 @@ public:
 
   template <typename T>
   void SortVector(const std::vector<T> &fVector, bool IsDescending = false) {
-    std::unordered_map<std::shared_ptr<Genes<F> >, T> fMap;
+    std::unordered_map<individual_t<F>, T> fMap;
     for (int i = 0; i < this->size(); ++i)
       fMap[(*this)[i]] = fVector[i];
     SortMap(fMap, IsDescending);
   }
 
   template <typename T>
-  void SortMap(std::unordered_map<std::shared_ptr<Genes<F> >, T> &fMap,
+  void SortMap(std::unordered_map<individual_t<F>, T> &fMap,
                bool IsDescending = false) {
     if (IsDescending) {
-      std::sort(this->begin(), this->end(),
-                [&fMap](const std::shared_ptr<Genes<F> > &lhs,
-                        const std::shared_ptr<Genes<F> > &rhs) {
-        return fMap[lhs] > fMap[rhs];
-      });
+      std::sort(
+          this->begin(), this->end(),
+          [&fMap](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+            return fMap[lhs] > fMap[rhs];
+          });
     } else
-      std::sort(this->begin(), this->end(),
-                [&fMap](const std::shared_ptr<Genes<F> > &lhs,
-                        const std::shared_ptr<Genes<F> > &rhs) {
-        return fMap[lhs] < fMap[rhs];
-      });
+      std::sort(
+          this->begin(), this->end(),
+          [&fMap](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+            return fMap[lhs] < fMap[rhs];
+          });
   }
 
   void SortObjective(int fObjective, bool IsDescending = false) {
@@ -99,13 +98,13 @@ public:
     if (IsDescending) {
       std::sort(fIndex.begin(), fIndex.end(),
                 [&fVector](const int &lhs, const int &rhs) {
-        return fVector[lhs] > fVector[rhs];
-      });
+                  return fVector[lhs] > fVector[rhs];
+                });
     } else
       std::sort(fIndex.begin(), fIndex.end(),
                 [&fVector](const int &lhs, const int &rhs) {
-        return fVector[lhs] < fVector[rhs];
-      });
+                  return fVector[lhs] < fVector[rhs];
+                });
     return fIndex;
   }
 

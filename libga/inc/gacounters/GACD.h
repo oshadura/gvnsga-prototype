@@ -12,8 +12,7 @@
 
 class GACD : public GACounter<GACD, double> {
 
-  template <typename F>
-  using Map = std::unordered_map<std::shared_ptr<Genes<F>>, double>;
+  template <typename F> using Map = std::unordered_map<individual_t<F>, double>;
 
 public:
   template <typename F> static Map<F> CalculateCDPop(const Population<F> &pop) {
@@ -36,7 +35,7 @@ public:
   template <typename F>
   static Map<F> CalculateCD(const Population<F> &pop, std::vector<double> &fMin,
                            std::vector<double> &fMax) {
-    typedef typename std::vector<std::shared_ptr<Genes<F>>>::iterator Iterator;
+    typedef typename std::vector<individual_t<F>>::iterator Iterator;
     Map<F> fMap;
     for (auto it = pop.begin(); it != pop.end(); ++it)
       fMap[*it] = 0;

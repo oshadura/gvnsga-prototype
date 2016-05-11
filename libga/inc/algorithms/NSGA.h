@@ -13,13 +13,12 @@
 #include "generic/Population.h"
 #include "generic/Algorithm.h"
 
-
 template <typename F> class NSGA : public Algorithm<NSGA<F>, F> {
 
 private:
   Population<F> fPopulation;
-  std::unordered_map < std::shared_ptr<Genes<F>>, double> fIndividualCrowDist;
-  std::unordered_map < std::shared_ptr<Genes<F>>, int> fIndividualRank;
+  std::unordered_map<individual_t<F>, double> fIndividualCrowDist;
+  std::unordered_map<individual_t<F>, int> fIndividualRank;
 
 public:
   NSGA(F Function) : Algorithm<NSGA<F>, F>(Function) {}
@@ -29,8 +28,8 @@ public:
 
   void Initialize() {
     fPopulation = Population<F>(fPopulationSize);
-    //fIndividualCrowDist = GACD::CalculateCDPop(fPopulation);
-    //fIndividualRank = GANDRank::CalculateRank(fPopulation);
+    fIndividualCrowDist = GACD::CalculateCDPop(fPopulation);
+    fIndividualRank = GANDRank::CalculateRank(fPopulation);
   }
 
   void Evolution() {
@@ -39,14 +38,18 @@ public:
     Population<F> fPopPool =
         tournament.SelectionGAMultiple(fPopulation, fPopulationSize * 2);
     for (unsigned int j = 0; j < fPopPool.size() - 1; j += 2) {
-      std::shared_ptr<Genes<F>> offspring =
+      individual_t<F> offspring =
           SBXCrossover::CrossoverGA(fPopPool[j], fPopPool[j + 1]);
       if (Generator::GetInstance().RNGDouble() < fMutation)
         offspring = PolynomialMutation::MutateGA(offspring);
       fPopulation.push_back(offspring);
     }
-    //fIndividualRank = GANDRank::CalculateRank(fPopulation);
-    //fIndividualCrowDist = GACD::CalculateCDPop(fPopulation);
+// Temporary until i will not find fix for Clang 3.7 (namespace) or upgrade to
+// 3.8
+#ifdef __linux__
+    fIndividualRank = GANDRank::CalculateRank(fPopulation, -1);
+#endif
+    fIndividualCrowDist = GACD::CalculateCDPop(fPopulation);
     GAComparator<F> nsgacomparator(&fIndividualRank, &fIndividualCrowDist);
     std::sort(fPopulation.begin(), fPopulation.end(), nsgacomparator);
     Population<F> fNextPop;
@@ -57,14 +60,15 @@ public:
 
   void Print(std::ostream &os) {
     auto fLastIndividual = fPopulation[fPopulation.size() - 1];
-    os << "pareto front: " << fIndividualRank[fLastIndividual] << " | worst crowding: ";
+    os << "pareto front: " << fIndividualRank[fLastIndividual]
+       << " | worst crowding: ";
     os << fIndividualCrowDist[fLastIndividual] << std::endl;
   }
 
   PF<F> GetPF() {
     PF<F> fFront;
     for (unsigned int i = 0; i < fPopulation.size(); ++i)
-      fFront. AddIndToPF(fPopulation[i]);
+      fFront.AddIndToPF(fPopulation[i]);
     return fFront;
   }
 };

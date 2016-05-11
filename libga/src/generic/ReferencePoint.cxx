@@ -90,7 +90,7 @@ void ReferencePoint::AssociateRP(std::vector<ReferencePoint> *fRP,
       Double_t fMinDist = std::numeric_limits<Double_t>::max();
       for (int r = 0; r < fRPCopy.size(); ++r) {
         // Temporary just compile solution
-        const std::vector<double> point;
+        std::vector<double> point;
         point.push_back(1);
         Double_t d = PerpedicularDistance(
             fRPCopy[r].Position(), point /*pop[fFront[t][i] ].conv_objs()*/);

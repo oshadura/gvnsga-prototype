@@ -17,6 +17,9 @@
 
 #include "generic/ExceptionMessenger.h"
 
+template <typename F> class Genes;
+template <typename F> using individual_t = std::shared_ptr<Genes<F>>;
+
 template <typename F> class Genes {
 
 private:
@@ -25,6 +28,12 @@ private:
 
 public:
   Genes() {}
+
+  ~Genes() {}
+
+  Genes(Genes const &);
+
+  void operator=(Genes const &);
 
   Genes(const typename F::Input &i, bool fEvaluated = true) : fGenes(i) {
     if (fEvaluated)

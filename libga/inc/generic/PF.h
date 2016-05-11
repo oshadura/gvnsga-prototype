@@ -6,7 +6,7 @@
 
 template <typename F> class PF {
 
-  std::list<std::shared_ptr<Genes<F> > > fFront;
+  std::list<std::shared_ptr<Genes<F>>> fFront;
 
 public:
   Population<F> GetPopulation() const {
@@ -16,7 +16,7 @@ public:
     return fResultPop;
   }
 
-  bool AddIndToPF(const std::shared_ptr<Genes<F> > &ind) {
+  bool AddIndToPF(const std::shared_ptr<Genes<F>> &ind) {
     for (auto it = fFront.begin(); it != fFront.end();) {
       if ((*it)->IsDominating(*ind) || (*it)->IsEqual(*ind))
         return false;
@@ -33,11 +33,11 @@ public:
     std::list<std::shared_ptr<Genes<F>>> fFront;
     if (pop.empty())
       return Population<F>();
-    auto fFunction = [&fFront](const std::shared_ptr<Genes<F> > &ind) {
+    auto fFunction = [&fFront](const std::shared_ptr<Genes<F>> &ind) {
       for (auto it = fFront.begin(); it != fFront.end();) {
         if ((*it)->IsDominating(*ind))
           return false;
-        if ((*it)->IsDominatedBy(*ind))
+        if ((*it)->IsDominated(*ind))
           fFront.erase(it++);
         else
           ++it;

@@ -1,7 +1,6 @@
 #ifndef __GAVALUE__
 #define __GAVALUE__
 
-
 template <typename T> class GaValue {
 
 protected:
@@ -9,7 +8,7 @@ protected:
 
 public:
   GaValue() {}
-  GaValue(T value) : fValue(value) {}
+  GaValue(T fValue) : fValue(fValue) {}
 
   T GetValue() const { return fValue; }
 
@@ -50,6 +49,5 @@ template <typename T>
 std::ostream &operator<<(std::ostream &os, const GaValue<T> &rhs) {
   return os << rhs.GetValue();
 }
-
 
 #endif
