@@ -29,8 +29,8 @@ public:
 
   void Initialize() {
     fPopulation = Population<F>(fPopulationSize);
-    fIndividualCrowDist = GACD::CalculateCD(fPopulation);
-    fIndividualRank = GANDRank::CalculateRank(fPopulation);
+    //fIndividualCrowDist = GACD::CalculateCDPop(fPopulation);
+    //fIndividualRank = GANDRank::CalculateRank(fPopulation);
   }
 
   void Evolution() {
@@ -45,8 +45,8 @@ public:
         offspring = PolynomialMutation::MutateGA(offspring);
       fPopulation.push_back(offspring);
     }
-    fIndividualRank = GANDRank::CalculateRank(fPopulation);
-    fIndividualCrowDist = GACD::CalculateCD(fPopulation);
+    //fIndividualRank = GANDRank::CalculateRank(fPopulation);
+    //fIndividualCrowDist = GACD::CalculateCDPop(fPopulation);
     GAComparator<F> nsgacomparator(&fIndividualRank, &fIndividualCrowDist);
     std::sort(fPopulation.begin(), fPopulation.end(), nsgacomparator);
     Population<F> fNextPop;
@@ -64,7 +64,7 @@ public:
   PF<F> GetPF() {
     PF<F> fFront;
     for (unsigned int i = 0; i < fPopulation.size(); ++i)
-      fFront.add(fPopulation[i]);
+      fFront. AddIndToPF(fPopulation[i]);
     return fFront;
   }
 };

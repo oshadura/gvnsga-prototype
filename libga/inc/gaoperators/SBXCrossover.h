@@ -3,148 +3,99 @@
 
 #include "Crossover.h"
 #include "generic/TGenes.h"
-//#include "generic/Population.h"
+#include "generic/Population.h"
+#include "generic/GaVector.h"
+#include "generic/RandomDouble.h"
 
 #include "random"
-
-template <class Derived> class Functions;
 
 class SBXCrossover : public Crossover<SBXCrossover> {
 
 public:
-  /**
-* @brief SBX Crossover
-* @details TBD: add generator class
-*
-* @param
-*
-*/
-
-/*
-  template <typename F>
-  static void CrossoverGA(const Genes<F> &parent1,
-                                       const Genes<F> &parent2,
-                                       Genes<F> &child1, Genes<F> &child2) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dist(0, 1);
-    T Component1, Component2, LimitDown, LimitUp;
-    T Crossover1, Crossover2;
-    Double32_t Alpha, Beta, Betaq;
-    T Rand = dist(gen);
-    if (Rand <= GetPCross()) {
-      fNCross++;
-      for (Int_t i = 0; i < fNParam; ++i) {
-        if (fabs(parent1.GetGene(i) - parent2.GetGene(i)) > EPS) {
-          if (parent1.GetGene(i) < parent2.GetGene(i)) {
-            Component1 = parent1.GetGene(i);
-            // std::cout << "Component1 = " << Component1 << std::endl;
-            Component2 = parent2.GetGene(i);
-            // std::cout << "Component2 = " << Component2 << std::endl;
-          } else {
-            Component1 = parent2.GetGene(i);
-            // std::cout << "Component1 = " << Component1 << std::endl;
-            Component2 = parent1.GetGene(i);
-            // std::cout << "Component2 = " << Component2 << std::endl;
-          }
-          LimitDown = fInterval[i].first;
-          LimitUp = fInterval[i].second;
-          // std::cout << "-======================= Preparations before
-          // Crossover1=======================-"<< std::endl;
-          Beta = 1.0 +
-                 (2.0 * (Component1 - LimitDown) / (Component2 - Component1));
-          // std::cout << "Beta = " << Beta << std::endl;
-          Alpha = 2.0 - pow(Beta, -(GetEtaCross() + 1.0));
-          // std::cout << "Alpha = " << Alpha << std::endl;
-          if (Rand <= (1 / Alpha)) { // This is a contracting crossover
-            Betaq = pow((Rand * Alpha), (1.0 / (GetEtaCross() + 1.0)));
-            // std::cout << "Betaq = " << Betaq << std::endl;
-          } else { // This is an expanding crossover
-            Betaq = pow((1.0 / (2.0 - Rand * Alpha)),
-                        (1.0 / (GetEtaCross() + 1.0)));
-            // std::cout << "Betaq = " << Betaq << std::endl;
-          }
-          Crossover1 = 0.5 * ((Component1 + Component2) -
-                              Betaq * (Component2 - Component1));
-          // std::cout << "-======================= Preparations before
-          // Crossover2=======================-"<< std::endl;
-          Beta =
-              1.0 + (2.0 * (LimitUp - Component2) / (Component2 - Component1));
-          // std::cout << "Beta = " << Beta << std::endl;
-          Alpha = 2.0 - pow(Beta, -(GetEtaCross() + 1.0));
-          // std::cout << "Alpha = " << Alpha << std::endl;
-          if (Rand <= (1 / Alpha)) { // This is a contracting crossover
-            Betaq = pow((Rand * Alpha), (1.0 / (GetEtaCross() + 1.0)));
-            // std::cout << "Betaq = " << Betaq << std::endl;
-          } else { // This is an expanding crossover
-            Betaq = pow((1.0 / (2.0 - Rand * Alpha)),
-                        (1.0 / (GetEtaCross() + 1.0)));
-            // std::cout << "Betaq = " << Betaq << std::endl;
-          }
-          Crossover2 = 0.5 * ((Component1 + Component2) +
-                              Betaq * (Component2 - Component1));
-          //////////////////////////////////////////////////////////////////////
-          Crossover1 = fmin(fmax(Crossover1, LimitDown), LimitUp);
-          // std::cout << "-======================= Time for a new
-          // Crossover()=======================-"<< std::endl;
-          // std::cout << "DEBUG: Crossover1 = "<< Crossover1 << std::endl;
-          Crossover2 = fmin(fmax(Crossover2, LimitDown), LimitUp);
-          // std::cout << "DEBUG: Crossover2 = "<< Crossover2 << std::endl;
-          if (Rand <= 0.5) {
-            child1.SetGene(i, Crossover2);
-            // std::cout << "============== DEBUG Child1: SetGene(i,Crossover2)
-            // on
-            // i-parameter place =================" << std::endl;
-            // child1.Genes<T> ::printGenes(child1);
-            child2.SetGene(i, Crossover1);
-            // std::cout << "============== DEBUG Child2: SetGene(i,Crossover1)
-            // on
-            // i-parameter place =================" << std::endl;
-            // child2.Genes<T> ::printGenes(child2);
-          } else {
-            child1.SetGene(i, Crossover1);
-            // std::cout << "============== DEBUG Child1: SetGene(i,Crossover1)
-            // on
-            // i-parameter place =================" << std::endl;
-            // child1.Genes<T> ::printGenes(child1);
-            child2.SetGene(i, Crossover2);
-            // std::cout << "============== DEBUG Child2: SetGene(i,Crossover2)
-            // on
-            // i-parameter place =================" << std::endl;
-            // child2.Genes<T> ::printGenes(child2);
-          }
-        } else {
-          child1.SetGene(i, parent1.GetGene(i));
-          // std::cout << "============== DEBUG Child1:
-          // SetGene(i,Parent1-i-Genes)
-          // on i-parameter place ================="
-          //          << std::endl;
-          // child1.Genes<T> ::printGenes(child1);
-          child2.SetGene(i, parent2.GetGene(i));
-          // std::cout << "============== DEBUG Child2:
-          // SetGene(i,Parent2-i-Genes)
-          // on i-parameter place ================="
-          //          << std::endl;
-          // child2.Genes<T> ::printGenes(child2);
-        }
-      }
-    } else {
-      for (Int_t i = 0; i < fNParam; i++) {
-        child1.SetGene(i, parent1.GetGene(i));
-        // std::cout << "============== DEBUG Child1:
-        // SetGene(i,Parent1-i-Genes)on
-        // i-parameter place =================" << std::endl;
-        // child1.Genes<T> ::printGenes(child1);
-        child2.SetGene(i, parent2.GetGene(i));
-        // std::cout << "============== DEBUG Child2: SetGene(i,Parent2-i-Genes)
-        // on i-parameter place =================" << std::endl;
-        // child2.Genes<T> ::printGenes(child1);
-      }
+  template <typename T> static T CrossoverGA(const T &ind1, const T &ind2) {
+    GaVector<RandomDouble> off1 = static_cast<T>(ind1);
+    GaVector<RandomDouble> off2 = static_cast<T>(ind2);
+    auto offspring1 = off1;
+    auto offspring2 = off2;
+    for (unsigned int i = 0; i < offspring1.size(); ++i) {
+      SBXCrossover::CrossoverEvolution(offspring1[i], offspring2[i], 0.5);
     }
-    child1.SetEvaluated(false);
-    child2.SetEvaluated(false);
+    return offspring1;
   }
-*/
+
+  static void CrossoverEvolution(RandomDouble &a, RandomDouble &b,
+                                 double fCrossDistributionIndex) {
+    //
+    double fX0 = a.GetValue();
+    double fX1 = b.GetValue();
+    double fDeltaX = fabs(fX1 - fX0);
+    //
+    double fLowBound = a.GetDownBound();
+    double fUpBound = b.GetUpBound();
+    //
+    double fBoundedValue1, fBoundedValue2, fnewa, fnewb, b1, b2;
+
+    if (fX0 < fX1) {
+      fBoundedValue1 = 1 + 2 * (fX0 - fLowBound) / fDeltaX;
+      fBoundedValue2 = 1 + 2 * (fUpBound - fX1) / fDeltaX;
+    } else {
+      fBoundedValue1 = 1 + 2 * (fX1 - fLowBound) / fDeltaX;
+      fBoundedValue2 = 1 + 2 * (fUpBound - fX0) / fDeltaX;
+    }
+    if (fBoundedValue1 < fBoundedValue2) {
+      fBoundedValue2 = fBoundedValue1;
+    } else {
+      fBoundedValue1 = fBoundedValue2;
+    }
+    double fRandomProbUniform1 =
+        1 - 1 / (2 * std::pow(fBoundedValue1, fCrossDistributionIndex + 1));
+    double fRandomProbUniform2 =
+        1 - 1 / (2 * std::pow(fBoundedValue2, fCrossDistributionIndex + 1));
+    double fRandomProb = Generator::GetInstance().RNGDouble();
+    if (fRandomProb == 1.0) {
+      fRandomProb = std::nextafter(fRandomProb, -1);
+    }
+    double u1 = fRandomProb * fRandomProbUniform1;
+    double u2 = fRandomProb * fRandomProbUniform2;
+    if (u1 <= 0.5) {
+      b1 = std::pow(2 * u1, 1 / (fCrossDistributionIndex + 1));
+    } else {
+      b1 = std::pow(0.5 / (1 - u1), 1 / (fCrossDistributionIndex + 1));
+    }
+    if (u2 <= 0.5) {
+      b2 = std::pow(2 * u2, 1 / (fCrossDistributionIndex + 1));
+    } else {
+      b2 = std::pow(0.5 / (1 - u2), 1 / (fCrossDistributionIndex + 1));
+    }
+    if (fX0 < fX1) {
+      fnewa = 0.5 * (fX0 + fX1 + b1 * (fX0 - fX1));
+      fnewb = 0.5 * (fX0 + fX1 + b2 * (fX1 - fX0));
+    } else {
+      fnewa = 0.5 * (fX0 + fX1 + b2 * (fX0 - fX1));
+      fnewb = 0.5 * (fX0 + fX1 + b1 * (fX1 - fX0));
+    }
+    if (fnewa < fLowBound) {
+      a.SetValue(fLowBound);
+    } else if (fnewa > fUpBound) {
+      a.SetValue(fUpBound);
+    } else {
+      a.SetValue(fnewa);
+    }
+
+    if (fnewb < fLowBound) {
+      b.SetValue(fLowBound);
+    } else if (fnewb > fUpBound) {
+      b.SetValue(fUpBound);
+    } else {
+      b.SetValue(fnewb);
+    }
+
+    if (Generator::GetInstance().RNGBool()) {
+      double temp = a.GetValue();
+      a.SetValue(b.GetValue());
+      b.SetValue(temp);
+    }
+  }
 };
 
 #endif

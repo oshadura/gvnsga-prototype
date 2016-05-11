@@ -15,12 +15,10 @@ public:
   ConstrainedGaValue(T down, T up) : fDownValue(down), fUpValue(up) {}
   ConstrainedGaValue(T v, T down, T up)
       : GaValue<T>(v), fDownValue(down), fUpValue(up) {}
-
-private:
-  void SetDownValue(T down) { fDownValue = down; }
-  void SetUpValue(T up) { fUpValue = up; }
-  T GetDownValue() const { return fDownValue; }
-  T GetUpValue() const { return fUpValue; }
+  void SetDownBound(T down) { fDownValue = down; }
+  void SetUpBound(T up) { fUpValue = up; }
+  T GetDownBound() const { return fDownValue; }
+  T GetUpBound() const { return fUpValue; }
 };
 
 #endif

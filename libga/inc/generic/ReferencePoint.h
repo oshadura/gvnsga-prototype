@@ -9,7 +9,7 @@
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 
-template <typename F> class ReferencePoint {
+class ReferencePoint {
 public:
   ReferencePoint();
   ReferencePoint(Int_t fSize);

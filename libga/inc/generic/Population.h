@@ -13,7 +13,7 @@
 template <typename F>
 class Population : public std::vector<std::shared_ptr<Genes<F> > > {
 
-  // class ContUpdatedParetoFront;
+  class PF;
 
 public:
   Population(std::initializer_list<std::shared_ptr<Genes<F> > > fList)
@@ -21,14 +21,14 @@ public:
   Population() : std::vector<std::shared_ptr<Genes<F> > >() {}
 
   Population(const std::vector<std::shared_ptr<Genes<F> > > &ind)
-      : std::vector<std::shared_ptr<Genes<F> > >(ind) {}
+      : std::vector<std::shared_ptr<Genes<F> >>(ind) {}
 
   Population(int n) {
     // Different...
     for (int i = 0; i < n; ++i) {
-      typename F::Input fRandomInd = F::GetInput().random();
-      auto fIndividual = std::make_shared<Genes<F> >(fRandomInd);
-      this->push_back(fIndividual);
+      typename F::Input input = F::GetInput().RandomSetup();
+      auto fInd = std::make_shared<Genes<F>>(input);
+      this->push_back(fInd);
     }
   }
 
@@ -73,17 +73,17 @@ public:
 
   template <typename T>
   void SortMap(std::unordered_map<std::shared_ptr<Genes<F> >, T> &fMap,
-            bool IsDescending = false) {
+               bool IsDescending = false) {
     if (IsDescending) {
       std::sort(this->begin(), this->end(),
                 [&fMap](const std::shared_ptr<Genes<F> > &lhs,
-                     const std::shared_ptr<Genes<F> > &rhs) {
+                        const std::shared_ptr<Genes<F> > &rhs) {
         return fMap[lhs] > fMap[rhs];
       });
     } else
       std::sort(this->begin(), this->end(),
                 [&fMap](const std::shared_ptr<Genes<F> > &lhs,
-                     const std::shared_ptr<Genes<F> > &rhs) {
+                        const std::shared_ptr<Genes<F> > &rhs) {
         return fMap[lhs] < fMap[rhs];
       });
   }
@@ -93,17 +93,19 @@ public:
   }
 
   template <typename T>
-  std::vector<int> SortIndex(const std::vector<T> &fVector,
-                             bool IsDescending = false) const {
+  std::vector<int> SortIndexVector(const std::vector<T> &fVector,
+                                   bool IsDescending = false) const {
     std::vector<int> fIndex = GetIndex();
     if (IsDescending) {
-      std::sort(
-          fIndex.begin(), fIndex.end(),
-          [&fVector](const int &lhs, const int &rhs) { return fVector[lhs] > fVector[rhs]; });
+      std::sort(fIndex.begin(), fIndex.end(),
+                [&fVector](const int &lhs, const int &rhs) {
+        return fVector[lhs] > fVector[rhs];
+      });
     } else
-      std::sort(
-          fIndex.begin(), fIndex.end(),
-          [&fVector](const int &lhs, const int &rhs) { return fVector[lhs] < fVector[rhs]; });
+      std::sort(fIndex.begin(), fIndex.end(),
+                [&fVector](const int &lhs, const int &rhs) {
+        return fVector[lhs] < fVector[rhs];
+      });
     return fIndex;
   }
 

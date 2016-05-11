@@ -1,23 +1,23 @@
 #include "generic/ReferencePoint.h"
 
-template <typename F> ReferencePoint::ReferencePoint() {}
+ReferencePoint::ReferencePoint() {}
 
 ReferencePoint::ReferencePoint(Int_t fSize) {}
 
 ReferencePoint::~ReferencePoint() {}
+
 void ReferencePoint::ClearRP() {
   fMemberSize = 0;
   fPossibleSolutions.clear();
 }
 
-template <typename F> void ReferencePoint::AddMemberRP() { fMemberSize += 1; }
+void ReferencePoint::AddMemberRP() { fMemberSize += 1; }
 
-template <typename F>
 void ReferencePoint::AddPotentialMemberRP(std::size_t ind, Double_t distance) {
   fPossibleSolutions.push_back(std::make_pair(ind, distance));
 }
 
-template <typename F> Int_t ReferencePoint::FindClosestMemberRP() {
+Int_t ReferencePoint::FindClosestMemberRP() {
   Double_t fMinDist = std::numeric_limits<Double_t>::max();
   Int_t fMinInd = -1;
   for (int i = 0; i < fPossibleSolutions.size(); ++i) {
@@ -29,7 +29,7 @@ template <typename F> Int_t ReferencePoint::FindClosestMemberRP() {
   return fMinInd;
 }
 
-template <typename F> Int_t ReferencePoint::RandomMemberRP() {
+Int_t ReferencePoint::RandomMemberRP() {
   if (fPossibleSolutions.size() > 0) {
     return fPossibleSolutions[rand() % fPossibleSolutions.size()].first;
   } else {
@@ -37,7 +37,6 @@ template <typename F> Int_t ReferencePoint::RandomMemberRP() {
   }
 }
 
-template <typename F>
 void ReferencePoint::RemovePotentialMemberRP(std::size_t ind) {
   for (int i = 0; i < fPossibleSolutions.size(); ++i) {
     if (fPossibleSolutions[i].first == ind) {
@@ -47,7 +46,6 @@ void ReferencePoint::RemovePotentialMemberRP(std::size_t ind) {
   }
 }
 
-template <typename F>
 void ReferencePoint::GenerateRecursivelyRP(std::vector<ReferencePoint> *fRP,
                                            ReferencePoint *fP,
                                            size_t fNumberObjects, size_t fLeft,
@@ -64,7 +62,6 @@ void ReferencePoint::GenerateRecursivelyRP(std::vector<ReferencePoint> *fRP,
   }
 }
 
-template <typename F>
 void ReferencePoint::GenerateRP(std::vector<ReferencePoint> *fRP, size_t fSize,
                                 const std::vector<std::size_t> &p) {
   ReferencePoint fP(fSize); // TBD - to be implemented
@@ -83,7 +80,6 @@ void ReferencePoint::GenerateRP(std::vector<ReferencePoint> *fRP, size_t fSize,
   }
 }
 
-template <typename F>
 void ReferencePoint::AssociateRP(std::vector<ReferencePoint> *fRP,
                                  const Population<Double_t> &pop,
                                  std::vector<std::vector<Int_t>> &fFront) {
@@ -131,7 +127,6 @@ void ReferencePoint::AssociateRP(std::vector<ReferencePoint> *fRP,
 //    vector<double> dir{1, 3}, point{5.5, 1.5};
 //    cout << PerpendicularDistance(dir, point) << endl;
 // ---------------------------------------------------------------------
-template <typename F>
 Double_t
 ReferencePoint::PerpedicularDistance(const std::vector<double> &fDirection,
                                      const std::vector<double> &fPoint) {

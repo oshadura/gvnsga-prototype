@@ -17,8 +17,6 @@
 
 #include "generic/ExceptionMessenger.h"
 
-// template <typename F> using GenesPtr = std::shared_ptr<Genes<F> >;
-
 template <typename F> class Genes {
 
 private:
@@ -38,7 +36,7 @@ public:
       if (fFitness[i] > other.fFitness[i])
         return false;
     }
-    return !isEqual(other);
+    return !IsEqual(other);
   }
 
   bool IsDominated(const Genes &other) const {
@@ -46,7 +44,7 @@ public:
       if (fFitness[i] < other.fFitness[i])
         return false;
     }
-    return !isEqual(other);
+    return !IsEqual(other);
   }
 
   bool IsEqual(const Genes &other) const {

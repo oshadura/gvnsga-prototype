@@ -6,10 +6,12 @@
 template <typename Derived> class Crossover {
 
 public:
-  template <typename T>
-  static void CrossoverGA(Genes<T> &p1, Genes<T> &p2, Genes<T> &ch1,
-                            Genes<T> &ch2) {
-    Derived::CrossoverGA(p1, p2, ch1, ch2);
+  template <typename F>
+  static Genes<F> 
+  CrossoverGA(Genes<F>  &p1, Genes<F>  &p2) {
+    typename F::Input input =
+        Derived::CrossoverGA(p1->GetInput(), p2->GetInput());
+    return std::make_shared<Genes<F> >(input);
   }
 };
 

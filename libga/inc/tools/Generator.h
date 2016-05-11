@@ -19,6 +19,7 @@ public:
   void operator=(Generator const&);
 
 public:
+  double RNGBool();
   double RNGDouble();
   double RNGDouble(int fMin, int fMax);
   std::vector<double> RNGDoubleVector(int fMin, int fMax);

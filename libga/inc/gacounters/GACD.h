@@ -40,13 +40,13 @@ public:
     Map<F> fMap;
     for (auto it = pop.begin(); it != pop.end(); ++it)
       fMap[*it] = 0;
-    int numOfObjectives = pop[0]->getOutput().size();
+    int numOfObjectives = pop[0]->GetOutput().size();
     if (fMin.size() != numOfObjectives || fMax.size() != numOfObjectives)
       throw std::runtime_error(
           "The boundary size and objective size does not match!");
     for (int i = 0; i < numOfObjectives; ++i) {
-      auto obj = pop.getObjective(i);
-      auto index = pop.sortedIndexByVector(obj);
+      auto obj = pop.GetObjective(i);
+      auto index = pop.SortIndexVector(obj);
       double denominator = fMax[i] - fMin[i];
       if (denominator < 0)
         throw std::runtime_error(
@@ -54,8 +54,8 @@ public:
       fMap[pop[index[0]]] = std::numeric_limits<double>::infinity();
       fMap[pop[index[index.size() - 1]]] = std::numeric_limits<double>::infinity();
       for (unsigned int j = 1; j < pop.size() - 1; ++j) {
-        fMap[pop[index[j]]] += (pop[index[j + 1]]->getOutput()[i] -
-                             pop[index[j - 1]]->getOutput()[i]) /
+        fMap[pop[index[j]]] += (pop[index[j + 1]]->GetOutput()[i] -
+                             pop[index[j - 1]]->GetOutput()[i]) /
                             denominator;
       }
     }

@@ -6,9 +6,10 @@
 template <typename Derived> class Mutation {
 
 public:
-  template <typename T>
-  void MutationGA(const Genes<T> &ind1, const Genes<T> &ind2) {
-    Derived::MutationGA(ind1, ind2);
+  template <typename F>
+  static std::shared_ptr<Genes<F> > MutationGA(const std::shared_ptr<Genes<F>> &ind1) {
+    typename F::Input input = Derived::MutationGA(ind1->GetInput());
+    return std::make_shared<Genes<F> >(input);
   }
 };
 
