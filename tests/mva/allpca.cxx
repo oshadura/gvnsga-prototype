@@ -8,8 +8,8 @@ using namespace Eigen;
 
 class AllPCA : public GATest {
 public:
-  LPCA lpca;
-  KPCA kpca;
+  geantvmoop::LPCA lpca;
+  geantvmoop::KPCA kpca;
 };
 
 /*
