@@ -24,7 +24,6 @@ private:
 
 public:
   NSGA(F Function) : Algorithm<NSGA<F>, F>(Function) {}
-
   int fPopulationSize = 100;
   double fMutation = 0.2;
 
@@ -40,11 +39,13 @@ public:
     Population<F> fPopPool =
         tournament.SelectionGAMultiple(fPopulation, fPopulationSize * 2);
     for (unsigned int j = 0; j < fPopPool.size() - 1; j += 2) {
+      /**
       individual_t<F> offspring =
           SBXCrossover::CrossoverGA(fPopPool[j], fPopPool[j + 1]);
       if (Generator::GetInstance().RNGDouble() < fMutation)
         offspring = PolynomialMutation::MutateGA(offspring);
       fPopulation.push_back(offspring);
+      **/
     }
 // Temporary until i will not find fix for Clang 3.7 (namespace) or upgrade to
 // 3.8
