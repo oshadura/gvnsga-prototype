@@ -4,7 +4,6 @@
 #include <exception>
 #include "TObject.h"
 
-
 class ExceptionMessenger : public std::exception {
 public:
   explicit ExceptionMessenger(const std::string &msg)
@@ -16,6 +15,5 @@ private:
   std::string message;
   ClassDef(ExceptionMessenger, 1)
 };
-
 
 #endif

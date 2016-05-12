@@ -6,7 +6,7 @@
 
 #include "generic/ExceptionMessenger.h"
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 template <typename F> class Genes;
 template <typename F> using individual_t = std::shared_ptr<Genes<F>>;
@@ -17,14 +17,15 @@ private:
   typename F::Output fOutput;
 
 public:
+  Genes() {}
 
   Genes(const typename F::Input &i, bool fEvaluated = true) : fInput(i) {
     if (fEvaluated)
       Evaluate();
   };
   //~Genes() {}
-  //Genes(Genes const &);
-  //void operator=(Genes const &);
+  // Genes(Genes const &);
+  // void operator=(Genes const &);
   bool IsDominating(const Genes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
       if (fOutput[i] > other.fOutput[i])
@@ -55,7 +56,6 @@ public:
 
   const typename F::Output &GetOutput() const { return fOutput; }
 };
-
 }
 
 #endif

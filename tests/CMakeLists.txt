@@ -15,15 +15,15 @@ ExternalProject_Add(googletest
 )
 
 #-------------------
-# Specify includes 
+# Specify includes
 #-------------------
 ExternalProject_Get_Property(googletest source_dir)
 message(STATUS "DEBUG: source_dir for GoogleTest = ${source_dir}")
 set(GTEST_INCLUDE_DIRS ${source_dir}/googletest/include)
-set(GMOCK_INCLUDE_DIRS ${source_dir}/googlemock/include) 
+set(GMOCK_INCLUDE_DIRS ${source_dir}/googlemock/include)
 
 #-------------------
-# Specify libraries 
+# Specify libraries
 #-------------------
 ExternalProject_Get_Property(googletest binary_dir)
 message(STATUS "DEBUG: binary_dir for GoogleTest = ${binary_dir}")
@@ -31,13 +31,15 @@ set(GTEST_LIBS_DIR ${binary_dir}/googlemock/gtest)
 set(GMOCK_LIBS_DIR ${binary_dir}/googlemock/)
 
 #-------------------
-# Includes 
+# Includes
 #-------------------
 
 include_directories(${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
 include_directories(inc)
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
 include_directories(/usr/include/eigen3)
+# Mac OS X
+include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 
 #-------------------
 # Setting up Ctest also

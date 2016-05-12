@@ -10,11 +10,11 @@ protected:
 
 public:
   GaValue() {}
-  GaValue(T fValue) : fValue(fValue) {}
+  GaValue(T v) : fValue(v) {}
   T GetValue() const { return fValue; }
 
-  //GaValue(GaValue const &);
-  //void operator=(GaValue const &);
+  // GaValue(GaValue const &);
+  // void operator=(GaValue const &);
 
   virtual void SetValue(const T &value) { GaValue::fValue = value; }
 };
@@ -52,7 +52,6 @@ template <typename T>
 std::ostream &operator<<(std::ostream &os, const GaValue<T> &rhs) {
   return os << rhs.GetValue();
 }
-
 }
 
 #endif

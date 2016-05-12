@@ -10,7 +10,7 @@
 #include <iostream>
 #include <unordered_map>
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 template <typename F> class Population : public std::vector<individual_t<F>> {
 
@@ -19,7 +19,7 @@ template <typename F> class Population : public std::vector<individual_t<F>> {
 public:
   Population(std::initializer_list<individual_t<F>> fList)
       : std::vector<individual_t<F>>(fList) {}
-      
+
   Population() : std::vector<individual_t<F>>() {}
 
   Population(const std::vector<individual_t<F>> &ind)
@@ -131,7 +131,6 @@ public:
     return s;
   }
 };
-
 }
 
 #endif

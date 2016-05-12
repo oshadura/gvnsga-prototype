@@ -3,7 +3,7 @@
 
 #include "generic/GaValue.h"
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 template <typename T> class ConstrainedGaValue : public GaValue<T> {
 
@@ -21,7 +21,6 @@ public:
   T GetDownBound() const { return fDownValue; }
   T GetUpBound() const { return fUpValue; }
 };
-
 }
 
 #endif
