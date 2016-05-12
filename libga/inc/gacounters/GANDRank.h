@@ -22,7 +22,7 @@ public:
   void operator=(GANDRank const &) = delete;
 
   template <typename F>
-  static Map<T> CalculateRank(Population<F> pop, int fBestIndividuals = -1) {
+  static Map<F> CalculateRank(Population<F> pop, int fBestIndividuals = -1) {
     if (fBestIndividuals == -1)
       fBestIndividuals = pop.size();
     Map<F> fMap;
