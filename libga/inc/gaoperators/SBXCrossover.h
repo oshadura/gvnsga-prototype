@@ -17,6 +17,7 @@ public:
   template <typename Ind> static Ind CrossoverGA(const Ind &ind1, const Ind &ind2) {
     GaVector<RandomDouble> offspring1 = static_cast<Ind>(ind1);
     GaVector<RandomDouble> offspring2 = static_cast<Ind>(ind2);
+
     for (unsigned int i = 0; i < offspring1.size(); ++i) {
       SBXCrossover::CrossoverEvolution(offspring1[i], offspring2[i], 0.5);
     }
@@ -25,16 +26,12 @@ public:
 
   static void CrossoverEvolution(RandomDouble &a, RandomDouble &b,
                                  double fCrossDistributionIndex) {
-    //
     double fX0 = a.GetValue();
     double fX1 = b.GetValue();
     double fDeltaX = fabs(fX1 - fX0);
-    //
     double fLowBound = a.GetDownBound();
     double fUpBound = b.GetUpBound();
-    //
     double fBoundedValue1, fBoundedValue2, fnewa, fnewb, b1, b2;
-
     if (fX0 < fX1) {
       fBoundedValue1 = 1 + 2 * (fX0 - fLowBound) / fDeltaX;
       fBoundedValue2 = 1 + 2 * (fUpBound - fX1) / fDeltaX;
@@ -81,7 +78,6 @@ public:
     } else {
       a.SetValue(fnewa);
     }
-
     if (fnewb < fLowBound) {
       b.SetValue(fLowBound);
     } else if (fnewb > fUpBound) {
@@ -89,7 +85,6 @@ public:
     } else {
       b.SetValue(fnewb);
     }
-
     if (Generator::GetInstance().RNGBool()) {
       double temp = a.GetValue();
       a.SetValue(b.GetValue());

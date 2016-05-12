@@ -9,7 +9,7 @@
 namespace geantvmoop {
 
 template <typename F> class Genes;
-template <typename F> using individual_t = std::shared_ptr<Genes<F>>;
+template <typename F> using individual_t = std::shared_ptr<Genes<F> >;
 template <typename F> class Genes {
 
 private:

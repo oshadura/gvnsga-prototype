@@ -2,7 +2,6 @@
 #define __CROSSOVER__
 
 #include "generic/TGenes.h"
-#include "generic/TGenes.h"
 
 namespace geantvmoop {
 
@@ -10,7 +9,7 @@ template <typename Derived> class Crossover {
 
 public:
   template <typename F>
-  static individual_t<F> CrossoverGA(individual_t<F> &p1, individual_t<F> &p2) {
+  static individual_t<F> CrossoverGA(const individual_t<F> &p1, const individual_t<F> &p2) {
     typename F::Input input =
         Derived::CrossoverGA(p1->GetInput(), p2->GetInput());
     return std::make_shared<geantvmoop::Genes<F> >(input);
