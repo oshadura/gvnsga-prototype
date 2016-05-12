@@ -1,7 +1,7 @@
 #ifndef __GAVALUE__
 #define __GAVALUE__
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 template <typename T> class GaValue {
 
@@ -11,14 +11,13 @@ protected:
 public:
   GaValue() {}
   GaValue(T fValue) : fValue(fValue) {}
+  T GetValue() const { return fValue; }
+
   //GaValue(GaValue const &);
   //void operator=(GaValue const &);
 
-  T GetValue() const { return fValue; }
-
   virtual void SetValue(const T &value) { GaValue::fValue = value; }
 };
-
 template <typename T>
 bool operator<(const GaValue<T> &lhs, const GaValue<T> &rhs) {
   return lhs.GetValue() < rhs.GetValue();

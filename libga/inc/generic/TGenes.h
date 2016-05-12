@@ -10,16 +10,15 @@ namespace geantvmoop{
 
 template <typename F> class Genes;
 template <typename F> using individual_t = std::shared_ptr<Genes<F>>;
-
 template <typename F> class Genes {
 
 private:
-  typename F::Input fGenes;
-  typename F::Output fFitness;
+  typename F::Input fInput;
+  typename F::Output fOutput;
 
 public:
 
-  Genes(const typename F::Input &i, bool fEvaluated = true) : fGenes(i) {
+  Genes(const typename F::Input &i, bool fEvaluated = true) : fInput(i) {
     if (fEvaluated)
       Evaluate();
   };
@@ -28,7 +27,7 @@ public:
   //void operator=(Genes const &);
   bool IsDominating(const Genes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
-      if (fFitness[i] > other.fFitness[i])
+      if (fOutput[i] > other.fOutput[i])
         return false;
     }
     return !IsEqual(other);
@@ -36,7 +35,7 @@ public:
 
   bool IsDominated(const Genes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
-      if (fFitness[i] < other.fFitness[i])
+      if (fOutput[i] < other.fOutput[i])
         return false;
     }
     return !IsEqual(other);
@@ -44,17 +43,17 @@ public:
 
   bool IsEqual(const Genes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
-      if (other.fFitness[i] != fFitness[i])
+      if (other.fOutput[i] != fOutput[i])
         return false;
     }
     return true;
   }
 
-  void Evaluate() { fFitness = F::Evaluate(fGenes); }
+  void Evaluate() { fOutput = F::Evaluate(fInput); }
 
-  const typename F::Input &GetInput() const { return fGenes; }
+  const typename F::Input &GetInput() const { return fInput; }
 
-  const typename F::Output &GetOutput() const { return fFitness; }
+  const typename F::Output &GetOutput() const { return fOutput; }
 };
 
 }

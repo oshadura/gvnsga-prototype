@@ -48,9 +48,9 @@ public:
     }
 // Temporary until i will not find fix for Clang 3.7 (namespace) or upgrade to
 // 3.8
-#ifdef __linux__
+//#ifdef __linux__
     fIndividualRank = GANDRank::CalculateRank(fPopulation);
-#endif
+//#endif
     fIndividualCrowDist = GACD::CalculateCDPop(fPopulation);
     GAComparator<F> nsgacomparator(&fIndividualRank, &fIndividualCrowDist);
     std::sort(fPopulation.begin(), fPopulation.end(), nsgacomparator);
