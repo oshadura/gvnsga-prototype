@@ -1,16 +1,14 @@
 #ifndef __KPCA__
 #define __KPCA__
 
-
-// Kernel PCA using the Eigen library, by Tim Nugent 2014
-// Modified by oksana.shadura@cern.ch
-
 #include <fstream>
 #include <iostream>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
 
 #include "PCA.h"
+
+namespace geantvmoop{
 
 using namespace Eigen;
 
@@ -61,5 +59,6 @@ private:
   double gamma, constant, order;
 };
 
+}
 
 #endif

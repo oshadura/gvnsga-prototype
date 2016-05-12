@@ -1,5 +1,7 @@
 #include "mva/LPCA.h"
 
+namespace geantvmoop{
+
 void LPCA::LoadData(const char *data, char sep) {
   // Read data
   unsigned int row = 0;
@@ -122,4 +124,6 @@ void LPCA::WriteEigenvectors(std::string file) {
   }
   outfile.close();
   std::cout << "Written file " << file << std::endl;
+}
+
 }

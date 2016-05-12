@@ -1,7 +1,6 @@
 #ifndef __LPCA__
 #define __LPCA__
 
-
 #include <fstream>
 #include <iostream>
 #include <Eigen/Dense>
@@ -10,6 +9,8 @@
 #include <generic/Functions.h>
 
 #include "PCA.h"
+
+namespace geantvmoop{
 
 using namespace Eigen;
 
@@ -37,5 +38,6 @@ private:
   unsigned int normalise;
 };
 
+}
 
 #endif

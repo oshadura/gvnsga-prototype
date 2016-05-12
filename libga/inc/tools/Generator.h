@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+namespace geantvmoop{
+
 class Generator {
 public:
 
@@ -31,5 +33,7 @@ public:
   int RNGSIMD(int fMin, int fMax);
   std::vector<int> RNGSIMDVector(int fMin, int fMax);
 };
+
+}
 
 #endif

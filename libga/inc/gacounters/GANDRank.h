@@ -6,7 +6,12 @@
 #include "generic/PF.h"
 #include "GACounter.h"
 
-class GANDRank : public GACounter<GANDRank, double> {
+namespace geantvmoop {
+
+class GANDRank : public GACounter<GANDRank, int> {
+
+  template <typename F> using Map = std::unordered_map<individual_t<F>, int>;
+
 public:
   GANDRank() {}
 
@@ -17,11 +22,11 @@ public:
   void operator=(GANDRank const &) = delete;
 
   template <typename F>
-  static std::unordered_map<std::vector<individual_t<F>>, int>
+  static std::unordered_map<std::vector<individual_t<F> >, int>
   CalculateRank(Population<F> pop, int fBestIndividuals = -1) {
     if (fBestIndividuals == -1)
       fBestIndividuals = pop.size();
-    std::unordered_map<std::vector<individual_t<F>>, int> fMap;
+    Map<F> fMap;
     int fRank = 0;
     int fNumberOfIndividuals = 0;
     while (!pop.empty() && (fNumberOfIndividuals < fBestIndividuals)) {
@@ -38,5 +43,7 @@ public:
     return fMap;
   }
 };
+
+} // end of namespace geantvmooop
 
 #endif

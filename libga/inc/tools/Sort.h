@@ -3,6 +3,8 @@
 
 #include <vector>
 
+namespace geantvmoop{
+
 class Sort {
 
 public:
@@ -13,5 +15,7 @@ public:
     return index;
   }
 };
+
+}
 
 #endif

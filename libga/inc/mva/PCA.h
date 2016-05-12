@@ -3,6 +3,8 @@
 
 #include "generic/Population.h"
 
+namespace geantvmoop{
+
 template <typename DerivedClass> class PCA {
 public:
 
@@ -11,5 +13,7 @@ public:
         }
 
 };
+
+}
 
 #endif

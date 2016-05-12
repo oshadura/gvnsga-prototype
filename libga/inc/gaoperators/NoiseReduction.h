@@ -3,6 +3,8 @@
 
 #include "generic/Population.h"
 
+namespace geantvmoop{
+
 template <typename Derived> class NoiseCleanup {
 
 public:
@@ -11,5 +13,7 @@ public:
     Derived::NoiseCleanup(population1, population2);
   }
 };
+
+}// end of namespace geantvmooop
 
 #endif

@@ -1,21 +1,12 @@
 #ifndef __GENES__
 #define __GENES__
 
-#define RESET "\033[0m"
-#define BLACK "\033[30m"   /* Black */
-#define RED "\033[31m"     /* Red */
-#define GREEN "\033[32m"   /* Green */
-#define YELLOW "\033[33m"  /* Yellow */
-#define BLUE "\033[34m"    /* Blue */
-#define MAGENTA "\033[35m" /* Magenta */
-#define CYAN "\033[36m"    /* Cyan */
-
-#include "TObject.h"
-
 #include <vector>
 #include <memory>
 
 #include "generic/ExceptionMessenger.h"
+
+namespace geantvmoop{
 
 template <typename F> class Genes;
 template <typename F> using individual_t = std::shared_ptr<Genes<F>>;
@@ -70,5 +61,7 @@ public:
 
   const typename F::Output &GetOutput() const { return fFitness; }
 };
+
+}
 
 #endif

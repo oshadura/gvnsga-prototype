@@ -6,6 +6,8 @@
 #include "generic/TGenes.h"
 #include "generic/Population.h"
 
+namespace geantvmoop{
+
 template <typename Derived, typename Type> class GACounter {
 
 public:
@@ -15,5 +17,7 @@ public:
     return Derived::GACounterInitialize(pop);
   }
 };
+
+} // end of namespace geantvmooop
 
 #endif

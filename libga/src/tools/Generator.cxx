@@ -12,6 +12,8 @@
 #include "tools/Generator.h"
 #include "generic/TGenes.h"
 
+namespace geantvmoop{
+
 void GeneratorDouble();
 
 void GeneratorDouble(int fMin, int fMax) {
@@ -40,3 +42,5 @@ void GeneratorVector();
 void GeneratorSIMD(int fMin, int fMax);
 
 void GeneratorSIMDVector(Genes<int> individual, int fMin, int fMax);
+
+}

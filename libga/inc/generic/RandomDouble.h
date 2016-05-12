@@ -1,8 +1,9 @@
 #ifndef __RANDOMDOUBLE__
 #define __RANDOMDOUBLE__
 
-
 #include "generic/ConstrainedGaValue.h"
+
+namespace geantvmoop{
 
 class RandomDouble : public ConstrainedGaValue<double> {
 
@@ -18,5 +19,7 @@ public:
   	return RandomDouble(value, fDownValue, fUpValue);
   }
 };
+
+}
 
 #endif

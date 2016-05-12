@@ -10,6 +10,8 @@
 #include <iostream>
 #include <unordered_map>
 
+namespace geantvmoop{
+
 template <typename F> class Population : public std::vector<individual_t<F>> {
 
   class PF;
@@ -128,5 +130,7 @@ public:
     return s;
   }
 };
+
+}
 
 #endif

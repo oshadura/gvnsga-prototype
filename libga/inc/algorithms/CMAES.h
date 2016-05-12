@@ -3,8 +3,10 @@
 
 #include "generic/Algorithm.h"
 #include "generic/TGenes.h"
-//#include "generic/Population.h"
-//#include "generic/PF.h"
+#include "generic/Population.h"
+#include "generic/PF.h"
+
+namespace geantvmoop {
 
 template <typename F> class CMAES : public Algorithm<CMAES<F>, F> {
 
@@ -25,7 +27,7 @@ private:
   PF<F> fFront;
 
   int fGen;
-
- };
+};
+}
 
 #endif

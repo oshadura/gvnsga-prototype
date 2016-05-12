@@ -4,6 +4,8 @@
 #include <boost/mpi.hpp>
 #include "generic/TGenes.h"
 
+namespace geantvmoop{
+
 class MPIServer {
 public:
   MPIServer(boost::mpi::environment &me, boost::mpi::communicator &w)
@@ -17,5 +19,7 @@ private:
   boost::mpi::environment &mpienv;
   boost::mpi::communicator &world;
 };
+
+}
 
 #endif

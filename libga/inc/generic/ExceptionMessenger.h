@@ -2,6 +2,8 @@
 #define __EXCEPTIONMESSENGER__
 
 #include <exception>
+#include "TObject.h"
+
 
 class ExceptionMessenger : public std::exception {
 public:
@@ -14,5 +16,6 @@ private:
   std::string message;
   ClassDef(ExceptionMessenger, 1)
 };
+
 
 #endif

@@ -4,6 +4,8 @@
 #include "Mutation.h"
 #include "tools/Generator.h"
 
+namespace geantvmoop{
+
 class PolynomialMutation : public Mutation<PolynomialMutation> {
 
 public:
@@ -17,5 +19,7 @@ public:
     }
   }
 };
+
+}
 
 #endif

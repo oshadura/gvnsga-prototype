@@ -5,6 +5,8 @@
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 
+namespace geantvmoop{
+
 class ParallelEvaluateServer : private ParallelEvaluator,
                                   public EvaluatePopulation{
 
@@ -90,3 +92,7 @@ public:
     }
   }
 };
+
+}
+
+#endif

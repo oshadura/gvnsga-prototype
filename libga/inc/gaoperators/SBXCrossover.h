@@ -9,6 +9,8 @@
 
 #include "random"
 
+namespace geantvmoop{
+
 class SBXCrossover : public Crossover<SBXCrossover> {
 
 public:
@@ -97,5 +99,7 @@ public:
     }
   }
 };
+
+}
 
 #endif

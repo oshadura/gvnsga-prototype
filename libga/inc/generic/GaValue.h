@@ -1,6 +1,8 @@
 #ifndef __GAVALUE__
 #define __GAVALUE__
 
+namespace geantvmoop{
+
 template <typename T> class GaValue {
 
 protected:
@@ -48,6 +50,8 @@ bool operator!=(const GaValue<T> &lhs, const GaValue<T> &rhs) {
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const GaValue<T> &rhs) {
   return os << rhs.GetValue();
+}
+
 }
 
 #endif

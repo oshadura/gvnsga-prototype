@@ -3,6 +3,8 @@
 
 #include <vector>
 
+namespace geantvmoop{
+
 template <typename T> class GaVector : public std::vector<T> {
 
 public:
@@ -16,5 +18,7 @@ public:
     return fIndividual;
     }
 };
+
+}
 
 #endif

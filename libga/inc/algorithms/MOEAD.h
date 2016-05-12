@@ -10,9 +10,9 @@
 #include "gaoperators/PolynomialMutation.h"
 #include "gaoperators/TournamentSelection.h"
 
+namespace geantvmoop {
 
-template <typename F>
-class MOEAD : public Algorithm<MOEAD<F>, F> {
+template <typename F> class MOEAD : public Algorithm<MOEAD<F>, F> {
 
 public:
   MOEAD(F problem) : Algorithm<MOEAD<F>, F>(problem) {}
@@ -49,19 +49,22 @@ public:
   }
 
   // Output suppose to be fFitness
-  double GetFitness(const Weights &fWeight, const std::vector<double> &fFitVector) {
+  double GetFitness(const Weights &fWeight, const std::vector<double>
+  &fFitVector) {
     return GetTchebichew(fWeight, fFitVector);
   }
 
   // Output suppose to be fFitness
-  double GetTchebichew(const Weights &fWeight, const std::vector<double> &fFitVector) {
+  double GetTchebichew(const Weights &fWeight, const std::vector<double>
+  &fFitVector) {
     double fMaxDistance = 0;
     for (int i = 0; i < F::GetNumOfObjectives(); ++i) {
-      fMaxDistance = std::max(fMaxDistance, fWeight[i] * (fWeight[i] - fRefPoint[i]));
+      fMaxDistance = std::max(fMaxDistance, fWeight[i] * (fWeight[i] -
+  fRefPoint[i]));
     }
     return fMaxDistance;
   }
-  
+
   */
 private:
   std::vector<Weights> fWeights;
@@ -77,8 +80,8 @@ private:
 
   int fGen;
 
-  //RandomSelection selection;
-
+  // RandomSelection selection;
 };
+}
 
 #endif

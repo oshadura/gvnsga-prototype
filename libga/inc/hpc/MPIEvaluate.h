@@ -5,6 +5,8 @@
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 
+namespace geantvmoop{
+
 class MPIEvaluate {
 protected:
   boost::mpi::environment &mpi_env;
@@ -27,5 +29,6 @@ public:
         max_tag(mpi_env.max_tag()) {}
 };
 
+}
 
-#endif /* ParallelEvaluator_h */
+#endif 

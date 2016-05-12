@@ -9,6 +9,10 @@
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 
+#include "TObject.h"
+
+namespace geantvmoop{
+
 class ReferencePoint {
 public:
   ReferencePoint();
@@ -37,5 +41,7 @@ private:
   std::vector<std::pair<std::size_t, Double_t>> fPossibleSolutions;
   std::size_t fMemberSize;
 };
+
+}
 
 #endif

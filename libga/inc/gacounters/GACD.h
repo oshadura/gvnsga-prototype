@@ -1,7 +1,6 @@
 #ifndef __GACD__
 #define __GACD__
 
-
 #include "GACounter.h"
 #include <vector>
 #include <map>
@@ -9,6 +8,7 @@
 #include <cmath>
 #include <algorithm>
 
+namespace geantvmoop {
 
 class GACD : public GACounter<GACD, double> {
 
@@ -23,8 +23,9 @@ public:
   }
 
   template <typename F>
-  static void CalculateBounds(const Population<F> &pop, std::vector<double> &fMin,
-                      std::vector<double> &fMax) {
+  static void CalculateBounds(const Population<F> &pop,
+                              std::vector<double> &fMin,
+                              std::vector<double> &fMax) {
     for (unsigned int j = 0; j < F::GetOutput().size(); ++j) {
       auto vector = pop.GetObjective(j);
       fMin.push_back(*std::min_element(vector.begin(), vector.end()));
@@ -34,8 +35,8 @@ public:
 
   template <typename F>
   static Map<F> CalculateCD(const Population<F> &pop, std::vector<double> &fMin,
-                           std::vector<double> &fMax) {
-    typedef typename std::vector<individual_t<F>>::iterator Iterator;
+                            std::vector<double> &fMax) {
+    typedef typename std::vector<individual_t<F> >::iterator Iterator;
     Map<F> fMap;
     for (auto it = pop.begin(); it != pop.end(); ++it)
       fMap[*it] = 0;
@@ -51,16 +52,18 @@ public:
         throw std::runtime_error(
             "Error min and max values couldn't be correct!");
       fMap[pop[index[0]]] = std::numeric_limits<double>::infinity();
-      fMap[pop[index[index.size() - 1]]] = std::numeric_limits<double>::infinity();
+      fMap[pop[index[index.size() - 1]]] =
+          std::numeric_limits<double>::infinity();
       for (unsigned int j = 1; j < pop.size() - 1; ++j) {
         fMap[pop[index[j]]] += (pop[index[j + 1]]->GetOutput()[i] -
-                             pop[index[j - 1]]->GetOutput()[i]) /
-                            denominator;
+                                pop[index[j - 1]]->GetOutput()[i]) /
+                               denominator;
       }
     }
 
     return fMap;
   }
 };
+}
 
 #endif

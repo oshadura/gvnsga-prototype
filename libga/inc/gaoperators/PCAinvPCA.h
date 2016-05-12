@@ -3,10 +3,12 @@
 
 #include "NoiseReduction.h"
 
+namespace geantvmoop {
+
 class PCAinvPCA : public NoiseReduction<PCAinvPCA> {
 
 public:
-
 };
+}
 
 #endif

@@ -4,25 +4,28 @@
 #include "gaoperators/Selection.h"
 #include "gacounters/GAComparator.h"
 
+namespace geantvmoop {
+
 template <typename GAComparator>
-class TournamentSelection: public Selection<TournamentSelection<GAComparator>> {
+class TournamentSelection
+    : public Selection<TournamentSelection<GAComparator> > {
 
 private:
   GAComparator comparator;
 
 public:
-  TournamentSelection(const GAComparator & comparator)
+  TournamentSelection(const GAComparator &comparator)
       : comparator(comparator) {}
 
   template <typename F>
-  std::vector<std::shared_ptr<F> > SelectionGAUnary(const Population<F> &
-                                                  population) {
+  std::vector<std::shared_ptr<F> >
+  SelectionGAUnary(const Population<F> &population) {
     throw std::runtime_error("Tournament Selection does not allow to "
                              "select only single individuals!");
   }
 
   template <typename F>
-  Population<F> SelectionGAMultiple(const Population<F> & population, int n) {
+  Population<F> SelectionGAMultiple(const Population<F> &population, int n) {
     Population<F> fResult;
     Population<F> fPool;
     while (fResult.size() < n) {
@@ -38,5 +41,6 @@ public:
     return fResult;
   }
 };
+}
 
 #endif

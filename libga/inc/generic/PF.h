@@ -4,6 +4,8 @@
 #include <list>
 #include <generic/Population.h>
 
+namespace geantvmoop{
+
 template <typename F> class PF {
 
   std::list<std::shared_ptr<Genes<F>>> fFront;
@@ -53,5 +55,7 @@ public:
     return fResult;
   }
 };
+
+}
 
 #endif

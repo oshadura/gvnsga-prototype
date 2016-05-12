@@ -18,6 +18,8 @@
 #include <cmath>
 #include <utility>
 
+namespace geantvmoop{
+
 class ProblemDTLZ1 : public Functions<ProblemDTLZ1> {
 
 public:
@@ -67,5 +69,7 @@ public:
 
   static Output GetOutput() { return std::vector<double>(3); }
 };
+
+}
 
 #endif

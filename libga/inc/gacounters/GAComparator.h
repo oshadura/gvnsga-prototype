@@ -1,6 +1,8 @@
 #ifndef __GACOMPARATOR__
 #define __GACOMPARATOR__
 
+namespace geantvmoop{
+
 template <typename F> class GAComparator {
 
 public:
@@ -44,4 +46,7 @@ public:
     }
   }
 };
+
+} // end of namespace geantvmooop
+
 #endif

@@ -1,5 +1,7 @@
 #include "generic/ReferencePoint.h"
 
+namespace geantvmoop{
+
 ReferencePoint::ReferencePoint() {}
 
 ReferencePoint::ReferencePoint(Int_t fSize) {}
@@ -487,3 +489,5 @@ reference point
 }
 // ----------------------------------------------------------------------
 */
+
+}

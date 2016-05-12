@@ -31,7 +31,7 @@ public:
   HistogramManager(){}
   HistogramManager *Instance();
   virtual ~HistogramManager(){}
-  Bool_t HistoFill(Population<Double_t> &pop, char *hfile);
+  Bool_t HistoFill(geantvmoop::Population<Double_t> &pop, char *hfile);
   Bool_t CheckValue(ROOT::Internal::TTreeReaderValueBase *value);
   void Reset();
 

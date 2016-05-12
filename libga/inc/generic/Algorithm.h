@@ -5,6 +5,8 @@
 
 #include "generic/PF.h"
 
+namespace geantvmoop {
+
 template <typename Derived, typename F> class Algorithm {
 
 private:
@@ -15,18 +17,16 @@ public:
 
   Algorithm(F fFunction) : fFunction(fFunction) {}
 
-  virtual PF<F> SolvePF(std::ostream *info = nullptr){
-  	Initialize();
-  	for (int i = 0; i < fMaxGeneration; ++i)
-  	{
-  		Evolution();
-  		if (info != nullptr)
-  		{
-  			*info << "Generation" << i;
-  			Print(*info);
-  		}
-  	}
-  	return GetPF();
+  virtual PF<F> SolvePF(std::ostream *info = nullptr) {
+    Initialize();
+    for (int i = 0; i < fMaxGeneration; ++i) {
+      Evolution();
+      if (info != nullptr) {
+        *info << "Generation" << i;
+        Print(*info);
+      }
+    }
+    return GetPF();
   }
 
   F GetProblem() const { return fFunction; }
@@ -41,9 +41,8 @@ public:
     return static_cast<Derived *>(this)->Print(os);
   }
 
-  PF<F> GetPF(){
-  	return static_cast<Derived*>(this)->GetPF();
-  }
+  PF<F> GetPF() { return static_cast<Derived *>(this)->GetPF(); }
 };
+}
 
 #endif

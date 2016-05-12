@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+namespace geantvmoop{
+
 // static
 std::vector<Weights> Weights::GetWeights(int n) {
   auto rndWeight = []() {
@@ -78,4 +80,6 @@ double Weights::GetWeightedSum(const Weights &w,
     sum += w[i] * output[i];
   }
   return sum;
+}
+
 }

@@ -10,6 +10,8 @@
 #include "tools/Sort.h"
 #include "tools/Generator.h"
 
+namespace geantvmoop {
+
 class Weights : public std::vector<double> {
 
 public:
@@ -23,5 +25,5 @@ public:
   // static
   double GetWeightedSum(const Weights &w, const std::vector<double> &output);
 };
-
+}
 #endif
