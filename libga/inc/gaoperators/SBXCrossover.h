@@ -9,16 +9,16 @@
 
 #include "random"
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 class SBXCrossover : public Crossover<SBXCrossover> {
 
 public:
-  template <typename T> static T CrossoverGA(const T &ind1, const T &ind2) {
-    GaVector<RandomDouble> off1 = static_cast<T>(ind1);
-    GaVector<RandomDouble> off2 = static_cast<T>(ind2);
-    auto offspring1 = off1;
-    auto offspring2 = off2;
+  template <typename Ind> static Ind CrossoverGA(const Ind &ind1, const Ind &ind2) {
+    GaVector<RandomDouble> offspring1;
+    offspring1 = static_cast<Ind>(ind1);
+    GaVector<RandomDouble> offspring2;
+    offspring2 = static_cast<Ind>(ind2);
     for (unsigned int i = 0; i < offspring1.size(); ++i) {
       SBXCrossover::CrossoverEvolution(offspring1[i], offspring2[i], 0.5);
     }
@@ -99,7 +99,6 @@ public:
     }
   }
 };
-
 }
 
 #endif

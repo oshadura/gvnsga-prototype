@@ -11,6 +11,8 @@ protected:
 public:
   GaValue() {}
   GaValue(T fValue) : fValue(fValue) {}
+  //GaValue(GaValue const &);
+  //void operator=(GaValue const &);
 
   T GetValue() const { return fValue; }
 

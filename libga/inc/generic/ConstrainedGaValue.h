@@ -12,7 +12,7 @@ protected:
   T fUpValue;
 
 public:
-  ConstrainedGaValue(T v) {}
+  ConstrainedGaValue() {}
   ConstrainedGaValue(T down, T up) : fDownValue(down), fUpValue(up) {}
   ConstrainedGaValue(T v, T down, T up)
       : GaValue<T>(v), fDownValue(down), fUpValue(up) {}

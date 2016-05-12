@@ -18,19 +18,14 @@ private:
   typename F::Output fFitness;
 
 public:
-  Genes() {}
-
-  ~Genes() {}
-
-  Genes(Genes const &);
-
-  void operator=(Genes const &);
 
   Genes(const typename F::Input &i, bool fEvaluated = true) : fGenes(i) {
     if (fEvaluated)
       Evaluate();
   };
-
+  //~Genes() {}
+  //Genes(Genes const &);
+  //void operator=(Genes const &);
   bool IsDominating(const Genes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
       if (fFitness[i] > other.fFitness[i])

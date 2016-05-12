@@ -15,6 +15,7 @@ public:
 };
 
 TEST_F(Nsga2, SolvingProblem) {
+  geantvmoop::ProblemDTLZ1 dtlz1;
   geantvmoop::NSGA<geantvmoop::ProblemDTLZ1> nsga(dtlz1);
   nsga.fPopulationSize = 1;
   nsga.SolvePF();
