@@ -4,12 +4,11 @@
 #include <vector>
 #include <memory>
 
-#include "generic/ExceptionMessenger.h"
-
 namespace geantvmoop {
 
 template <typename F> class Genes;
 template <typename F> using individual_t = std::shared_ptr<Genes<F> >;
+
 template <typename F> class Genes {
 
 private:
@@ -18,14 +17,10 @@ private:
 
 public:
   Genes() {}
-
   Genes(const typename F::Input &i, bool fEvaluated = true) : fInput(i) {
     if (fEvaluated)
       Evaluate();
   };
-  //~Genes() {}
-  // Genes(Genes const &);
-  // void operator=(Genes const &);
   bool IsDominating(const Genes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
       if (fOutput[i] > other.fOutput[i])

@@ -1,4 +1,4 @@
-#include "algorithms/MOEADWeights.h"
+#include "generic/GAWeights.h"
 
 #include <algorithm>
 

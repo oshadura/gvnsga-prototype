@@ -36,7 +36,6 @@ public:
   template <typename F>
   static Map<F> CalculateCD(const Population<F> &pop, std::vector<double> &fMin,
                             std::vector<double> &fMax) {
-    typedef typename std::vector<individual_t<F> >::iterator Iterator;
     Map<F> fMap;
     for (auto it = pop.begin(); it != pop.end(); ++it)
       fMap[*it] = 0;

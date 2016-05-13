@@ -10,7 +10,8 @@ template <typename Derived> class Mutation {
 public:
   template <typename F>
   static individual_t<F> MutationGA(individual_t<F> &ind1) {
-    typename F::Input input = Derived::MutationGA(ind1->GetInput());
+    typename F::Input input = ind1->GetInput();
+    Derived::MutationGA(input);
     return std::make_shared<geantvmoop::Genes<F> >(input);
   }
 };

@@ -22,11 +22,10 @@ public:
 
   Population() : std::vector<individual_t<F>>() {}
 
-  Population(const std::vector<individual_t<F>> &ind)
-      : std::vector<individual_t<F>>(ind) {}
+  Population(const std::vector<individual_t<F>> &inds)
+      : std::vector<individual_t<F>>(inds) {}
 
   Population(int n) {
-    // Different...
     for (int i = 0; i < n; ++i) {
       typename F::Input input = F::GetInput().RandomSetup();
       auto fInd = std::make_shared<Genes<F>>(input);

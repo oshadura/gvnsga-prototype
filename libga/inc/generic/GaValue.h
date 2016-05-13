@@ -10,7 +10,7 @@ protected:
 
 public:
   GaValue() {}
-  GaValue(T v) : fValue(v) {}
+  GaValue(T fValue) : fValue(fValue) {}
   T GetValue() const { return fValue; }
 
   // GaValue(GaValue const &);

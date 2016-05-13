@@ -9,7 +9,7 @@ namespace geantvmoop{
 class PolynomialMutation : public Mutation<PolynomialMutation> {
 
 public:
-  template <typename T> static T MutateGA(T &individual, double fProbability = -1) {
+  template <typename Individual> static void MutateGA(Individual &individual, double fProbability = -1) {
     if (fProbability == -1)
       fProbability = 1 / (double)individual.size();
     auto random = Generator::GetInstance();

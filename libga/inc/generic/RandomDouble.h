@@ -15,7 +15,7 @@ public:
 
   RandomDouble(double down, double up) : ConstrainedGaValue(0, down, up) {}
 
-  RandomDouble RandomSetup() {
+  RandomDouble RandomSetup() const {
     auto generator = Generator::GetInstance();
     double value = generator.RNGDouble(fDownValue, fUpValue);
     return RandomDouble(value, fDownValue, fUpValue);

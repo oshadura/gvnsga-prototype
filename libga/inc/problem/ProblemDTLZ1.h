@@ -23,15 +23,18 @@ namespace geantvmoop{
 class ProblemDTLZ1 : public Functions<ProblemDTLZ1> {
 
 public:
+
   typedef GaVector<RandomDouble> Input;
+
   typedef std::vector<double> Output;
+  
   // constexpr static const double pi =
   // static_cast<double>(boost::math::constants::pi<double>());
 
   // constexpr
   static double pi() { return std::atan(1) * 4; }
 
-  static Output Evaluate(Input &individual) {
+  static Output Evaluate(const Input &individual) {
     std::vector<double> fFitness;
     std::vector<double> fParameters;
     for (auto parameter : individual)

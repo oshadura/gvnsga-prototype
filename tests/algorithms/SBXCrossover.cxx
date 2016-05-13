@@ -11,6 +11,8 @@ public:
 	geantvmoop::individual_t<geantvmoop::ProblemDTLZ1> fIndividual2 = std::make_shared<geantvmoop::Genes<geantvmoop::ProblemDTLZ1>>(SBXInput{3, geantvmoop::RandomDouble(0,0,10000)});
 };
 
+/*
 TEST_F(CrossoverSBXTest, SBX){
 	ASSERT_NO_THROW(geantvmoop::SBXCrossover::CrossoverGA(fIndividual1,fIndividual2));
 }
+*/

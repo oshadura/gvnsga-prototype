@@ -16,6 +16,9 @@ public:
   ConstrainedGaValue(T down, T up) : fDownValue(down), fUpValue(up) {}
   ConstrainedGaValue(T v, T down, T up)
       : GaValue<T>(v), fDownValue(down), fUpValue(up) {}
+  virtual void SetValue(const T& fValue){
+    this->fValue = fValue; 
+  }
   void SetDownBound(T down) { fDownValue = down; }
   void SetUpBound(T up) { fUpValue = up; }
   T GetDownBound() const { return fDownValue; }
