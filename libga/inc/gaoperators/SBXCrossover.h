@@ -14,10 +14,12 @@ namespace geantvmoop {
 class SBXCrossover : public Crossover<SBXCrossover> {
 
 public:
-  template <typename Individual> static Individual CrossoverGA(const Individual &ind1, const Individual &ind2){
-    GaVector<RandomDouble> offspring1 = static_cast<Individual>(ind1);
-    GaVector<RandomDouble> offspring2 = static_cast<Individual>(ind2);
-    for (unsigned int i = 0; i < offspring1.size(); ++i) {
+  template <typename Individual>
+  static Individual CrossoverGA(const Individual &ind1,
+                                const Individual &ind2) {
+    GaVector<RandomDouble> *offspring1 = static_cast<Individual &>(ind1);
+    GaVector<RandomDouble> *offspring2 = static_cast<Individual &>(ind2);
+    for (unsigned int i = 0; i < offspring1->size(); ++i) {
       SBXCrossover::CrossoverEvolution(offspring1[i], offspring2[i], 0.5);
     }
     return offspring1;
