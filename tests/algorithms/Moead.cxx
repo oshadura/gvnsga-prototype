@@ -15,6 +15,6 @@ public:
 TEST_F(Moead, SolvingProblem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GAMOEAD<geantvmoop::DTLZ1> moead(dtlz1);
-  moead.fPopulationSize = 1;
+  moead.fPopulationSize = 10;
   moead.SolvePF();
 }
