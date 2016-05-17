@@ -66,6 +66,7 @@ if(ENABLE_GEANTV)
   include_directories(${GEANTV_INCLUDE_DIR})
   include_directories(${VECGEOM_INCLUDE_DIR})
   include_directories(${Vc_INCLUDE_DIR})
+  include_directories(${HEPMC_INCLUDE_DIR})
 endif()
 if(ENABLE_PERFMON)
   include_directories(${PerfMon_INCLUDE_DIR})
@@ -86,6 +87,8 @@ include_directories(/usr/include/libxml2/)
 include_directories(/usr/include/eigen3)
 # Mac OS X
 include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
+# Lib Instrument backward
+include_directories(${CMAKE_SOURCE_DIR}/libinstrument/inc) 
 
 #-------------------
 # Files
@@ -121,6 +124,6 @@ ROOT_GENERATE_ROOTMAP(GADict LINKDEF LinkDef.h)
 #-------------------
 
 add_library(GA SHARED ${sources} GADict.cxx)
-target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer ${})
+target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer ${GEANTV_LIBRARIES} ${VECGEOM_LIBRARIES} ${VC_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY} ${MLPACK_LIBRARY})
 set_target_properties(GA PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 install(TARGETS GA DESTINATION ${CMAKE_BINARY_DIR})

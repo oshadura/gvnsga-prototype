@@ -13,7 +13,6 @@
 #include "generic/Functions.h"
 #include "output/HistogramManager.h"
 #include "generic/TGenes.h"
-#include "algorithms/AlgorithmNSGA.h"
 #include "instrumentation/GeantVFitness.h"
 
 #ifdef ENABLE_PERFMON
@@ -33,9 +32,13 @@
 #include "ExN03Application.h"
 #include "GeantVApplication.h"
 
+#ifndef COPROCESSOR_REQUEST
+#define COPROCESSOR_REQUEST false
+#endif
+
 namespace geantvmoop {
 
-class DTLZ1 : public Functions<DTLZ1> {
+class RunGeantV : public Functions<RunGeantV> {
 
 public:
   typedef GAVector<GADouble> Input;
@@ -43,27 +46,27 @@ public:
   typedef std::vector<double> Output;
 
   static Output Evaluate(const Input &individual) {
+    // Converting values
+    std::vector<double> fFitness;
+    std::vector<double> fParameters;
+    for (auto parameter : individual)
+        fParameters.push_back(parameter.getValue());
+    // Cleanup ROOT session..
     gROOT->Reset();
-    GeantVFitness *fitness = new GeantVFitness();
 #ifdef ENABLE_PERFMON
     PFMWatch perfcontrol;
     perfcontrol.Start();
 #endif
-    // fitness->LogMemoryFitness("fitness.root");
     const char *geomfile = "ExN03.root";
     const char *xsec = "xsec_FTFP_BERT.root";
     const char *fstate = "fstate_FTFP_BERT.root";
     bool performance = true;
     bool coprocessor = COPROCESSOR_REQUEST;
-    // int nthreads = individual.GetThread(individual);
-    int nthreads = individual[0];
+    int nthreads = fParameters[0];
     printf("Debugging Run.C: thread value = %d\n", nthreads);
-    int ntotal = individual[1];
-    //    individual.GetAllev(individual); // Number of events to be transported
+    int ntotal = fParameters[1];
     printf("Debugging Run.C: all events value = %d\n", ntotal);
-    int nbuffered = individual[2];
-    // int nbuffered = individual.GetBuffev(
-    //    individual); // Number of buffered events (tunable [1,ntotal])
+    int nbuffered = fParameters[2];
     printf("Debugging Run.C: buffered particles value = %d\n", nbuffered);
     TGeoManager::Import(geomfile);
     TaskBroker *broker = nullptr;
@@ -102,13 +105,11 @@ public:
     prop->fNaverage = 500; // Average number of tracks per event
     // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
     // If set to 0 takes the default value of 0.01
-    // prop->fPriorityThr = individual.GetPriority(individual);
-    prop->fPriorityThr = individual[3];
+    prop->fPriorityThr = fParameters[3];
     printf("Debugging Run.C: priority value = %f\n", prop->fPriorityThr);
     // Initial vector size, this is no longer an important model parameter,
     // because is gets dynamically modified to accomodate the track flow
-    prop->fNperBasket = individual[4];
-    // individual.GetVector(individual); // Initial vector size (tunable)
+    prop->fNperBasket = fParameters[4];
     printf("Debugging Run.C: vector value = %d\n", prop->fNperBasket);
     // This is now the most important parameter for memory considerations
     prop->fMaxPerBasket = 256; // Maximum vector size (tunable)
@@ -128,8 +129,7 @@ public:
         new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
     // Number of steps for learning phase (tunable [0, 1e6])
     // if set to 0 disable learning phase
-    prop->fLearnSteps = individual[5];
-    // individual.GetSteps(individual);
+    prop->fLearnSteps = fParameters[5];
     printf("Debugging Run.C: learning steps value = %d\n", prop->fLearnSteps);
     if (performance)
       prop->fLearnSteps = 0;
@@ -156,32 +156,28 @@ public:
 #ifdef ENABLE_PERFMON
     perfcontrol.Stop();
 #endif
-    fitness->SetMemorySwitch(false);
-    fitness->TemporarySolution();
-    // fitness->LogMemoryFitness("fitness.root");
-    individual.SetFitness(0, prop->fTimer->RealTime());
-    individual.SetFitness(1, -(prop->fNprimaries.load()));
-    individual.SetFitness(2, fitness->LogMemoryFitness("fitness.root"));
+    fFitness.push_back(prop->fTimer->RealTime());
+    fFitness.push_back(-(prop->fNprimaries.load()));
 #ifdef ENABLE_PERFMON
-    individual.SetFitness(3, perfcontrol.GetNInstructions());
-    individual.SetFitness(4, perfcontrol.GetBranchMisses());
+    fFitness.push_back(perfcontrol.GetNInstructions());
+    fFitness.push_back(perfcontrol.GetBranchMisses());
     perfcontrol.printSummary();
 #endif
     delete prop;
-    delete fitness;
-    gROOT->GetListOfGlobals()->Delete();
-    gROOT->GetListOfGeometries()->Delete();
-    return individual.GetFitnessVector();
+    return fParameters;
   }
 
-  static InputGetInput() {
+  static Input GetInput() {
     Input vector;
     for (int i = 0; i < 6; ++i)
       vector.push_back(GADouble(0, 5));
     return vector;
   }
-
-  static Output GetOutput() { return std::vector<double>(3); }
+#ifdef ENABLE_PERFMON
+    static Output GetOutput() { return std::vector<double>(2); }
+#else
+  static Output GetOutput() { return std::vector<double>(4); }
+#endif
 };
 }
 

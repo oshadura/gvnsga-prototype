@@ -51,7 +51,7 @@ if(ENABLE_PERFMON)
   #endif()
 endif()
 #----------------------------------------------------------------------------
-option(ENABLE_GEANTV "We are using libGA already for GeantV" OFF)
+option(ENABLE_GEANTV "We are using libGA already for GeantV" ON)
 
 if(ENABLE_GEANTV)
 	find_package(GeantV)
