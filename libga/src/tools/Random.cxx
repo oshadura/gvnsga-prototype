@@ -1,16 +1,16 @@
-#include "Random.h"
+#include "tools/Random.h"
 #include <cstdlib>
 
-moo::Random *moo::Random::_singletonInst = new moo::Random();
+geantvmoop::Random *geantvmoop::Random::_singletonInst = new geantvmoop::Random();
 
-double moo::Random::rndDouble() { return ((double)std::rand() / (RAND_MAX)); }
+double geantvmoop::Random::rndDouble() { return ((double)std::rand() / (RAND_MAX)); }
 
-int moo::Random::rndInt(int min, int max) {
+int geantvmoop::Random::rndInt(int min, int max) {
   return min + (std::rand() % (int)(max - min + 1));
 }
 
-bool moo::Random::rndBool() { return rand() % 2 == 1; }
+bool geantvmoop::Random::rndBool() { return rand() % 2 == 1; }
 
-double moo::Random::rndDouble(int min, int max) {
+double geantvmoop::Random::rndDouble(int min, int max) {
   return min + (double)std::rand() / RAND_MAX * (max - min);
 }
