@@ -1,3 +1,16 @@
+//===--- ReferencePoint.h - LibGA ---------------------------------*- C++
+//-*-===//
+//
+//                     LibGA Prototype
+//
+//===----------------------------------------------------------------------===//
+/**
+ * @file ReferencePoint.h
+ * @brief Implementation of RP class for LibGA
+ * prototype
+ */
+//
+
 #ifndef __REFERENCEPOINT__
 #define __REFERENCEPOINT__
 
@@ -11,7 +24,7 @@
 
 #include "TObject.h"
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 class ReferencePoint {
 public:
@@ -41,7 +54,6 @@ private:
   std::vector<std::pair<std::size_t, Double_t>> fPossibleSolutions;
   std::size_t fMemberSize;
 };
-
 }
 
 #endif

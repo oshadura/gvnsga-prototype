@@ -1,25 +1,20 @@
 #include "GATest.h"
-#include "problem/ProblemDTLZ1.h"
+#include "problem/DTLZ1.h"
 #include "generic/Population.h"
 #include "generic/Functions.h"
 #include "generic/TGenes.h"
 #include "output/HistogramManager.h"
-#include "algorithms/MOEAD.h"
+#include "algorithms/GAMOEAD.h"
 #include "instrumentation/GeantVFitness.h"
 #include <boost/math/constants/constants.hpp>
 
-
 class Moead : public GATest {
 public:
-	geantvmoop::ProblemDTLZ1 dtlz1;
 };
 
-/*
-
 TEST_F(Moead, SolvingProblem) {
-  geantvmoop::ProblemDTLZ1 dtlz1;
-  geantvmoop::MOEAD<geantvmoop::ProblemDTLZ1> moead(dtlz1);
+  geantvmoop::DTLZ1 dtlz1;
+  geantvmoop::GAMOEAD<geantvmoop::DTLZ1> moead(dtlz1);
   moead.fPopulationSize = 1;
   moead.SolvePF();
-  }
-*/
+}

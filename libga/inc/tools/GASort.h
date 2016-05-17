@@ -1,11 +1,11 @@
-#ifndef SORT_H
-#define SORT_H
+
+
+#ifndef MOO_SORTUTIL_H
+#define MOO_SORTUTIL_H
 
 #include <vector>
 
-namespace geantvmoop{
-
-class Sort {
+class SortUtil {
 
 public:
   static std::vector<int> GetIndex(int n) {
@@ -16,6 +16,4 @@ public:
   }
 };
 
-}
-
-#endif
+#endif // MOO_SORTUTIL_H

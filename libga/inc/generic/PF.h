@@ -1,61 +1,80 @@
+//===--- PF.h - LibGA ---------------------------------*- C++
+//-*-===//
+//
+//                     LibGA Prototype
+//
+//===----------------------------------------------------------------------===//
+/**
+ * @file GaVector.h
+ * @brief Implementation of vector for LibGA
+ * prototype
+ */
+//
+
 #ifndef __PF__
 #define __PF__
 
-#include <list>
-#include <generic/Population.h>
+#include "generic/Population.h"
+#include <unordered_set>
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 template <typename F> class PF {
-
-  std::list<individual_t<F>> fFront;
+private:
+  std::list<individual_t<F>> front;
 
 public:
-  Population<F> GetPopulation() const {
-    Population<F> fResultPop;
-    for (auto ind : fFront)
-      fResultPop.push_back(ind);
-    return fResultPop;
+  Population<F> getPopulation() const {
+    Population<F> result;
+    for (auto ind : front)
+      result.push_back(ind);
+    return result;
   }
 
-  bool AddIndToPF(const individual_t<F> &ind) {
-    for (auto it = fFront.begin(); it != fFront.end();) {
+  bool add(const individual_t<F> &ind) {
+    // for every element of front
+    for (auto it = front.begin(); it != front.end();) {
+      // of one elements dominates ind -> does not belong to front
       if ((*it)->IsDominating(*ind) || (*it)->IsEqual(*ind))
         return false;
+      // else remove all elements that are dominated by ind
       if ((*it)->IsDominated(*ind))
-        fFront.erase(it++);
+        front.erase(it++);
       else
         ++it;
     }
-    fFront.push_back(ind);
+    front.push_back(ind);
     return true;
   }
 
-  static Population<F> GetPF(const Population<F> &pop) {
-    std::list<individual_t<F>> fFront;
+  static Population<F> ParetoFrontND(const Population<F> &pop) {
+    std::list<individual_t<F>> front;
     if (pop.empty())
       return Population<F>();
-    auto fFunction = [&fFront](const individual_t<F> &ind) {
-      for (auto it = fFront.begin(); it != fFront.end();) {
+    // function for adding an element to the front
+    auto func = [&front](const individual_t<F> &ind) {
+      // for every element of front
+      for (auto it = front.begin(); it != front.end();) {
+        // of one elements dominates ind -> does not belong to front
         if ((*it)->IsDominating(*ind))
           return false;
+        // else remove all elements that are dominated by ind
         if ((*it)->IsDominated(*ind))
-          fFront.erase(it++);
+          front.erase(it++);
         else
           ++it;
       }
-      fFront.push_back(ind);
+      front.push_back(ind);
       return true;
     };
     for (unsigned int i = 0; i < pop.size(); ++i)
-      fFunction(pop[i]);
-    Population<F> fResult;
-    for (auto ind : fFront)
-      fResult.push_back(ind);
-    return fResult;
+      func(pop[i]);
+    Population<F> result;
+    for (auto ind : front)
+      result.push_back(ind);
+    return result;
   }
 };
-
 }
 
 #endif

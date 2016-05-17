@@ -1,55 +1,70 @@
-#ifndef __GENES__
-#define __GENES__
+//===--- TGenes.h - LibGA ---------------------------------*- C++
+//-*-===//
+//
+//                     LibGA Prototype
+//
+//===----------------------------------------------------------------------===//
+/**
+ * @file TGenes.h
+ * @brief Implementation of TGenes for LibGA
+ * prototype
+ */
+//
+
+#ifndef __TGENES__
+#define __TGENES__
 
 #include <vector>
 #include <memory>
+#include <functional>
 
 namespace geantvmoop {
 
-template <typename F> class Genes;
-template <typename F> using individual_t = std::shared_ptr<Genes<F> >;
+template <typename F> class TGenes;
+template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
 
-template <typename F> class Genes {
+template <typename F> class TGenes {
 
 private:
-  typename F::Input fInput;
-  typename F::Output fOutput;
+  typename F::Input input;
+  typename F::Output output;
 
 public:
-  Genes() {}
-  Genes(const typename F::Input &i, bool fEvaluated = true) : fInput(i) {
-    if (fEvaluated)
+  TGenes() {}
+  TGenes(const typename F::Input &i, bool eval = true) : input(i) {
+    if (eval)
       Evaluate();
   };
-  bool IsDominating(const Genes &other) const {
+
+  bool IsDominating(const TGenes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
-      if (fOutput[i] > other.fOutput[i])
+      if (output[i] > other.output[i])
         return false;
     }
     return !IsEqual(other);
   }
 
-  bool IsDominated(const Genes &other) const {
+  bool IsDominated(const TGenes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
-      if (fOutput[i] < other.fOutput[i])
+      if (output[i] < other.output[i])
         return false;
     }
     return !IsEqual(other);
   }
 
-  bool IsEqual(const Genes &other) const {
+  bool IsEqual(const TGenes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
-      if (other.fOutput[i] != fOutput[i])
+      if (other.output[i] != output[i])
         return false;
     }
     return true;
   }
 
-  void Evaluate() { fOutput = F::Evaluate(fInput); }
+  void Evaluate() { output = F::Evaluate(input); }
 
-  const typename F::Input &GetInput() const { return fInput; }
+  const typename F::Input &GetInput() const { return input; }
 
-  const typename F::Output &GetOutput() const { return fOutput; }
+  const typename F::Output &GetOutput() const { return output; }
 };
 }
 

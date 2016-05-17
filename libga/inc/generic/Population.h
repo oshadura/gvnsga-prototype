@@ -1,120 +1,126 @@
+//===--- Population.h - LibGA ---------------------------------*- C++
+//-*-===//
+//
+//                     LibGA Prototype
+//
+//===----------------------------------------------------------------------===//
+/**
+ * @file Population.h
+ * @brief Implementation of population class for LibGA
+ * prototype
+ */
+//
+
 #ifndef __POPULATION__
 #define __POPULATION__
 
-#include "generic/TGenes.h"
-#include "tools/Generator.h"
-
+#include "TGenes.h"
 #include <vector>
-#include <memory>
-#include <algorithm>
+#include <list>
+#include <stack>
 #include <iostream>
+#include <algorithm>
 #include <unordered_map>
+#include <initializer_list>
 
 namespace geantvmoop {
 
 template <typename F> class Population : public std::vector<individual_t<F>> {
 
-  class PF;
-
 public:
-  Population(std::initializer_list<individual_t<F>> fList)
-      : std::vector<individual_t<F>>(fList) {}
-
+  Population(std::initializer_list<individual_t<F>> list)
+      : std::vector<individual_t<F>>(list) {}
   Population() : std::vector<individual_t<F>>() {}
 
-  Population(const std::vector<individual_t<F>> &inds)
-      : std::vector<individual_t<F>>(inds) {}
+  Population(const std::vector<individual_t<F>> &individuals)
+      : std::vector<individual_t<F>>(individuals) {}
 
   Population(int n) {
     for (int i = 0; i < n; ++i) {
-      typename F::Input input = F::GetInput().RandomSetup();
-      auto fInd = std::make_shared<Genes<F>>(input);
-      this->push_back(fInd);
+      typename F::Input in = F::GetInput().random();
+      auto ind = std::make_shared<TGenes<F>>(in);
+      this->push_back(ind);
     }
   }
 
-  bool IsNonDominated(const individual_t<F> &individual) const {
-    for (auto fEntry : *this) {
-      if (individual->IsDominated(*fEntry))
+  bool isNonDominated(const individual_t<F> &ind) const {
+    for (auto entry : *this) {
+      if (ind->isDominatedBy(*entry))
         return true;
     }
     return false;
   }
 
-  const individual_t<F> PopBack() {
-    individual_t<F> individual = this->back();
+  const individual_t<F> pop_back_and_delete() {
+    individual_t<F> a = this->back();
     this->pop_back();
-    return individual;
+    return a;
   }
 
-  void Remove(const Population<F> &pop) {
-    for (auto fEntry : pop) {
-      this->erase(std::remove(this->begin(), this->end(), fEntry), this->end());
+  void remove(const Population<F> &pop) {
+    for (auto entry : pop) {
+      this->erase(std::remove(this->begin(), this->end(), entry), this->end());
     }
   }
 
-  typename F::Output GetObjective(int fObjective) const {
-    typename F::Output fVector;
+  typename F::Output GetObjective(int objective) const {
+    typename F::Output v;
     for (unsigned int j = 0; j < this->size(); ++j)
-      fVector.push_back(GetValue(j, fObjective));
-    return fVector;
+      v.push_back(GetValue(j, objective));
+    return v;
   }
 
-  double GetValue(int fIndex, int fObjective) const {
-    return (*this)[fIndex]->GetOutput()[fObjective];
+  double GetValue(int index, int objective) const {
+    return (*this)[index]->GetOutput()[objective];
   }
 
   template <typename T>
-  void SortVector(const std::vector<T> &fVector, bool IsDescending = false) {
-    std::unordered_map<individual_t<F>, T> fMap;
+  void SortVector(const std::vector<T> &v, bool isDescending = false) {
+    std::unordered_map<individual_t<F>, T> m;
     for (int i = 0; i < this->size(); ++i)
-      fMap[(*this)[i]] = fVector[i];
-    SortMap(fMap, IsDescending);
+      m[(*this)[i]] = v[i];
+    SortMap(m, isDescending);
   }
 
   template <typename T>
-  void SortMap(std::unordered_map<individual_t<F>, T> &fMap,
-               bool IsDescending = false) {
-    if (IsDescending) {
+  std::vector<int> SortIndex(const std::vector<T> &v,
+                             bool isDescending = false) const {
+    std::vector<int> index = GetIndex();
+    if (isDescending) {
       std::sort(
-          this->begin(), this->end(),
-          [&fMap](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-            return fMap[lhs] > fMap[rhs];
-          });
+          index.begin(), index.end(),
+          [&v](const int &lhs, const int &rhs) { return v[lhs] > v[rhs]; });
     } else
       std::sort(
-          this->begin(), this->end(),
-          [&fMap](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-            return fMap[lhs] < fMap[rhs];
-          });
-  }
-
-  void SortObjective(int fObjective, bool IsDescending = false) {
-    SortVector(GetObjective(fObjective), IsDescending);
+          index.begin(), index.end(),
+          [&v](const int &lhs, const int &rhs) { return v[lhs] < v[rhs]; });
+    return index;
   }
 
   template <typename T>
-  std::vector<int> SortIndexVector(const std::vector<T> &fVector,
-                                   bool IsDescending = false) const {
-    std::vector<int> fIndex = GetIndex();
-    if (IsDescending) {
-      std::sort(fIndex.begin(), fIndex.end(),
-                [&fVector](const int &lhs, const int &rhs) {
-                  return fVector[lhs] > fVector[rhs];
+  void SortMap(std::unordered_map<individual_t<F>, T> &m,
+               bool isDescending = false) {
+    if (isDescending) {
+      std::sort(this->begin(), this->end(),
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] > m[rhs];
                 });
     } else
-      std::sort(fIndex.begin(), fIndex.end(),
-                [&fVector](const int &lhs, const int &rhs) {
-                  return fVector[lhs] < fVector[rhs];
+      std::sort(this->begin(), this->end(),
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] < m[rhs];
                 });
-    return fIndex;
+  }
+
+  void SortObj(int objective, bool isDescending = false) {
+    SortVec(GetObjective(objective), isDescending);
   }
 
   std::vector<int> GetIndex() const {
-    std::vector<int> fIndex(this->size());
+    std::vector<int> index(this->size());
     for (unsigned int k = 0; k < this->size(); ++k)
-      fIndex[k] = k;
-    return fIndex;
+      index[k] = k;
+    return index;
   }
 
   friend std::ostream &operator<<(std::ostream &s, const Population<F> &pop) {

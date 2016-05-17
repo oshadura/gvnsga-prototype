@@ -92,6 +92,7 @@ include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 #-------------------
 
 file(GLOB sources src/algorithms/*.cxx
+                  src/addstructures/*cxx
                   src/generic/*.cxx
                   src/instrumentation/*.cxx
                   src/mva/*.cxx

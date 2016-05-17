@@ -1,17 +1,17 @@
 #ifndef __CMAES__
 #define __CMAES__
 
-#include "generic/Algorithm.h"
+#include "generic/GAAlgorithm.h"
 #include "generic/TGenes.h"
 #include "generic/Population.h"
 #include "generic/PF.h"
 
 namespace geantvmoop {
 
-template <typename F> class CMAES : public Algorithm<CMAES<F>, F> {
+template <typename F> class CMAES : public GAAlgorithm<CMAES<F>, F> {
 
 public:
-  CMAES(F problem) : Algorithm<CMAES<F>, F>(problem) {}
+  CMAES(F problem) : GAAlgorithm<CMAES<F>, F>(problem) {}
 
   void Initialize() {}
 

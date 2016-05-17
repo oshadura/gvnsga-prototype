@@ -4,30 +4,25 @@
 #include "generic/TGenes.h"
 #include "generic/Population.h"
 #include "generic/Functions.h"
-#include "generic/GaVector.h"
-#include "generic/RandomDouble.h"
-
+#include "generic/GAVector.h"
+#include "generic/GADouble.h"
 #include "output/HistogramManager.h"
-
-#include "algorithms/NSGA.h"
-
+#include "algorithms/GANSGA2.h"
 #include "instrumentation/GeantVFitness.h"
-
 #include <boost/math/constants/constants.hpp>
 
 #include <cmath>
 #include <utility>
 
-namespace geantvmoop{
+namespace geantvmoop {
 
-class ProblemDTLZ1 : public Functions<ProblemDTLZ1> {
+class DTLZ1 : public Functions<DTLZ1> {
 
 public:
-
-  typedef GaVector<RandomDouble> Input;
+  typedef GAVector<GADouble> Input;
 
   typedef std::vector<double> Output;
-  
+
   // constexpr static const double pi =
   // static_cast<double>(boost::math::constants::pi<double>());
 
@@ -38,7 +33,7 @@ public:
     std::vector<double> fFitness;
     std::vector<double> fParameters;
     for (auto parameter : individual)
-      fParameters.push_back(parameter.GetValue());
+      fParameters.push_back(parameter.getValue());
     int n = 7;
     int m = 3;
     Int_t k = n - m + 1; // 5
@@ -66,13 +61,12 @@ public:
   static Input GetInput() {
     Input vector;
     for (int i = 0; i < 3; ++i)
-      vector.push_back(RandomDouble(-5, 5));
+      vector.push_back(GADouble(-5, 5));
     return vector;
   }
 
   static Output GetOutput() { return std::vector<double>(3); }
 };
-
 }
 
 #endif
