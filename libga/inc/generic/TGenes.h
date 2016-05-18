@@ -31,8 +31,8 @@ private:
 
 public:
   TGenes() {}
-  TGenes(const typename F::Input &i, bool eval = true) : input(i) {
-    if (eval)
+  TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
+    if (fEvaluated)
       Evaluate();
   };
 

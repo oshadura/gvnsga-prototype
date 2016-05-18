@@ -8,9 +8,9 @@ namespace geantvmoop{
 template <typename Derived> class NoiseCleanup {
 
 public:
-  template <typename T>
-  void NoiseCleanup(const Population<T> &population1, const Population<T> &population2) {
-    Derived::NoiseCleanup(population1, population2);
+  template <typename F>
+  Population<F> NoiseCleanup(const Population<T> &population) {
+    Derived::NoiseCleanupImpl(population);
   }
 };
 
