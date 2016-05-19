@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
-#project(libga)
+project(libga)
 #-------------------
 # Requirements
 #-------------------
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+#-------------------
 find_package(ROOT REQUIRED)
 include(${ROOT_USE_FILE})
 # Dependency for MVA
@@ -83,6 +84,11 @@ if(Eigen_FOUND)
   include_directories(${EIGEN3_INCLUDE_DIR})
 endif()
 # Temporary solution - cmake MLPACK & Eigen3 doesnt work..
+if(LIBCMAES_FOUND)
+  include_directories(${LIBCMAES_INCLUDE_DIR})
+endif()
+
+#--------------------------------------------------
 include_directories(/usr/include/libxml2/)
 include_directories(/usr/include/eigen3)
 # Mac OS X

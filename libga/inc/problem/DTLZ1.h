@@ -33,7 +33,7 @@ public:
     std::vector<double> fFitness;
     std::vector<double> fParameters;
     for (auto parameter : individual)
-      fParameters.push_back(parameter.getValue());
+      fParameters.push_back(parameter.GetGAValue());
     int n = 7;
     int m = 3;
     Int_t k = n - m + 1; // 5
@@ -61,7 +61,7 @@ public:
   static Input GetInput() {
     Input vector;
     for (int i = 0; i < 3; ++i)
-      vector.push_back(GADouble(-5, 5));
+      vector.push_back(GADouble(1, 5));
     return vector;
   }
 

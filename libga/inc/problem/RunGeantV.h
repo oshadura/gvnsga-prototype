@@ -2,6 +2,7 @@
 #define __RUNGEANTV__
 
 #include <cmath>
+#include <utility>
 #include <iostream>  // std::cout
 #include <iterator>  // std::ostream_iterator
 #include <vector>    // std::vector
@@ -14,6 +15,18 @@
 #include "output/HistogramManager.h"
 #include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
+#include "generic/TGenes.h"
+#include "generic/Population.h"
+#include "generic/Functions.h"
+#include "generic/GAVector.h"
+#include "generic/GADouble.h"
+#include "output/HistogramManager.h"
+#include "algorithms/GANSGA2.h"
+#include "instrumentation/GeantVFitness.h"
+#include <boost/math/constants/constants.hpp>
+
+#include <cmath>
+#include <utility>
 
 #ifdef ENABLE_PERFMON
 #include "PFMWatch.h"
@@ -50,9 +63,7 @@ public:
     std::vector<double> fFitness;
     std::vector<double> fParameters;
     for (auto parameter : individual)
-        fParameters.push_back(parameter.getValue());
-    // Cleanup ROOT session..
-    gROOT->Reset();
+        fParameters.push_back(parameter.GetGAValue());
 #ifdef ENABLE_PERFMON
     PFMWatch perfcontrol;
     perfcontrol.Start();
@@ -170,11 +181,11 @@ public:
   static Input GetInput() {
     Input vector;
     for (int i = 0; i < 6; ++i)
-      vector.push_back(GADouble(0, 5));
+      vector.push_back(GADouble(1, 5));
     return vector;
   }
 #ifdef ENABLE_PERFMON
-    static Output GetOutput() { return std::vector<double>(2); }
+  static Output GetOutput() { return std::vector<double>(2); }
 #else
   static Output GetOutput() { return std::vector<double>(4); }
 #endif

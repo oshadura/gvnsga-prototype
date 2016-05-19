@@ -19,7 +19,7 @@
 
 namespace geantvmoop {
 
-template <typename Type> class GAConstrainedValue : public Variable<Type> {
+template <typename Type> class GAConstrainedValue : public GAValue<Type> {
 
 protected:
   Type fDown;
@@ -29,8 +29,9 @@ public:
   GAConstrainedValue() {}
   GAConstrainedValue(Type d, Type u) : fDown(d), fUp(u){};
   GAConstrainedValue(Type v, Type d, Type u)
-      : Variable<Type>(v), fDown(d), fUp(u){};
-
+      : GAValue<Type>(v), fDown(d), fUp(u){};
+  ~GAConstrainedValue(){}
+  
   virtual void setValue(const Type &value) {
     if (value < fDown || value > fUp)
       throw std::runtime_error("Boundary Exception.");

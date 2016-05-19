@@ -30,7 +30,7 @@
 
 namespace geantvmoop {
 
-template <typename F> class NSGA3 : public GAAlgorithm<NSGA3<F>, F> {
+template <typename F> class GANSGA3 : public GAAlgorithm<GANSGA3<F>, F> {
 
 private:
   Population<F> population;

@@ -1,3 +1,11 @@
+# - Locate HepMC library
+# Defines:
+#
+#  HEPMC_FOUND
+#  HEPMC_INCLUDE_DIR
+#  HEPMC_INCLUDE_DIRS (not cached)
+#  HEPMC_LIBRARIES
+
 if ($ENV{LIBCMAES_ROOT_DIR})
   set(LIBCMAES_ROOT_DIR $ENV{LIBCMAES_ROOT_DIR})
 endif()
@@ -21,4 +29,4 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Libcmaes DEFAULT_MSG LIBCMAES_INCLUDE_DIR LIBCMAES_LIBRARIES )
 
 # show the LIBCMAES_INCLUDE_DIR and LIBCMAES_LIBRARIES variables only in the advanced view
-mark_as_advanced(LIBCMAES_INCLUDE_DIR LIBCMAES_LIBRARIES)
+mark_as_advanced(LIBCMAES_FOUND LIBCMAES_INCLUDE_DIR LIBCMAES_LIBRARIES)

@@ -37,8 +37,8 @@ public:
   static void GeneticCrossover(GADouble &a, GADouble &b,
                                double distributionIndex) {
 
-    double x0 = a.getValue();
-    double x1 = b.getValue();
+    double x0 = a.GetGAValue();
+    double x1 = b.GetGAValue();
     double dx = fabs(x1 - x0);
     double lb = a.GetDownLimit();
     double ub = b.GetUpLimit();
@@ -105,8 +105,8 @@ public:
     // this makes PISA's SBX compatible with other implementations
     // which swap the values
     if (Random::getInstance()->rndBool()) {
-      double temp = a.getValue();
-      a.setValue(b.getValue());
+      double temp = a.GetGAValue();
+      a.setValue(b.GetGAValue());
       b.setValue(temp);
     }
   }

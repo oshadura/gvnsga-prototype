@@ -1,8 +1,8 @@
-project(gagtests)
 include(ExternalProject)
 
 ExternalProject_Add(googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
+    TIMEOUT 10
     CMAKE_ARGS -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=DebugLibs
                -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE:PATH=ReleaseLibs
                -Dgtest_force_shared_crt=ON
@@ -13,7 +13,6 @@ ExternalProject_Add(googletest
     LOG_CONFIGURE ON
     LOG_BUILD ON
 )
-
 
 #-------------------
 # Specify includes
@@ -38,9 +37,19 @@ set(GMOCK_LIBS_DIR ${binary_dir}/googlemock/)
 include_directories(${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS})
 include_directories(inc)
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
+include_directories(${CMAKE_SOURCE_DIR}/libinstrument/inc)
+
+# Linux
 include_directories(/usr/include/eigen3)
 # Mac OS X
 include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
+
+if(ENABLE_GEANTV)
+  include_directories(${GEANTV_INCLUDE_DIR})
+  include_directories(${VECGEOM_INCLUDE_DIR})
+  include_directories(${Vc_INCLUDE_DIR})
+  include_directories(${HEPMC_INCLUDE_DIR})
+endif()
 
 #-------------------
 # Setting up Ctest also
@@ -66,7 +75,7 @@ if(APPLE)
           # Fix this
           ${MLPACK_LIBRARY}
           )
-elseif(UNIX)
+elseif()
   target_link_libraries(gagtests
           ${GTEST_LIBS_DIR}/libgtest.a
           ${GTEST_LIBS_DIR}/libgtest_main.a

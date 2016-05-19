@@ -29,6 +29,8 @@ public:
 
   GAAlgorithm(F problem) : problem(problem) {}
 
+  ~GAAlgorithm(){}
+
   virtual PF<F> SolvePF() {
     Initialize();
     for (int i = 0; i < fMaxGeneration; ++i) {

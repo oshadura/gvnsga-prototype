@@ -42,6 +42,8 @@ public:
       this->push_back(ind);
     }
   }
+  
+  ~Population(){}
 
   bool isNonDominated(const individual_t<F> &ind) const {
     for (auto entry : *this) {
@@ -66,11 +68,11 @@ public:
   typename F::Output GetObjective(int objective) const {
     typename F::Output v;
     for (unsigned int j = 0; j < this->size(); ++j)
-      v.push_back(GetValue(j, objective));
+      v.push_back(GetGAValue(j, objective));
     return v;
   }
 
-  double GetValue(int index, int objective) const {
+  double GetGAValue(int index, int objective) const {
     return (*this)[index]->GetOutput()[objective];
   }
 

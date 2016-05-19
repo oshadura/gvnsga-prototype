@@ -23,7 +23,7 @@ template <typename Type> class GAVector : public std::vector<Type> {
 public:
   GAVector() : std::vector<Type>() {}
   GAVector(int n, const Type &val) : std::vector<Type>(n, val) {}
-
+  ~GAVector(){}
   GAVector random() const {
     GAVector result;
     for (auto value : *this) {

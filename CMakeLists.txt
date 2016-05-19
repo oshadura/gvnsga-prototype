@@ -15,15 +15,17 @@ message(STATUS "${CMAKE_BUILD_TYPE}: ${CMAKE_C_FLAGS_RELWITHDEBINFO}")
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
 
+#----------------------------------------------------------------------------
+
 find_package(ROOT REQUIRED)
 include(${ROOT_USE_FILE})
 
 #----------------------------------------------------------------------------
-# export OMP_NUM_THREADS=1
+# BASH: export OMP_NUM_THREADS=1
 option(ENABLE_OPENMP "Adding OpenMP support" OFF)
 find_package(OpenMP)
 if(OPENMP_FOUND)
-  #set(GVNSGA_COMPILATION_FLAGS " ${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_OPENMP")
+  set(GVNSGA_COMPILATION_FLAGS " ${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_OPENMP")
   set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
@@ -42,20 +44,13 @@ if(BOOST_FOUND)
 endif()
 
 #----------------------------------------------------------------------------
-option(ENABLE_PERFMON "Adding PerfMon support" OFF)
-
-if(ENABLE_PERFMON)
-  #find_package(PerfMon)
-  #f(PERFMON_FOUND)
-    set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_PERFMON")
-  #endif()
-endif()
-#----------------------------------------------------------------------------
 option(ENABLE_GEANTV "We are using libGA already for GeantV" ON)
 
 if(ENABLE_GEANTV)
 	find_package(GeantV)
 	if(GeantV_FOUND)
+      message(STATUS "GEANTV_INCLUDE_DIR is ${GEANTV_INCLUDE_DIR}")
+      message(STATUS "GEANTV_LIBRARIES is ${GEANTV_LIBRARIES}")
   		set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_GEANTV")
   		set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${GEANTV_CXX_FLAGS}")
 	endif()
@@ -82,7 +77,9 @@ option(ENABLE_VECGEOM "If we are using libGA already with VecGeom" OFF)
 if(ENABLE_VECGEOM)
 	find_package(VecGeom)
 	if(VecGeom_FOUND)
-  		set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_VECGEOM")
+      message(STATUS "VECGEOM_LIBRARIES is ${VECGEOM_LIBRARIES}")
+      message(STATUS "VECGEOM_INCLUDE_DIR is ${VECGEOM_INCLUDE_DIR}")
+    	set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_VECGEOM")
   		set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${VECGEOM_CXX_FLAGS}")
 	endif()
 endif()
@@ -114,8 +111,8 @@ endif()
 option(ENABLE_MLPACK "If we are using libGA already with MLPACK" OFF)
 
 if(ENABLE_MLPACK)
-  #find_package(Armadillo)
-  #find_package(MLPACK)
+  find_package(Armadillo)
+  find_package(MLPACK)
   if(MLPACK_FOUND)
       set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_MLPACK")
       set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${MLPACK_CXX_FLAGS}")
@@ -125,11 +122,27 @@ endif()
 option(ENABLE_CMAES "If we are using libGA already with libcmaes" OFF)
 
 if(ENABLE_CMAES)
-  #find_package(Libcmaes)
-  #if(CMAES_FOUND)
+  # Stupid idea..
+  # set(CMAKE_MODULE_PATH  ${CMAKE_SOURCE_DIR}/cmake/modules/)
+  find_package(Libcmaes)
+  if(LIBCMAES_FOUND)
+      message(STATUS "LIBCMAES_LIBRARIES is ${LIBCMAES_LIBRARIES}")
+      message(STATUS "LIBCMAES_INCLUDE_DIR is ${LIBCMAES_INCLUDE_DIR}")
       set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_CMAES")
       set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${CMAES_CXX_FLAGS}")
-  #endif()
+  endif()
+endif()
+
+#----------------------------------------------------------------------------
+option(ENABLE_PERFMON "Adding PerfMon support" OFF)
+
+if(ENABLE_PERFMON)
+  find_package(PerfMon)
+  if(PERFMON_FOUND)
+    set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_PERFMON")
+    message(STATUS "PerfMon_LIBRARY is ${PerfMon_LIBRARY}")
+    message(STATUS "PerfMon_INCLUDE_DIR is ${PerfMon_INCLUDE_DIR}")
+  endif()
 endif()
 
 #----------------------------------------------------------------------------
