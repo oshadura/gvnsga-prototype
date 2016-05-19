@@ -73,6 +73,16 @@ if(APPLE)
           GA
           Instrument
           # Fix this
+          ${ROOT_LIBRARIES}
+          Hist
+          RIO
+          Tree
+          Gui
+          Geom
+          ${GEANTV_LIBRARIES}
+          ${VECGEOM_LIBRARIES}
+          ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
+          ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
           ${MLPACK_LIBRARY}
           )
 elseif()
@@ -84,6 +94,16 @@ elseif()
           GA
           Instrument
           # Fix this
+          ${ROOT_LIBRARIES}
+          Hist
+          RIO
+          Tree
+          Gui
+          Geom
+          ${GEANTV_LIBRARIES}
+          ${VECGEOM_LIBRARIES}
+          ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
+          ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
           ${MLPACK_LIBRARY}
           )
 endif()

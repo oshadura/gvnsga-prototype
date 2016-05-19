@@ -38,7 +38,7 @@ private:
 
 public:
   GANSGA2(F problem) : GAAlgorithm<GANSGA2<F>, F>(problem) {}
-  int fPopulationSize = 1000;
+  int fPopulationSize = 8;
   double PMut = 0.2;
 
   void Initialize() {
