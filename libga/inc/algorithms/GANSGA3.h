@@ -42,13 +42,13 @@ public:
   int fPopulationSize = 1000;
   double PMut = 0.2;
 
-  void Initialize() {
+  void InitializeImpl() {
     population = Population<F>{fPopulationSize};
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
   }
 
-  void Evolution() {
+  void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
     GATournamentSelection<GAComparator<F>> selector(cmp);
     Population<F> matingPool =
@@ -70,13 +70,13 @@ public:
     population = next;
   }
 
-  void Print(std::ostream &os) {
+  void PrintImpl(std::ostream &os) {
     auto last = population[population.size() - 1];
     os << "Pareto front: " << fIndRank[last] << " | worst crowding: ";
     os << fIndCrowDist[last] << std::endl;
   }
 
-  PF<F> GetParetoFront() {
+  PF<F> GetParetoFrontImpl() {
     PF<F> fFront;
     for (unsigned int i = 0; i < population.size(); ++i)
       fFront.add(population[i]);

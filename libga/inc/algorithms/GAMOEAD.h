@@ -43,7 +43,7 @@ public:
 
   GAMOEAD(F problem) : GAAlgorithm<GAMOEAD<F>, F>(problem) {}
 
-  void Initialize() {
+  void InitializeImpl() {
     fWeights = Weights::GetWeights(fPopulationSize);
     fPopulationSize = fWeights.size();
     std::cout << fPopulationSize << std::endl;
@@ -63,7 +63,7 @@ public:
     return Random::getInstance()->rndInt(0, v.size());
   }
 
-  void Evolution() {
+  void EvolutionImpl() {
     fCounter = 0;
     for (int i = 0; i < pop.size(); ++i) {
       auto a = pop[fNearest[i][RandomVectorIndex(fNearest[i])]];
@@ -85,9 +85,9 @@ public:
     }
   }
 
-  void Print(std::ostream &os) { os << fCounter << std::endl; }
+  void PrintImpl(std::ostream &os) { os << fCounter << std::endl; }
 
-  PF<F> GetParetoFront() { return fFront; }
+  PF<F> GetParetoFrontImpl() { return fFront; }
 
   ////////////////////////////////////
 

@@ -13,9 +13,3 @@ public:
       std::make_shared<geantvmoop::TGenes<geantvmoop::DTLZ1>>(
           SBXInput{3, geantvmoop::GADouble(0, 0, 10000)});
 };
-
-/*
-TEST_F(CrossoverSBXTest, SBX){
-        ASSERT_NO_THROW(geantvmoop::SBXCrossover::CrossoverGA(fIndividual1,fIndividual2));
-}
-*/

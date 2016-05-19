@@ -33,15 +33,6 @@ if(Boost_FOUND)
 endif()
 
 #----------------------------------------------------------------------------
-
-message(STATUS "GEANTV_INCLUDE_DIR is ${GEANTV_INCLUDE_DIR}")
-message(STATUS "GEANTV_LIBRARIES is ${GEANTV_LIBRARIES}")
-message(STATUS "VECGEOM_LIBRARIES is ${VECGEOM_LIBRARIES}")
-message(STATUS "VECGEOM_INCLUDE_DIR is ${VECGEOM_INCLUDE_DIR}")
-message(STATUS "PerfMon_LIBRARY is ${PerfMon_LIBRARY}")
-message(STATUS "PerfMon_INCLUDE_DIR is ${PerfMon_INCLUDE_DIR}")
-
-#----------------------------------------------------------------------------
 macro(build_executables EXECUTABLES)
   foreach(EXECUTABLE ${EXECUTABLES})
     get_filename_component(TARGET_NAME ${EXECUTABLE} NAME_WE)

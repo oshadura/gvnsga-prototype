@@ -28,7 +28,7 @@ template <typename F> class CMAES : public GAAlgorithm<CMAES<F>, F> {
 public:
   CMAES(F problem) : GAAlgorithm<CMAES<F>, F>(problem) {}
 
-  void Initialize() {
+  void InitializeImpl() {
     int dim = 20; // problem dimensions.
     std::vector<double> x0(dim, 1.0);
     double sigma = 0.1;
@@ -54,11 +54,11 @@ public:
   };
   /////////////////////////////
 
-  void Evolution() {/*Nothing to do*/}
+  void EvolutionImpl() {/*Nothing to do*/}
 
-  void Print(std::ostream &os) { os << fGen << std::endl; }
+  void PrintImpl(std::ostream &os) { os << fGen << std::endl; }
 
-  PF<F> GetParetoFront() {/* Nothing to do*/}
+  PF<F> GetParetoFrontImpl() {/* Nothing to do*/}
 
 private:
   Population<F> pop;

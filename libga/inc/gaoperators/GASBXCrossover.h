@@ -89,25 +89,25 @@ public:
     }
     // guard against out-of-bounds values
     if (aValue < lb) {
-      a.setValue(lb);
+      a.SetGAValue(lb);
     } else if (aValue > ub) {
-      a.setValue(ub);
+      a.SetGAValue(ub);
     } else {
-      a.setValue(aValue);
+      a.SetGAValue(aValue);
     }
     if (bValue < lb) {
-      b.setValue(lb);
+      b.SetGAValue(lb);
     } else if (bValue > ub) {
-      b.setValue(ub);
+      b.SetGAValue(ub);
     } else {
-      b.setValue(bValue);
+      b.SetGAValue(bValue);
     }
     // this makes PISA's SBX compatible with other implementations
     // which swap the values
     if (Random::getInstance()->rndBool()) {
       double temp = a.GetGAValue();
-      a.setValue(b.GetGAValue());
-      b.setValue(temp);
+      a.SetGAValue(b.GetGAValue());
+      b.SetGAValue(temp);
     }
   }
 };

@@ -59,7 +59,7 @@ public:
     return a;
   }
 
-  void remove(const Population<F> &pop) {
+  void Remove(const Population<F> &pop) {
     for (auto entry : pop) {
       this->erase(std::remove(this->begin(), this->end(), entry), this->end());
     }

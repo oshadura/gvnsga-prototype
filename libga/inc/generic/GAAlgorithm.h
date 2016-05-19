@@ -25,6 +25,7 @@ private:
   F problem;
 
 public:
+  
   int fMaxGeneration = 100;
 
   GAAlgorithm(F problem) : problem(problem) {}
@@ -43,16 +44,16 @@ public:
 
   void SetProblem(F problem) { this->problem = problem; }
 
-  void Evolution() { return static_cast<Derived *>(this)->Evolution(); }
+  void Evolution() { return static_cast<Derived *>(this)->EvolutionImpl(); }
 
-  void Initialize() { return static_cast<Derived *>(this)->Initialize(); }
+  void Initialize() { return static_cast<Derived *>(this)->InitializeImpl(); }
 
   void Print(std::ostream &os) {
-    return static_cast<Derived *>(this)->Print(os);
+    return static_cast<Derived *>(this)->PrintImpl(os);
   }
 
   PF<F> GetParetoFront() {
-    return static_cast<Derived *>(this)->GetParetoFront();
+    return static_cast<Derived *>(this)->GetParetoFrontImpl();
   }
 };
 }

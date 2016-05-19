@@ -85,7 +85,7 @@ if(APPLE)
           ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
           ${MLPACK_LIBRARY}
           )
-elseif()
+elseif(UNIX)
   target_link_libraries(gagtests
           ${GTEST_LIBS_DIR}/libgtest.a
           ${GTEST_LIBS_DIR}/libgtest_main.a
