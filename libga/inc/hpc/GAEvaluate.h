@@ -25,7 +25,6 @@ template <typename Derived> class GAEvaluate {
 public:
 
   //void Evaluate() { output = F::Evaluate(input); }
-
   template <typename F> static void GAEvaluate() {
     typename F::Input individual = Derived::GAEvaluateImpl();
     return std::make_shared<geantvmoop::TGenes<F>>(individual);

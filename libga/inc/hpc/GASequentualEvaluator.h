@@ -90,3 +90,6 @@ public:
     fArrayDead[fNumberChildren] = 0;
     return fOutput;
   }
+};
+
+}
