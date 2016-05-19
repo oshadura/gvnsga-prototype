@@ -97,6 +97,19 @@ if(ENABLE_VC)
   		set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${VC_CXX_FLAGS}")
 		endif()
 endif()
+
+#----------------------------------------------------------------------------
+
+option(ENABLE_HEPMC "If we are using libGA already with HepMC3" ON)
+
+if(ENABLE_HEPMC)
+	find_package(HepMC)
+	if(HepMC_FOUND)
+  		set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_HEPMC")
+  		set(GA_CXX_FLAGS "${GA_CXX_FLAGS} ${HepMC3_CXX_FLAGS}")
+		endif()
+endif()
+
 #----------------------------------------------------------------------------
 option(ENABLE_MLPACK "If we are using libGA already with MLPACK" OFF)
 

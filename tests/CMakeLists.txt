@@ -55,17 +55,29 @@ enable_testing()
 file(GLOB_RECURSE TEST_FILES "*.cxx")
 add_executable(gagtests ${TEST_FILES})
 
-
-target_link_libraries(gagtests
-        ${GTEST_LIBS_DIR}/libgtest.a
-        ${GTEST_LIBS_DIR}/libgtest_main.a
-        ${GMOCK_LIBS_DIR}/libgmock.a
-        ${GMOCK_LIBS_DIR}/libgmock_main.a
-        GA
-        #Instrument
-        # Fix this
-        ${MLPACK_LIBRARY}
-        )
+if(APPLE)
+  target_link_libraries(gagtests
+          /usr/local/lib/libgtest.a
+          /usr/local/lib/libgtest_main.a
+          /usr/local/lib/libgmock.a
+          /usr/local/lib/libgmock_main.a
+          GA
+          Instrument
+          # Fix this
+          ${MLPACK_LIBRARY}
+          )
+elseif(UNIX)
+  target_link_libraries(gagtests
+          ${GTEST_LIBS_DIR}/libgtest.a
+          ${GTEST_LIBS_DIR}/libgtest_main.a
+          ${GMOCK_LIBS_DIR}/libgmock.a
+          ${GMOCK_LIBS_DIR}/libgmock_main.a
+          GA
+          Instrument
+          # Fix this
+          ${MLPACK_LIBRARY}
+          )
+endif()
 
 add_test(gagtests gagtests)
 install(TARGETS gagtests DESTINATION ${CMAKE_BINARY_DIR})

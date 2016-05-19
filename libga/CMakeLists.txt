@@ -88,7 +88,7 @@ include_directories(/usr/include/eigen3)
 # Mac OS X
 include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 # Lib Instrument backward
-include_directories(${CMAKE_SOURCE_DIR}/libinstrument/inc) 
+include_directories(${CMAKE_SOURCE_DIR}/libinstrument/inc)
 
 #-------------------
 # Files
