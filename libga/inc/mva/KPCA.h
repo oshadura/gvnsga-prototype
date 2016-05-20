@@ -8,7 +8,7 @@
 
 #include "PCA.h"
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 using namespace Eigen;
 
@@ -23,7 +23,7 @@ public:
         constant(1.0), order(2.0) {
     X = d;
   }
-  virtual ~KPCA(){}
+  virtual ~KPCA() {}
   void LoadData(const char *data, char sep = ',');
   template <typename F> void UploadPopulation(Population<F> &pop);
   template <typename F> void LoadUpdatedPopulation(Population<F> &pop);
@@ -51,10 +51,7 @@ public:
   void WriteTransformed(std::string);
   void WriteEigenvectors(std::string);
 
-  template <typename F>
-  Population<F> MVAImpl(Population<F> &pop){
-    
-  }
+  template <typename F> Population<F> MVAImpl(Population<F> &pop) {}
 
 private:
   double Kernel(const VectorXd &a, const VectorXd &b);
@@ -63,7 +60,6 @@ private:
   unsigned int components, kernel_type, normalise;
   double gamma, constant, order;
 };
-
 }
 
 #endif
