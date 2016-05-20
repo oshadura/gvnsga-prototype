@@ -29,10 +29,6 @@ public:
     for (auto value : *this) {
       result.push_back(value.random());
     }
-    std::cout << "Vector ";
-    for (auto i: result)
-      std::cout << i << ' ';
-    std::cout << ' ' << std::endl;
     return result;
   }
 };

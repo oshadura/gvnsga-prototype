@@ -34,8 +34,9 @@ template <typename F> class GANSGA3 : public GAAlgorithm<GANSGA3<F>, F> {
 
 private:
   Population<F> population;
-  std::unordered_map<individual_t<F>, double> fIndCrowDist;
-  std::unordered_map<individual_t<F>, int> fIndRank;
+  //std::unordered_map<individual_t<F>, double> fIndCrowDist;
+  //std::unordered_map<individual_t<F>, int> fIndRank;
+  std::vector<ReferencePoint> fReference;
 
 public:
   GANSGA3(F problem) : GAAlgorithm<GANSGA3<F>, F>(problem) {}
@@ -44,11 +45,14 @@ public:
 
   void InitializeImpl() {
     population = Population<F>{fPopulationSize};
-    fIndCrowDist = GACD::CalculateIndicator(population);
-    fIndRank = GANDRank::CalculateIndicator(population);
+    //Stupid solution only for DTLZ1!
+    GenerateRP(&fReference, 3, 4);
+    //fIndCrowDist = GACD::CalculateIndicator(population);
+    //fIndRank = GANDRank::CalculateIndicator(population);
   }
 
   void EvolutionImpl() {
+    /*
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
     GATournamentSelection<GAComparator<F>> selector(cmp);
     Population<F> matingPool =
@@ -68,12 +72,15 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
+    */
   }
 
   void PrintImpl(std::ostream &os) {
+    /*
     auto last = population[population.size() - 1];
     os << "Pareto front: " << fIndRank[last] << " | worst crowding: ";
     os << fIndCrowDist[last] << std::endl;
+    */
   }
 
   PF<F> GetParetoFrontImpl() {

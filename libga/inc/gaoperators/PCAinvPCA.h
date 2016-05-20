@@ -12,18 +12,22 @@ public:
   template <typename F>
   Population<F> NoiseReductionImpl(const Population<F> &population) {
     Population<F> result;
-
-
+    CovAnalisys();
+    // if enough variance level go ahead..
+    PCA();
+    InversePCA();
     return result;
   }
 
   template <typename F> void CovAnalisys(){}
 
-  template <typename F> void PCA(){}
+  template <typename F> void PCA(){
+  // Distribution is normal then -> MVA::LPCA() else -> MVA::KPCA()
+}
 
-  template <typename F> void InversePCA(){}
-
-  template <typename F> void ReEvaluation(){}
+  template <typename F> void InversePCA(){
+	
+}
 
 };
 }

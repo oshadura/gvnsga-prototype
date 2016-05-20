@@ -31,9 +31,17 @@ public:
 
   static Output Evaluate(const Input &individual) {
     std::vector<double> fFitness;
+    fFitness.reserve(individual.size());
     std::vector<double> fParameters;
+    fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
+    ////
+    std::cout << "Vector input for evaluation function: ";
+    for (auto i: fParameters)
+      std::cout << i << ' ';
+    std::cout << ' ' << std::endl;
+    ///
     int n = 7;
     int m = 3;
     Int_t k = n - m + 1; // 5

@@ -65,6 +65,7 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
+    std::cout << "Moving to next generation.."<<std::endl;
   }
 
   void PrintImpl(std::ostream &os) {

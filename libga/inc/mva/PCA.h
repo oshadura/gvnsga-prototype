@@ -3,17 +3,14 @@
 
 #include "generic/Population.h"
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 template <typename DerivedClass> class PCA {
 public:
-
-	template <typename F> Population<F> MVA(const Population<F> &population) {
-            return static_cast<DerivedClass*>(this)->MVA(population);
-        }
-
+  template <typename F> Population<F> MVA(const Population<F> &population) {
+    return static_cast<DerivedClass *>(this)->MVAImpl(population);
+  }
 };
-
 }
 
 #endif

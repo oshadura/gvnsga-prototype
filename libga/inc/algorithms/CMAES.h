@@ -64,8 +64,6 @@ private:
   Population<F> pop;
 
   PF<F> fFront;
-
-  int fGen;
 };
 }
 

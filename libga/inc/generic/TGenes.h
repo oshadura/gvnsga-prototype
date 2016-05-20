@@ -31,11 +31,14 @@ private:
 
 public:
   TGenes() {}
+
   TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
     if (fEvaluated)
       Evaluate();
   };
+
   ~TGenes(){}
+  
   bool IsDominating(const TGenes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
       if (output[i] > other.output[i])

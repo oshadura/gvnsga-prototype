@@ -51,6 +51,11 @@ public:
   void WriteTransformed(std::string);
   void WriteEigenvectors(std::string);
 
+  template <typename F>
+  Population<F> MVAImpl(Population<F> &pop){
+    
+  }
+
 private:
   double Kernel(const VectorXd &a, const VectorXd &b);
   MatrixXd X, Xcentered, C, K, eigenvectors, transformed;

@@ -28,7 +28,7 @@ namespace geantvmoop {
 template <typename F> class GAMOEAD : public GAAlgorithm<GAMOEAD<F>, F> {
 private:
   std::vector<Weights> fWeights;
-  std::vector<std::vector<int>> fNearest;
+  std::vector<std::vector<int> > fNearest;
   std::vector<double> fRefPoint;
   Population<F> pop;
   std::vector<double> fFitness;
@@ -38,7 +38,7 @@ private:
   int fCounter = 0;
 
 public:
-  int fPopulationSize = 1000;
+  int fPopulationSize = 10;
   int T = 5;
 
   GAMOEAD(F problem) : GAAlgorithm<GAMOEAD<F>, F>(problem) {}
@@ -51,7 +51,7 @@ public:
       throw std::runtime_error("Please set T lower than population size!");
     for (auto w : fWeights)
       fNearest.push_back(w.GetNearestNeighbor(fWeights, T));
-    pop = Population<F>{fPopulationSize};
+    pop = Population<F>{ fPopulationSize };
     fRefPoint = GetRP(pop);
     fFitness = std::vector<double>(fPopulationSize,
                                    std::numeric_limits<double>::max());
@@ -83,6 +83,7 @@ public:
       }
       fFront.add(offspring);
     }
+  std::cout << "Moving to next generation.." << std::endl;
   }
 
   void PrintImpl(std::ostream &os) { os << fCounter << std::endl; }

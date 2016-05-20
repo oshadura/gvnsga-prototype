@@ -28,8 +28,9 @@ namespace geantvmoop {
 template <typename F> class Population : public std::vector<individual_t<F>> {
 
 public:
-  Population(std::initializer_list<individual_t<F>> list)
-      : std::vector<individual_t<F>>(list) {}
+  //Population(std::initializer_list<individual_t<F>> list)
+  //    : std::vector<individual_t<F>>(list) {}
+
   Population() : std::vector<individual_t<F>>() {}
 
   Population(const std::vector<individual_t<F>> &individuals)
@@ -37,9 +38,9 @@ public:
 
   Population(int n) {
     for (int i = 0; i < n; ++i) {
-      typename F::Input in = F::GetInput().random();
-      auto ind = std::make_shared<TGenes<F>>(in);
-      this->push_back(ind);
+      typename F::Input gene = F::GetInput().random();
+      auto individual = std::make_shared<TGenes<F>>(gene);
+      this->push_back(individual);
     }
   }
   

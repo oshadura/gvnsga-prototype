@@ -14,24 +14,19 @@ class SequentualEvaluator : public GAEvaluate<SequentualEvaluator> {
 public:
   // void Evaluate() { output = F::Evaluate(input); }
   template <typename T> static void Evaluate() {
-	// Changes according new function ... -> recheck.
     size_t sizeofOutput = sizeof(fOutput) + sizeof(T) * fOutput.capacity();
     std::cout << "Size of expected buffer for fitness is :" << sizeofOutput
               << std::endl;
     const int fNumberChildren = 1;
     int pipeGA[fNumberChildren + 1];
-    // Array of pids to be killed after
     pid_t fArrayDead[fNumberChildren];
-    // Pid
     pid_t cpid;
     ssize_t result;
     pipe(pipeGA);
     ///////////////////////////////////////////////////////////////////////
     std::vector<T> tempFitness;
-    tempFitness.resize(ind.setup->fNObjectives);
-    // Forking a child process - should be in loop too
+    tempFitness.resize(0);
     cpid = fork();
-    // Loop if we have more children
     for (int i = 0; i < fNumberChildren; ++i) {
       //  cpid = fork();
       if (cpid > 0) {
