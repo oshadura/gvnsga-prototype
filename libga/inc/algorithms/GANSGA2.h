@@ -32,13 +32,18 @@ namespace geantvmoop {
 template <typename F> class GANSGA2 : public GAAlgorithm<GANSGA2<F>, F> {
 
 private:
+
+
+
   Population<F> population;
+
   std::unordered_map<individual_t<F>, double> fIndCrowDist;
+
   std::unordered_map<individual_t<F>, int> fIndRank;
 
 public:
   GANSGA2(F problem) : GAAlgorithm<GANSGA2<F>, F>(problem) {}
-  
+
   int fPopulationSize = 8;
   double PMut = 0.2;
 
