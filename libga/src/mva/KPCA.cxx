@@ -31,10 +31,10 @@ void KPCA::LoadData(const char *data, char sep) {
 }
 
 template <typename F> void KPCA::UploadPopulation(Population<F> &pop) {
-  for (int i = 0; i < pop.GetPopulationSize(); ++i) {
-    for (int j = 0; j < pop.GetGenes(i).size(); ++j){
-          auto ind = pop.GetGenes(i);
-          auto gene = ind.GetGene(j);
+  for (int i = 0; i < pop.size(); ++i) {
+    for (int j = 0; j < pop[i].size(); ++j){
+          auto ind = pop[i];
+          auto gene = ind[j];
           X.row(i) = VectorXd::Map(&gene, sizeof(gene));
     }
   }

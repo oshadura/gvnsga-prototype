@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 #include "GATest.h"
+#include "generic/Population.h"
+#include "problem/DTLZ1.h"
 #include "mva/PCA.h"
 #include "mva/LPCA.h"
 #include "mva/KPCA.h"
@@ -8,18 +10,17 @@ using namespace Eigen;
 
 class AllPCA : public GATest {
 public:
+  geantvmoop::DTLZ1 dtlz1;
   geantvmoop::LPCA lpca;
   geantvmoop::KPCA kpca;
+  geantvmoop::Population<geantvmoop::DTLZ1> pop;
 };
 
-/*
-TEST_F(AllPCA, UploadPopulationLPCA){
-  Population<double> pop;
+TEST_F(AllPCA, UploadPopulationLPCA) {
   lpca.UploadPopulation(pop);
-  ASSERT_EQ(lpca.GetX().rows(), pop.GetPopulationSize());
-  ASSERT_EQ(lpca.GetX().cols(), pop.GetSetup()->GetNParam());
+  ASSERT_EQ(lpca.GetX().rows(), pop.size());
+  ASSERT_EQ(lpca.GetX().cols(), 3);
 }
-*/
 
 TEST_F(AllPCA, LoadingDataLPCA) {
   lpca.LoadData("data");
@@ -79,8 +80,7 @@ TEST_F(AllPCA, LoadingDataKPCA) {
   ASSERT_EQ(Xtest, test);
 }
 
-
 TEST_F(AllPCA, RunLPCA) {
-	lpca.LoadData("data");
-	lpca.RunLPCA();
+  lpca.LoadData("data");
+  lpca.RunLPCA();
 }
