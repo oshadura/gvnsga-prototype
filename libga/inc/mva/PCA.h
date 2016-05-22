@@ -5,10 +5,10 @@
 
 namespace geantvmoop {
 
-template <typename DerivedClass> class PCA {
+template <typename Derived> class PCA {
 public:
   template <typename F> Population<F> MVA(const Population<F> &population) {
-    return static_cast<DerivedClass *>(this)->MVAImpl(population);
+    return static_cast<Derived *>(this)->MVAImpl(population);
   }
 };
 }

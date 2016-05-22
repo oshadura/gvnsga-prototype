@@ -1,6 +1,6 @@
 #include "mva/KPCA.h"
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 void KPCA::LoadData(const char *data, char sep) {
   // Read data
@@ -32,17 +32,15 @@ void KPCA::LoadData(const char *data, char sep) {
 
 template <typename F> void KPCA::UploadPopulation(Population<F> &pop) {
   for (int i = 0; i < pop.size(); ++i) {
-    for (int j = 0; j < pop[i].size(); ++j){
-          auto ind = pop[i];
-          auto gene = ind[j];
-          X.row(i) = VectorXd::Map(&gene, sizeof(gene));
+    for (int j = 0; j < pop[i].size(); ++j) {
+      auto ind = pop[i];
+      auto gene = ind[j];
+      X.row(i) = VectorXd::Map(&gene, sizeof(gene));
     }
   }
 }
 
-template <typename F> void KPCA::LoadUpdatedPopulation(Population<F> &pop) {
-}
-
+template <typename F> void KPCA::LoadUpdatedPopulation(Population<F> &pop) {}
 
 double KPCA::Kernel(const VectorXd &a, const VectorXd &b) {
   switch (kernel_type) {
@@ -67,7 +65,7 @@ void KPCA::RunKpca() {
   eigenvalues = edecomp.eigenvalues().real();
   eigenvectors = edecomp.eigenvectors().real();
   cumulative.resize(eigenvalues.rows());
-  std::vector<std::pair<double, VectorXd> > eigen_pairs;
+  std::vector<std::pair<double, VectorXd>> eigen_pairs;
   double c = 0.0;
   for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
     if (normalise) {
@@ -78,8 +76,10 @@ void KPCA::RunKpca() {
   }
   // http://stackoverflow.com/questions/5122804/sorting-with-lambda
   std::sort(eigen_pairs.begin(), eigen_pairs.end(),
-            [](const std::pair<double, VectorXd> a, const std::pair<double, VectorXd> b)
-                ->bool { return (a.first > b.first); });
+            [](const std::pair<double, VectorXd> a,
+               const std::pair<double, VectorXd> b) -> bool {
+              return (a.first > b.first);
+            });
   for (unsigned int i = 0; i < eigen_pairs.size(); i++) {
     eigenvalues(i) = eigen_pairs[i].first;
     c += eigenvalues(i);
@@ -153,7 +153,7 @@ void KPCA::Print() {
   }
   std::cout << std::endl;
   std::cout << "Sorted eigenvectors:" << eigenvectors << std::endl;
-  std::cout << "Transformed data:" << X *eigenvectors << std::endl;
+  std::cout << "Transformed data:" << X * eigenvectors << std::endl;
   // std::cout << "Transformed centred data:"<< transformed << std::endl;
 }
 
@@ -184,5 +184,4 @@ void KPCA::WriteEigenvectors(std::string file) {
   outfile.close();
   std::cout << "Written file " << file << std::endl;
 }
-
 }

@@ -32,7 +32,7 @@ namespace geantvmoop {
 template <typename F> class GANSGA2 : public GAAlgorithm<GANSGA2<F>, F> {
 
 private:
-     Population<F> population;
+  Population<F> population;
   std::unordered_map<individual_t<F>, double> fIndCrowDist;
   std::unordered_map<individual_t<F>, int> fIndRank;
 
@@ -50,9 +50,11 @@ public:
   void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
     GATournamentSelection<GAComparator<F>> selector(cmp);
-    Population<F> matingPool = selector.MultipleSelection(population, fPopulationSize * 2);
+    Population<F> matingPool =
+        selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
-      individual_t<F> offspring = GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
+      individual_t<F> offspring =
+          GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
       if (Random::getInstance()->rndDouble() < PMut)
         offspring = GAPolMutation::Mutation(offspring);
       population.push_back(offspring);
@@ -65,7 +67,7 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
-    std::cout << "Moving to next generation.."<<std::endl;
+    std::cout << "Moving to next generation.." << std::endl;
   }
 
   void PrintImpl(std::ostream &os) {
