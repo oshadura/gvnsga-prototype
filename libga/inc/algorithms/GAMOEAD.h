@@ -46,7 +46,7 @@ public:
   void InitializeImpl() {
     fWeights = Weights::GetWeights(fPopulationSize);
     fPopulationSize = fWeights.size();
-    std::cout << fPopulationSize << std::endl;
+    std::cout << "Population weights: " << fPopulationSize << std::endl;
     if (T >= fPopulationSize)
       throw std::runtime_error("Please set T lower than population size!");
     for (auto w : fWeights)
@@ -81,12 +81,14 @@ public:
           ++fCounter;
         }
       }
-      fFront.add(offspring);
+      fFront.Add(offspring);
     }
-  std::cout << "Moving to next generation.." << std::endl;
+    // std::cout << "Moving to next generation " << std::endl;
   }
 
-  void PrintImpl(std::ostream &os) { os << fCounter << std::endl; }
+  void PrintImpl(std::ostream &os) {
+    os << "Generation counter: " << fCounter << std::endl;
+  }
 
   PF<F> GetParetoFrontImpl() { return fFront; }
 

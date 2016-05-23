@@ -37,12 +37,11 @@ public:
     // CVS format for R ananlysis..
     for (int i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
-      // How to transfer?
-      GAVector<GADouble> ind = static_cast<GAVector<GADouble>>(individual);
-      for (int i = 0; i < ind.size(); ++i) {
-        auto parameter = ind[i];
+      for (int i = 0; i < individual.size(); ++i) {
+        auto parameter = individual[i];
         populationcvs << parameter << ",";
       }
+      populationcvs << "\n";
     }
     populationcvs
         << "-==========================================================-\n";
@@ -59,9 +58,8 @@ public:
       individual.push_back(Gene1);
       individual.push_back(Gene2);
       individual.push_back(Gene3);
-      auto fInd = std::make_shared<TGenes<F>>(individual);
-      // Cant push..
-      // pop.push_back(fInd);
+      auto fInd = std::make_shared<TGenes<F> >(individual);
+      pop.push_back(fInd);
     }
   }
 };

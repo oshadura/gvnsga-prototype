@@ -17,90 +17,57 @@ public:
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
-TEST_F(AllPCA, UploadPopulationCheck) {
+TEST_F(AllPCA, UploadPopulationCheck_NonFunc) {
   // lpca.UploadPopulation(pop);
   // ASSERT_EQ(lpca.GetX().rows(), pop.size());
   // ASSERT_EQ(lpca.GetX().cols(), 3);
 }
 
-TEST_F(AllPCA, LoadPopulation) {
+TEST_F(AllPCA, LoadPopulationFromCSV) {
   geantvmoop::Population<geantvmoop::DTLZ1> population;
-  geantvmoop::CSVManager::GetInstance().LoadCSV("data",
-                                                                   population);
+  geantvmoop::CSVManager::GetInstance().LoadCSV("datasimple",population);
+  ASSERT_EQ(population.size(), 5);
 }
 
-TEST_F(AllPCA, PCADataPopulation) {
+TEST_F(AllPCA, PCALoadDataCSV) {
   lpca.LoadData("data");
   ASSERT_EQ(lpca.GetX().rows(), pop.size());
-  ASSERT_EQ(lpca.GetX().cols(), 4);
+  ASSERT_EQ(lpca.GetX().cols(), 3);
 }
 
-TEST_F(AllPCA, LoadingDataLPCA) {
+TEST_F(AllPCA, LoadingDataLPCAByHands) {
   lpca.LoadData("data");
-  MatrixXd test(4, 5);
+  MatrixXd test(3, 5);
   test(0, 0) = 2.0;
   test(1, 0) = 2.0;
   test(2, 0) = 5.0;
-  test(3, 0) = 1.0;
   test(0, 1) = 1.0;
   test(1, 1) = 1.0;
   test(2, 1) = 3.0;
-  test(3, 1) = 3.0;
   test(0, 2) = 1.0;
   test(1, 2) = 9.0;
   test(2, 2) = 8.0;
-  test(3, 2) = 4.0;
   test(0, 3) = 3.0;
   test(1, 3) = 7.0;
   test(2, 3) = 7.0;
-  test(3, 3) = 6.0;
   test(0, 4) = 1.0;
   test(1, 4) = 6.0;
   test(2, 4) = 3.0;
-  test(3, 4) = 3.0;
-  MatrixXd Xtest;
-  Xtest = lpca.GetX().transpose();
-  ASSERT_EQ(Xtest, test);
-}
-
-TEST_F(AllPCA, LoadingDataKPCA) {
-  lpca.LoadData("data");
-  MatrixXd test(4, 5);
-  test(0, 0) = 2.0;
-  test(1, 0) = 2.0;
-  test(2, 0) = 5.0;
-  test(3, 0) = 1.0;
-  test(0, 1) = 1.0;
-  test(1, 1) = 1.0;
-  test(2, 1) = 3.0;
-  test(3, 1) = 3.0;
-  test(0, 2) = 1.0;
-  test(1, 2) = 9.0;
-  test(2, 2) = 8.0;
-  test(3, 2) = 4.0;
-  test(0, 3) = 3.0;
-  test(1, 3) = 7.0;
-  test(2, 3) = 7.0;
-  test(3, 3) = 6.0;
-  test(0, 4) = 1.0;
-  test(1, 4) = 6.0;
-  test(2, 4) = 3.0;
-  test(3, 4) = 3.0;
   MatrixXd Xtest;
   Xtest = lpca.GetX().transpose();
   ASSERT_EQ(Xtest, test);
 }
 
 TEST_F(AllPCA, RunLPCA) {
-  lpca.LoadData("data");
+  lpca.LoadData("data.example");
   lpca.RunLPCA();
   lpca.Print();
-  kpca.WriteTransformed("output.lpca");
+  kpca.WriteTransformed("outputlpca");
 }
 
 TEST_F(AllPCA, RunKPCA) {
   kpca.LoadData("data");
   kpca.RunKPCA();
   kpca.Print();
-  kpca.WriteTransformed("output.kpca");
+  kpca.WriteTransformed("outputkpca");
 }

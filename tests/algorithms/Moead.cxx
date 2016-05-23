@@ -18,4 +18,5 @@ TEST_F(Moead, SolvingProblemDTLZ1) {
   moead.fPopulationSize = 10;
   moead.fMaxGeneration = 10;
   moead.SolvePF();
+  moead.PrintImpl(std::cout);
 }

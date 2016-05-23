@@ -86,7 +86,7 @@ public:
   PF<F> GetParetoFrontImpl() {
     PF<F> fFront;
     for (unsigned int i = 0; i < population.size(); ++i)
-      fFront.add(population[i]);
+      fFront.Add(population[i]);
     return fFront;
   }
 

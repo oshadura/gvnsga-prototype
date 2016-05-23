@@ -17,6 +17,6 @@ TEST_F(Nsga2, SolvingDTLZ1Problem) {
   nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();
+  nsga.PrintImpl(std::cout);
 }
 
-TEST_F(Nsga2, TestEvaluationOfOneIndividual) {}

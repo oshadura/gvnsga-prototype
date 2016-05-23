@@ -24,14 +24,14 @@ private:
   std::list<individual_t<F>> front;
 
 public:
-  Population<F> getPopulation() const {
+  Population<F> GetPopulation() const {
     Population<F> result;
     for (auto ind : front)
       result.push_back(ind);
     return result;
   }
 
-  bool add(const individual_t<F> &ind) {
+  bool Add(const individual_t<F> &ind) {
     // for every element of front
     for (auto it = front.begin(); it != front.end();) {
       // of one elements dominates ind -> does not belong to front
