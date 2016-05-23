@@ -15,7 +15,6 @@ namespace geantvmoop {
 class CSVManager {
 
 public:
-
   static CSVManager &GetInstance() {
     static CSVManager Instance;
     return Instance;
@@ -29,17 +28,18 @@ private:
   ~CSVManager() {}
 
 public:
-  template <typename F> void CSVOutput(std::string file, const Population<F> &pop) {
+  template <typename F>
+  void CSVOutput(std::string file, const Population<F> &pop) {
     std::ofstream populationcvs;
     populationcvs.open(file.c_str(), std::fstream::app);
     // Suppose to be variadic...
     populationcvs << "Gene1, Gene2, Gene3\n";
     // CVS format for R ananlysis..
     for (int i = 0; i < pop.size(); ++i) {
-      auto individual = pop[i];
+      auto individual = pop.GetTGenes(i);
       // How to transfer?
-      GAVector<GADouble> ind = individual;
-      for (int i = 0; i < ind.size(); ++i){
+      GAVector<GADouble> ind = static_cast<GAVector<GADouble>>(individual);
+      for (int i = 0; i < ind.size(); ++i) {
         auto parameter = ind[i];
         populationcvs << parameter << ",";
       }
@@ -49,7 +49,8 @@ public:
   }
 
   // Better to do it in variadic way..
-  template <typename F> void LoadCSV(std::string file, const Population<F> &pop) {
+  template <typename F>
+  void LoadCSV(std::string file, const Population<F> &pop) {
     double Gene1, Gene2, Gene3;
     io::CSVReader<3> in(file);
     in.read_header(io::ignore_extra_column, "Gene1", "Gene2", "Gene3");
@@ -58,8 +59,9 @@ public:
       individual.push_back(Gene1);
       individual.push_back(Gene2);
       individual.push_back(Gene3);
-      auto fInd = std::make_shared<geantvmoop::TGenes<F> >(individual);
-      pop.push_back(fInd);
+      auto fInd = std::make_shared<TGenes<F>>(individual);
+      // Cant push..
+      // pop.push_back(fInd);
     }
   }
 };

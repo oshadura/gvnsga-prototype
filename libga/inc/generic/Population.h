@@ -15,6 +15,9 @@
 #define __POPULATION__
 
 #include "TGenes.h"
+// For test..
+#include "GAVector.h"
+#include "GADouble.h"
 #include <vector>
 #include <list>
 #include <stack>
@@ -45,6 +48,13 @@ public:
   }
 
   ~Population() {}
+  // For test..
+  const typename F::Input &GetTGenes(int i) const {
+    return (*this)[i]->GetInput();
+  }
+  // typename F::Input &GetTGenes(int i) const {
+  //    return (const_cast<Population<F> *>(this))[i]->GetInput();
+  // }
 
   bool isNonDominated(const individual_t<F> &ind) const {
     for (auto entry : *this) {
