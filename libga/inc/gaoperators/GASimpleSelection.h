@@ -47,7 +47,7 @@ public:
   Population<F> MultipleSelectionImpl(const Population<F> &population, int n) {
     Population<F> result;
     for (int i = 0; i < n; ++i) {
-      result.push_back(select_(population));
+      result.push_back(UnarySelectionImpl(population));
     }
     return result;
   }

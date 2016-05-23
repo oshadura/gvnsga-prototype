@@ -68,7 +68,7 @@ public:
       next.push_back(population[l]);
     population = next;
     std::cout << "Moving to next generation.." << std::endl;
-    CSVManager<F>::GetInstance().CSVOutput("output", population);
+    CSVManager::GetInstance().CSVOutput("output", population);
   }
 
   void PrintImpl(std::ostream &os) {
