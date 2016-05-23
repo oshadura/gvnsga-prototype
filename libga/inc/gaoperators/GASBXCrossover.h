@@ -34,8 +34,7 @@ public:
     return fOffspring1;
   }
 
-  static void GeneticCrossover(GADouble &a, GADouble &b,
-                               double distributionIndex) {
+  static void GeneticCrossover(GADouble &a, GADouble &b, double distributionIndex) {
     double x0 = a.GetGAValue();
     double x1 = b.GetGAValue();
     double dx = fabs(x1 - x0);

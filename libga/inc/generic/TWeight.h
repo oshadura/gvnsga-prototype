@@ -28,7 +28,7 @@ class Weights : public std::vector<double> {
 
 public:
   Weights(std::initializer_list<double> list) : std::vector<double>(list) {}
-  ~Weights(){}
+  ~Weights() {}
   static std::vector<Weights> GetWeights(int n) {
     auto rndWeight = []() {
       auto r = Random::getInstance();

@@ -16,16 +16,16 @@
 
 #include "generic/GAAlgorithm.h"
 #include "generic/PF.h"
-#include "addstructures/GANDRank.h"
-#include "addstructures/GACD.h"
-#include "addstructures/GAComparator.h"
-#include "tools/Random.h"
-#include <iostream>
-
 #include "gaoperators/GATournamentSelection.h"
 #include "gaoperators/GASBXCrossover.h"
 #include "gaoperators/GAPolMutation.h"
 #include "addstructures/GAComparator.h"
+#include "addstructures/GANDRank.h"
+#include "addstructures/GACD.h"
+#include "addstructures/GAComparator.h"
+#include "tools/Random.h"
+#include "output/CSVManager.h"
+#include <iostream>
 
 namespace geantvmoop {
 
@@ -68,11 +68,12 @@ public:
       next.push_back(population[l]);
     population = next;
     std::cout << "Moving to next generation.." << std::endl;
+    CSVManager<F>::GetInstance().CSVOutput("output", population);
   }
 
   void PrintImpl(std::ostream &os) {
     auto last = population[population.size() - 1];
-    os << "pareto front: " << fIndRank[last] << " | worst crowding: ";
+    os << "Pareto front: " << fIndRank[last] << " | Worst crowding: ";
     os << fIndCrowDist[last] << std::endl;
   }
 

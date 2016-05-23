@@ -51,7 +51,7 @@ double KPCA::Kernel(const VectorXd &a, const VectorXd &b) {
   }
 }
 
-void KPCA::RunKpca() {
+void KPCA::RunKPCA() {
   // Fill kernel matrix
   K.resize(X.rows(), X.rows());
   for (unsigned int i = 0; i < X.rows(); i++) {
@@ -137,24 +137,24 @@ void KPCA::RunKpca() {
 }
 
 void KPCA::Print() {
-  std::cout << "Input data: " << X << std::endl;
-  std::cout << "Centered data: " << Xcentered << std::endl;
-  std::cout << "Covariance matrix: " << C << std::endl;
-  std::cout << "Eigenvalues: " << eigenvalues << std::endl;
-  std::cout << "Eigenvectors: " << eigenvectors << std::endl;
-  std::cout << "Sorted eigenvalues: " << std::endl;
+  std::cout << "Input data:\n " << X << std::endl;
+  std::cout << "Centered data: \n" << Xcentered << std::endl;
+  std::cout << "Covariance matrix: \n" << C << std::endl;
+  std::cout << "Eigenvalues:\n " << eigenvalues << std::endl;
+  std::cout << "Eigenvectors:\n " << eigenvectors << std::endl;
+  std::cout << "Sorted eigenvalues: \n" << std::endl;
   for (unsigned int i = 0; i < eigenvalues.rows(); i++) {
     if (eigenvalues(i) > 0) {
-      std::cout << "PC " << i + 1 << ": Eigenvalue: " << eigenvalues(i);
+      std::cout << "PC " << i + 1 << ": Eigenvalue: \n" << eigenvalues(i);
       printf("\t(%3.3f of variance, cumulative =  %3.3f)\n",
              eigenvalues(i) / eigenvalues.sum(),
              cumulative(i) / eigenvalues.sum());
     }
   }
   std::cout << std::endl;
-  std::cout << "Sorted eigenvectors:" << eigenvectors << std::endl;
-  std::cout << "Transformed data:" << X * eigenvectors << std::endl;
-  // std::cout << "Transformed centred data:"<< transformed << std::endl;
+  std::cout << "Sorted eigenvectors:\n" << eigenvectors << std::endl;
+  std::cout << "Transformed data:\n" << X * eigenvectors << std::endl;
+  std::cout << "Transformed centred data:\n" << transformed << std::endl;
 }
 
 void KPCA::WriteTransformed(std::string file) {
