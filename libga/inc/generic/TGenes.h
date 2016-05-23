@@ -22,7 +22,8 @@ namespace geantvmoop {
 
 template <typename F> class TGenes;
 template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
-
+// TBD: Add one more templated typename for evaluation procedure (fork-,
+// MPI-based..)
 template <typename F> class TGenes {
 
 private:
@@ -34,11 +35,12 @@ public:
 
   TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
     if (fEvaluated)
+      // Templated class providing different evaluations..
       Evaluate();
   };
 
-  ~TGenes(){}
-  
+  ~TGenes() {}
+
   bool IsDominating(const TGenes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
       if (output[i] > other.output[i])

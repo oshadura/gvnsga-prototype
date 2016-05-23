@@ -25,12 +25,11 @@ private:
   F problem;
 
 public:
-  
   int fMaxGeneration = 100;
 
   GAAlgorithm(F problem) : problem(problem) {}
 
-  ~GAAlgorithm(){}
+  ~GAAlgorithm() {}
 
   virtual PF<F> SolvePF() {
     Initialize();

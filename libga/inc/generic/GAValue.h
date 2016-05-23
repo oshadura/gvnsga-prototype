@@ -26,7 +26,7 @@ protected:
 public:
   GAValue() {}
   GAValue(Type value) : value(value) {}
-  ~GAValue(){}
+  ~GAValue() {}
 
   Type GetGAValue() const { return value; }
 

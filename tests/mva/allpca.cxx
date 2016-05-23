@@ -2,6 +2,7 @@
 #include "GATest.h"
 #include "generic/Population.h"
 #include "problem/DTLZ1.h"
+#include "output/CSVManager.h"
 #include "mva/PCA.h"
 #include "mva/LPCA.h"
 #include "mva/KPCA.h"
@@ -13,13 +14,25 @@ public:
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::LPCA lpca;
   geantvmoop::KPCA kpca;
-  geantvmoop::Population<geantvmoop::DTLZ1> pop;
+  geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
-TEST_F(AllPCA, UploadPopulationLPCA) {
-  lpca.UploadPopulation(pop);
+TEST_F(AllPCA, UploadPopulationCheck) {
+  // lpca.UploadPopulation(pop);
+  // ASSERT_EQ(lpca.GetX().rows(), pop.size());
+  // ASSERT_EQ(lpca.GetX().cols(), 3);
+}
+
+TEST_F(AllPCA, LoadPopulation) {
+  geantvmoop::Population<geantvmoop::DTLZ1> population;
+  geantvmoop::CSVManager<geantvmoop::DTLZ1>::GetInstance().LoadCSV("data",
+                                                                   population);
+}
+
+TEST_F(AllPCA, PCADataPopulation) {
+  lpca.LoadData("data");
   ASSERT_EQ(lpca.GetX().rows(), pop.size());
-  ASSERT_EQ(lpca.GetX().cols(), 3);
+  ASSERT_EQ(lpca.GetX().cols(), 4);
 }
 
 TEST_F(AllPCA, LoadingDataLPCA) {
@@ -45,7 +58,6 @@ TEST_F(AllPCA, LoadingDataLPCA) {
   test(1, 4) = 6.0;
   test(2, 4) = 3.0;
   test(3, 4) = 3.0;
-  ////////////////
   MatrixXd Xtest;
   Xtest = lpca.GetX().transpose();
   ASSERT_EQ(Xtest, test);
@@ -74,7 +86,6 @@ TEST_F(AllPCA, LoadingDataKPCA) {
   test(1, 4) = 6.0;
   test(2, 4) = 3.0;
   test(3, 4) = 3.0;
-  ////////////////
   MatrixXd Xtest;
   Xtest = lpca.GetX().transpose();
   ASSERT_EQ(Xtest, test);
@@ -83,4 +94,13 @@ TEST_F(AllPCA, LoadingDataKPCA) {
 TEST_F(AllPCA, RunLPCA) {
   lpca.LoadData("data");
   lpca.RunLPCA();
+  lpca.Print();
+  kpca.WriteTransformed("output.lpca");
+}
+
+TEST_F(AllPCA, RunKPCA) {
+  kpca.LoadData("data");
+  kpca.RunKPCA();
+  kpca.Print();
+  kpca.WriteTransformed("output.kpca");
 }

@@ -9,5 +9,9 @@ public:
 };
 
 TEST_F(Individual, GeneratingIndividual) {
-	geantvmoop::TGenes<geantvmoop::DTLZ1> i;
+  geantvmoop::TGenes<geantvmoop::DTLZ1> i;
+}
+
+TEST_F(Individual, GenerationPopulation) {
+  geantvmoop::Population<geantvmoop::DTLZ1> pop;
 }

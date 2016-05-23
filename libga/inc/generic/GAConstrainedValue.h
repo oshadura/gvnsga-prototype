@@ -30,8 +30,8 @@ public:
   GAConstrainedValue(Type d, Type u) : fDown(d), fUp(u){};
   GAConstrainedValue(Type v, Type d, Type u)
       : GAValue<Type>(v), fDown(d), fUp(u){};
-  ~GAConstrainedValue(){}
-  
+  ~GAConstrainedValue() {}
+
   virtual void SetGAValue(const Type &value) {
     if (value < fDown || value > fUp)
       throw std::runtime_error("Boundary Exception.");

@@ -28,7 +28,7 @@ namespace geantvmoop {
 template <typename F> class Population : public std::vector<individual_t<F>> {
 
 public:
-  //Population(std::initializer_list<individual_t<F>> list)
+  // Population(std::initializer_list<individual_t<F>> list)
   //    : std::vector<individual_t<F>>(list) {}
 
   Population() : std::vector<individual_t<F>>() {}
@@ -43,8 +43,8 @@ public:
       this->push_back(individual);
     }
   }
-  
-  ~Population(){}
+
+  ~Population() {}
 
   bool isNonDominated(const individual_t<F> &ind) const {
     for (auto entry : *this) {
