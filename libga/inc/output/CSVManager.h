@@ -43,8 +43,7 @@ public:
       }
       populationcvs << "\n";
     }
-    populationcvs
-        << "-==========================================================-\n";
+    populationcvs << "-=================-\n";
   }
 
   // Better to do it in variadic way..

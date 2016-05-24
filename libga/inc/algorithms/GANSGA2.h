@@ -67,7 +67,7 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
-    // std::cout << "Moving to next generation.." << std::endl;
+    std::cout << "Moving to next generation.." << population << std::endl;
     CSVManager::GetInstance().CSVOutput("output.lpca", population);
   }
 
@@ -83,6 +83,7 @@ public:
     PF<F> fFront;
     for (unsigned int i = 0; i < population.size(); ++i)
       fFront.Add(population[i]);
+      std::cout << fFront << std::endl;
     return fFront;
   }
 };

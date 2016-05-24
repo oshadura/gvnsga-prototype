@@ -83,7 +83,8 @@ public:
       }
       fFront.Add(offspring);
     }
-    // std::cout << "Moving to next generation " << std::endl;
+    //      std::cout << fFront << std::endl;
+    std::cout << pop << std::endl;
   }
 
   void PrintImpl(std::ostream &os) {
@@ -92,7 +93,6 @@ public:
 
   PF<F> GetParetoFrontImpl() { return fFront; }
 
-  ////////////////////////////////////
 
   static void UpdateRP(std::vector<double> &ref, const individual_t<F> &ind) {
     int numOfObjectives = F::GetNObjectives();

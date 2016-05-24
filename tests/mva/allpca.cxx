@@ -17,10 +17,10 @@ public:
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
-TEST_F(AllPCA, UploadPopulationCheck_NonFunc) {
-  // lpca.UploadPopulation(pop);
-  // ASSERT_EQ(lpca.GetX().rows(), pop.size());
-  // ASSERT_EQ(lpca.GetX().cols(), 3);
+TEST_F(AllPCA, UploadRawPopulationCheck) {
+  lpca.UploadPopulation(pop);
+  ASSERT_EQ(lpca.GetX().rows(), pop.size());
+  ASSERT_EQ(lpca.GetX().cols(), 3);
 }
 
 TEST_F(AllPCA, LoadPopulationFromCSV) {

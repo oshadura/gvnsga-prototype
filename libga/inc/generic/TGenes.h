@@ -21,7 +21,7 @@
 namespace geantvmoop {
 
 template <typename F> class TGenes;
-template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
+template <typename F> using individual_t = std::shared_ptr<TGenes<F> >;
 // TBD: Add one more templated typename for evaluation procedure (fork-,
 // MPI-based..)
 template <typename F> class TGenes {
@@ -70,6 +70,14 @@ public:
   const typename F::Input &GetInput() const { return input; }
 
   const typename F::Output &GetOutput() const { return output; }
+
+  friend std::ostream &operator<<(std::ostream &os,
+                                  const TGenes<F> &ind) {
+    auto indvector = ind.GetInput();
+    for (int i = 0; i < indvector.size(); ++i)
+      os << indvector[i] << " ";
+    return os;
+  }
 };
 }
 

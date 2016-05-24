@@ -32,18 +32,6 @@ void LPCA::LoadData(const char *data, char sep) {
   }
 }
 
-template <typename F> void LPCA::UploadPopulation(Population<F> &pop) {
-  for (int i = 0; i < pop.size(); ++i) {
-    for (int j = 0; j < pop[i].size(); ++j) {
-      auto ind = pop[i];
-      auto gene = ind[j];
-      X.row(i) = VectorXd::Map(&gene, sizeof(gene));
-    }
-  }
-}
-
-template <typename F> void LPCA::LoadUpdatedPopulation(Population<F> &pop) {}
-
 void LPCA::RunLPCA() {
   Xcentered = X.rowwise() - X.colwise().mean();
   C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
@@ -51,7 +39,7 @@ void LPCA::RunLPCA() {
   eigenvalues = edecomp.eigenvalues().real();
   eigenvectors = edecomp.eigenvectors().real();
   cumulative.resize(eigenvalues.rows());
-  std::vector<std::pair<double, VectorXd>> eigen_pairs;
+  std::vector<std::pair<double, VectorXd> > eigen_pairs;
   double c = 0.0;
   for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
     if (normalise) {
@@ -62,9 +50,8 @@ void LPCA::RunLPCA() {
   }
   std::sort(eigen_pairs.begin(), eigen_pairs.end(),
             [](const std::pair<double, VectorXd> a,
-               const std::pair<double, VectorXd> b) -> bool {
-              return (a.first > b.first);
-            });
+               const std::pair<double, VectorXd> b)
+                ->bool { return (a.first > b.first); });
   for (unsigned int i = 0; i < eigen_pairs.size(); i++) {
     eigenvalues(i) = eigen_pairs[i].first;
     c += eigenvalues(i);
@@ -91,7 +78,7 @@ void LPCA::Print() {
   }
   std::cout << std::endl;
   std::cout << "Sorted eigenvectors:\n" << eigenvectors << std::endl;
-  std::cout << "Transformed data:\n" << X * eigenvectors << std::endl;
+  std::cout << "Transformed data:\n" << X *eigenvectors << std::endl;
   std::cout << "Transformed centred data:\n" << transformed << std::endl;
 }
 

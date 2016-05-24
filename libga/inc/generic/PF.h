@@ -19,9 +19,9 @@
 
 namespace geantvmoop {
 
-template <typename F> class PF {
+template <typename F> class PF : public std::list<individual_t<F>>{
 private:
-  std::list<individual_t<F>> front;
+  std::list<individual_t<F> > front;
 
 public:
   Population<F> GetPopulation() const {
@@ -48,7 +48,7 @@ public:
   }
 
   static Population<F> ParetoFrontND(const Population<F> &pop) {
-    std::list<individual_t<F>> front;
+    std::list<individual_t<F> > front;
     if (pop.empty())
       return Population<F>();
     // function for adding an element to the front
@@ -73,6 +73,12 @@ public:
     for (auto ind : front)
       result.push_back(ind);
     return result;
+  }
+
+   friend std::ostream &operator<<(std::ostream &os, const PF<F> &pf) {
+    for (auto i : pf)
+      os << i<< " ";
+    return os;
   }
 };
 }
