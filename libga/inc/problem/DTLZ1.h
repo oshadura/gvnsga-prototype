@@ -30,9 +30,8 @@ public:
   static double pi() { return std::atan(1) * 4; }
 
   static Output Evaluate(const Input &individual) {
-    std::vector<double> fFitness;
+    std::vector<double> fFitness, fParameters;
     fFitness.reserve(individual.size());
-    std::vector<double> fParameters;
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
@@ -46,7 +45,6 @@ public:
     int m = 3;
     Int_t k = n - m + 1; // 5
     Double_t g = 0.0;
-
     for (Int_t i = m - 1; i < n; ++i) {
       g += pow(fParameters[i - 1] - 0.5, 2) -
            cos(20 * pi() * (fParameters[i - 1] - 0.5));

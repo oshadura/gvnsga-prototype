@@ -57,8 +57,9 @@ public:
       individual.push_back(Gene1);
       individual.push_back(Gene2);
       individual.push_back(Gene3);
-      auto fInd = std::make_shared<TGenes<F> >(individual);
-      pop.push_back(fInd);
+      auto fInd = std::make_shared<TGenes<F>>(individual);
+      // FIX
+      // pop.push_back(fInd);
     }
   }
 };

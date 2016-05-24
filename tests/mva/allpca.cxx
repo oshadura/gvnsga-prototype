@@ -25,7 +25,7 @@ TEST_F(AllPCA, UploadRawPopulationCheck) {
 
 TEST_F(AllPCA, LoadPopulationFromCSV) {
   geantvmoop::Population<geantvmoop::DTLZ1> population;
-  geantvmoop::CSVManager::GetInstance().LoadCSV("datasimple",population);
+  geantvmoop::CSVManager::GetInstance().LoadCSV("datasimple", population);
   ASSERT_EQ(population.size(), 5);
 }
 
