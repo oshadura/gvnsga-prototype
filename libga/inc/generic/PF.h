@@ -19,7 +19,7 @@
 
 namespace geantvmoop {
 
-template <typename F> class PF : public std::list<individual_t<F>>{
+template <typename F> class PF : public std::list<individual_t<F> > {
 private:
   std::list<individual_t<F> > front;
 
@@ -75,9 +75,9 @@ public:
     return result;
   }
 
-   friend std::ostream &operator<<(std::ostream &os, const PF<F> &pf) {
+  friend std::ostream &operator<<(std::ostream &os, const PF<F> &pf) {
     for (auto i : pf)
-      os << i<< " ";
+      os << i << " ";
     return os;
   }
 };

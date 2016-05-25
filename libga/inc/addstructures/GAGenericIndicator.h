@@ -11,8 +11,8 @@
  */
 //===----------------------------------------------------------------------===//
 
-#ifndef MOO_INDICATOR_H
-#define MOO_INDICATOR_H
+#ifndef __GAGENERICINDICATOR__
+#define __GAGENERICINDICATOR__
 
 #include <algorithm>
 #include <unordered_map>
@@ -27,7 +27,7 @@ public:
   template <typename F>
   std::unordered_map<individual_t<F>, T> static CalculateIndicator(
       const Population<F> &population) {
-    return Derived::CalculateIndicator(population);
+    return Derived::CalculateIndicatorImpl(population);
   }
 };
 }

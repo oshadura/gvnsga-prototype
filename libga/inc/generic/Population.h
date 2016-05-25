@@ -134,7 +134,7 @@ public:
 
   friend std::ostream &operator<<(std::ostream &s, const Population<F> &pop) {
     std::cout << "---------------------------\n";
-    std::cout << "Size: " << pop.size() << std::endl;
+    std::cout << "Size of population: " << pop.size() << std::endl;
     std::cout << "---------------------------\n";
     for (int i = 0; i < pop.size(); ++i) {
       auto entry = pop[i];

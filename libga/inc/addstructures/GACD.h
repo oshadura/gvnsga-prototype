@@ -29,11 +29,11 @@ class GACD : public GAGenericIndicator<GACD, double> {
 
 public:
   template <typename T>
-  static Map<T> CalculateIndicator(const Population<T> &pop) {
+  static Map<T> CalculateIndicatorImpl(const Population<T> &pop) {
     std::vector<double> fMin;
     std::vector<double> fMax;
     BoundingValues(pop, fMin, fMax);
-    return CalculateIndicator(pop, fMin, fMax);
+    return CalculateIndicatorImpl(pop, fMin, fMax);
   }
 
   template <typename T>
@@ -48,7 +48,7 @@ public:
   }
 
   template <typename T>
-  static Map<T> CalculateIndicator(const Population<T> &pop,
+  static Map<T> CalculateIndicatorImpl(const Population<T> &pop,
                                    std::vector<double> &fMin,
                                    std::vector<double> &fMax) {
     Map<T> fMap;
