@@ -28,7 +28,7 @@ void LPCA::LoadData(const char *data, char sep) {
     reader.close();
     Xcentered.resize(X.rows(), X.cols());
   } else {
-    std::cout << "Failed to read file " << data << std::endl;
+    std::cout << "Failed to read file..." << data << std::endl;
   }
 }
 

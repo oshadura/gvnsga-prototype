@@ -26,7 +26,9 @@ public:
 
   void LoadData(const char *data, char sep = ',');
 
-  void SetNormalise(const int i) { normalise = i; };
+  void SetNormalise(const int i) {
+    normalise = i;
+  };
   MatrixXd &GetTransformed() { return transformed; }
 
   MatrixXd &GetX() { return X; }
@@ -48,21 +50,22 @@ private:
 
 public:
   template <typename F> void UploadPopulation(Population<F> &pop) {
-    std::vector<double> fParameters;
     for (int i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
       for (int j = 0; j < individual.size(); ++j) {
         auto gene = individual[j];
-        fParameters.push_back(gene.GetGAValue());
-        std::cout << "New gene to be written from population: "
-                  << gene.GetGAValue() << std::endl;
+        if (X.rows() < i + 1) {
+          X.conservativeResize(i + 1, X.cols());
+        }
+        if (X.cols() < j + 1) {
+          X.conservativeResize(X.rows(), j + 1);
+        }
+        X(i, j) = gene.GetGAValue();
       }
-      Map<MatrixXd> mapvector(fParameters.data(), fParameters.size(),
-                              pop.size());
-      fParameters.clear();
     }
     std::string sep = "\n----------------------------------------\n";
     std::cout << X << sep;
+    Xcentered.resize(X.rows(), X.cols());
   }
 };
 }
