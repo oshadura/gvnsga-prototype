@@ -62,7 +62,14 @@ TEST_F(AllPCA, RunLPCA) {
   lpca.LoadData("data.example");
   lpca.RunLPCA();
   lpca.Print();
-  kpca.WriteTransformed("outputlpca");
+  lpca.WriteTransformed("outputlpca");
+}
+
+TEST_F(AllPCA, RunLPCAReductionofComponents) {
+  lpca.LoadData("data.example");
+  lpca.RunLPCAWithReductionOfComponents();
+  lpca.Print();
+  lpca.WriteTransformed("outputlpcatransform");
 }
 
 TEST_F(AllPCA, RunKPCA) {

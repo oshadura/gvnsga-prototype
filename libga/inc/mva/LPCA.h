@@ -35,6 +35,8 @@ public:
 
   void RunLPCA();
 
+  void RunLPCAWithReductionOfComponents();
+
   void Print();
 
   void WriteTransformed(std::string);
