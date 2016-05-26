@@ -68,28 +68,29 @@ public:
     GAComparator<F> comp(&fIndRank, &fIndCrowDist);
     std::sort(population.begin(), population.end(), comp);
 
-    std::cout << "---------------------------\n";
+    std::cout << "---------------------------\n" << std::endl;
     for (auto entry : population) {
-      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1]
-                << " | rank: " << fIndRank[entry] << " | crowding: ";
+      //  for (int i = 0; i < entry.GetOutput().size(); ++i) {
+      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1] << ", "
+                << entry->GetOutput()[3] << ", ";
+      //  }
+      std::cout << " | rank: " << fIndRank[entry] << " | crowding: ";
       std::cout << fIndCrowDist[entry] << std::endl;
     }
-    std::cout << "---------------------------\n";
-
+    std::cout << "---------------------------\n" << std::endl;
     Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
-    std::cout << "Moving to next generation..\n" << population << std::endl;
+    //std::cout << "Moving to next generation..\n" << population << std::endl;
     CSVManager::GetInstance().CSVOutput("output.lpca", population);
   }
 
   void PrintImpl(std::ostream &os) {
     // Print everything!
     auto last = population[population.size() - 1];
-      os << "| Pareto front: " << fIndRank[last]
-         << " | Crowding distance: ";
-      os << fIndCrowDist[last] << std::endl;
+    os << "| Pareto front: " << fIndRank[last] << " | Crowding distance: ";
+    os << fIndCrowDist[last] << std::endl;
   }
 
   PF<F> GetParetoFrontImpl() {

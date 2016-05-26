@@ -78,6 +78,7 @@ public:
   friend std::ostream &operator<<(std::ostream &os, const PF<F> &pf) {
     for (auto i : pf)
       os << i << " ";
+    std::cout<<"\n";
     return os;
   }
 };

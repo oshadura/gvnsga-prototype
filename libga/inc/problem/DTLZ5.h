@@ -1,5 +1,5 @@
-#ifndef __PROBLEMDTLZ1__
-#define __PROBLEMDTLZ1__
+#ifndef __PROBLEMDTLZ5__
+#define __PROBLEMDTLZ5__
 
 #include "generic/TGenes.h"
 #include "generic/Population.h"
@@ -16,7 +16,7 @@
 
 namespace geantvmoop {
 
-class DTLZ1 : public Functions<DTLZ1> {
+class DTLZ5 : public Functions<DTLZ5> {
 
 public:
   typedef GAVector<GADouble> Input;
@@ -31,22 +31,22 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    /////////////
+    
     std::cout << "Vector input for evaluation function: ";
     for (auto i: fParameters)
       std::cout << i << ' ';
     std::cout << ' ' << std::endl;
-    ////////////
+    
     int n = 7;
     int m = 3;
-    int k = n - m + 1; // 5
-    double g = 0.0;
-    for (int i = m - 1; i < n; ++i) {
+    Int_t k = n - m + 1; // 5
+    Double_t g = 0.0;
+    for (Int_t i = m - 1; i < n; ++i) {
       g += pow(fParameters[i - 1] - 0.5, 2) -
            cos(20 * pi() * (fParameters[i - 1] - 0.5));
     }
     g = 100 * (k + g);
-    for (int i = 0; i < m; ++i) {
+    for (Int_t i = 0; i < m; ++i) {
       Double_t f = 0.5 * (1 + g);
       size_t j = 0;
       for (; m >= 2 + i && j <= m - 2 - i; ++j) {

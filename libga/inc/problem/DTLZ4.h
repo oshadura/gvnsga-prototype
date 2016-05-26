@@ -1,5 +1,5 @@
-#ifndef __PROBLEMDTLZ1__
-#define __PROBLEMDTLZ1__
+#ifndef __PROBLEMDTLZ4__
+#define __PROBLEMDTLZ4__
 
 #include "generic/TGenes.h"
 #include "generic/Population.h"
@@ -16,11 +16,10 @@
 
 namespace geantvmoop {
 
-class DTLZ1 : public Functions<DTLZ1> {
+class DTLZ4 : public Functions<DTLZ4> {
 
 public:
   typedef GAVector<GADouble> Input;
-
   typedef std::vector<double> Output;
 
   static double pi() { return std::atan(1) * 4; }
@@ -31,29 +30,28 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    /////////////
+    
     std::cout << "Vector input for evaluation function: ";
     for (auto i: fParameters)
       std::cout << i << ' ';
     std::cout << ' ' << std::endl;
-    ////////////
-    int n = 7;
+    
+    int alpha = 100;
+    int n = 12;
     int m = 3;
     int k = n - m + 1; // 5
-    double g = 0.0;
+    Double_t g = 0.0;
     for (int i = m - 1; i < n; ++i) {
-      g += pow(fParameters[i - 1] - 0.5, 2) -
-           cos(20 * pi() * (fParameters[i - 1] - 0.5));
+      g += pow(fParameters[i] - 0.5, 2);
     }
-    g = 100 * (k + g);
     for (int i = 0; i < m; ++i) {
-      Double_t f = 0.5 * (1 + g);
-      size_t j = 0;
-      for (; m >= 2 + i && j <= m - 2 - i; ++j) {
-        f *= fParameters[j];
+      double f = (1 + g);
+      int j = 0;
+      for (; j + m <= m - 2; ++j) {
+        f *= cos(pow(fParameters[j], alpha) * pi()/2);
       }
       if (i > 0) {
-        f *= (1 - fParameters[j]);
+        f *= sin(pow(fParameters[j], alpha) * pi()/2);
       }
       fFitness.push_back(f);
     }
@@ -62,7 +60,7 @@ public:
 
   static Input GetInput() {
     Input vector;
-    for (int i = 0; i < 7; ++i)
+    for (int i = 0; i < 12; ++i)
       vector.push_back(GADouble(0, 1));
     return vector;
   }

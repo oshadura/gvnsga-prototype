@@ -18,10 +18,9 @@ public:
 };
 
 TEST_F(AllPCA, UploadRawPopulationCheck) {
-  MatrixXd fParameters;
   lpca.UploadPopulation(pop);
   ASSERT_EQ(lpca.GetX().rows(), 5);
-  ASSERT_EQ(lpca.GetX().cols(), 3);
+  ASSERT_EQ(lpca.GetX().cols(), 7);
 }
 
 TEST_F(AllPCA, LoadPopulationFromCSV) {

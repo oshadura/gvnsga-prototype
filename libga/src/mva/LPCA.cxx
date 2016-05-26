@@ -33,14 +33,19 @@ void LPCA::LoadData(const char *data, char sep) {
 }
 
 void LPCA::RunLPCA() {
+  //Centered matrix
   Xcentered = X.rowwise() - X.colwise().mean();
   C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
   EigenSolver<MatrixXd> edecomp(C);
+  // Eigen values
   eigenvalues = edecomp.eigenvalues().real();
+  //Eigen vectors
   eigenvectors = edecomp.eigenvectors().real();
   cumulative.resize(eigenvalues.rows());
+  // Eigen pairs [eigenvalue, eigenvector]
   std::vector<std::pair<double, VectorXd> > eigen_pairs;
   double c = 0.0;
+  
   for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
     if (normalise) {
       double norm = eigenvectors.col(i).norm();
@@ -48,6 +53,7 @@ void LPCA::RunLPCA() {
     }
     eigen_pairs.push_back(std::make_pair(eigenvalues(i), eigenvectors.col(i)));
   }
+  // Sorting Eigen pairs [eigenvalue, eigenvector]
   std::sort(eigen_pairs.begin(), eigen_pairs.end(),
             [](const std::pair<double, VectorXd> a,
                const std::pair<double, VectorXd> b)
@@ -58,8 +64,13 @@ void LPCA::RunLPCA() {
     cumulative(i) = c;
     eigenvectors.col(i) = eigen_pairs[i].second;
   }
+  // Transformed matrix
   transformed = Xcentered * eigenvectors;
 }
+
+/*
+void LPCA::RunInverseLPCA(){}
+*/
 
 void LPCA::Print() {
   std::cout << "Input data:\n" << X << std::endl;

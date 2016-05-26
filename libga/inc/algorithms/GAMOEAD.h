@@ -39,7 +39,8 @@ private:
 
 public:
   int fPopulationSize = 10;
-  int T = 5;
+  // T closest  weight vectors
+  int T = 7;
 
   GAMOEAD(F problem) : GAAlgorithm<GAMOEAD<F>, F>(problem) {}
 
