@@ -65,56 +65,10 @@ void LPCA::RunLPCA() {
     cumulative(i) = c;
     eigenvectors.col(i) = eigen_pairs[i].second;
   }
+  Transformed = X * eigenvectors;
   // Transformed matrix
-  transformed = Xcentered * eigenvectors;
+  TransformedCentered = Xcentered * eigenvectors;
 }
-
-/*
-void LPCA::RunRevertLPCA() {
-  double totalvar = 0;
-  int i = 0;
-  // Centered matrix
-  Xcentered = X.rowwise() - X.colwise().mean();
-  C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
-  EigenSolver<MatrixXd> edecomp(C);
-  // Eigen values
-  eigenvalues = edecomp.eigenvalues().real();
-  // Eigen vectors
-  eigenvectors = edecomp.eigenvectors().real();
-  cumulative.resize(eigenvalues.rows());
-  // Eigen pairs [eigenvalue, eigenvector]
-  std::vector<std::pair<double, VectorXd> > eigen_pairs;
-  double c = 0.0;
-
-  for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
-    if (normalise) {
-      double norm = eigenvectors.col(i).norm();
-      eigenvectors.col(i) /= norm;
-    }
-    eigen_pairs.push_back(std::make_pair(eigenvalues(i), eigenvectors.col(i)));
-  }
-  // Sorting Eigen pairs [eigenvalue, eigenvector]
-  std::sort(eigen_pairs.begin(), eigen_pairs.end(),
-            [](const std::pair<double, VectorXd> a,
-               const std::pair<double, VectorXd> b)
-                ->bool { return (a.first > b.first); });
-  while (totalvar <= 0.85) {
-    eigenvalues(i) = eigen_pairs[i].first;
-    c += eigenvalues(i);
-    cumulative(i) = c;
-    eigenvectors.col(i) = eigen_pairs[i].second;
-    totalvar = totalvar + (eigenvalues(i) / eigenvalues.sum());
-    ++i;
-  }
-  //eigenvectors.conservativeResize(X.rows(), i);
-  //eigenvectors.resizeCols(i);
-  std::cout << "Eigenvectors:\n" << eigenvectors << std::endl;
-  std::cout << "Total number of components to be used in transformed matrix: "
-            << i << std::endl;
-  // Transformed matrix
-  transformed = Xcentered * eigenvectors;
-}
-*/
 
 void LPCA::RunLPCAWithReductionOfComponents() {
   double totalvar = 0;
@@ -131,7 +85,6 @@ void LPCA::RunLPCAWithReductionOfComponents() {
   // Eigen pairs [eigenvalue, eigenvector]
   std::vector<std::pair<double, VectorXd> > eigen_pairs;
   double c = 0.0;
-
   for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
     if (normalise) {
       double norm = eigenvectors.col(i).norm();
@@ -144,6 +97,11 @@ void LPCA::RunLPCAWithReductionOfComponents() {
             [](const std::pair<double, VectorXd> a,
                const std::pair<double, VectorXd> b)
                 ->bool { return (a.first > b.first); });
+  // Printing current state information before  PC cutoff
+  std::cout << "Printing original information after PCA" << std::cout;
+  Transformed = X * eigenvectors;
+  TransformedCentered = Xcentered * eigenvectors;
+  // Varince based selection (< 85 %)
   while (totalvar <= 0.85) {
     eigenvalues(i) = eigen_pairs[i].first;
     c += eigenvalues(i);
@@ -152,58 +110,20 @@ void LPCA::RunLPCAWithReductionOfComponents() {
     totalvar = totalvar + (eigenvalues(i) / eigenvalues.sum());
     ++i;
   }
-  //eigenvectors.conservativeResize(X.rows(), i);
-  //eigenvectors.resizeCols(i);
-  std::cout << "Eigenvectors:\n" << eigenvectors << std::endl;
-  std::cout << "Total number of components to be used in transformed matrix: "
+  Print();
+  eigenvectors.conservativeResize(eigenvectors.rows(), i);
+  Transformed.conservativeResize(Transformed.rows(), i);
+  TransformedCentered.conservativeResize(Transformed.rows(), i);
+  std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
+  std::cout << "Total number of components to be used in Transformed matrix: "
             << i << std::endl;
   // Transformed matrix
-  transformed = Xcentered * eigenvectors;
-}
-
-void LPCA::RunRevertLPCAWithReductionOfComponents() {
-  double totalvar = 0;
-  int i = 0;
-  // Centered matrix
-  Xcentered = X.rowwise() - X.colwise().mean();
-  C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
-  EigenSolver<MatrixXd> edecomp(C);
-  // Eigen values
-  eigenvalues = edecomp.eigenvalues().real();
-  // Eigen vectors
-  eigenvectors = edecomp.eigenvectors().real();
-  cumulative.resize(eigenvalues.rows());
-  // Eigen pairs [eigenvalue, eigenvector]
-  std::vector<std::pair<double, VectorXd> > eigen_pairs;
-  double c = 0.0;
-
-  for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
-    if (normalise) {
-      double norm = eigenvectors.col(i).norm();
-      eigenvectors.col(i) /= norm;
-    }
-    eigen_pairs.push_back(std::make_pair(eigenvalues(i), eigenvectors.col(i)));
-  }
-  // Sorting Eigen pairs [eigenvalue, eigenvector]
-  std::sort(eigen_pairs.begin(), eigen_pairs.end(),
-            [](const std::pair<double, VectorXd> a,
-               const std::pair<double, VectorXd> b)
-                ->bool { return (a.first > b.first); });
-  while (totalvar <= 0.85) {
-    eigenvalues(i) = eigen_pairs[i].first;
-    c += eigenvalues(i);
-    cumulative(i) = c;
-    eigenvectors.col(i) = eigen_pairs[i].second;
-    totalvar = totalvar + (eigenvalues(i) / eigenvalues.sum());
-    ++i;
-  }
-  //eigenvectors.conservativeResize(X.rows(), i);
-  //eigenvectors.resizeCols(i);
-  std::cout << "Eigenvectors:\n" << eigenvectors << std::endl;
-  std::cout << "Total number of components to be used in transformed matrix: "
-            << i << std::endl;
-  // Transformed matrix
-  transformed = Xcentered * eigenvectors;
+  MatrixXd NewDataMatrix, NewDataMatrixCentered;
+  NewDataMatrix = eigenvectors * Transformed.transpose();
+  NewDataMatrixCentered = eigenvectors * TransformedCentered.transpose();
+  std::cout << "New Transformed data:\n" << NewDataMatrix << std::endl;
+  std::cout << "New Transformed (centered?) data:\n" << NewDataMatrixCentered
+            << std::endl;
 }
 
 void LPCA::Print() {
@@ -223,16 +143,17 @@ void LPCA::Print() {
   }
   std::cout << std::endl;
   std::cout << "Sorted eigenvectors:\n" << eigenvectors << std::endl;
-  std::cout << "Transformed data:\n" << X *eigenvectors << std::endl;
-  std::cout << "Transformed centred data:\n" << transformed << std::endl;
+  std::cout << "Transformed data:\n" << Transformed << std::endl;
+  std::cout << "Transformed centred data:\n" << TransformedCentered
+            << std::endl;
 }
 
 void LPCA::WriteTransformed(std::string file) {
   std::ofstream outfile(file);
-  for (unsigned int i = 0; i < transformed.rows(); i++) {
-    for (unsigned int j = 0; j < transformed.cols(); j++) {
-      outfile << transformed(i, j);
-      if (j != transformed.cols() - 1)
+  for (unsigned int i = 0; i < TransformedCentered.rows(); i++) {
+    for (unsigned int j = 0; j < TransformedCentered.cols(); j++) {
+      outfile << TransformedCentered(i, j);
+      if (j != TransformedCentered.cols() - 1)
         outfile << ",";
     }
     outfile << std::endl;

@@ -29,13 +29,17 @@ public:
   void SetNormalise(const int i) {
     normalise = i;
   };
-  MatrixXd &GetTransformed() { return transformed; }
+  MatrixXd &GetTransformed() { return TransformedCentered; }
 
   MatrixXd &GetX() { return X; }
 
   void RunLPCA();
 
   void RunLPCAWithReductionOfComponents();
+
+  void RunRevertLPCAWithReductionOfComponents();
+
+  void RunRevertLPCA();
 
   void Print();
 
@@ -46,7 +50,7 @@ public:
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {}
 
 private:
-  MatrixXd X, Xcentered, C, K, eigenvectors, transformed;
+  MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered;
   VectorXd eigenvalues, cumulative;
   unsigned int normalise;
 
