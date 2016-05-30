@@ -58,5 +58,4 @@ bool HistogramManager<F>::HistoFill(Population<F> &pop, char *hfile) {
   return true;
 }
 
-template <class F> void HistogramManager<F>::Reset() { /*Instance = 0;*/
-}
+template <class F> void HistogramManager<F>::Reset() { /*Instance = 0;*/}
