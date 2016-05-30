@@ -72,7 +72,6 @@ if(APPLE)
           /usr/local/lib/libgmock_main.a
           GA
           Instrument
-          # Fix this
           ${ROOT_LIBRARIES}
           Hist
           RIO
@@ -93,7 +92,6 @@ elseif(UNIX)
           ${GMOCK_LIBS_DIR}/libgmock_main.a
           GA
           Instrument
-          # Fix this
           ${ROOT_LIBRARIES}
           Hist
           RIO

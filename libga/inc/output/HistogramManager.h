@@ -25,7 +25,7 @@
 #include <vector>
 #include <iostream>
 
-namespace geantvmoop{
+using namespace geantvmoop;
 
 template <typename F> class HistogramManager : public TObject {
 
@@ -47,11 +47,8 @@ private:
   ~HistogramManager() {}
 
 //ClassDef(HistogramManager, 1)
-ClassDefT(HistogramManager<F>,0)
 };
 
-ClassDefT2(HistogramManager,F)
-
-}
+//ClassDefT2(HistogramManager,F)
 
 #endif

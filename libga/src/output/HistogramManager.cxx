@@ -15,10 +15,9 @@
 #include "TROOT.h"
 #include "Rtypes.h"
 
+using namespace geantvmoop;
 
-namespace geantvmoop {
-
-ClassImpT(HistogramManager,F)
+//ClassImpT(HistogramManager,F)
 //templateClassImp(HistogramManager);
 
 template <class F>
@@ -60,5 +59,4 @@ bool HistogramManager<F>::HistoFill(Population<F> &pop, char *hfile) {
 }
 
 template <class F> void HistogramManager<F>::Reset() { /*Instance = 0;*/
-}
 }
