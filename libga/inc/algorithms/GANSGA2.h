@@ -25,6 +25,8 @@
 #include "addstructures/GAComparator.h"
 #include "tools/Random.h"
 #include "output/CSVManager.h"
+#include "output/HistogramManager.h"
+
 #include <iostream>
 
 namespace geantvmoop {
@@ -84,6 +86,7 @@ public:
     population = next;
     //std::cout << "Moving to next generation..\n" << population << std::endl;
     CSVManager::GetInstance().CSVOutput("output.lpca", population);
+    HistogramManager<F>::GetInstance().HistoFill(population, "testpopulation.root");
   }
 
   void PrintImpl(std::ostream &os) {

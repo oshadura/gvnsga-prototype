@@ -1,3 +1,16 @@
+//===--- CSVManager.h - LibGA ---------------------------------*- C++
+//-*-===//
+//
+//                     LibGA Prototype
+//
+//===----------------------------------------------------------------------===//
+/**
+ * @file CSVManager.h
+ * @brief Implementation of CSV class for LibGA
+ * prototype
+ */
+//
+
 #ifndef __CSVMANAGER__
 #define __CSVMANAGER__
 

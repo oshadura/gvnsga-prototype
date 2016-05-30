@@ -100,7 +100,7 @@ void LPCA::RunLPCAWithReductionOfComponents() {
   // Printing current state information before  PC cutoff
   std::cout << "Printing original information after PCA" << std::cout;
   Transformed = X * eigenvectors;
-  TransformedCentered = Xcentered * eigenvectors;
+  //TransformedCentered = Xcentered * eigenvectors;
   // Varince based selection (< 85 %)
   while (totalvar <= 0.85) {
     eigenvalues(i) = eigen_pairs[i].first;
@@ -113,17 +113,17 @@ void LPCA::RunLPCAWithReductionOfComponents() {
   Print();
   eigenvectors.conservativeResize(eigenvectors.rows(), i);
   Transformed.conservativeResize(Transformed.rows(), i);
-  TransformedCentered.conservativeResize(Transformed.rows(), i);
+  //TransformedCentered.conservativeResize(Transformed.rows(), i);
   std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
   std::cout << "Total number of components to be used in Transformed matrix: "
             << i << std::endl;
   // Transformed matrix
   MatrixXd NewDataMatrix, NewDataMatrixCentered;
   NewDataMatrix = eigenvectors * Transformed.transpose();
-  NewDataMatrixCentered = eigenvectors * TransformedCentered.transpose();
+  //NewDataMatrixCentered = eigenvectors * TransformedCentered.transpose();
   std::cout << "New Transformed data:\n" << NewDataMatrix << std::endl;
-  std::cout << "New Transformed (centered?) data:\n" << NewDataMatrixCentered
-            << std::endl;
+  //std::cout << "New Transformed (centered?) data:\n" << NewDataMatrixCentered
+  //          << std::endl;
 }
 
 void LPCA::Print() {

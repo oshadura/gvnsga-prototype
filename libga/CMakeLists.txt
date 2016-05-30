@@ -33,7 +33,7 @@ endif()
 #-------------------
 
 if (GNU)
-  set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -Wall -fPIC -g")
+  set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -Wall -fPIC -g -z defs")
   if (CMAKE_BUILD_TYPE MATCHES Debug)
     set(GA_CXX_FLAGS "${GA_CXX_FLAGS} -ggdb -O0")
   else()

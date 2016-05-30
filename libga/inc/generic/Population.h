@@ -52,7 +52,18 @@ public:
     return (*this)[i]->GetInput();
   }
 
-  bool isNonDominated(const individual_t<F> &ind) const {
+  const typename F::Output &GetTFitness(int i) const {
+  }
+
+  const typename F::Input &GetIJGenes(int i, int j) const {
+    return (*this)[i]->GetInput()[j];
+  }
+
+  const typename F::Output &GetIJFitness(int i, int j) const {
+    return (*this)[i]->GetOutput()[j];
+  }
+
+  bool IsNonDominated(const individual_t<F> &ind) const {
     for (auto entry : *this) {
       if (ind->isDominatedBy(*entry))
         return true;
@@ -137,9 +148,9 @@ public:
     for (int i = 0; i < pop.size(); ++i) {
       auto entry = pop[i];
       // for (int j = 0; j < entry.GetOutput().size(); ++j) {
-      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1] << ", "
-                << entry->GetOutput()[3] << ", "<< std::endl;
-      //std::cout << "<- Fitness function output" << std::endl;
+      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1]
+                << ", " << entry->GetOutput()[3] << ", " << std::endl;
+      // std::cout << "<- Fitness function output" << std::endl;
     }
     std::cout << "---------------------------\n";
     return s;

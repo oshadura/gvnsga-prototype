@@ -23,4 +23,4 @@ private:
 };
 }
 
-#endif // MOO_RANDOM_H
+#endif 
