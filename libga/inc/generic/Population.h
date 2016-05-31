@@ -58,23 +58,37 @@ public:
     return (*this)[i]->GetOutput();
   }
 
-  const typename F::Input &GetIJGenes(int i, int j) const {
-    return (*this)[i]->GetInput()[j];
+  typename F::Input GetGene(int gene) const {
+    typename F::Input v;
+    for (unsigned int j = 0; j < this->size(); ++j)
+      v.push_back(GetGeneValue(j, gene));
+    return v;
   }
 
-  const typename F::Output &GetIJFitness(int i, int j) const {
-    return (*this)[i]->GetOutput()[j];
+  double GetGeneValue(int index, int gene) const {
+    return (*this)[index]->GetOutput()[gene];
+  }
+
+  typename F::Output GetObjective(int objective) const {
+    typename F::Output v;
+    for (unsigned int j = 0; j < this->size(); ++j)
+      v.push_back(GetObjectiveValue(j, objective));
+    return v;
+  }
+
+  double GetObjectiveValue(int index, int objective) const {
+    return (*this)[index]->GetOutput()[objective];
   }
 
   bool IsNonDominated(const individual_t<F> &ind) const {
     for (auto entry : *this) {
-      if (ind->isDominatedBy(*entry))
+      if (ind->IsDominatedBy(*entry))
         return true;
     }
     return false;
   }
 
-  const individual_t<F> pop_back_and_delete() {
+  const individual_t<F> PopBack() {
     individual_t<F> a = this->back();
     this->pop_back();
     return a;
@@ -84,17 +98,6 @@ public:
     for (auto entry : pop) {
       this->erase(std::remove(this->begin(), this->end(), entry), this->end());
     }
-  }
-
-  typename F::Output GetObjective(int objective) const {
-    typename F::Output v;
-    for (unsigned int j = 0; j < this->size(); ++j)
-      v.push_back(GetGAValue(j, objective));
-    return v;
-  }
-
-  double GetGAValue(int index, int objective) const {
-    return (*this)[index]->GetOutput()[objective];
   }
 
   template <typename T>

@@ -50,7 +50,6 @@ public:
   HistogramManager(HistogramManager const &) = delete;
   void operator=(HistogramManager const &) = delete;
   bool HistoFill(Population<F> &pop, char *hfile) {
-    double ind, fitness;
     TH1F *PopDist =
         new TH1F("PopDist", "Population distribution", pop.size(), 0., 1.);
     PopDist->GetXaxis()->SetTitle("Population distribution");
@@ -68,10 +67,11 @@ public:
     XScatter->GetYaxis()->SetTitle("Size of vector");
 
     for (int i = 0; i < pop.size(); ++i) {
-      // Bad! I need to have one more variable!
+      auto ind = pop.GetGene(i);
+      // Bad! I need to have one more variable for sixe of TGenes
       for (int j = 0; j < pop.GetTGenes(i).size(); ++j) {
-        ind = pop.GetIJGenes(i, j);
-        fitness = pop.GetIJFitness(i, j);
+        auto ind = pop.GetGeneValue(i, j);
+        auto fitness = pop.GetObjectiveValue(i, j);
         PopDist->Fill(ind);
         PopFitnessDist->Fill(fitness);
       }
