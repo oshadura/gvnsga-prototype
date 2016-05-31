@@ -69,7 +69,7 @@ public:
     fIndCrowDist = GACD::CalculateIndicator(population);
     GAComparator<F> comp(&fIndRank, &fIndCrowDist);
     std::sort(population.begin(), population.end(), comp);
-
+    HistogramManager<F>::GetInstance().HistoFill(population, "population_nsga2.root");
     std::cout << "---------------------------\n" << std::endl;
     for (auto entry : population) {
       //  for (int i = 0; i < entry.GetOutput().size(); ++i) {
@@ -86,7 +86,6 @@ public:
     population = next;
     //std::cout << "Moving to next generation..\n" << population << std::endl;
     CSVManager::GetInstance().CSVOutput("output.lpca", population);
-    HistogramManager<F>::GetInstance().HistoFill(population, "testpopulation.root");
   }
 
   void PrintImpl(std::ostream &os) {

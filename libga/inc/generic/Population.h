@@ -47,8 +47,11 @@ public:
   }
 
   ~Population() {}
+  
   // Stupid clang
+#if defined __clang__
   void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
+#endif
 
   const typename F::Input &GetTGenes(int i) const {
     return (*this)[i]->GetInput();
