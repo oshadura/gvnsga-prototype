@@ -47,8 +47,8 @@ public:
   }
 
   ~Population() {}
-  
-  // Stupid clang
+
+// Stupid clang
 #if defined __clang__
   void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
 #endif

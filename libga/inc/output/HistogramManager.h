@@ -63,17 +63,16 @@ public:
         sprintf(namepop, "%s%d", "PopDist", i);
         sprintf(namefitn, "%s%d", "PopFitnessDist", i);
         std::cout << "Filling out histograms.." << std::endl;
-        //TH1F *h = (TH1F *)gDirectory->Get(name);
-        //if (h)
-        //  h->Draw("same");
+        TH1F *h = (TH1F *)gDirectory->Get(namepop);
+        if (h)
+          h->Draw("same");
         TH1F *PopDist =
             new TH1F(namepop, "Population distribution", pop.size(), 0., 1.);
         PopDist->GetXaxis()->SetTitle("Population distribution");
         PopDist->GetYaxis()->SetTitle("N of bins");
 
-        TH1F *PopFitnessDist =
-            new TH1F(namefitn, "Population fitness distribution",
-                     pop.size(), 0., 1.);
+        TH1F *PopFitnessDist = new TH1F(
+            namefitn, "Population fitness distribution", pop.size(), 0., 1.);
         PopFitnessDist->GetXaxis()->SetTitle("Population fitness distribution");
         PopFitnessDist->GetYaxis()->SetTitle("N of bins");
 
