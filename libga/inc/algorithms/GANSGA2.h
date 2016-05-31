@@ -42,9 +42,11 @@ public:
   GANSGA2(F problem) : GAAlgorithm<GANSGA2<F>, F>(problem) {}
   int fPopulationSize = 10;
   double PMut = 0.2;
+  int fCurrentGeneration = 0;
 
   void InitializeImpl() {
-    population = Population<F>{ fPopulationSize };
+    fCurrentGeneration = 1; // initializing generation
+    population = Population<F>{fPopulationSize};
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
     /*
@@ -55,7 +57,7 @@ public:
 
   void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
-    GATournamentSelection<GAComparator<F> > selector(cmp);
+    GATournamentSelection<GAComparator<F>> selector(cmp);
     Population<F> matingPool =
         selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
@@ -69,12 +71,13 @@ public:
     fIndCrowDist = GACD::CalculateIndicator(population);
     GAComparator<F> comp(&fIndRank, &fIndCrowDist);
     std::sort(population.begin(), population.end(), comp);
-    HistogramManager<F>::GetInstance().HistoFill(population, "population_nsga2.root");
+    HistogramManager<F>::GetInstance().HistoFill(
+        population, "population_nsga2.root", fCurrentGeneration);
     std::cout << "---------------------------\n" << std::endl;
     for (auto entry : population) {
       //  for (int i = 0; i < entry.GetOutput().size(); ++i) {
-      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1] << ", "
-                << entry->GetOutput()[3] << ", ";
+      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1]
+                << ", " << entry->GetOutput()[3] << ", ";
       //  }
       std::cout << " | rank: " << fIndRank[entry] << " | crowding: ";
       std::cout << fIndCrowDist[entry] << std::endl;
@@ -84,8 +87,9 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
-    //std::cout << "Moving to next generation..\n" << population << std::endl;
+    // std::cout << "Moving to next generation..\n" << population << std::endl;
     CSVManager::GetInstance().CSVOutput("output.lpca", population);
+    ++fCurrentGeneration;
   }
 
   void PrintImpl(std::ostream &os) {

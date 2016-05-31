@@ -51,30 +51,34 @@ public:
 
   void operator=(HistogramManager const &) = delete;
 
-  bool HistoFill(Population<F> &pop, char *hfile) {
+  bool HistoFill(Population<F> &pop, char *hfile, int generation) {
+
     TH1F *PopDist, *PopFitnessDist;
     TH2F *XScatter;
-    char *namepop, *namefitn;
-    TFile f(hfile, "update");
+    char *namepop, *namefitn, *namefolder;
+
+    sprintf(namepop, "%s%d", "PopDist", generation);
+    sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
+    sprintf(namefolder, "%s%d", "Population statistics", generation);
+
+    TFile file(hfile, "update");
+    file.mkdir(namefolder);
+
     for (int i = 0; i < pop.size(); ++i) {
       for (int j = 0; j < pop.GetTGenes(i).size(); ++j) {
         auto ind = pop.GetGeneValue(i, j);
         auto fitness = pop.GetObjectiveValue(i, j);
-        sprintf(namepop, "%s%d", "PopDist", i);
-        sprintf(namefitn, "%s%d", "PopFitnessDist", i);
         std::cout << "Filling out histograms.." << std::endl;
-        TH1F *h = (TH1F *)gDirectory->Get(namepop);
-        if (h)
-          h->Draw("same");
+
         TH1F *PopDist =
             new TH1F(namepop, "Population distribution", pop.size(), 0., 1.);
-        PopDist->GetXaxis()->SetTitle("Population distribution");
-        PopDist->GetYaxis()->SetTitle("N of bins");
+        PopDist->GetXaxis()->SetTitle("N of bins");
+        PopDist->GetYaxis()->SetTitle("Population distribution");
 
         TH1F *PopFitnessDist = new TH1F(
             namefitn, "Population fitness distribution", pop.size(), 0., 1.);
-        PopFitnessDist->GetXaxis()->SetTitle("Population fitness distribution");
-        PopFitnessDist->GetYaxis()->SetTitle("N of bins");
+        PopFitnessDist->GetXaxis()->SetTitle("N of bins");
+        PopFitnessDist->GetYaxis()->SetTitle("Population fitness distribution");
 
         TH2F *XScatter = new TH2F("XScatter", "N events versus size vector", 50,
                                   0., 1., 50, 0., 1.);
@@ -97,6 +101,7 @@ public:
     PopFitnessDist->Write();
     return true;
   }
+
   void Reset();
 
 private:
