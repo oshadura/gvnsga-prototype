@@ -33,6 +33,8 @@
 
 #include <vector>
 #include <iostream>
+#include <stdio.h>
+#include <math.h>
 
 using namespace geantvmoop;
 
@@ -55,7 +57,7 @@ public:
 
     TH1F *PopDist, *PopFitnessDist;
     TH2F *XScatter;
-    char *namepop, *namefitn, *namefolder;
+    char namepop[20], namefitn[20], namefolder[20];
 
     sprintf(namepop, "%s%d", "PopDist", generation);
     sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
