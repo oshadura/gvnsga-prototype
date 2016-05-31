@@ -54,9 +54,6 @@ public:
   void operator=(HistogramManager const &) = delete;
 
   bool HistoFill(Population<F> &pop, char *hfile, int generation) {
-
-    TH1F *PopDist, *PopFitnessDist;
-    TH2F *XScatter;
     char namepop[20], namefitn[20], namefolder[20];
 
     sprintf(namepop, "%s%d", "PopDist", generation);
@@ -66,27 +63,26 @@ public:
     TFile file(hfile, "update");
     file.mkdir(namefolder);
 
+    TH1F *PopDist =
+        new TH1F(namepop, "Population distribution", pop.size(), 0., 1.);
+    PopDist->GetXaxis()->SetTitle("N of bins");
+    PopDist->GetYaxis()->SetTitle("Population distribution");
+
+    TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution",
+                                    pop.size(), 0., 1.);
+    PopFitnessDist->GetXaxis()->SetTitle("N of bins");
+    PopFitnessDist->GetYaxis()->SetTitle("Population fitness distribution");
+
+    TH2F *XScatter = new TH2F("XScatter", "N events versus size vector", 50, 0.,
+                              1., 50, 0., 1.);
+    XScatter->GetXaxis()->SetTitle("N Events");
+    XScatter->GetYaxis()->SetTitle("Size of vector");
+
     for (int i = 0; i < pop.size(); ++i) {
       for (int j = 0; j < pop.GetTGenes(i).size(); ++j) {
         auto ind = pop.GetGeneValue(i, j);
         auto fitness = pop.GetObjectiveValue(i, j);
         std::cout << "Filling out histograms.." << std::endl;
-
-        TH1F *PopDist =
-            new TH1F(namepop, "Population distribution", pop.size(), 0., 1.);
-        PopDist->GetXaxis()->SetTitle("N of bins");
-        PopDist->GetYaxis()->SetTitle("Population distribution");
-
-        TH1F *PopFitnessDist = new TH1F(
-            namefitn, "Population fitness distribution", pop.size(), 0., 1.);
-        PopFitnessDist->GetXaxis()->SetTitle("N of bins");
-        PopFitnessDist->GetYaxis()->SetTitle("Population fitness distribution");
-
-        TH2F *XScatter = new TH2F("XScatter", "N events versus size vector", 50,
-                                  0., 1., 50, 0., 1.);
-        XScatter->GetXaxis()->SetTitle("N Events");
-        XScatter->GetYaxis()->SetTitle("Size of vector");
-
         PopDist->Fill(ind);
         PopFitnessDist->Fill(fitness);
       }
