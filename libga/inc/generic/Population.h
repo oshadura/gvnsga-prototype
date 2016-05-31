@@ -27,32 +27,35 @@
 
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F> > {
+template <typename F> class Population : public std::vector<individual_t<F>> {
 
 public:
   // Population(std::initializer_list<individual_t<F>> list)
   //    : std::vector<individual_t<F>>(list) {}
 
-  Population() : std::vector<individual_t<F> >() {}
+  Population() : std::vector<individual_t<F>>() {}
 
-  Population(const std::vector<individual_t<F> > &individuals)
-      : std::vector<individual_t<F> >(individuals) {}
+  Population(const std::vector<individual_t<F>> &individuals)
+      : std::vector<individual_t<F>>(individuals) {}
 
   Population(int n) {
     for (int i = 0; i < n; ++i) {
       typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F> >(gene);
+      auto individual = std::make_shared<TGenes<F>>(gene);
       this->push_back(individual);
     }
   }
 
   ~Population() {}
+  // Stupid clang
+  void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
 
   const typename F::Input &GetTGenes(int i) const {
     return (*this)[i]->GetInput();
   }
 
   const typename F::Output &GetTFitness(int i) const {
+    return (*this)[i]->GetOutput();
   }
 
   const typename F::Input &GetIJGenes(int i, int j) const {
@@ -122,12 +125,14 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] > m[rhs];
+                });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] < m[rhs];
+                });
   }
 
   void SortObj(int objective, bool isDescending = false) {

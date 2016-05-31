@@ -43,7 +43,7 @@ void LPCA::RunLPCA() {
   eigenvectors = edecomp.eigenvectors().real();
   cumulative.resize(eigenvalues.rows());
   // Eigen pairs [eigenvalue, eigenvector]
-  std::vector<std::pair<double, VectorXd> > eigen_pairs;
+  std::vector<std::pair<double, VectorXd>> eigen_pairs;
   double c = 0.0;
 
   for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
@@ -56,8 +56,9 @@ void LPCA::RunLPCA() {
   // Sorting Eigen pairs [eigenvalue, eigenvector]
   std::sort(eigen_pairs.begin(), eigen_pairs.end(),
             [](const std::pair<double, VectorXd> a,
-               const std::pair<double, VectorXd> b)
-                ->bool { return (a.first > b.first); });
+               const std::pair<double, VectorXd> b) -> bool {
+              return (a.first > b.first);
+            });
 
   for (unsigned int i = 0; i < eigen_pairs.size(); i++) {
     eigenvalues(i) = eigen_pairs[i].first;
@@ -83,7 +84,7 @@ void LPCA::RunLPCAWithReductionOfComponents() {
   eigenvectors = edecomp.eigenvectors().real();
   cumulative.resize(eigenvalues.rows());
   // Eigen pairs [eigenvalue, eigenvector]
-  std::vector<std::pair<double, VectorXd> > eigen_pairs;
+  std::vector<std::pair<double, VectorXd>> eigen_pairs;
   double c = 0.0;
   for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
     if (normalise) {
@@ -95,12 +96,13 @@ void LPCA::RunLPCAWithReductionOfComponents() {
   // Sorting Eigen pairs [eigenvalue, eigenvector]
   std::sort(eigen_pairs.begin(), eigen_pairs.end(),
             [](const std::pair<double, VectorXd> a,
-               const std::pair<double, VectorXd> b)
-                ->bool { return (a.first > b.first); });
+               const std::pair<double, VectorXd> b) -> bool {
+              return (a.first > b.first);
+            });
   // Printing current state information before  PC cutoff
-  std::cout << "Printing original information after PCA" << std::cout;
+  std::cout << "Printing original information after PCA" << std::endl;
   Transformed = X * eigenvectors;
-  //TransformedCentered = Xcentered * eigenvectors;
+  // TransformedCentered = Xcentered * eigenvectors;
   // Varince based selection (< 85 %)
   while (totalvar <= 0.85) {
     eigenvalues(i) = eigen_pairs[i].first;
@@ -113,16 +115,16 @@ void LPCA::RunLPCAWithReductionOfComponents() {
   Print();
   eigenvectors.conservativeResize(eigenvectors.rows(), i);
   Transformed.conservativeResize(Transformed.rows(), i);
-  //TransformedCentered.conservativeResize(Transformed.rows(), i);
+  // TransformedCentered.conservativeResize(Transformed.rows(), i);
   std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
   std::cout << "Total number of components to be used in Transformed matrix: "
             << i << std::endl;
   // Transformed matrix
   MatrixXd NewDataMatrix, NewDataMatrixCentered;
   NewDataMatrix = eigenvectors * Transformed.transpose();
-  //NewDataMatrixCentered = eigenvectors * TransformedCentered.transpose();
+  // NewDataMatrixCentered = eigenvectors * TransformedCentered.transpose();
   std::cout << "New Transformed data:\n" << NewDataMatrix << std::endl;
-  //std::cout << "New Transformed (centered?) data:\n" << NewDataMatrixCentered
+  // std::cout << "New Transformed (centered?) data:\n" << NewDataMatrixCentered
   //          << std::endl;
 }
 

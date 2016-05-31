@@ -71,7 +71,7 @@ public:
       individual.push_back(Gene2);
       individual.push_back(Gene3);
       auto fInd = std::make_shared<TGenes<F>>(individual);
-      // TBF fixed for MAC OS X
+      // TBD fixed for MAC OS X
       pop.push_back(fInd);
     }
   }

@@ -17,9 +17,11 @@
 
 using namespace geantvmoop;
 
-//ClassImpT(HistogramManager,F)
-//templateClassImp(HistogramManager);
+// ClassImpT(HistogramManager,F)
+templateClassImp(HistogramManager);
 
+// Moved to .h...
+/*
 template <class F>
 bool HistogramManager<F>::HistoFill(Population<F> &pop, char *hfile) {
   double ind, fitness;
@@ -57,5 +59,7 @@ bool HistogramManager<F>::HistoFill(Population<F> &pop, char *hfile) {
   PopFitnessDist->Draw();
   return true;
 }
+*/
 
-template <class F> void HistogramManager<F>::Reset() { /*Instance = 0;*/}
+template <class F> void HistogramManager<F>::Reset() { /*Instance = 0;*/
+}
