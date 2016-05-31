@@ -29,6 +29,7 @@
 #include "TObject.h"
 #include "TSystem.h"
 #include "TROOT.h"
+#include "TDirectory.h"
 #include "Rtypes.h"
 
 #include <vector>
@@ -54,24 +55,26 @@ public:
   void operator=(HistogramManager const &) = delete;
 
   bool HistoFill(Population<F> &pop, char *hfile, int generation) {
-    char namepop[20], namefitn[20], namefolder[20];
-
+    char namepop[20], namefitn[20], namefolder[20], namescatter[20];
+    //TDirectory *folder;
     sprintf(namepop, "%s%d", "PopDist", generation);
     sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
-    sprintf(namefolder, "%s%d", "Population statistics", generation);
+    sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
+    sprintf(namescatter, "%s%d", "Scatterx1x2|", generation);
 
     TFile file(hfile, "update");
     file.mkdir(namefolder);
+    file.cd(namefolder);
 
     TH1F *PopDist =
         new TH1F(namepop, "Population distribution", pop.size(), 0., 1.);
-    PopDist->GetXaxis()->SetTitle("N of bins");
-    PopDist->GetYaxis()->SetTitle("Population distribution");
+    PopDist->GetXaxis()->SetTitle("TGenes / bins");
+    PopDist->GetYaxis()->SetTitle("N");
 
     TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution",
                                     pop.size(), 0., 1.);
-    PopFitnessDist->GetXaxis()->SetTitle("N of bins");
-    PopFitnessDist->GetYaxis()->SetTitle("Population fitness distribution");
+    PopFitnessDist->GetXaxis()->SetTitle("TGenes / bins");
+    PopFitnessDist->GetYaxis()->SetTitle("N");
 
     TH2F *XScatter = new TH2F("XScatter", "N events versus size vector", 50, 0.,
                               1., 50, 0., 1.);
@@ -80,21 +83,25 @@ public:
 
     for (int i = 0; i < pop.size(); ++i) {
       for (int j = 0; j < pop.GetTGenes(i).size(); ++j) {
+
         auto ind = pop.GetGeneValue(i, j);
+
         auto fitness = pop.GetObjectiveValue(i, j);
+
+        // Only for DTLZ1
+        auto x1 = pop.GetGeneValue(i,1);
+        auto x2 = pop.GetGeneValue(i,2);
+
         std::cout << "Filling out histograms.." << std::endl;
         PopDist->Fill(ind);
         PopFitnessDist->Fill(fitness);
+        XScatter->Fill(x1,x2);
       }
     }
-    TCanvas *output = new TCanvas("output", "DTLZ1 genetic optimisation", 1);
-    output->Divide(2, 2);
-    output->cd(1);
     PopDist->Draw();
     PopDist->Write();
-    output->cd(2);
-    // XScatter->Draw();
-    output->cd(3);
+    XScatter->Draw();
+    XScatter->Write();
     PopFitnessDist->Draw();
     PopFitnessDist->Write();
     return true;
