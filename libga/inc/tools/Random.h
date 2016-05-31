@@ -3,24 +3,35 @@
 
 #include <stdlib.h> /* srand, rand */
 #include <time.h>   /* time */
+#include <cstdlib>
 
 namespace geantvmoop {
 
 class Random {
 public:
-  static Random *getInstance() { return _singletonInst; };
+  static Random &GetInstance() {
+    static Random Instance;
+    return Instance;
+  }
 
-  double rndDouble();
-  double rndDouble(int min, int max);
-  int rndInt(int min, int max);
-  bool rndBool();
-
-private:
-  static Random *_singletonInst;
-  Random() { srand(time(NULL)); }
   Random(Random const &);
   void operator=(Random const &);
+
+  double RandomDouble() { return ((double)std::rand() / (RAND_MAX)); }
+
+  int RandomInt(int min, int max) {
+    return min + (std::rand() % (int)(max - min + 1));
+  }
+
+  bool RandomBool() { return rand() % 2 == 1; }
+
+  double RandomDouble(int min, int max) {
+    return min + (double)std::rand() / RAND_MAX * (max - min);
+  }
+
+private:
+  Random() { srand(time(NULL)); }
 };
 }
 
-#endif 
+#endif

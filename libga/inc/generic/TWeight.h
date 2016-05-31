@@ -32,9 +32,9 @@ public:
   ~Weights() {}
   
   static std::vector<Weights> GetWeights(int n) {
-    auto rndWeight = []() {
-      auto r = Random::getInstance();
-      std::vector<double> v = {r->rndDouble(), r->rndDouble(), r->rndDouble()};
+    auto RandomWeight = []() {
+      auto r = Random::GetInstance();
+      std::vector<double> v = {r.RandomDouble(), r.RandomDouble(), r.RandomDouble()};
       double sum = 0;
       for (auto it = v.begin(); it != v.end(); ++it)
         sum += *it;

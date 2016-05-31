@@ -60,7 +60,7 @@ public:
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
       individual_t<F> offspring =
           GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
-      if (Random::getInstance()->rndDouble() < PMut)
+      if (Random::GetInstance().RandomDouble() < PMut)
         offspring = GAPolMutation::Mutation(offspring);
       population.push_back(offspring);
     }

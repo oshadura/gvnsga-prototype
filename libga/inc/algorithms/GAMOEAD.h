@@ -28,7 +28,7 @@ namespace geantvmoop {
 template <typename F> class GAMOEAD : public GAAlgorithm<GAMOEAD<F>, F> {
 private:
   std::vector<Weights> fWeights;
-  std::vector<std::vector<int> > fNearest;
+  std::vector<std::vector<int>> fNearest;
   std::vector<double> fRefPoint;
   Population<F> pop;
   std::vector<double> fFitness;
@@ -52,7 +52,7 @@ public:
       throw std::runtime_error("Please set T lower than population size!");
     for (auto w : fWeights)
       fNearest.push_back(w.GetNearestNeighbor(fWeights, T));
-    pop = Population<F>{ fPopulationSize };
+    pop = Population<F>{fPopulationSize};
     fRefPoint = GetRP(pop);
     fFitness = std::vector<double>(fPopulationSize,
                                    std::numeric_limits<double>::max());
@@ -61,7 +61,7 @@ public:
   }
 
   template <typename T> int RandomVectorIndex(std::vector<T> v) {
-    return Random::getInstance()->rndInt(0, v.size());
+    return Random::GetInstance().RandomInt(0, v.size());
   }
 
   void EvolutionImpl() {
@@ -70,7 +70,7 @@ public:
       auto a = pop[fNearest[i][RandomVectorIndex(fNearest[i])]];
       auto b = pop[fNearest[i][RandomVectorIndex(fNearest[i])]];
       individual_t<F> offspring = GASBXCrossover::Crossover(a, b);
-      if (Random::getInstance()->rndDouble() < PMut)
+      if (Random::GetInstance().RandomDouble() < PMut)
         offspring = GAPolMutation::Mutation(offspring);
       UpdateRP(fRefPoint, offspring);
       auto out = offspring->GetOutput();
@@ -93,7 +93,6 @@ public:
   }
 
   PF<F> GetParetoFrontImpl() { return fFront; }
-
 
   static void UpdateRP(std::vector<double> &ref, const individual_t<F> &ind) {
     int numOfObjectives = F::GetNObjectives();

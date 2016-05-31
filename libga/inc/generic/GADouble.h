@@ -29,9 +29,8 @@ public:
   GADouble(double d, double u) : GAConstrainedValue(0, d, u){};
   ~GADouble() {}
   GADouble random() const {
-    auto random = Random::getInstance();
-    double tmp = random->rndDouble(fDown, fUp);
-    return GADouble(tmp, fDown, fUp);
+    auto gene = Random::GetInstance().RandomDouble(fDown, fUp);
+    return GADouble(gene, fDown, fUp);
   }
 };
 }
