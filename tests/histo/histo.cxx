@@ -10,9 +10,9 @@ public:
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
-
 TEST_F(HistoOutput, SimpleHistoOutputofPopulation) {
   geantvmoop::Population<geantvmoop::DTLZ1> population;
-  bool IsTrue = HistogramManager<geantvmoop::DTLZ1>::GetInstance().HistoFill(population, "testpopulation.root");
+  bool IsTrue = HistogramManager<geantvmoop::DTLZ1>::GetInstance().HistoFill(
+      population, "testpopulation.root", 0);
   ASSERT_EQ(IsTrue, true);
 }
