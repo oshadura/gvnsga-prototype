@@ -37,17 +37,17 @@ public:
 
   void RunLPCAWithReductionOfComponents();
 
-  void RunRevertLPCAWithReductionOfComponents();
-
-  void RunRevertLPCA();
-
   void Print();
 
   void WriteTransformed(std::string);
 
   void WriteEigenvectors(std::string);
 
-  template <typename F> Population<F> MVAImpl(Population<F> &pop) {}
+  template <typename F> Population<F> MVAImpl(Population<F> &pop) {
+    UploadPopulation(pop);
+    RunLPCAWithReductionOfComponents();
+    UnloadPopulation(pop);
+  }
 
 private:
   MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered;
@@ -73,6 +73,9 @@ public:
     std::cout << X << sep;
     Xcentered.resize(X.rows(), X.cols());
   }
+
+template <typename F> void UnloadPopulation(Population<F> &pop) {}
+
 };
 }
 

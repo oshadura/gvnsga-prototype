@@ -11,7 +11,7 @@ public:
   template <typename F>
   Population<F> NoiseReductionImpl(const Population<F> &population) {
     Population<F> result;
-    return result;
+    return LPCA::MVA(population);
   }
 };
 }
