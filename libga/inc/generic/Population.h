@@ -69,7 +69,8 @@ public:
   }
 
   double GetGeneValue(int index, int gene) const {
-    return (*this)[index]->GetOutput()[gene];
+    auto value = (*this)[index]->GetInput()[gene];
+    return value.GetGAValue();
   }
 
   typename F::Output GetObjective(int objective) const {

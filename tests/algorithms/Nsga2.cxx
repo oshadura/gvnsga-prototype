@@ -20,11 +20,12 @@ public:
 TEST_F(Nsga2, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2<geantvmoop::DTLZ1> nsga(dtlz1);
-  nsga.fPopulationSize = 10;
+  nsga.fPopulationSize = 1000;
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();
 }
 
+/*
 TEST_F(Nsga2, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
   geantvmoop::GANSGA2<geantvmoop::DTLZ2> nsga(dtlz2);
@@ -73,3 +74,4 @@ TEST_F(Nsga2, SolvingDTLZ7Problem) {
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();
 }
+*/

@@ -39,7 +39,7 @@ private:
   std::unordered_map<individual_t<F>, int> fIndRank;
 
 public:
-  GANSGA2(F problem) : GAAlgorithm<GANSGA2<F>, F>(problem) {}
+  GANSGA2Mod(F problem) : GAAlgorithm<GANSGA2Mod<F>, F>(problem) {}
   int fPopulationSize = 10;
   double PMut = 0.2;
   int fCurrentGeneration = 0;
@@ -49,10 +49,6 @@ public:
     population = Population<F>{fPopulationSize};
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
-    /*
-    for (unsigned int i = 0; i < population.size(); ++i)
-      std::cout << "| Pareto front: " << fIndRank[population[0]] << std::endl;
-    */
   }
 
   void EvolutionImpl() {
@@ -72,7 +68,7 @@ public:
     GAComparator<F> comp(&fIndRank, &fIndCrowDist);
     std::sort(population.begin(), population.end(), comp);
     HistogramManager<F>::GetInstance().HistoFill(
-        population, "population_nsga2.root", fCurrentGeneration);
+        population, "population_nsga2_mod.root", fCurrentGeneration);
     std::cout << "---------------------------\n" << std::endl;
     for (auto entry : population) {
       //  for (int i = 0; i < entry.GetOutput().size(); ++i) {
