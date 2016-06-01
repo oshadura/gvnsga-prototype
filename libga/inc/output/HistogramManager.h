@@ -65,7 +65,7 @@ public:
     bitmask.resize(N, 0);      // N-K trailing 0's
     // print integers and permute bitmask
     do {
-      for (int i = 1; i <= N; ++i) {
+      for (int i = 0; i < N; ++i) {
         if (bitmask[i]) {
           // std::cout << " " << i;
           ScattComb.push_back(i);
@@ -78,10 +78,11 @@ public:
 
   bool HistoFill(Population<F> &pop, char *hfile, int generation) {
     char namepop[20], namefitn[20], namefolder[20], namescatter[20], x1str[10],
-        x2str[10];
-    std::vector<int> ScatterCombination;
+        x2str[10], y1str[10], y2str[10];
+    std::vector<int> ScatterCombinationX, ScatterCombinationY;
     // TDirectory *folder;
-    TObjArray HList(0);
+    TObjArray HXList(0);
+    TObjArray HYList(0);
     sprintf(namepop, "%s%d", "PopDist", generation);
     sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
     sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
@@ -99,19 +100,23 @@ public:
     PopFitnessDist->GetXaxis()->SetTitle("TGenes / bins");
     PopFitnessDist->GetYaxis()->SetTitle("N");
     /////////////////////////////////////////////////////////////////
-    std::cout << "Lets check Scatter combination vector" << std::endl;
-    ScatterCombination =
-        ScatterCombinationCalculator(pop.GetTGenes(0).size() + 1, 2);
+    //std::cout << "Lets check Scatter combination vector" << std::endl;
+    ScatterCombinationX =
+        ScatterCombinationCalculator(pop.GetTGenes(0).size(), 2);
+    ScatterCombinationY =
+        ScatterCombinationCalculator(pop.GetTFitness(0).size(), 2);
+    /*
     for (auto i : ScatterCombination)
       std::cout << i << ' ';
+    std::cout << std::endl;
+    */
     /////////////////////////////////////////////////////////////////
-
     for (int i = 0; i < pop.size(); ++i) {
       // X Scatter plots
-      for (int it = 0; it < ScatterCombination.size(); it+=2) {
-        //Taking correct X ID
-        auto valueX1 = ScatterCombination.at(it);
-        auto valueX2 = ScatterCombination.at(it+1);
+      for (int it = 0; it < ScatterCombinationX.size(); it += 2) {
+        // Taking correct X ID
+        auto valueX1 = ScatterCombinationX.at(it);
+        auto valueX2 = ScatterCombinationX.at(it + 1);
 
         sprintf(namescatter, "%s%d%s%d", "X", valueX1, "vsX", valueX2);
         sprintf(x1str, "%s%d", "X", valueX1);
@@ -120,16 +125,40 @@ public:
         auto x1 = pop.GetGeneValue(i, it);
         auto x2 = pop.GetGeneValue(i, it + 1);
         TString histoname = TString::Format(namescatter);
-        TH2F *myhist = ((TH2F *)(HList.FindObject(histoname)));
-        if (!myhist) {
-          myhist = new TH2F(TString::Format(namescatter),
+        TH2F *myhistx = ((TH2F *)(HXList.FindObject(histoname)));
+        if (!myhistx) {
+          myhistx = new TH2F(TString::Format(namescatter),
                             "Scatter plot of different TGenes", pop.size(), 0.,
                             1., pop.size(), 0., 1.);
-          HList.Add(myhist);
+          HXList.Add(myhistx);
         }
-        myhist->GetXaxis()->SetTitle(x1str);
-        myhist->GetYaxis()->SetTitle(x2str);
-        myhist->Fill(x1, x2);
+        myhistx->GetXaxis()->SetTitle(x1str);
+        myhistx->GetYaxis()->SetTitle(x2str);
+        myhistx->Fill(x1, x2);
+      }
+      // Y Scatter plots
+      for (int it = 0; it < ScatterCombinationY.size(); it += 2) {
+        // Taking correct Y ID
+        auto valueY1 = ScatterCombinationY.at(it);
+        auto valueY2 = ScatterCombinationY.at(it + 1);
+
+        sprintf(namescatter, "%s%d%s%d", "Y", valueY1, "vsY", valueY2);
+        sprintf(y1str, "%s%d", "Y", valueY1);
+        sprintf(y2str, "%s%d", "Y", valueY2);
+
+        auto y1 = pop.GetObjectiveValue(i, it);
+        auto y2 = pop.GetObjectiveValue(i, it + 1);
+        TString histoname = TString::Format(namescatter);
+        TH2F *myhisty = ((TH2F *)(HYList.FindObject(histoname)));
+        if (!myhisty) {
+          myhisty = new TH2F(TString::Format(namescatter),
+                            "Scatter plot of different TGenes", pop.size(), 0.,
+                            50., pop.size(), 0., 50.);
+          HYList.Add(myhisty);
+        }
+        myhisty->GetXaxis()->SetTitle(y1str);
+        myhisty->GetYaxis()->SetTitle(y2str);
+        myhisty->Fill(y1, y2);
       }
       // Distribution plots
       for (int j = 0; j < pop.GetTGenes(0).size(); ++j) {
@@ -141,9 +170,8 @@ public:
     }
     PopDist->Draw();
     PopDist->Write();
-    HList.Write();
-    // XScatter->Draw();
-    // XScatter->Write();
+    HXList.Write();
+    HYList.Write();
     PopFitnessDist->Draw();
     PopFitnessDist->Write();
 
