@@ -14,10 +14,10 @@ public:
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::LPCA lpca;
   geantvmoop::KPCA kpca;
-  geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
+  geantvmoop::Population<geantvmoop::DTLZ1> pop{ 5 };
 };
 
-TEST_F(AllPCA, UploadRawPopulationCheck) {
+TEST_F(AllPCA, PCAConvertPopulationtoX) {
   lpca.UploadPopulation(pop);
   ASSERT_EQ(lpca.GetX().rows(), 5);
   ASSERT_EQ(lpca.GetX().cols(), 7);
@@ -31,9 +31,21 @@ TEST_F(AllPCA, LoadPopulationFromCSV) {
 
 TEST_F(AllPCA, PCALoadDataCSV) {
   lpca.LoadData("data");
-  //lpca.Print();
   ASSERT_EQ(lpca.GetX().rows(), pop.size());
   ASSERT_EQ(lpca.GetX().cols(), 3);
+}
+
+TEST_F(AllPCA, PCAConvertXtoPopulation) {
+  lpca.LoadData("dataDTLZ1");
+  MatrixXd currentX = lpca.GetX();
+  std::cout << "Number of cols " << currentX.cols() << std::endl;
+  std::cout << "Number of rows " << currentX.rows() << std::endl;
+  std::cout << currentX << std::endl;
+  geantvmoop::Population<geantvmoop::DTLZ1> population;
+  lpca.UnloadPopulation(population, currentX);
+  std::cout << population << std::endl;
+  ASSERT_EQ(lpca.GetX().rows(), population.size());
+  ASSERT_EQ(lpca.GetX().cols(), 7);
 }
 
 TEST_F(AllPCA, LoadingDataLPCAByHands) {

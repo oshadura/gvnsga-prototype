@@ -32,10 +32,10 @@ public:
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     /////////////
-    std::cout << "Vector input for evaluation function: ";
-    for (auto i: fParameters)
-      std::cout << i << ' ';
-    std::cout << ' ' << std::endl;
+    //std::cout << "Vector input for evaluation function: ";
+    //for (auto i: fParameters)
+    //  std::cout << i << ' ';
+    //std::cout << ' ' << std::endl;
     ////////////
     int n = 7;
     int m = 3;

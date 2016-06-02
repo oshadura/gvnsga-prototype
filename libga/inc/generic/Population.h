@@ -27,21 +27,22 @@
 
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F>> {
+template <typename F> class Population : public std::vector<individual_t<F> > {
 
 public:
-  // Population(std::initializer_list<individual_t<F>> list)
-  //    : std::vector<individual_t<F>>(list) {}
+  // for creation of new population
+  Population(std::initializer_list<individual_t<F>> list)
+      : std::vector<individual_t<F>>(list) {}
 
-  Population() : std::vector<individual_t<F>>() {}
+  Population() : std::vector<individual_t<F> >() {}
 
-  Population(const std::vector<individual_t<F>> &individuals)
-      : std::vector<individual_t<F>>(individuals) {}
+  Population(const std::vector<individual_t<F> > &individuals)
+      : std::vector<individual_t<F> >(individuals) {}
 
   Population(int n) {
     for (int i = 0; i < n; ++i) {
       typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F>>(gene);
+      auto individual = std::make_shared<TGenes<F> >(gene);
       this->push_back(individual);
     }
   }
@@ -132,14 +133,12 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] > m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] < m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
   }
 
   void SortObj(int objective, bool isDescending = false) {
@@ -160,9 +159,15 @@ public:
     for (int i = 0; i < pop.size(); ++i) {
       auto entry = pop[i];
       // for (int j = 0; j < entry.GetOutput().size(); ++j) {
-      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1]
-                << ", " << entry->GetOutput()[3] << ", " << std::endl;
+      std::cout << "Fitness function values -> " << entry->GetOutput()[0]
+                << ", " << entry->GetOutput()[1] << ", "
+                << entry->GetOutput()[3] << ", " << std::endl;
       // std::cout << "<- Fitness function output" << std::endl;
+      std::cout << "Optimisation parameter values -> " << entry->GetInput()[0] << ", "
+                << entry->GetInput()[1] << ", " << entry->GetInput()[3] << ", "
+                << entry->GetInput()[4] << ", " << entry->GetInput()[5] << ", "
+                << entry->GetInput()[6] << ", " << entry->GetInput()[7]
+                << std::endl;
     }
     std::cout << "---------------------------\n";
     return s;

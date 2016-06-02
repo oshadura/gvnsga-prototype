@@ -43,8 +43,8 @@ public:
     UnloadPopulation(pop);
   }
 
-  void LoadData(const char *data, char sep = ','){
-        unsigned int row = 0;
+  void LoadData(const char *data, char sep = ',') {
+    unsigned int row = 0;
     std::ifstream reader;
     reader.open(data);
     if (reader.is_open()) {
@@ -90,7 +90,28 @@ public:
     Xcentered.resize(X.rows(), X.cols());
   }
 
-  template <typename F> Population<F> &UnloadPopulation(MatrixXd &data) {}
+  template <typename F>
+  void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
+    // check if they are both the same size!
+    // if (data.cols() != newpop.size())
+    //  return;
+    typename F::Input ind;
+    std::vector<individual_t<F> > poplist;
+    std::string sep = "\n----------------------------------------\n";
+    for (int i = 0; i < data.rows(); ++i) {
+      for (int j = 0; j < data.cols(); ++j) {
+        std::cout << "Gene to be added in a population[" << i << "," << j
+                  << "] is " << data(i, j) << std::endl;
+        ind.push_back(data(i, j));
+        // ind.SetGAValue(data(i, j));
+      }
+      std::cout << "New gene added." << std::endl;
+      TGenes<F> newind = ind;
+      poplist.push_back(std::make_shared<geantvmoop::TGenes<F> >(newind));
+      ind.clear();
+    }
+    newpop = Population<F>(poplist);
+  }
 
   void RunLPCA() {
     // Centered matrix

@@ -77,6 +77,8 @@ public:
   }
 
   bool HistoFill(Population<F> &pop, char *hfile, int generation) {
+    std::cout << "Building output statistics for generation " << generation
+              << std::endl;
     char namepop[20], namefitn[20], namefolder[20], namescatter[20], x1str[10],
         x2str[10], y1str[10], y2str[10];
     std::vector<int> ScatterCombinationX, ScatterCombinationY;
@@ -100,7 +102,7 @@ public:
     PopFitnessDist->GetXaxis()->SetTitle("TGenes / bins");
     PopFitnessDist->GetYaxis()->SetTitle("N");
     /////////////////////////////////////////////////////////////////
-    //std::cout << "Lets check Scatter combination vector" << std::endl;
+    // std::cout << "Lets check Scatter combination vector" << std::endl;
     ScatterCombinationX =
         ScatterCombinationCalculator(pop.GetTGenes(0).size(), 2);
     ScatterCombinationY =
@@ -128,8 +130,8 @@ public:
         TH2F *myhistx = ((TH2F *)(HXList.FindObject(histoname)));
         if (!myhistx) {
           myhistx = new TH2F(TString::Format(namescatter),
-                            "Scatter plot of different TGenes", pop.size(), 0.,
-                            1., pop.size(), 0., 1.);
+                             "Scatter plot of different TGenes", pop.size(), 0.,
+                             1., pop.size(), 0., 1.);
           HXList.Add(myhistx);
         }
         myhistx->GetXaxis()->SetTitle(x1str);
@@ -152,8 +154,8 @@ public:
         TH2F *myhisty = ((TH2F *)(HYList.FindObject(histoname)));
         if (!myhisty) {
           myhisty = new TH2F(TString::Format(namescatter),
-                            "Scatter plot of different TGenes", pop.size(), 0.,
-                            50., pop.size(), 0., 50.);
+                             "Scatter plot of different TGenes", pop.size(), 0.,
+                             50., pop.size(), 0., 50.);
           HYList.Add(myhisty);
         }
         myhisty->GetXaxis()->SetTitle(y1str);
