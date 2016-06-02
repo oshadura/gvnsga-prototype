@@ -9,7 +9,7 @@ template <typename Derived> class NoiseReduction {
 
 public:
   template <typename F>
-  Population<F> NoiseReduction(const Population<T> &population) {
+  Population<F> NR(Population<F> &population) {
     return static_cast<Derived *>(this)
         ->Derived::NoiseReductionImpl(population);
   }

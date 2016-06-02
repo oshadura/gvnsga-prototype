@@ -88,7 +88,7 @@ public:
       next.push_back(population[l]);
     population = next;
     std::cout << "Moving to next generation " << fCurrentGeneration << std::endl;
-    CSVManager::GetInstance().CSVOutput("output.lpca", population);
+    CSVManager::GetInstance().CSVOutput("output.nsga", population);
     ++fCurrentGeneration;
   }
 

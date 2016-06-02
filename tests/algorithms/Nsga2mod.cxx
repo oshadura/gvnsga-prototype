@@ -10,68 +10,66 @@
 #include "generic/Functions.h"
 #include "generic/TGenes.h"
 #include "output/HistogramManager.h"
-#include "algorithms/GANSGA2.h"
+#include "algorithms/GANSGA2Mod.h"
 #include "instrumentation/GeantVFitness.h"
 
-class Nsga2 : public GATest {
+class Nsga2Mod : public GATest {
 public:
 };
 
-TEST_F(Nsga2, SolvingDTLZ1Problem) {
-  /*
+TEST_F(Nsga2Mod, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
-  geantvmoop::GANSGA2<geantvmoop::DTLZ1> nsga(dtlz1);
-  nsga.fPopulationSize = 1000;
-  nsga.fMaxGeneration = 10;
-  nsga.SolvePF();
-  */
+  geantvmoop::GANSGA2Mod<geantvmoop::DTLZ1> nsga2mod(dtlz1);
+  nsga2mod.fPopulationSize = 10;
+  nsga2mod.fMaxGeneration = 10;
+  nsga2mod.SolvePF();
 }
 
 /*
-TEST_F(Nsga2, SolvingDTLZ2Problem) {
+TEST_F(Nsga2Mod, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
-  geantvmoop::GANSGA2<geantvmoop::DTLZ2> nsga(dtlz2);
+  geantvmoop::GANSGA2Mod<geantvmoop::DTLZ2> nsga(dtlz2);
   nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();
 }
 
-TEST_F(Nsga2, SolvingDTLZ3Problem) {
+TEST_F(Nsga2Mod, SolvingDTLZ3Problem) {
   geantvmoop::DTLZ3 dtlz3;
-  geantvmoop::GANSGA2<geantvmoop::DTLZ3> nsga(dtlz3);
+  geantvmoop::GANSGA2Mod<geantvmoop::DTLZ3> nsga(dtlz3);
   nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();
 }
 
-TEST_F(Nsga2, SolvingDTLZ4Problem) {
+TEST_F(Nsga2Mod, SolvingDTLZ4Problem) {
   geantvmoop::DTLZ4 dtlz4;
-  geantvmoop::GANSGA2<geantvmoop::DTLZ4> nsga(dtlz4);
+  geantvmoop::GANSGA2Mod<geantvmoop::DTLZ4> nsga(dtlz4);
   nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();
 }
 
 
-TEST_F(Nsga2, SolvingDTLZ5Problem) {
+TEST_F(Nsga2Mod, SolvingDTLZ5Problem) {
   geantvmoop::DTLZ5 dtlz5;
-  geantvmoop::GANSGA2<geantvmoop::DTLZ5> nsga(dtlz5);
+  geantvmoop::GANSGA2Mod<geantvmoop::DTLZ5> nsga(dtlz5);
   nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();
 }
 
-TEST_F(Nsga2, SolvingDTLZ6Problem) {
+TEST_F(Nsga2Mod, SolvingDTLZ6Problem) {
   geantvmoop::DTLZ6 dtlz6;
-  geantvmoop::GANSGA2<geantvmoop::DTLZ6> nsga(dtlz6);
+  geantvmoop::GANSGA2Mod<geantvmoop::DTLZ6> nsga(dtlz6);
   nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();
 }
 
-TEST_F(Nsga2, SolvingDTLZ7Problem) {
+TEST_F(Nsga2Mod, SolvingDTLZ7Problem) {
   geantvmoop::DTLZ7 dtlz7;
-  geantvmoop::GANSGA2<geantvmoop::DTLZ7> nsga(dtlz7);
+  geantvmoop::GANSGA2Mod<geantvmoop::DTLZ7> nsga(dtlz7);
   nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 10;
   nsga.SolvePF();

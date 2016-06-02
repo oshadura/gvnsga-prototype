@@ -38,9 +38,11 @@ public:
   MatrixXd &GetX() { return X; }
 
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {
+    Population<F> result;
     UploadPopulation(pop);
     RunLPCAWithReductionOfComponents();
-    UnloadPopulation(pop);
+    UnloadPopulation(result, X);
+    return result;
   }
 
   void LoadData(const char *data, char sep = ',') {
@@ -100,12 +102,12 @@ public:
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < data.rows(); ++i) {
       for (int j = 0; j < data.cols(); ++j) {
-        std::cout << "Gene to be added in a population[" << i << "," << j
-                  << "] is " << data(i, j) << std::endl;
+        // std::cout << "Gene to be added in a population[" << i << "," << j
+        //          << "] is " << data(i, j) << std::endl;
         ind.push_back(data(i, j));
         // ind.SetGAValue(data(i, j));
       }
-      std::cout << "New gene added." << std::endl;
+      // std::cout << "New gene added." << std::endl;
       TGenes<F> newind = ind;
       poplist.push_back(std::make_shared<geantvmoop::TGenes<F> >(newind));
       ind.clear();
@@ -185,7 +187,7 @@ public:
     Transformed = X * eigenvectors;
     // TransformedCentered = Xcentered * eigenvectors;
     // Varince based selection (< 85 %)
-    while (totalvar <= 0.85) {
+    while (totalvar <= 0.90) {
       eigenvalues(i) = eigen_pairs[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;
@@ -194,20 +196,26 @@ public:
       ++i;
     }
     Print();
+    std::cout << "---------------------------\n" << std::endl;
+
     eigenvectors.conservativeResize(eigenvectors.rows(), i);
     Transformed.conservativeResize(Transformed.rows(), i);
     // TransformedCentered.conservativeResize(Transformed.rows(), i);
     std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
+    std::cout << "Reduced tranformed matrix \n" << Transformed << std::endl;
     std::cout << "Total number of components to be used in Transformed matrix: "
               << i << std::endl;
     // Transformed matrix
-    MatrixXd NewDataMatrix, NewDataMatrixCentered;
-    NewDataMatrix = eigenvectors * Transformed.transpose();
+    //MatrixXd NewDataMatrix, NewDataMatrixCentered;
+    //NewDataMatrix = eigenvectors * Transformed.transpose();
+    X = eigenvectors * Transformed.transpose();
     // NewDataMatrixCentered = eigenvectors * TransformedCentered.transpose();
-    std::cout << "New Transformed data:\n" << NewDataMatrix << std::endl;
+    std::cout << "New Transformed data:\n" << X << std::endl;
     // std::cout << "New Transformed (centered?) data:\n" <<
     // NewDataMatrixCentered
     //          << std::endl;
+    // Lets overwrite values..
+    //X = NewDataMatrix;
   }
 
   void Print() {

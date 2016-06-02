@@ -11,14 +11,15 @@
  */
 //===----------------------------------------------------------------------===//
 
-#ifndef MOO_NSGAII_H
-#define MOO_NSGAII_H
+#ifndef MOO_NSGAIIMOD_H
+#define MOO_NSGAIIMOD_H
 
 #include "generic/GAAlgorithm.h"
 #include "generic/PF.h"
 #include "gaoperators/GATournamentSelection.h"
 #include "gaoperators/GASBXCrossover.h"
 #include "gaoperators/GAPolMutation.h"
+#include "gaoperators/PCAinvPCA.h"
 #include "addstructures/GAComparator.h"
 #include "addstructures/GANDRank.h"
 #include "addstructures/GACD.h"
@@ -46,14 +47,14 @@ public:
 
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
-    population = Population<F>{fPopulationSize};
+    population = Population<F>{ fPopulationSize };
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
   }
 
   void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
-    GATournamentSelection<GAComparator<F>> selector(cmp);
+    GATournamentSelection<GAComparator<F> > selector(cmp);
     Population<F> matingPool =
         selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
@@ -82,10 +83,19 @@ public:
     Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
-    population = next;
-    std::cout << "Moving to next generation " << fCurrentGeneration << std::endl;
-    CSVManager::GetInstance().CSVOutput("output.lpca", population);
+    std::cout << "--------------TRANFORMATION-------------\n" << std::endl;
+    if (fCurrentGeneration % 2 == 0) {
+      PCAinvPCA cleanupoperator;
+      population = cleanupoperator.NR(next);
+    } else {
+      population = next;
+    }
+    std::cout << "Moving to next generation " << fCurrentGeneration
+              << std::endl;
+    CSVManager::GetInstance().CSVOutput("output.nsgalpca", population);
     ++fCurrentGeneration;
+    std::cout << "---------------------------\n" << std::endl;
+    std::cout << "---------------------------\n" << std::endl;
   }
 
   void PrintImpl(std::ostream &os) {
