@@ -31,6 +31,7 @@ TEST_F(AllPCA, LoadPopulationFromCSV) {
 
 TEST_F(AllPCA, PCALoadDataCSV) {
   lpca.LoadData("data");
+  //lpca.Print();
   ASSERT_EQ(lpca.GetX().rows(), pop.size());
   ASSERT_EQ(lpca.GetX().cols(), 3);
 }
