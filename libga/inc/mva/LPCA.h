@@ -206,10 +206,12 @@ public:
     std::cout << "Total number of components to be used in Transformed matrix: "
               << i << std::endl;
     // Transformed matrix
-    //MatrixXd NewDataMatrix, NewDataMatrixCentered;
+    MatrixXd NewDataMatrix, NewDataMatrixCentered;
     //NewDataMatrix = eigenvectors * Transformed.transpose();
-    X = eigenvectors * Transformed.transpose();
+
+    NewDataMatrix = eigenvectors * Transformed.transpose();
     // NewDataMatrixCentered = eigenvectors * TransformedCentered.transpose();
+    X = NewDataMatrix.transpose();
     std::cout << "New Transformed data:\n" << X << std::endl;
     // std::cout << "New Transformed (centered?) data:\n" <<
     // NewDataMatrixCentered
@@ -236,8 +238,8 @@ public:
     std::cout << std::endl;
     std::cout << "Sorted eigenvectors:\n" << eigenvectors << std::endl;
     std::cout << "Transformed data:\n" << Transformed << std::endl;
-    std::cout << "Transformed centred data:\n" << TransformedCentered
-              << std::endl;
+    //std::cout << "Transformed centred data:\n" << TransformedCentered
+    //          << std::endl;
   }
 
   void WriteTransformed(std::string file) {

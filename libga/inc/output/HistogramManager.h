@@ -26,11 +26,18 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TF2.h"
+#include "TStyle.h"
+#include "TGraph2D.h"
 #include "TObject.h"
 #include "TSystem.h"
 #include "TROOT.h"
 #include "TDirectory.h"
 #include "Rtypes.h"
+#include "TF3.h"
+#include "TError.h"
+#include "Fit/BinData.h"
+#include "Fit/Fitter.h"
+#include "Math/WrappedMultiTF1.h"
 
 #include <vector>
 #include <iostream>
@@ -80,7 +87,7 @@ public:
     std::cout << "Building output statistics for generation " << generation
               << std::endl;
     char namepop[20], namefitn[20], namefolder[20], namescatter[20], x1str[10],
-        x2str[10], y1str[10], y2str[10];
+        x2str[10], y1str[10], y2str[10], nameFitLand[20];
     std::vector<int> ScatterCombinationX, ScatterCombinationY;
     // TDirectory *folder;
     TObjArray HXList(0);
@@ -88,25 +95,43 @@ public:
     sprintf(namepop, "%s%d", "PopDist", generation);
     sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
     sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
+    sprintf(nameFitLand, "%s%d", "FitLand", generation);
     TFile file(hfile, "update");
     file.mkdir(namefolder);
     file.cd(namefolder);
-    /////////////////////////////////////////////////////////////////
+
+    //////// Population distribution
     TH1F *PopDist =
         new TH1F(namepop, "Population distribution", pop.size(), 0., 1.);
     PopDist->GetXaxis()->SetTitle("TGenes / bins");
     PopDist->GetYaxis()->SetTitle("N");
-    /////////////////////////////////////////////////////////////////
-    TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution",
-                                    pop.size(), 0., 1.);
-    PopFitnessDist->GetXaxis()->SetTitle("TGenes / bins");
-    PopFitnessDist->GetYaxis()->SetTitle("N");
-    /////////////////////////////////////////////////////////////////
+
+    /////// Fitness landscape
+    TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5",
+                           0, 100, 0, 100, 0, 100);
+    FitLand->SetParameters(2, 2, 2);
+    ROOT::Fit::Fitter fitter;
+    // wrapped the TF1 in a IParamMultiFunction interface for teh Fitter class
+    ROOT::Math::WrappedMultiTF1 wrapperfunction(*FitLand, 3);
+    fitter.SetFunction(wrapperfunction);
+    ROOT::Fit::BinData data(pop.size(), 3);
+    double function[3];
+    double predictor[pop.size()];
+    double error = 0.1;
+    ////// Preparation for scatter combination
     // std::cout << "Lets check Scatter combination vector" << std::endl;
     ScatterCombinationX =
         ScatterCombinationCalculator(pop.GetTGenes(0).size(), 2);
     ScatterCombinationY =
         ScatterCombinationCalculator(pop.GetTFitness(0).size(), 2);
+
+    //////// Fitness distribution
+    TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution",
+                                    pop.size(), 0., 1.);
+    PopFitnessDist->GetXaxis()->SetTitle("TGenes / bins");
+    PopFitnessDist->GetYaxis()->SetTitle("N");
+
+    /////////////////////////////////////////////////////////////////
     /*
     for (auto i : ScatterCombination)
       std::cout << i << ' ';
@@ -169,14 +194,43 @@ public:
         PopDist->Fill(ind);
         PopFitnessDist->Fill(fitness);
       }
+      // for TGraph2D - ONLY DTLZ1 - 3 objectives
+      auto x = pop.GetObjectiveValue(i, 1);
+      auto y = pop.GetObjectiveValue(i, 2);
+      auto z = pop.GetObjectiveValue(i, 3);
+      function[0] = x;
+      function[1] = y;
+      function[2] = z;
+      // predictor DTZ1
+      predictor[i] = x + y + z - 0.5;
+      // add the 3d-data coordinate, the predictor value  and its errors
+      data.Add(function, predictor[i], error);
     }
     PopDist->Draw();
     PopDist->Write();
+    ////////////////////
     HXList.Write();
     HYList.Write();
+    ////////////////////
     PopFitnessDist->Draw();
     PopFitnessDist->Write();
-
+    ////////////////////
+    bool ret = fitter.Fit(data);
+    // if (ret) {
+    const ROOT::Fit::FitResult &res = fitter.Result();
+    // print result (should be around 1)
+    res.Print(std::cout);
+    // copy all fit result info (values, chi2, etc..) in TF3
+    FitLand->SetFitResult(res);
+    // test fit p-value (chi2 probability)
+    double prob = res.Prob();
+    FitLand->Draw();
+    FitLand->Write();
+    if (prob < 1.E-2)
+      Error("HistoFill", "Bad data fit - fit p-value is %f", prob);
+    //} else {
+    // Error("HistoFill", "3D fit failed");
+    //}
     return true;
   }
 
@@ -184,6 +238,7 @@ public:
 
 private:
   HistogramManager() {}
+
   ~HistogramManager() {}
 
   ClassDef(HistogramManager, 1)

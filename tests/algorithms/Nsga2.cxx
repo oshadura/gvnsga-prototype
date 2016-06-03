@@ -18,13 +18,11 @@ public:
 };
 
 TEST_F(Nsga2, SolvingDTLZ1Problem) {
-  /*
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2<geantvmoop::DTLZ1> nsga(dtlz1);
   nsga.fPopulationSize = 1000;
-  nsga.fMaxGeneration = 10;
+  nsga.fMaxGeneration = 100;
   nsga.SolvePF();
-  */
 }
 
 /*
