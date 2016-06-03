@@ -15,6 +15,7 @@
 //
 
 #include "generic/Population.h"
+#include "problem/DTLZ1.h"
 #include "TObject.h"
 #include "TH1.h"
 #include "TFile.h"
@@ -26,6 +27,7 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TF2.h"
+#include "TH3.h"
 #include "TStyle.h"
 #include "TGraph2D.h"
 #include "TObject.h"
@@ -87,7 +89,7 @@ public:
     std::cout << "Building output statistics for generation " << generation
               << std::endl;
     char namepop[20], namefitn[20], namefolder[20], namescatter[20], x1str[10],
-        x2str[10], y1str[10], y2str[10], nameFitLand[20];
+        x2str[10], y1str[10], y2str[10], nameFitLand[20] , name3dhist[20];
     std::vector<int> ScatterCombinationX, ScatterCombinationY;
     // TDirectory *folder;
     TObjArray HXList(0);
@@ -96,6 +98,7 @@ public:
     sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
     sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
     sprintf(nameFitLand, "%s%d", "FitLand", generation);
+    sprintf(name3dhist, "%s%d", "h3a", generation);
     TFile file(hfile, "update");
     file.mkdir(namefolder);
     file.cd(namefolder);
@@ -105,10 +108,14 @@ public:
         new TH1F(namepop, "Population distribution", pop.size(), 0., 1.);
     PopDist->GetXaxis()->SetTitle("TGenes / bins");
     PopDist->GetYaxis()->SetTitle("N");
+    /////// Population 3 DHistogram
+
+    TH3F *h3a = new TH3F(name3dhist, "3D Population", pop.size(), 0, 10,
+                         pop.size(), 0, 10, pop.size(), 0, 20);
 
     /////// Fitness landscape
-    TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5",
-                           0, 100, 0, 100, 0, 100);
+    TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5", 0,
+                           100, 0, 100, 0, 100);
     FitLand->SetParameters(2, 2, 2);
     ROOT::Fit::Fitter fitter;
     // wrapped the TF1 in a IParamMultiFunction interface for teh Fitter class
@@ -201,6 +208,7 @@ public:
       function[0] = x;
       function[1] = y;
       function[2] = z;
+      h3a->Fill(x, y, z);
       // predictor DTZ1
       predictor[i] = x + y + z - 0.5;
       // add the 3d-data coordinate, the predictor value  and its errors
@@ -215,6 +223,9 @@ public:
     PopFitnessDist->Draw();
     PopFitnessDist->Write();
     ////////////////////
+    h3a->Draw();
+    h3a->Write();
+    ///////////////////
     bool ret = fitter.Fit(data);
     // if (ret) {
     const ROOT::Fit::FitResult &res = fitter.Result();
@@ -224,13 +235,13 @@ public:
     FitLand->SetFitResult(res);
     // test fit p-value (chi2 probability)
     double prob = res.Prob();
-    FitLand->Draw();
-    FitLand->Write();
-    if (prob < 1.E-2)
+    //FitLand->Draw();
+    //FitLand->Write();
+    if (prob < 1.E-2) {
       Error("HistoFill", "Bad data fit - fit p-value is %f", prob);
-    //} else {
-    // Error("HistoFill", "3D fit failed");
-    //}
+    } else {
+      Error("HistoFill", "3D fit failed");
+    }
     return true;
   }
 
