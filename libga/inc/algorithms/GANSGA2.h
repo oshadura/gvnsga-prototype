@@ -46,7 +46,7 @@ public:
 
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
-    population = Population<F>{fPopulationSize};
+    population = Population<F>{ fPopulationSize };
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
     /*
@@ -57,7 +57,7 @@ public:
 
   void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
-    GATournamentSelection<GAComparator<F>> selector(cmp);
+    GATournamentSelection<GAComparator<F> > selector(cmp);
     Population<F> matingPool =
         selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
@@ -87,9 +87,10 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
-    std::cout << "Moving to next generation " << fCurrentGeneration << std::endl;
     CSVManager::GetInstance().CSVOutput("output.nsga", population);
     ++fCurrentGeneration;
+    std::cout << "Moving to next generation " << fCurrentGeneration
+              << std::endl;
   }
 
   void PrintImpl(std::ostream &os) {

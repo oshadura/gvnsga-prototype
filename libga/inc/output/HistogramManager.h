@@ -15,7 +15,6 @@
 //
 
 #include "generic/Population.h"
-#include "problem/DTLZ1.h"
 #include "TObject.h"
 #include "TH1.h"
 #include "TFile.h"
@@ -94,6 +93,10 @@ public:
     // TDirectory *folder;
     TObjArray HXList(0);
     TObjArray HYList(0);
+    gROOT->SetStyle("Plain");
+    gStyle->SetPalette(1);
+    gStyle->SetOptStat(0);
+    gStyle->SetOptTitle(0);
     sprintf(namepop, "%s%d", "PopDist", generation);
     sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
     sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
@@ -110,7 +113,7 @@ public:
     PopDist->GetYaxis()->SetTitle("N");
     /////// Population 3 DHistogram
 
-    TH3F *h3a = new TH3F(name3dhist, "3D Population", pop.size(), 0, 10,
+    TH3D *h3a = new TH3D(name3dhist, "3D Population", pop.size(), 0, 10,
                          pop.size(), 0, 10, pop.size(), 0, 20);
 
     /////// Fitness landscape
@@ -138,7 +141,9 @@ public:
     PopFitnessDist->GetXaxis()->SetTitle("TGenes / bins");
     PopFitnessDist->GetYaxis()->SetTitle("N");
 
-    /////////////////////////////////////////////////////////////////
+    //////// Canvas distribution
+    //TCanvas* Xcanvas = new TCanvas("Xcanvas");
+    ////////////////////////////////////////////////////////////////
     /*
     for (auto i : ScatterCombination)
       std::cout << i << ' ';
@@ -169,6 +174,7 @@ public:
         myhistx->GetXaxis()->SetTitle(x1str);
         myhistx->GetYaxis()->SetTitle(x2str);
         myhistx->Fill(x1, x2);
+        HXList.Draw("surf3");
       }
       // Y Scatter plots
       for (int it = 0; it < ScatterCombinationY.size(); it += 2) {
@@ -193,6 +199,7 @@ public:
         myhisty->GetXaxis()->SetTitle(y1str);
         myhisty->GetYaxis()->SetTitle(y2str);
         myhisty->Fill(y1, y2);
+        HYList.Draw("surf3");
       }
       // Distribution plots
       for (int j = 0; j < pop.GetTGenes(0).size(); ++j) {
@@ -208,7 +215,7 @@ public:
       function[0] = x;
       function[1] = y;
       function[2] = z;
-      h3a->Fill(x, y, z);
+      //h3a->Fill(x, y, z);
       // predictor DTZ1
       predictor[i] = x + y + z - 0.5;
       // add the 3d-data coordinate, the predictor value  and its errors
@@ -223,7 +230,7 @@ public:
     PopFitnessDist->Draw();
     PopFitnessDist->Write();
     ////////////////////
-    h3a->Draw();
+    h3a->Draw("iso");
     h3a->Write();
     ///////////////////
     bool ret = fitter.Fit(data);
