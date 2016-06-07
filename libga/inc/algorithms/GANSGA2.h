@@ -87,6 +87,7 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
+    std::cout << population << std::endl;
     CSVManager::GetInstance().CSVOutput("output.nsga", population);
     ++fCurrentGeneration;
     std::cout << "Moving to next generation " << fCurrentGeneration

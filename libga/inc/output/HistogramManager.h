@@ -9,7 +9,7 @@
 //===----------------------------------------------------------------------===//
 /**
  * @file HistogramManager.h
- * @brief Implementation of CSV class for LibGA
+ * @brief Implementation of Histogramme class for LibGA
  * prototype
  */
 //
@@ -36,9 +36,12 @@
 #include "Rtypes.h"
 #include "TF3.h"
 #include "TError.h"
+#include "TProfile.h"
+#include "TImage.h"
 #include "Fit/BinData.h"
 #include "Fit/Fitter.h"
 #include "Math/WrappedMultiTF1.h"
+#include "TRandom2.h"
 
 #include <vector>
 #include <iostream>
@@ -87,12 +90,14 @@ public:
   bool HistoFill(Population<F> &pop, char *hfile, int generation) {
     std::cout << "Building output statistics for generation " << generation
               << std::endl;
-    char namepop[20], namefitn[20], namefolder[20], namescatter[20], x1str[10],
-        x2str[10], y1str[10], y2str[10], nameFitLand[20] , name3dhist[20];
+    char namepop[20], namefitn[20], namefile[10], namefolder[20],
+        namescatter[20], x1str[10], x2str[10], y1str[10], y2str[10],
+        nameFitLand[20], name3dhist[20];
     std::vector<int> ScatterCombinationX, ScatterCombinationY;
     // TDirectory *folder;
     TObjArray HXList(0);
     TObjArray HYList(0);
+    TRandom2 random;
     gROOT->SetStyle("Plain");
     gStyle->SetPalette(1);
     gStyle->SetOptStat(0);
@@ -102,6 +107,7 @@ public:
     sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
     sprintf(nameFitLand, "%s%d", "FitLand", generation);
     sprintf(name3dhist, "%s%d", "h3a", generation);
+    sprintf(namefile, "%s%d%s", "StatisticsX", generation, ".png");
     TFile file(hfile, "update");
     file.mkdir(namefolder);
     file.cd(namefolder);
@@ -119,7 +125,12 @@ public:
     /////// Fitness landscape
     TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5", 0,
                            100, 0, 100, 0, 100);
-    FitLand->SetParameters(2, 2, 2);
+    FitLand->SetParameter(0, 1);
+    FitLand->SetParameter(1, 1);
+    FitLand->SetParameter(2, 1);
+    FitLand->FixParameter(0, 1);
+    FitLand->FixParameter(1, 1);
+    FitLand->FixParameter(2, 1);
     ROOT::Fit::Fitter fitter;
     // wrapped the TF1 in a IParamMultiFunction interface for teh Fitter class
     ROOT::Math::WrappedMultiTF1 wrapperfunction(*FitLand, 3);
@@ -142,7 +153,7 @@ public:
     PopFitnessDist->GetYaxis()->SetTitle("N");
 
     //////// Canvas distribution
-    //TCanvas* Xcanvas = new TCanvas("Xcanvas");
+    //TCanvas *Xcanvas = new TCanvas("Xcanvas");
     ////////////////////////////////////////////////////////////////
     /*
     for (auto i : ScatterCombination)
@@ -174,7 +185,18 @@ public:
         myhistx->GetXaxis()->SetTitle(x1str);
         myhistx->GetYaxis()->SetTitle(x2str);
         myhistx->Fill(x1, x2);
-        HXList.Draw("surf3");
+        /*
+        Xcanvas->Divide(2, 2);
+        Xcanvas->cd(1);
+        myhistx->DrawClone("Contz");
+        Xcanvas->cd(2);
+        myhistx->DrawClone("surf3");
+        Xcanvas->cd(3);
+        myhistx->ProfileX()->DrawClone();
+        Xcanvas->cd(4);
+        myhistx->ProfileY()->DrawClone();
+        Xcanvas->Draw();
+        */
       }
       // Y Scatter plots
       for (int it = 0; it < ScatterCombinationY.size(); it += 2) {
@@ -199,7 +221,7 @@ public:
         myhisty->GetXaxis()->SetTitle(y1str);
         myhisty->GetYaxis()->SetTitle(y2str);
         myhisty->Fill(y1, y2);
-        HYList.Draw("surf3");
+        // HYList.Draw("surf3");
       }
       // Distribution plots
       for (int j = 0; j < pop.GetTGenes(0).size(); ++j) {
@@ -217,7 +239,7 @@ public:
       function[2] = z;
       //h3a->Fill(x, y, z);
       // predictor DTZ1
-      predictor[i] = x + y + z - 0.5;
+      predictor[i] = x + y + z - 0.5 + random.Gaus(0, error);
       // add the 3d-data coordinate, the predictor value  and its errors
       data.Add(function, predictor[i], error);
     }
@@ -230,8 +252,8 @@ public:
     PopFitnessDist->Draw();
     PopFitnessDist->Write();
     ////////////////////
-    h3a->Draw("iso");
-    h3a->Write();
+    //h3a->Draw("iso");
+    //h3a->Write();
     ///////////////////
     bool ret = fitter.Fit(data);
     // if (ret) {
@@ -242,13 +264,14 @@ public:
     FitLand->SetFitResult(res);
     // test fit p-value (chi2 probability)
     double prob = res.Prob();
-    //FitLand->Draw();
-    //FitLand->Write();
+    // FitLand->Draw();
+    // FitLand->Write();
     if (prob < 1.E-2) {
       Error("HistoFill", "Bad data fit - fit p-value is %f", prob);
     } else {
       Error("HistoFill", "3D fit failed");
     }
+    //delete Xcanvas;
     return true;
   }
 
