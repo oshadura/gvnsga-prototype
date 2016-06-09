@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef MOO_RANDOM_H
 #define MOO_RANDOM_H
 

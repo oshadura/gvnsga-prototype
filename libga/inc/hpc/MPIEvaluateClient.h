@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __MPIEVALUATECLIENT__
 #define __MPIEVALUATECLIENT__
 

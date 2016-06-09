@@ -1,3 +1,5 @@
+#pragma once
+
 #include <boost/mpi.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/utility.hpp>

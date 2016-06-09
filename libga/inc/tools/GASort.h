@@ -1,4 +1,4 @@
-
+#pragma once
 
 #ifndef MOO_SORTUTIL_H
 #define MOO_SORTUTIL_H

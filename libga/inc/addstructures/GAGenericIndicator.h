@@ -10,6 +10,7 @@
  * algorithms for LibGA prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
 
 #ifndef __GAGENERICINDICATOR__
 #define __GAGENERICINDICATOR__

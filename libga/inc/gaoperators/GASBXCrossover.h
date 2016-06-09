@@ -10,6 +10,7 @@
  * prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
 
 #ifndef __GASBXCROSSOVER__
 #define __GASBXCROSSOVER__

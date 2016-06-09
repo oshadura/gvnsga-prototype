@@ -10,6 +10,7 @@
  * prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
 
 #ifndef MOO_MOEAD_H
 #define MOO_MOEAD_H
@@ -22,13 +23,14 @@
 #include "gaoperators/GASBXCrossover.h"
 #include "gaoperators/GAPolMutation.h"
 #include "gaoperators/GASimpleSelection.h"
+#include "output/HistogramManager.h"
 
 namespace geantvmoop {
 
 template <typename F> class GAMOEAD : public GAAlgorithm<GAMOEAD<F>, F> {
 private:
   std::vector<Weights> fWeights;
-  std::vector<std::vector<int>> fNearest;
+  std::vector<std::vector<int> > fNearest;
   std::vector<double> fRefPoint;
   Population<F> pop;
   std::vector<double> fFitness;
@@ -36,6 +38,7 @@ private:
   double PMut = 0.2;
   GASimpleSelection SimpleSelection;
   int fCounter = 0;
+  int fCurrentGeneration = 0;
 
 public:
   int fPopulationSize = 10;
@@ -45,6 +48,7 @@ public:
   GAMOEAD(F problem) : GAAlgorithm<GAMOEAD<F>, F>(problem) {}
 
   void InitializeImpl() {
+    fCurrentGeneration = 1; // initializing generation
     fWeights = Weights::GetWeights(fPopulationSize);
     fPopulationSize = fWeights.size();
     std::cout << "Population weights: " << fPopulationSize << std::endl;
@@ -52,7 +56,7 @@ public:
       throw std::runtime_error("Please set T lower than population size!");
     for (auto w : fWeights)
       fNearest.push_back(w.GetNearestNeighbor(fWeights, T));
-    pop = Population<F>{fPopulationSize};
+    pop = Population<F>{ fPopulationSize };
     fRefPoint = GetRP(pop);
     fFitness = std::vector<double>(fPopulationSize,
                                    std::numeric_limits<double>::max());
@@ -66,6 +70,8 @@ public:
 
   void EvolutionImpl() {
     fCounter = 0;
+    HistogramManager<F>::GetInstance().HistoFill(pop, "population_moead.root",
+                                                 fCurrentGeneration);
     for (int i = 0; i < pop.size(); ++i) {
       auto a = pop[fNearest[i][RandomVectorIndex(fNearest[i])]];
       auto b = pop[fNearest[i][RandomVectorIndex(fNearest[i])]];
@@ -84,8 +90,9 @@ public:
       }
       fFront.Add(offspring);
     }
-    //      std::cout << fFront << std::endl;
-    std::cout << pop << std::endl;
+    // std::cout << fFront << std::endl;
+    //std::cout << pop << std::endl;
+    ++fCurrentGeneration;
   }
 
   void PrintImpl(std::ostream &os) {

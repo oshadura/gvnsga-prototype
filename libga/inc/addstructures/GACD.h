@@ -9,6 +9,7 @@
  * @brief Implementation of crowding distance for LibGA prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
 
 #ifndef __GACD__
 #define __GACD__

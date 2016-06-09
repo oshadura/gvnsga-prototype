@@ -10,6 +10,7 @@
  * prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
 
 #ifndef __GAPOLMUTATION__
 #define __GAPOLMUTATION__

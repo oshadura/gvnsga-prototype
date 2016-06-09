@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __PROBLEMDTLZ1__
 #define __PROBLEMDTLZ1__
 
@@ -32,10 +34,10 @@ public:
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     /////////////
-    //std::cout << "Vector input for evaluation function: ";
-    //for (auto i: fParameters)
+    // std::cout << "Vector input for evaluation function: ";
+    // for (auto i: fParameters)
     //  std::cout << i << ' ';
-    //std::cout << ' ' << std::endl;
+    // std::cout << ' ' << std::endl;
     ////////////
     int n = 7;
     int m = 3;
@@ -65,6 +67,13 @@ public:
     for (int i = 0; i < 7; ++i)
       vector.push_back(GADouble(0, 1));
     return vector;
+  }
+
+  // ROOT Fitting to true Pareto front
+  static Double_t TruePF(Double_t *x, Double_t *parameter) {
+    Double_t value =
+        parameter[0] * x[0] + parameter[1] * x[1] + parameter[2] * x[2] - 0.5;
+    return value;
   }
 
   static Output GetOutput() { return std::vector<double>(3); }

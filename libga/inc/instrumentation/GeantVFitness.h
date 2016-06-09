@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __GEANTVFITNESS__
 #define __GEANTVFITNESS__
 

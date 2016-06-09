@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __PROBLEMDTLZ2__
 #define __PROBLEMDTLZ2__
 
@@ -10,6 +12,8 @@
 #include "algorithms/GANSGA2.h"
 #include "instrumentation/GeantVFitness.h"
 #include <boost/math/constants/constants.hpp>
+
+#include "TMath.h"
 
 #include <cmath>
 #include <utility>
@@ -31,12 +35,12 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    
+    /*
     std::cout << "Vector input for evaluation function: ";
-    for (auto i: fParameters)
+    for (auto i : fParameters)
       std::cout << i << ' ';
     std::cout << ' ' << std::endl;
-    
+    */
     int n = 12;
     int m = 3;
     int k = n - m + 1; // 10
@@ -48,10 +52,10 @@ public:
       Double_t f = (1 + g);
       size_t j = 0;
       for (; i + m <= m - 2; ++j) {
-        f *= cos(fParameters[j] * pi()/2);
+        f *= cos(fParameters[j] * pi() / 2);
       }
       if (m > 0) {
-        f *= sin(fParameters[j] * pi()/2);
+        f *= sin(fParameters[j] * pi() / 2);
       }
       fFitness.push_back(f);
     }
@@ -63,6 +67,22 @@ public:
     for (int i = 0; i < 12; ++i)
       vector.push_back(GADouble(0, 1));
     return vector;
+  }
+
+  // ROOT Fitting to true Pareto front
+  /*
+  static Double_t TruePF(Double_t *x, Double_t *parameter) {
+    Double_t value = std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] *
+  x[1] * x[1] - parameter[2] * x[2] * x[2]);
+    return value;
+  }
+  */
+
+  static Double_t TruePF(Double_t *x, Double_t *parameter) {
+    Double_t r2 = x[0] * x[0] + x[1] * x[1] + x[2] * x[2];
+    Double_t arg = (TMath::Sqrt(r2) - parameter[1]) / parameter[2];
+    Double_t val = parameter[0] * TMath::Exp(-0.5 * arg * arg);
+    return val;
   }
 
   static Output GetOutput() { return std::vector<double>(3); }

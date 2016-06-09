@@ -9,6 +9,7 @@
  * @brief Implementation of comparison operator for LibGA prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
 
 #ifndef __GACOMPAROR__
 #define __GACOMPAROR__

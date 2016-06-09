@@ -10,6 +10,8 @@
  * prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
+
 #ifndef __GASIMPLESELECTION__
 #define __GASIMPLESELECTION__
 

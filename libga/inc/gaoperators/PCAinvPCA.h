@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __PCAINVPCA__
 #define __PCAINVPCA__
 

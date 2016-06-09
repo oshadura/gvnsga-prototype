@@ -10,6 +10,7 @@
  * prototype
  */
 //
+ #pragma once
 
 #ifndef __PF__
 #define __PF__

@@ -17,11 +17,13 @@ class Nsga2 : public GATest {
 public:
 };
 
+/*
+
 TEST_F(Nsga2, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2<geantvmoop::DTLZ1> nsga(dtlz1);
   nsga.fPopulationSize = 100;
-  nsga.fMaxGeneration = 1000;
+  nsga.fMaxGeneration = 300;
   nsga.SolvePF();
 }
 
@@ -29,10 +31,11 @@ TEST_F(Nsga2, SolvingDTLZ1Problem) {
 TEST_F(Nsga2, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
   geantvmoop::GANSGA2<geantvmoop::DTLZ2> nsga(dtlz2);
-  nsga.fPopulationSize = 10;
-  nsga.fMaxGeneration = 10;
+  nsga.fPopulationSize = 100;
+  nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
+
 
 TEST_F(Nsga2, SolvingDTLZ3Problem) {
   geantvmoop::DTLZ3 dtlz3;
@@ -42,6 +45,7 @@ TEST_F(Nsga2, SolvingDTLZ3Problem) {
   nsga.SolvePF();
 }
 
+/*
 TEST_F(Nsga2, SolvingDTLZ4Problem) {
   geantvmoop::DTLZ4 dtlz4;
   geantvmoop::GANSGA2<geantvmoop::DTLZ4> nsga(dtlz4);

@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __MPICLIENT__
 #define __MPICLIENT__
 

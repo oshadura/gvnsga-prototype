@@ -10,6 +10,7 @@
  * prototype
  */
 //
+ #pragma once
 
 #ifndef __CSVMANAGER__
 #define __CSVMANAGER__

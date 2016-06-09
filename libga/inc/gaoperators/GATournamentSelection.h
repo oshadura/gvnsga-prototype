@@ -10,6 +10,7 @@
  * prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
 
 #ifndef __GATOURNAMENTSELECTION__
 #define __GATOURNAMENTSELECTION__

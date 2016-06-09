@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __MPIEVALUETE__
 #define __MPIEVALUETE__
 

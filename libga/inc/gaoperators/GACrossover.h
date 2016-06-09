@@ -10,6 +10,7 @@
  * prototype
  */
 //===----------------------------------------------------------------------===//
+#pragma once
 
 #ifndef __GACROSSOVER__
 #define __GACROSSOVER__

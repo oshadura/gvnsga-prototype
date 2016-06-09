@@ -10,6 +10,7 @@
  * prototype
  */
 //
+#pragma once
 
 #ifndef __FUNCTIONS__
 #define __FUNCTIONS__

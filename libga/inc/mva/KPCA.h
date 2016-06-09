@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __KPCA__
 #define __KPCA__
 

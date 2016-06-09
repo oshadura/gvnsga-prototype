@@ -10,6 +10,7 @@
  * prototype
  */
 //
+#pragma once
 
 #ifndef __GADOUBLE__
 #define __GADOUBLE__

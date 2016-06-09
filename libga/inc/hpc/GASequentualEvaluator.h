@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __SEQUENTUALEVALUATOR__
 #define __SEQUENTUALEVALUATOR__
 

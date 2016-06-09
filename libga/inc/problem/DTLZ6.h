@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __PROBLEMDTLZ6__
 #define __PROBLEMDTLZ6__
 

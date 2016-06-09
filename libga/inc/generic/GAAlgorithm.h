@@ -11,6 +11,8 @@
  */
 //
 
+#pragma once
+
 #ifndef __GAALGORITHM__
 #define __GAALGORITHM__
 

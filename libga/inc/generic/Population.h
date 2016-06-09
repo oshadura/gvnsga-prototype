@@ -10,6 +10,7 @@
  * prototype
  */
 //
+ #pragma once
 
 #ifndef __POPULATION__
 #define __POPULATION__

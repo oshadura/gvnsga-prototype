@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __RUNGEANTV__
 #define __RUNGEANTV__
 

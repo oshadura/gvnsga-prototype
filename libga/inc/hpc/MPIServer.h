@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __MPISERVER__
 #define __MPISERVER__
 

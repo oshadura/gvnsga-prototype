@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __LPCA__
 #define __LPCA__
 
@@ -19,7 +21,8 @@ using namespace Eigen;
 class LPCA : public PCA<LPCA> {
 
 private:
-  MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered;
+  MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered,
+      colmean;
   VectorXd eigenvalues, cumulative;
   unsigned int normalise;
 
@@ -116,6 +119,19 @@ public:
   }
 
   void RunLPCA() {
+    /*
+    VectorXd diff_prealloc(mean.size());
+    VectorXd covar_times_diff_prealloc(mean.size());
+    MatrixXd covar_inverse = covar.inverse();
+    double covar_determinant = covar.determinant();
+
+    Eigen::internal::set_is_malloc_allowed(false);
+
+    // (x-mu)
+    diff_prealloc = input - mean;
+    // Sigma^-1 * (x-mu)
+    covar_times_diff_prealloc.noalias() = covar_inverse * diff_prealloc;
+    */
     // Centered matrix
     Xcentered = X.rowwise() - X.colwise().mean();
     C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
@@ -155,8 +171,28 @@ public:
   }
 
   void RunLPCAWithReductionOfComponents() {
+    /*
+    VectorXd mean = VectorXd::Zero(X.cols());
+    VectorXd diff_prealloc(mean.size());
+    VectorXd covar_times_diff_prealloc(mean.size());
+    MatrixXd covar_inverse = covar.inverse();
+    double covar_determinant = covar.determinant();
+    Eigen::internal::set_is_malloc_allowed(false);
+
+    // (x-mu)
+    diff_prealloc = input - mean;
+    // Sigma^-1 * (x-mu)
+    covar_times_diff_prealloc.noalias() = covar_inverse * diff_prealloc;
+    */
     double totalvar = 0;
     int i = 0;
+    colmean = X.colwise().sum() / X.rows();
+    for (int i = 1; i < X.rows(); ++i) {
+      if (colmean.rows() < i + 1) {
+        colmean.conservativeResize(i + 1, colmean.cols());
+      }
+      colmean.row(i) = colmean.row(0);
+    }
     // Centered matrix
     Xcentered = X.rowwise() - X.colwise().mean();
     C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
@@ -207,21 +243,14 @@ public:
               << i << std::endl;
     // Transformed matrix
     MatrixXd NewDataMatrix, NewDataMatrixCentered;
-    //NewDataMatrix = eigenvectors * Transformed.transpose();
-
     NewDataMatrix = eigenvectors * Transformed.transpose();
-    // NewDataMatrixCentered = eigenvectors * TransformedCentered.transpose();
-    X = NewDataMatrix.transpose();
+    X = NewDataMatrix.transpose() + colmean;
     std::cout << "New Transformed data:\n" << X << std::endl;
-    // std::cout << "New Transformed (centered?) data:\n" <<
-    // NewDataMatrixCentered
-    //          << std::endl;
-    // Lets overwrite values..
-    //X = NewDataMatrix;
   }
 
   void Print() {
     std::cout << "Input data:\n" << X << std::endl;
+    std::cout << "Mean of columns:\n" << colmean << std::endl;
     std::cout << "Centered data:\n" << Xcentered << std::endl;
     std::cout << "Covariance matrix:\n" << C << std::endl;
     std::cout << "Eigenvalues:\n" << eigenvalues << std::endl;
@@ -238,7 +267,7 @@ public:
     std::cout << std::endl;
     std::cout << "Sorted eigenvectors:\n" << eigenvectors << std::endl;
     std::cout << "Transformed data:\n" << Transformed << std::endl;
-    //std::cout << "Transformed centred data:\n" << TransformedCentered
+    // std::cout << "Transformed centred data:\n" << TransformedCentered
     //          << std::endl;
   }
 

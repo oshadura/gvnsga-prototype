@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __PCA__
 #define __PCA__
 

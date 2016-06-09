@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef __FUNCTIONSPROXY__
 #define __FUNCTIONSPROXY__
 

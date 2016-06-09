@@ -10,6 +10,8 @@
  * prototype
  */
 //
+#pragma once
+ 
 
 #ifndef __GACONSTRAINEDVALUE__
 #define __GACONSTRAINEDVALUE__

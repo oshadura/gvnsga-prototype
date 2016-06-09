@@ -10,6 +10,7 @@
  * prototype
  */
 //
+ #pragma once
 
 #ifndef __GAVALUE__
 #define __GAVALUE__

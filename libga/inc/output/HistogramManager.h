@@ -13,8 +13,10 @@
  * prototype
  */
 //
+#pragma once
 
 #include "generic/Population.h"
+#include "generic/Functions.h"
 #include "TObject.h"
 #include "TH1.h"
 #include "TFile.h"
@@ -98,39 +100,43 @@ public:
     TObjArray HXList(0);
     TObjArray HYList(0);
     TRandom2 random;
-    gROOT->SetStyle("Plain");
-    gStyle->SetPalette(1);
-    gStyle->SetOptStat(0);
-    gStyle->SetOptTitle(0);
     sprintf(namepop, "%s%d", "PopDist", generation);
     sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
     sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
     sprintf(nameFitLand, "%s%d", "FitLand", generation);
     sprintf(name3dhist, "%s%d", "h3a", generation);
-    sprintf(namefile, "%s%d%s", "StatisticsX", generation, ".png");
+    // sprintf(namefile, "%s%d%s", "StatisticsX", generation, ".png");
     TFile file(hfile, "update");
     file.mkdir(namefolder);
     file.cd(namefolder);
-
     //////// Population distribution
     TH1F *PopDist =
         new TH1F(namepop, "Population distribution", pop.size(), 0., 1.);
     PopDist->GetXaxis()->SetTitle("TGenes / bins");
     PopDist->GetYaxis()->SetTitle("N");
+    PopDist->SetFillColor(kYellow); // Fill fill color to yellow
+    PopDist->SetFillColor(kYellow); // Fill fill color to yellow
+    PopDist->SetMarkerStyle(20);
+    PopDist->SetMarkerColor(kBlue);
+    PopDist->SetMarkerSize(.6); //
     /////// Population 3 DHistogram
-
-    TH3D *h3a = new TH3D(name3dhist, "3D Population", pop.size(), 0, 10,
-                         pop.size(), 0, 10, pop.size(), 0, 20);
-
+    TH3F *h3a =
+        new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     /////// Fitness landscape
-    TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5", 0,
-                           100, 0, 100, 0, 100);
-    FitLand->SetParameter(0, 1);
-    FitLand->SetParameter(1, 1);
-    FitLand->SetParameter(2, 1);
-    FitLand->FixParameter(0, 1);
-    FitLand->FixParameter(1, 1);
-    FitLand->FixParameter(2, 1);
+    // TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5",
+    // 0,
+    //                      100, 0, 100, 0, 100, 3);
+    h3a->SetFillColor(kYellow); // Fill fill color to yellow
+    h3a->SetFillColor(kYellow); // Fill fill color to yellow
+    h3a->SetMarkerStyle(20);
+    h3a->SetMarkerColor(kBlue);
+    h3a->SetMarkerSize(.6); //
+    ////////////////////////////////
+    TF3 *FitLand = new TF3(nameFitLand, F::TruePF, 0, 50, 0, 50, 0, 50, 3);
+    FitLand->SetParameters(1, 1, 1);
+    // FitLand->FixParameter(0, 1);
+    // FitLand->FixParameter(1, 1);
+    // FitLand->FixParameter(2, 1);
     ROOT::Fit::Fitter fitter;
     // wrapped the TF1 in a IParamMultiFunction interface for teh Fitter class
     ROOT::Math::WrappedMultiTF1 wrapperfunction(*FitLand, 3);
@@ -151,9 +157,13 @@ public:
                                     pop.size(), 0., 1.);
     PopFitnessDist->GetXaxis()->SetTitle("TGenes / bins");
     PopFitnessDist->GetYaxis()->SetTitle("N");
-
+    PopFitnessDist->SetFillColor(kYellow); // Fill fill color to yellow
+    PopFitnessDist->SetFillColor(kYellow); // Fill fill color to yellow
+    PopFitnessDist->SetMarkerStyle(20);
+    PopFitnessDist->SetMarkerColor(kBlue);
+    PopFitnessDist->SetMarkerSize(.6); //
     //////// Canvas distribution
-    //TCanvas *Xcanvas = new TCanvas("Xcanvas");
+    // TCanvas *Xcanvas = new TCanvas("Xcanvas");
     ////////////////////////////////////////////////////////////////
     /*
     for (auto i : ScatterCombination)
@@ -180,6 +190,11 @@ public:
           myhistx = new TH2F(TString::Format(namescatter),
                              "Scatter plot of different TGenes", pop.size(), 0.,
                              1., pop.size(), 0., 1.);
+          myhistx->SetFillColor(kYellow); // Fill fill color to yellow
+          myhistx->SetFillColor(kYellow); // Fill fill color to yellow
+          myhistx->SetMarkerStyle(20);
+          myhistx->SetMarkerColor(kBlue);
+          myhistx->SetMarkerSize(.6); //
           HXList.Add(myhistx);
         }
         myhistx->GetXaxis()->SetTitle(x1str);
@@ -215,7 +230,12 @@ public:
         if (!myhisty) {
           myhisty = new TH2F(TString::Format(namescatter),
                              "Scatter plot of different TGenes", pop.size(), 0.,
-                             50., pop.size(), 0., 50.);
+                             10., pop.size(), 0., 10.);
+          myhisty->SetFillColor(kYellow); // Fill fill color to yellow
+          myhisty->SetFillColor(kYellow); // Fill fill color to yellow
+          myhisty->SetMarkerStyle(20);
+          myhisty->SetMarkerColor(kBlue);
+          myhisty->SetMarkerSize(.6); //
           HYList.Add(myhisty);
         }
         myhisty->GetXaxis()->SetTitle(y1str);
@@ -237,7 +257,7 @@ public:
       function[0] = x;
       function[1] = y;
       function[2] = z;
-      //h3a->Fill(x, y, z);
+      h3a->Fill(x, y, z);
       // predictor DTZ1
       predictor[i] = x + y + z - 0.5 + random.Gaus(0, error);
       // add the 3d-data coordinate, the predictor value  and its errors
@@ -252,29 +272,29 @@ public:
     PopFitnessDist->Draw();
     PopFitnessDist->Write();
     ////////////////////
-    //h3a->Draw("iso");
-    //h3a->Write();
+    h3a->Draw("surf3");
+    h3a->Fit(FitLand);
+    h3a->Write();
     ///////////////////
     bool ret = fitter.Fit(data);
-    // if (ret) {
-    const ROOT::Fit::FitResult &res = fitter.Result();
-    // print result (should be around 1)
-    res.Print(std::cout);
-    // copy all fit result info (values, chi2, etc..) in TF3
-    FitLand->SetFitResult(res);
-    // test fit p-value (chi2 probability)
-    double prob = res.Prob();
-    // FitLand->Draw();
-    // FitLand->Write();
-    if (prob < 1.E-2) {
-      Error("HistoFill", "Bad data fit - fit p-value is %f", prob);
-    } else {
+    if (ret) {
+      const ROOT::Fit::FitResult &res = fitter.Result();
+      // print result (should be around 1)
+      res.Print(std::cout);
+      // copy all fit result info (values, chi2, etc..) in TF3
+      FitLand->SetFitResult(res);
+      // test fit p-value (chi2 probability)
+      double prob = res.Prob();
+      // FitLand->Draw();
+      // FitLand->Write();
+      if (prob < 1.E-2)
+        Error("HistoFill", "Bad data fit - fit p-value is %f", prob);
+      else
+        std::cout << "Good fit : p-value  = " << prob << std::endl;
+    } else
       Error("HistoFill", "3D fit failed");
-    }
-    //delete Xcanvas;
     return true;
   }
-
   void Reset();
 
 private:
