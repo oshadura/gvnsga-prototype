@@ -5,6 +5,8 @@
 
 #include <fstream>
 #include <iostream>
+#include <cmath>
+
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
 

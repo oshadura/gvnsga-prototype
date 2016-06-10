@@ -5,8 +5,12 @@
 
 #include <fstream>
 #include <iostream>
+#include <cmath>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
+
+ #include <unsupported/Eigen/MatrixFunctions>
+
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 #include "generic/GAVector.h"
@@ -21,9 +25,8 @@ using namespace Eigen;
 class LPCA : public PCA<LPCA> {
 
 private:
-  MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered,
-      colmean;
-  VectorXd eigenvalues, cumulative;
+  MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered, covariance, dev;
+  VectorXd eigenvalues, cumulative, colmean, stddev;
   unsigned int normalise;
 
 public:
@@ -119,19 +122,6 @@ public:
   }
 
   void RunLPCA() {
-    /*
-    VectorXd diff_prealloc(mean.size());
-    VectorXd covar_times_diff_prealloc(mean.size());
-    MatrixXd covar_inverse = covar.inverse();
-    double covar_determinant = covar.determinant();
-
-    Eigen::internal::set_is_malloc_allowed(false);
-
-    // (x-mu)
-    diff_prealloc = input - mean;
-    // Sigma^-1 * (x-mu)
-    covar_times_diff_prealloc.noalias() = covar_inverse * diff_prealloc;
-    */
     // Centered matrix
     Xcentered = X.rowwise() - X.colwise().mean();
     C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
@@ -171,22 +161,15 @@ public:
   }
 
   void RunLPCAWithReductionOfComponents() {
-    /*
-    VectorXd mean = VectorXd::Zero(X.cols());
-    VectorXd diff_prealloc(mean.size());
-    VectorXd covar_times_diff_prealloc(mean.size());
-    MatrixXd covar_inverse = covar.inverse();
-    double covar_determinant = covar.determinant();
-    Eigen::internal::set_is_malloc_allowed(false);
-
-    // (x-mu)
-    diff_prealloc = input - mean;
-    // Sigma^-1 * (x-mu)
-    covar_times_diff_prealloc.noalias() = covar_inverse * diff_prealloc;
-    */
+    //std dev
     double totalvar = 0;
     int i = 0;
+    //Covariance matrix
+    covariance = (Xcentered.adjoint()* Xcentered) / double(X.rows() - 1);
+    // Mean of matrix X
     colmean = X.colwise().sum() / X.rows();
+    // Vector of std deviation of colums
+    stddev = (X.rowwise() - colmean.transpose()).array().pow(2).colwise().sum() / X.rows();
     for (int i = 1; i < X.rows(); ++i) {
       if (colmean.rows() < i + 1) {
         colmean.conservativeResize(i + 1, colmean.cols());
@@ -194,7 +177,25 @@ public:
       colmean.row(i) = colmean.row(0);
     }
     // Centered matrix
-    Xcentered = X.rowwise() - X.colwise().mean();
+    Xcentered = (X.rowwise() - X.colwise().mean());
+    // Sqrt of sigma
+    stddev = stddev.cwiseSqrt();
+    
+    /*
+    std::cout << "Std dev:\n" << stddev << std::endl;
+    dev.col(0) = stddev;
+
+    for (int i = 0; i < X.rows(); ++i) {
+      if (dev.rows() < i + 1) {
+        stddev.conservativeResize(i + 1, dev.cols());
+      }
+      std::cout << "Std dev:\n" ;
+      dev.row(i) = stddev;
+    }
+    */
+
+    std::cout << "Std dev matrix:\n" << stddev << std::endl;
+    Xcentered = Xcentered.array() / dev.array();
     C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
     EigenSolver<MatrixXd> edecomp(C);
     // Eigen values
@@ -244,7 +245,7 @@ public:
     // Transformed matrix
     MatrixXd NewDataMatrix, NewDataMatrixCentered;
     NewDataMatrix = eigenvectors * Transformed.transpose();
-    X = NewDataMatrix.transpose() + colmean;
+    X = NewDataMatrix.transpose() * dev + colmean;
     std::cout << "New Transformed data:\n" << X << std::endl;
   }
 
