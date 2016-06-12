@@ -10,7 +10,6 @@
  * prototype
  */
 //
-
 #pragma once
 
 #ifndef __GAALGORITHM__

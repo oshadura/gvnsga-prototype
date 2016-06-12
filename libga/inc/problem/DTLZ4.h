@@ -32,12 +32,12 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    
+
     std::cout << "Vector input for evaluation function: ";
-    for (auto i: fParameters)
+    for (auto i : fParameters)
       std::cout << i << ' ';
     std::cout << ' ' << std::endl;
-    
+
     int alpha = 100;
     int n = 12;
     int m = 3;
@@ -50,10 +50,10 @@ public:
       double f = (1 + g);
       int j = 0;
       for (; j + m <= m - 2; ++j) {
-        f *= cos(pow(fParameters[j], alpha) * pi()/2);
+        f *= cos(pow(fParameters[j], alpha) * pi() / 2);
       }
       if (i > 0) {
-        f *= sin(pow(fParameters[j], alpha) * pi()/2);
+        f *= sin(pow(fParameters[j], alpha) * pi() / 2);
       }
       fFitness.push_back(f);
     }
@@ -65,6 +65,13 @@ public:
     for (int i = 0; i < 12; ++i)
       vector.push_back(GADouble(0, 1));
     return vector;
+  }
+
+  static Double_t TruePF(Double_t *x, Double_t *parameter) {
+    Double_t value =
+        std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] * x[1] * x[1] -
+                  parameter[2] * x[2] * x[2]);
+    return value;
   }
 
   static Output GetOutput() { return std::vector<double>(3); }

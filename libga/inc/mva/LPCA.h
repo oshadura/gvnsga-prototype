@@ -9,7 +9,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
 
- #include <unsupported/Eigen/MatrixFunctions>
+#include <unsupported/Eigen/MatrixFunctions>
 
 #include "generic/Population.h"
 #include "generic/TGenes.h"
@@ -25,8 +25,10 @@ using namespace Eigen;
 class LPCA : public PCA<LPCA> {
 
 private:
-  MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered, covariance, dev;
-  VectorXd eigenvalues, cumulative, colmean, stddev;
+  MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered,
+      covariance, dev, mean, devnew, meannew;
+  ;
+  VectorXd eigenvalues, cumulative, stddev, colmean, stddevnew, colmeannew;
   unsigned int normalise;
 
 public:
@@ -161,40 +163,33 @@ public:
   }
 
   void RunLPCAWithReductionOfComponents() {
-    //std dev
+    // std dev
     double totalvar = 0;
     int i = 0;
-    //Covariance matrix
-    covariance = (Xcentered.adjoint()* Xcentered) / double(X.rows() - 1);
+    // Covariance matrix
+    covariance = (Xcentered.adjoint() * Xcentered) / double(X.rows() - 1);
     // Mean of matrix X
     colmean = X.colwise().sum() / X.rows();
     // Vector of std deviation of colums
-    stddev = (X.rowwise() - colmean.transpose()).array().pow(2).colwise().sum() / X.rows();
-    for (int i = 1; i < X.rows(); ++i) {
-      if (colmean.rows() < i + 1) {
-        colmean.conservativeResize(i + 1, colmean.cols());
-      }
-      colmean.row(i) = colmean.row(0);
+    stddev =
+        (X.rowwise() - colmean.transpose()).array().pow(2).colwise().sum() /
+        X.rows();
+    mean = MatrixXd::Zero(X.rows(), X.cols());
+    dev = MatrixXd::Zero(X.rows(), X.cols());
+    for (int i = 0; i < X.rows(); ++i) {
+      mean.row(i) = colmean.transpose();
+      dev.row(i) = stddev.transpose();
     }
+    std::cout << "Mean matrix:\n" << mean << std::endl;
+
     // Centered matrix
     Xcentered = (X.rowwise() - X.colwise().mean());
+
     // Sqrt of sigma
     stddev = stddev.cwiseSqrt();
-    
-    /*
-    std::cout << "Std dev:\n" << stddev << std::endl;
-    dev.col(0) = stddev;
 
-    for (int i = 0; i < X.rows(); ++i) {
-      if (dev.rows() < i + 1) {
-        stddev.conservativeResize(i + 1, dev.cols());
-      }
-      std::cout << "Std dev:\n" ;
-      dev.row(i) = stddev;
-    }
-    */
-
-    std::cout << "Std dev matrix:\n" << stddev << std::endl;
+    std::cout << "Std dev vector:\n" << stddev << std::endl;
+    std::cout << "Std dev matrix:\n" << dev << std::endl;
     Xcentered = Xcentered.array() / dev.array();
     C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
     EigenSolver<MatrixXd> edecomp(C);
@@ -240,13 +235,35 @@ public:
     // TransformedCentered.conservativeResize(Transformed.rows(), i);
     std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
     std::cout << "Reduced tranformed matrix \n" << Transformed << std::endl;
-    std::cout << "Total number of components to be used in Transformed matrix: "
+    std::cout << "Total number of components to be used in transformed matrix: "
               << i << std::endl;
     // Transformed matrix
-    MatrixXd NewDataMatrix, NewDataMatrixCentered;
+    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
     NewDataMatrix = eigenvectors * Transformed.transpose();
-    X = NewDataMatrix.transpose() * dev + colmean;
-    std::cout << "New Transformed data:\n" << X << std::endl;
+    NewDataMatrixTransposed = NewDataMatrix.transpose();
+    std::cout << "Transformed data matrix:\n" << NewDataMatrixTransposed
+              << std::endl;
+    colmeannew = NewDataMatrixTransposed.colwise().sum() /
+                 NewDataMatrixTransposed.rows();
+    // Vector of std deviation of colums
+    stddevnew = (NewDataMatrixTransposed.rowwise() - colmeannew.transpose())
+                    .array()
+                    .pow(2)
+                    .colwise()
+                    .sum() /
+                NewDataMatrixTransposed.rows();
+    std::cout << "New mean vector:\n" << colmeannew << std::endl;
+    std::cout << "New std dev:\n" << stddevnew << std::endl;
+    meannew = MatrixXd::Zero(X.rows(), X.cols());
+    devnew = MatrixXd::Zero(X.rows(), X.cols());
+    for (int i = 0; i < X.rows(); ++i) {
+      devnew.row(i) = stddevnew.transpose();
+      meannew.row(i) = colmeannew.transpose();
+    }
+    X = NewDataMatrixTransposed;
+    //X = devnew.array()*NewDataMatrixTransposed.array()/*  + mean */;
+    //X = X + meannew;
+    std::cout << "New Transformed data matrix:\n" << X << std::endl;
   }
 
   void Print() {
@@ -268,8 +285,6 @@ public:
     std::cout << std::endl;
     std::cout << "Sorted eigenvectors:\n" << eigenvectors << std::endl;
     std::cout << "Transformed data:\n" << Transformed << std::endl;
-    // std::cout << "Transformed centred data:\n" << TransformedCentered
-    //          << std::endl;
   }
 
   void WriteTransformed(std::string file) {

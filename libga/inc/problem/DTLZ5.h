@@ -33,12 +33,12 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    
+
     std::cout << "Vector input for evaluation function: ";
-    for (auto i: fParameters)
+    for (auto i : fParameters)
       std::cout << i << ' ';
     std::cout << ' ' << std::endl;
-    
+
     int n = 7;
     int m = 3;
     Int_t k = n - m + 1; // 5
@@ -67,6 +67,13 @@ public:
     for (int i = 0; i < 7; ++i)
       vector.push_back(GADouble(0, 1));
     return vector;
+  }
+
+  static Double_t TruePF(Double_t *x, Double_t *parameter) {
+    Double_t value =
+        std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] * x[1] * x[1] -
+                  parameter[2] * x[2] * x[2]);
+    return value;
   }
 
   static Output GetOutput() { return std::vector<double>(3); }

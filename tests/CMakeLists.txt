@@ -40,7 +40,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
 include_directories(${CMAKE_SOURCE_DIR}/libinstrument/inc)
 
 # Linux
-include_directories(/usr/include/eigen3)
+include_directories(/usr/local/include/eigen3)
 # Mac OS X
 include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 
