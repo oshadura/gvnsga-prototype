@@ -85,10 +85,8 @@ TEST_F(AllPCA, RunLPCAReductionofComponents) {
 }
 
 TEST_F(AllPCA, RunKPCA) {
-  /*
-  kpca.LoadData("data");
+  kpca.LoadData("data.example");
   kpca.RunKPCA();
   kpca.Print();
   kpca.WriteTransformed("outputkpca");
-  */
 }

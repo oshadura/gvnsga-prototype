@@ -27,7 +27,6 @@ class LPCA : public PCA<LPCA> {
 private:
   MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered,
       covariance, dev, mean, devnew, meannew;
-  ;
   VectorXd eigenvalues, cumulative, stddev, colmean, stddevnew, colmeannew;
   unsigned int normalise;
 
@@ -180,16 +179,10 @@ public:
       mean.row(i) = colmean.transpose();
       dev.row(i) = stddev.transpose();
     }
-    std::cout << "Mean matrix:\n" << mean << std::endl;
-
     // Centered matrix
-    Xcentered = (X.rowwise() - X.colwise().mean());
-
+    Xcentered = (X.rowwise() - X.colwise().mean());    
     // Sqrt of sigma
     stddev = stddev.cwiseSqrt();
-
-    std::cout << "Std dev vector:\n" << stddev << std::endl;
-    std::cout << "Std dev matrix:\n" << dev << std::endl;
     Xcentered = Xcentered.array() / dev.array();
     C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
     EigenSolver<MatrixXd> edecomp(C);
@@ -228,8 +221,12 @@ public:
       ++i;
     }
     Print();
+    std::cout << "Sqrt of std dev vector of matrix X:\n" << stddev << std::endl;
+    std::cout << "Sqrt of std dev matrix of matrix X:\n" << dev << std::endl;
+    std::cout << "Column nean vector of matrix X:\n" << colmean << std::endl;
+    std::cout << "Mean matrix:\n" << mean << std::endl;
     std::cout << "---------------------------\n" << std::endl;
-
+    std::cout << "REVERSE PCA: " << std::endl;
     eigenvectors.conservativeResize(eigenvectors.rows(), i);
     Transformed.conservativeResize(Transformed.rows(), i);
     // TransformedCentered.conservativeResize(Transformed.rows(), i);
@@ -252,19 +249,23 @@ public:
                     .colwise()
                     .sum() /
                 NewDataMatrixTransposed.rows();
-    std::cout << "New mean vector:\n" << colmeannew << std::endl;
-    std::cout << "New std dev:\n" << stddevnew << std::endl;
+    std::cout << "New mean vector of matrix X':\n" << colmeannew << std::endl;
+    std::cout << "New std dev of matrix X':\n" << stddevnew << std::endl;
     meannew = MatrixXd::Zero(X.rows(), X.cols());
     devnew = MatrixXd::Zero(X.rows(), X.cols());
     for (int i = 0; i < X.rows(); ++i) {
       devnew.row(i) = stddevnew.transpose();
       meannew.row(i) = colmeannew.transpose();
     }
-    X = NewDataMatrixTransposed;
-    //X = devnew.array()*NewDataMatrixTransposed.array()/*  + mean */;
-    //X = X + meannew;
-    std::cout << "New Transformed data matrix:\n" << X << std::endl;
+    NewDataMatrixTransposed = NewDataMatrixTransposed - meannew;
+    NewDataMatrixTransposed = NewDataMatrixTransposed.array()/devnew.array();
+    std::cout << "New Transformed data matrix X':\n" << NewDataMatrixTransposed << std::endl;
+    /////////////////BACK///////////////////
+    X =  dev.array() * NewDataMatrixTransposed.array();
+    X = X + mean;
+     std::cout << "New Transformed data matrix with reverse = X:\n" << X << std::endl;
   }
+
 
   void Print() {
     std::cout << "Input data:\n" << X << std::endl;
