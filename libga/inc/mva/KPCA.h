@@ -20,10 +20,10 @@ class KPCA : public PCA<KPCA> {
 
 public:
   KPCA()
-      : components(2), kernel_type(1), normalise(0), gamma(0.001),
+      : components(3), kernel_type(1), normalise(0), gamma(0.001),
         constant(1.0), order(2.0) {}
   explicit KPCA(MatrixXd &d)
-      : components(2), kernel_type(1), normalise(0), gamma(0.001),
+      : components(3), kernel_type(1), normalise(0), gamma(0.001),
         constant(1.0), order(2.0) {
     X = d;
   }
@@ -176,34 +176,6 @@ public:
         }
       }
     }
-
-    /*
-    std::cout
-   << "Input data:" << std::endl
-   << X << std::endl
-   << std::endl
-  ;
-    std::cout
-   << "Centered data:"<< std::endl
-   << Xcentered << std::endl
-   << std::endl
-  ;
-    std::cout
-   << "Centered kernel matrix:" << std::endl
-   << Kcentered << std::endl
-   << std::endl
-  ;
-    std::cout
-   << "Eigenvalues:" << std::endl
-   << eigenvalues << std::endl
-   << std::endl
-  ;
-    std::cout
-   << "Eigenvectors:" << std::endl
-   << eigenvectors << std::endl
-   << std::endl
-  ;
-    */
     std::cout << "Sorted eigenvalues:" << std::endl;
     for (unsigned int i = 0; i < eigenvalues.rows(); i++) {
       if (eigenvalues(i) > 0) {
