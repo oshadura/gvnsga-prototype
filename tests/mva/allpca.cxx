@@ -38,12 +38,8 @@ TEST_F(AllPCA, PCALoadDataCSV) {
 TEST_F(AllPCA, PCAConvertXtoPopulation) {
   lpca.LoadData("dataDTLZ1");
   MatrixXd currentX = lpca.GetX();
-  // std::cout << "Number of cols " << currentX.cols() << std::endl;
-  // std::cout << "Number of rows " << currentX.rows() << std::endl;
-  // std::cout << currentX << std::endl;
   geantvmoop::Population<geantvmoop::DTLZ1> population;
   lpca.UnloadPopulation(population, currentX);
-  // std::cout << population << std::endl;
   ASSERT_EQ(lpca.GetX().rows(), population.size());
   ASSERT_EQ(lpca.GetX().cols(), 7);
 }
@@ -91,4 +87,21 @@ TEST_F(AllPCA, RunKPCA) {
   kpca.RunKPCA();
   kpca.Print();
   kpca.WriteTransformed("outputkpca");
+}
+
+
+TEST_F(AllPCA, RunRobustPCA){
+  /*
+  MatrixXd D = MatrixXd::Random(5, 5);
+  D = D.array() * D.array();
+  MatrixXd A = MatrixXd::Zero(5, 5);
+  MatrixXd E = MatrixXd::Zero(5, 5);
+  std::cout << "The original matirix; D = \n" << D << std::endl;
+  // Perform Robust PCA
+  sp::ml::robust_pca(D, A, E);
+  std::cout << "Estimated row rank matrix: A = \n" << A << std::endl;
+  std::cout << "Estimated sparse matrix: E = \n" << E << std::endl;
+  std::cout << "Reconstructed matrix: A + E =:\n" << A + E << std::endl;
+  std::cout << "Reconstruction Error = " << (D - (A + E)).norm() << std::endl;
+  */
 }

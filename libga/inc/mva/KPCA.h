@@ -29,17 +29,29 @@ public:
   }
   virtual ~KPCA() {}
 
-  void SetComponents(const int i) { components = i; };
+  void SetComponents(const int i) {
+    components = i;
+  };
 
-  void SetKernel(const int i) { kernel_type = i; };
+  void SetKernel(const int i) {
+    kernel_type = i;
+  };
 
-  void SetNormalise(const int i) { normalise = i; };
+  void SetNormalise(const int i) {
+    normalise = i;
+  };
 
-  void SetGamma(const double i) { gamma = i; };
+  void SetGamma(const double i) {
+    gamma = i;
+  };
 
-  void SetConstant(const double i) { constant = i; };
+  void SetConstant(const double i) {
+    constant = i;
+  };
 
-  void SetOrder(const double i) { order = i; };
+  void SetOrder(const double i) {
+    order = i;
+  };
 
   MatrixXd &GetTransformed() { return transformed; }
 
@@ -76,7 +88,7 @@ public:
     // if (data.cols() != newpop.size())
     //  return;
     typename F::Input ind;
-    std::vector<individual_t<F>> poplist;
+    std::vector<individual_t<F> > poplist;
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < data.rows(); ++i) {
       for (int j = 0; j < data.cols(); ++j) {
@@ -87,7 +99,7 @@ public:
       }
       // std::cout << "New gene added." << std::endl;
       TGenes<F> newind = ind;
-      poplist.push_back(std::make_shared<geantvmoop::TGenes<F>>(newind));
+      poplist.push_back(std::make_shared<geantvmoop::TGenes<F> >(newind));
       ind.clear();
     }
     newpop = Population<F>(poplist);
@@ -135,7 +147,7 @@ public:
     eigenvalues = edecomp.eigenvalues().real();
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
-    std::vector<std::pair<double, VectorXd>> eigen_pairs;
+    std::vector<std::pair<double, VectorXd> > eigen_pairs;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
@@ -148,9 +160,8 @@ public:
     // http://stackoverflow.com/questions/5122804/sorting-with-lambda
     std::sort(eigen_pairs.begin(), eigen_pairs.end(),
               [](const std::pair<double, VectorXd> a,
-                 const std::pair<double, VectorXd> b) -> bool {
-                return (a.first > b.first);
-              });
+                 const std::pair<double, VectorXd> b)
+                  ->bool { return (a.first > b.first); });
     for (unsigned int i = 0; i < eigen_pairs.size(); i++) {
       eigenvalues(i) = eigen_pairs[i].first;
       c += eigenvalues(i);
@@ -174,9 +185,6 @@ public:
                cumulative(i) / eigenvalues.sum());
       }
     }
-    std::cout << std::endl;
-    // std::cout << "Sorted eigenvectors:" << eigenvectors std::endl;
-    // std::cout << "Transformed data:" << transformed << std::endl;
   }
 
   void RunKPCA() {
@@ -193,7 +201,7 @@ public:
     eigenvalues = edecomp.eigenvalues().real();
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
-    std::vector<std::pair<double, VectorXd>> eigen_pairs;
+    std::vector<std::pair<double, VectorXd> > eigen_pairs;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
@@ -205,9 +213,8 @@ public:
     }
     std::sort(eigen_pairs.begin(), eigen_pairs.end(),
               [](const std::pair<double, VectorXd> a,
-                 const std::pair<double, VectorXd> b) -> bool {
-                return (a.first > b.first);
-              });
+                 const std::pair<double, VectorXd> b)
+                  ->bool { return (a.first > b.first); });
     for (unsigned int i = 0; i < eigen_pairs.size(); i++) {
       eigenvalues(i) = eigen_pairs[i].first;
       c += eigenvalues(i);
@@ -222,7 +229,15 @@ public:
         }
       }
     }
-    std::cout << "Sorted eigenvalues:" << std::endl;
+  }
+
+  void Print() {
+    std::cout << "Input data: \n" << X << std::endl;
+    std::cout << "Centered data: \n" << Xcentered << std::endl;
+    std::cout << "Centered kernel matrix: \n" << K << std::endl;
+    std::cout << "Eigenvalues: \n" << eigenvalues << std::endl;
+    std::cout << "Eigenvectors: \n" << eigenvectors << std::endl;
+    std::cout << "Sorted eigenvalues: \n" << std::endl;
     for (unsigned int i = 0; i < eigenvalues.rows(); i++) {
       if (eigenvalues(i) > 0) {
         std::cout << "PC " << i + 1 << ": Eigenvalue: " << eigenvalues(i);
@@ -231,26 +246,8 @@ public:
                cumulative(i) / eigenvalues.sum());
       }
     }
-  }
-
-  void Print() {
-    std::cout << "Input data: \n " << X << std::endl;
-    std::cout << "Centered data: \n" << Xcentered << std::endl;
-    std::cout << "Covariance matrix: \n" << C << std::endl;
-    std::cout << "Eigenvalues: \n " << eigenvalues << std::endl;
-    std::cout << "Eigenvectors: \n " << eigenvectors << std::endl;
-    std::cout << "Sorted eigenvalues: \n" << std::endl;
-    for (unsigned int i = 0; i < eigenvalues.rows(); i++) {
-      if (eigenvalues(i) > 0) {
-        std::cout << "PC " << i + 1 << ": Eigenvalue: \n" << eigenvalues(i);
-        printf("\t(%3.3f of variance, cumulative =  %3.3f)\n",
-               eigenvalues(i) / eigenvalues.sum(),
-               cumulative(i) / eigenvalues.sum());
-      }
-    }
-    std::cout << "Sorted eigenvectors:\n" << eigenvectors << std::endl;
-    std::cout << "Transformed data:\n" << X * eigenvectors << std::endl;
-    // std::cout << "Transformed centred data:\n" << transformed << std::endl;
+    std::cout << "Sorted eigenvectors: \n" << eigenvectors << std::endl;
+    std::cout << "Transformed data: \n" << transformed << std::endl;
   }
 
   void WriteTransformed(std::string file) {
@@ -284,6 +281,8 @@ public:
 private:
   double Kernel(const VectorXd &a, const VectorXd &b) {
     switch (kernel_type) {
+    case 1:
+      return (std::pow(a.dot(b) + constant, order));
     case 2:
       return (std::pow(a.dot(b) + constant, order));
     default:

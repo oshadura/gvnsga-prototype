@@ -45,16 +45,19 @@ TEST_F(Nsga2Mod, SolvingDTLZ3Problem) {
   nsga.fMaxGeneration = 50;
   nsga.SolvePF();
 }
+*/
 
-/*
 TEST_F(Nsga2Mod, SolvingDTLZ4Problem) {
+  /*
   geantvmoop::DTLZ4 dtlz4;
   geantvmoop::GANSGA2Mod<geantvmoop::DTLZ4> nsga(dtlz4);
   nsga.fPopulationSize = 100;
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
+  */
 }
 
+/*
 TEST_F(Nsga2Mod, SolvingDTLZ5Problem) {
   geantvmoop::DTLZ5 dtlz5;
   geantvmoop::GANSGA2Mod<geantvmoop::DTLZ5> nsga(dtlz5);

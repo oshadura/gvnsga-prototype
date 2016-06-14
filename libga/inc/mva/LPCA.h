@@ -212,7 +212,7 @@ public:
     Transformed = X * eigenvectors;
     // TransformedCentered = Xcentered * eigenvectors;
     // Varince based selection (< 85 %)
-    while (totalvar <= 0.90) {
+    while (totalvar <= 0.85) {
       eigenvalues(i) = eigen_pairs[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;

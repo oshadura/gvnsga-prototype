@@ -1,3 +1,7 @@
+#pragma once
+
+#ifndef __ROBUSTPCA__
+#define __ROBUSTPCA__
 //  Copyright (c) 2014 Ryuichi Yamamoto
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,6 +22,8 @@
 //  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 //  IN THE SOFTWARE.
 
+// Modified by oshadura
+
 #pragma once
 
 #include <Eigen/Core>
@@ -25,164 +31,137 @@
 #include <cmath>
 #include <iostream>
 
-namespace sp {
-namespace ml {
+namespace geantvmoop {
 
-namespace internal {
+// using namespace Eigen;
+class RobustPCA : public PCA<RobustPCA> {
 
-template <class ValueType, class Vector>
-inline int count_larger_than(const Vector& v, ValueType value) {
-  int count = 0;
+  template <class ValueType, class Vector>
+  inline int count_larger_than(const Vector &v, ValueType value) {
+    int count = 0;
 
-  for (int i = 0; i < v.size(); ++i) {
-    if (v[i] > value) ++count;
+    for (int i = 0; i < v.size(); ++i) {
+      if (v[i] > value)
+        ++count;
+    }
+
+    return count;
   }
 
-  return count;
-}
+  /**
+   * Robust Principal Component Analysis (RPCA) using the inexact augumented
+   * Lagrance multiplier.
+   * @param D observation matrix (D = A + E)
+   * @param A  row-rank matrix
+   * @param E  sparse matrix
+   */
+  template <class ValueType = float>
+  void robust_pca_inexact_alm(
+      Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic> &D,
+      Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic> &A,
+      Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic> &E) {
+    typedef typename Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>
+    Matrix;
+    typedef typename Eigen::Array<ValueType, Eigen::Dynamic, Eigen::Dynamic>
+    Array;
+    typedef typename Eigen::Matrix<ValueType, Eigen::Dynamic, 1> Vector;
 
-/**
- * Robust Principal Component Analysis (RPCA) using the inexact augumented
- * Lagrance multiplier.
- * @param D observation matrix (D = A + E)
- * @param A  row-rank matrix
- * @param E  sparse matrix
- */
-template <class ValueType = float>
-void robust_pca_inexact_alm(
-    Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>& D,
-    Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>& A,
-    Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>& E) {
-  typedef typename Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>
-      Matrix;
-  typedef typename Eigen::Array<ValueType, Eigen::Dynamic, Eigen::Dynamic>
-      Array;
-  typedef typename Eigen::Matrix<ValueType, Eigen::Dynamic, 1> Vector;
+    const int M = D.rows();
+    const int N = D.cols();
 
-  const int M = D.rows();
-  const int N = D.cols();
+    using std::cout;
+    using std::endl;
 
-  using std::cout;
-  using std::endl;
+    // supplementary variable
+    Matrix Y = D;
+    A = Matrix::Zero(M, N);
+    E = Matrix::Zero(M, N);
+    Array zero = Matrix::Zero(M, N);
 
-  // supplementary variable
-  Matrix Y = D;
-  A = Matrix::Zero(M, N);
-  E = Matrix::Zero(M, N);
-  Array zero = Matrix::Zero(M, N);
+    // parameters
+    const double lambda = 1.0 / sqrt(std::max(M, N));
+    const double rho = 1.5;
 
-  // parameters
-  const double lambda = 1.0 / sqrt(std::max(M, N));
-  const double rho = 1.5;
+    Eigen::JacobiSVD<Matrix> svd_only_singlar_values(Y);
+    const double norm_two =
+        svd_only_singlar_values.singularValues()(0); // can be tuned
+    const double norm_inf = Y.array().abs().maxCoeff() / lambda;
+    const double dual_norm = std::max(norm_two, norm_inf);
+    const double d_norm = D.norm();
+    Y /= dual_norm;
 
-  Eigen::JacobiSVD<Matrix> svd_only_singlar_values(Y);
-  const double norm_two =
-      svd_only_singlar_values.singularValues()(0);  // can be tuned
-  const double norm_inf = Y.array().abs().maxCoeff() / lambda;
-  const double dual_norm = std::max(norm_two, norm_inf);
-  const double d_norm = D.norm();
-  Y /= dual_norm;
+    double mu = 1.25 / norm_two;
+    const double mu_bar = mu * 1.0e+7;
 
-  double mu = 1.25 / norm_two;
-  const double mu_bar = mu * 1.0e+7;
+    bool converged = false;
+    int max_iter = 1000;
+    double error_tolerance = 1.0e-7;
+    int iter = 0;
+    int total_svd = 0;
+    int sv = 10;
+    while (!converged) {
+      // update sparse matrix E
+      Array temp_T = D - A + (1.0 / mu) * Y;
+      E = (temp_T - lambda / mu).max(zero) + (temp_T + lambda / mu).min(zero);
 
-  bool converged = false;
-  int max_iter = 1000;
-  double error_tolerance = 1.0e-7;
-  int iter = 0;
-  int total_svd = 0;
-  int sv = 10;
-  while (!converged) {
-    // update sparse matrix E
-    Array temp_T = D - A + (1.0 / mu) * Y;
-    E = (temp_T - lambda / mu).max(zero) + (temp_T + lambda / mu).min(zero);
+      // force non-negative
+      E = E.array().max(zero); //
+      // cout << E << endl;
 
-    // force non-negative
-    E = E.array().max(zero);  // 論文には書いてない
-                              //cout << E << endl;
+      // SVD
+      Eigen::JacobiSVD<Matrix> svd(D - E + 1.0 / mu * Y,
+                                   Eigen::ComputeFullU | Eigen::ComputeFullV);
+      Matrix U = svd.matrixU();
+      Matrix V = svd.matrixV();
+      Vector singularValues = svd.singularValues();
 
-    // SVD
-    Eigen::JacobiSVD<Matrix> svd(D - E + 1.0 / mu * Y,
-                                 Eigen::ComputeFullU | Eigen::ComputeFullV);
-    Matrix U = svd.matrixU();
-    Matrix V = svd.matrixV();
-    Vector singularValues = svd.singularValues();
+      // trancate dimention
+      int svp = count_larger_than(singularValues, 1 / mu);
+      if (svp < sv) {
+        sv = std::min(svp + 1, N);
+      } else {
+        sv = std::min(svp + static_cast<int>(0.05 * N + 0.5), N);
+      }
 
-    // trancate dimention
-    int svp = count_larger_than(singularValues, 1 / mu);
-    if (svp < sv) {
-      sv = std::min(svp + 1, N);
-    } else {
-      sv = std::min(svp + static_cast<int>(0.05 * N + 0.5), N);
-    }
+      // update A
+      Matrix S_th =
+          (singularValues.head(svp).array() - 1.0 / mu).matrix().asDiagonal();
+      A = U.leftCols(svp) * S_th * V.leftCols(svp).transpose();
 
-    // update A
-    Matrix S_th =
-        (singularValues.head(svp).array() - 1.0 / mu).matrix().asDiagonal();
-    A = U.leftCols(svp) * S_th * V.leftCols(svp).transpose();
+      // force non-negative
+      A = A.array().max(zero);
 
-    // force non-negative
-    A = A.array().max(zero);
+      total_svd += 1;
+      Matrix Z = D - A - E;
+      Y = Y + mu * Z;
+      mu = std::min(mu * rho, mu_bar);
 
-    total_svd += 1;
-    Matrix Z = D - A - E;
-    Y = Y + mu * Z;
-    mu = std::min(mu * rho, mu_bar);
+      // objective function
+      double objective = Z.norm() / d_norm;
 
-    // objective function
-    double objective = Z.norm() / d_norm;
+      if (objective < error_tolerance) {
+        converged = true;
+      }
 
-    if (objective < error_tolerance) {
-      converged = true;
-    }
-
-    if (++iter >= max_iter) {
-      break;
+      if (++iter >= max_iter) {
+        break;
+      }
     }
   }
+
+  /**
+   * Interface of RPCA
+   * @param D: observation matrix (D = A + E)
+   * @param A: row-rank matrix
+   * @param E: sparse matrix
+  */
+  template <class ValueType = float>
+  void robust_pca(Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic> &D,
+                  Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic> &A,
+                  Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic> &E) {
+    robust_pca_inexact_alm(D, A, E);
+  }
+};
 }
 
-}  // end namespace internal
-
-/**
- * Interface of RPCA
- * @param D: observation matrix (D = A + E)
- * @param A: row-rank matrix
- * @param E: sparse matrix
-*/
-template <class ValueType = float>
-void robust_pca(Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>& D,
-                Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>& A,
-                Eigen::Matrix<ValueType, Eigen::Dynamic, Eigen::Dynamic>& E) {
-  internal::robust_pca_inexact_alm(D, A, E);
-}
-
-}  // end namespace ml
-}  // end namespace sp
-
-/*
-  
-Sample of main()
-
-int main() {
-  MatrixXd D = MatrixXd::Random(5, 5);
-  D = D.array() * D.array();
-
-  MatrixXd A = MatrixXd::Zero(5, 5);
-  MatrixXd E = MatrixXd::Zero(5, 5);
-
-  std::cout << "The original matirix; D = \n" << D << std::endl;
-
-  // Perform Robust PCA
-  sp::ml::robust_pca(D, A, E);
-  std::cout << "Estimated row rank matrix: A = \n" << A << std::endl;
-  std::cout << "Estimated sparse matrix: E = \n" << E << std::endl;
-
-  std::cout << "Reconstructed matrix: A + E =:\n" << A + E << std::endl;
-
-  std::cout << "Reconstruction Error = " << (D - (A + E)).norm() << std::endl;
-
-  return 0;
-} 
-
-*/
+#endif
