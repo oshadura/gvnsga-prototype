@@ -10,7 +10,7 @@
  * prototype
  */
 //
- #pragma once
+#pragma once
 
 #ifndef __CSVMANAGER__
 #define __CSVMANAGER__
@@ -61,6 +61,7 @@ public:
   }
 
   // Better to do it in variadic way..
+  /**
   template <typename F>
   void LoadCSV(std::string file, const Population<F> &pop) {
     double Gene1, Gene2, Gene3;
@@ -76,6 +77,7 @@ public:
       pop.push_back(fInd);
     }
   }
+  **/
 };
 }
 

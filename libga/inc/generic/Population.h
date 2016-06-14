@@ -10,7 +10,7 @@
  * prototype
  */
 //
- #pragma once
+#pragma once
 
 #ifndef __POPULATION__
 #define __POPULATION__
@@ -28,32 +28,32 @@
 
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F> > {
+template <typename F> class Population : public std::vector<individual_t<F>> {
 
 public:
   // for creation of new population
   Population(std::initializer_list<individual_t<F>> list)
       : std::vector<individual_t<F>>(list) {}
 
-  Population() : std::vector<individual_t<F> >() {}
+  Population() : std::vector<individual_t<F>>() {}
 
-  Population(const std::vector<individual_t<F> > &individuals)
-      : std::vector<individual_t<F> >(individuals) {}
+  Population(const std::vector<individual_t<F>> &individuals)
+      : std::vector<individual_t<F>>(individuals) {}
 
   Population(int n) {
     for (int i = 0; i < n; ++i) {
       typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F> >(gene);
+      auto individual = std::make_shared<TGenes<F>>(gene);
       this->push_back(individual);
     }
   }
 
   ~Population() {}
 
-// Stupid clang
-#if defined __clang__
-  void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
-#endif
+  // Stupid clang
+  //#if defined __clang__
+  //  void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
+  //#endif
 
   const typename F::Input &GetTGenes(int i) const {
     return (*this)[i]->GetInput();
@@ -134,12 +134,14 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] > m[rhs];
+                });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] < m[rhs];
+                });
   }
 
   void SortObj(int objective, bool isDescending = false) {
@@ -164,10 +166,10 @@ public:
                 << ", " << entry->GetOutput()[1] << ", "
                 << entry->GetOutput()[3] << ", " << std::endl;
       // std::cout << "<- Fitness function output" << std::endl;
-      std::cout << "Optimisation parameter values -> " << entry->GetInput()[0] << ", "
-                << entry->GetInput()[1] << ", " << entry->GetInput()[3] << ", "
-                << entry->GetInput()[4] << ", " << entry->GetInput()[5] << ", "
-                << entry->GetInput()[6] << ", " << entry->GetInput()[7]
+      std::cout << "Optimisation parameter values -> " << entry->GetInput()[0]
+                << ", " << entry->GetInput()[1] << ", " << entry->GetInput()[3]
+                << ", " << entry->GetInput()[4] << ", " << entry->GetInput()[5]
+                << ", " << entry->GetInput()[6] << ", " << entry->GetInput()[7]
                 << std::endl;
     }
     std::cout << "---------------------------\n";
