@@ -6,6 +6,7 @@
 #include "mva/PCA.h"
 #include "mva/LPCA.h"
 #include "mva/KPCA.h"
+#include "mva/RobustPCA.h"
 
 using namespace Eigen;
 
@@ -14,6 +15,7 @@ public:
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::LPCA lpca;
   geantvmoop::KPCA kpca;
+  geantvmoop::RobustPCA robustpca;
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
@@ -91,17 +93,8 @@ TEST_F(AllPCA, RunKPCA) {
 
 
 TEST_F(AllPCA, RunRobustPCA){
-  /*
-  MatrixXd D = MatrixXd::Random(5, 5);
-  D = D.array() * D.array();
-  MatrixXd A = MatrixXd::Zero(5, 5);
-  MatrixXd E = MatrixXd::Zero(5, 5);
-  std::cout << "The original matirix; D = \n" << D << std::endl;
-  // Perform Robust PCA
-  sp::ml::robust_pca(D, A, E);
-  std::cout << "Estimated row rank matrix: A = \n" << A << std::endl;
-  std::cout << "Estimated sparse matrix: E = \n" << E << std::endl;
-  std::cout << "Reconstructed matrix: A + E =:\n" << A + E << std::endl;
-  std::cout << "Reconstruction Error = " << (D - (A + E)).norm() << std::endl;
-  */
+  robustpca.LoadData("data");
+  robustpca.RobustPCAInexact();
+  robustpca.Print();
+  //robustpca.WriteTransformed("outputkpca");
 }
