@@ -302,7 +302,7 @@ private:
 
   ~HistogramManager() {}
 
-  ClassDef(HistogramManager, 1)
+  //ClassDef(HistogramManager, 1)
 };
 
 // ClassDefT2(HistogramManager,F)

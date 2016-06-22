@@ -10,7 +10,7 @@
  * prototype
  */
 //
- #pragma once
+#pragma once
 
 #ifndef __TGENES__
 #define __TGENES__
@@ -18,6 +18,8 @@
 #include <vector>
 #include <memory>
 #include <functional>
+
+#include "hpc/GASequentualEvaluator.h"
 
 namespace geantvmoop {
 
@@ -36,7 +38,6 @@ public:
 
   TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
     if (fEvaluated)
-      // Templated class providing different evaluations..
       Evaluate();
   };
 
@@ -66,20 +67,23 @@ public:
     return true;
   }
 
-  void Evaluate() { output = F::Evaluate(input); }
-
-  const typename F::Input &GetInput() const { return input; }
-
-  const typename F::Output &GetOutput() const { return output; }
-
-  friend std::ostream &operator<<(std::ostream &os,
-                                  const TGenes<F> &ind) {
-    auto indvector = ind.GetInput();
-    for (int i = 0; i < indvector.size(); ++i)
-      os << indvector[i] << " ";
-    return os;
+  void Evaluate() {
+    output = GASequentualEvaluator::Evaluate(input);
+    // Was..
+    // output = F::Evaluate(input); 
   }
-};
+
+    const typename F::Input &GetInput() const { return input; }
+
+    const typename F::Output &GetOutput() const { return output; }
+
+    friend std::ostream &operator<<(std::ostream & os, const TGenes<F> & ind) {
+      auto indvector = ind.GetInput();
+      for (int i = 0; i < indvector.size(); ++i)
+        os << indvector[i] << " ";
+      return os;
+    }
+  };
 }
 
 #endif

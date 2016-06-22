@@ -3,19 +3,29 @@
 #ifndef __SEQUENTUALEVALUATOR__
 #define __SEQUENTUALEVALUATOR__
 
-#include "GACrossover.h"
+#include "GAEvaluate.h"
 #include "generic/GAVector.h"
 #include "generic/GADouble.h"
 #include "tools/Random.h"
+
 #include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <strings.h>
+#include <errno.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
 
 namespace geantvmoop {
 
-class SequentualEvaluator : public GAEvaluate<SequentualEvaluator> {
+class GASequentualEvaluator : public GAEvaluate<GASequentualEvaluator> {
 
 public:
   // void Evaluate() { output = F::Evaluate(input); }
-  template <typename T> static void Evaluate() {
+  template <typename F> static void EvaluateImpl() {
+    
     size_t sizeofOutput = sizeof(fOutput) + sizeof(T) * fOutput.capacity();
     std::cout << "Size of expected buffer for fitness is :" << sizeofOutput
               << std::endl;
@@ -26,8 +36,7 @@ public:
     ssize_t result;
     pipe(pipeGA);
     ///////////////////////////////////////////////////////////////////////
-    std::vector<T> tempFitness;
-    tempFitness.resize(0);
+    F::input, F::output;
     cpid = fork();
     for (int i = 0; i < fNumberChildren; ++i) {
       //  cpid = fork();
@@ -79,14 +88,10 @@ public:
       }
       std::cout << "We are back to master job::" << std::endl;
     }
-    if (setup.fNCons) {
-      ConstViol = 0;
-    }
-    fEvaluated = true;
     // Cleaning array of previos pids
     fArrayDead[fNumberChildren] = 0;
-    return fOutput;
+    // How to return values....?
+    F::output = fOutput;
   }
 };
-
 }

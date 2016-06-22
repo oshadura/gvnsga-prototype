@@ -116,7 +116,7 @@ public:
     Population<F> result;
     UploadPopulation(pop);
     RobustPCAInexact();
-    UnloadPopulation(result, D);
+    UnloadPopulation(result, A);
     return result;
   }
   // Double suppose to be F::Input
@@ -133,8 +133,8 @@ public:
     std::cout << "The original matirix; D = \n" << D << std::endl;
     std::cout << "Estimated row rank matrix: A = \n" << A << std::endl;
     std::cout << "Estimated sparse matrix: E = \n" << E << std::endl;
-    std::cout << "Reconstructed matrix: A + E =:\n" << A + E << std::endl;
-    std::cout << "Reconstruction Error = " << (D - (A + E)).norm() << std::endl;
+    std::cout << "Reconstructed matrix: A + E = \n" << A + E << std::endl;
+    std::cout << "Reconstruction Error = \n" << (D - (A + E)).norm() << std::endl;
   }
 
   /**
@@ -152,20 +152,14 @@ public:
     // supplementary variable
     A = MatrixXd::Zero(M, N);
     E = MatrixXd::Zero(M, N);
-
-    //std::cout << "The original matirix;\n D = \n" << D << std::endl;
-    //std::cout << "Estimated row rank matrix:\n A = \n" << A << std::endl;
-    //std::cout << "Estimated sparse matrix:\n E = \n" << E << std::endl;
     MatrixXd Y = D;
     ArrayXXd zero = ArrayXXd::Zero(M, N);
 
-    // parameters
+    // Parameters
     const double lambda = 1.0 / sqrt(std::max(M, N));
     const double rho = 1.5;
 
     JacobiSVD<MatrixXd> svd_only_singlar_values(Y);
-
-    //std::cout << "Creating Jacobian SVD matrix.." << std::endl;
 
     const double norm_two =
         svd_only_singlar_values.singularValues()(0); // can be tuned
@@ -190,9 +184,7 @@ public:
     int total_svd = 0;
 
     int sv = 10;
-
-    //std::cout << "Updating sparse matrix.." << std::endl;
-
+    
     while (!converged) {
       // update sparse matrix E
       ArrayXXd temp_T = D - A + (1.0 / mu) * Y;
@@ -208,7 +200,7 @@ public:
       MatrixXd V = svd.matrixV();
       VectorXd singularValues = svd.singularValues();
 
-      // trancate dimention
+      // truncate dimention
       int svp = LargerThan(singularValues, 1 / mu);
       if (svp < sv) {
         sv = std::min(svp + 1, N);
