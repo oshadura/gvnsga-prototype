@@ -68,9 +68,9 @@ public:
   }
 
   void Evaluate() {
-    output = GASequentualEvaluator::Evaluate(input);
+    //output = GASequentualEvaluator::Evaluate(input);
     // Was..
-    // output = F::Evaluate(input); 
+    output = F::Evaluate(input); 
   }
 
     const typename F::Input &GetInput() const { return input; }

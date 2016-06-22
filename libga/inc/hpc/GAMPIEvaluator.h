@@ -6,7 +6,7 @@
 
 namespace geantvmoop {
 
-class SequentualEvaluator : public GAEvaluate<SequentualEvaluator> {
+class GAMPIEvaluator : public GAEvaluate<GAMPIEvaluator> {
 
 public:
   // void Evaluate() { output = F::Evaluate(input); }

@@ -65,7 +65,7 @@ public:
     std::vector<double> fFitness;
     std::vector<double> fParameters;
     for (auto parameter : individual)
-        fParameters.push_back(parameter.GetGAValue());
+      fParameters.push_back(parameter.GetGAValue());
 #ifdef ENABLE_PERFMON
     PFMWatch perfcontrol;
     perfcontrol.Start();
@@ -192,13 +192,12 @@ public:
   static Output GetOutput() { return std::vector<double>(4); }
 #endif
 
-    // ROOT Fitting to true Pareto front
+  // ROOT Fitting to true Pareto front
   static Double_t TruePF(Double_t *x, Double_t *parameter) {
     Double_t value =
         parameter[0] * x[0] + parameter[1] * x[1] + parameter[2] * x[2] - 0.5;
     return value;
   }
-  
 };
 }
 

@@ -13,8 +13,8 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 
-#ifndef __GACROSSOVER__
-#define __GACROSSOVER__
+#ifndef __GAEVALUATE__
+#define __GAEVALUATE__
 
 #include <memory>
 #include "generic/TGenes.h"
@@ -27,8 +27,7 @@ public:
 
   //void Evaluate() { output = F::Evaluate(input); }
   template <typename F> static void Evaluate() {
-    typename F::Input individual = Derived::GAEvaluateImpl();
-    return std::make_shared<geantvmoop::TGenes<F>>(individual);
+    Derived::GAEvaluateImpl();
   }
 };
 }

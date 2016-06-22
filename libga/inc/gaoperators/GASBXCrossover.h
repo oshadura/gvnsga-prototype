@@ -5,12 +5,11 @@
 //
 //===----------------------------------------------------------------------===//
 /**
- * @file PSBXCrossover.h
+ * @file GASBXCrossover.h
  * @brief Implementation of SBX crossover for LibGA
  * prototype
  */
 //===----------------------------------------------------------------------===//
-#pragma once
 
 #ifndef __GASBXCROSSOVER__
 #define __GASBXCROSSOVER__
