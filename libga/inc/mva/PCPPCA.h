@@ -1,14 +1,12 @@
 #pragma once
 
-#ifndef __ROBUSTPCA__
-#define __ROBUSTPCA__
+#ifndef __PCPPCA__
+#define __PCPPCA__
 
 #include <Eigen/Core>
 #include <Eigen/SVD>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
-
-#include <unsupported/Eigen/MatrixFunctions>
 
 #include "generic/Population.h"
 #include "generic/TGenes.h"
@@ -27,15 +25,15 @@ namespace geantvmoop {
 
 using namespace Eigen;
 
-class RobustPCA : public PCA<RobustPCA> {
+class PCPPCA : public PCA<PCPPCA> {
 
 private:
   MatrixXd D, A, E;
 
 public:
-  RobustPCA() {}
+  PCPPCA() {}
 
-  virtual ~RobustPCA() {}
+  virtual ~PCPPCA() {}
 
   void LoadData(const char *data, char sep = ',') {
     unsigned int row = 0;
@@ -115,7 +113,7 @@ public:
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {
     Population<F> result;
     UploadPopulation(pop);
-    RobustPCAInexact();
+    PCPPCAInexact();
     UnloadPopulation(result, A);
     return result;
   }
@@ -138,13 +136,13 @@ public:
   }
 
   /**
-   * Robust Principal Component Analysis (RPCA) using the inexact augumented Lagrange multiplier
+   * PCP Principal Component Analysis (via Principle Component Pursuit) using the inexact augumented Lagrange multiplier
    * Lagrance multiplier.
    * @param D observation matrix (D = A + E)
    * @param A  row-rank matrix
    * @param E  sparse matrix
    */
-  void RobustPCAInexact() {
+  void PCPPCAInexact() {
 
     const int M = D.rows();
     const int N = D.cols();
