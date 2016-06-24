@@ -7,6 +7,7 @@
 #include "mva/LPCA.h"
 #include "mva/KPCA.h"
 #include "mva/RobustPCA.h"
+#include "mva/UncenteredLPCA.h"
 
 using namespace Eigen;
 
@@ -16,6 +17,7 @@ public:
   geantvmoop::LPCA lpca;
   geantvmoop::KPCA kpca;
   geantvmoop::RobustPCA robustpca;
+  geantvmoop::UncenteredLPCA ulpca;
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
@@ -83,6 +85,20 @@ TEST_F(AllPCA, RunLPCAReductionofComponents) {
   lpca.RunLPCAWithReductionOfComponents();
   lpca.WriteTransformed("outputlpcatransform");
 }
+
+TEST_F(AllPCA, RunUncenteredLPCA) {
+  ulpca.LoadData("data");
+  ulpca.RunUncenteredLPCA();
+  ulpca.Print();
+  ulpca.WriteTransformed("outputulpca");
+}
+
+TEST_F(AllPCA, RunUncenteredLPCAReductionofComponents) {
+  ulpca.LoadData("data");
+  ulpca.RunUncenteredLPCAWithReductionOfComponents();
+  ulpca.WriteTransformed("outputulpcatransform");
+}
+
 
 TEST_F(AllPCA, RunKPCA) {
   kpca.LoadData("data");

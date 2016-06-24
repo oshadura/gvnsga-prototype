@@ -72,14 +72,21 @@ public:
     HistogramManager<F>::GetInstance().HistoFill(
         population, "population_nsga2_mod_rpca.root", fCurrentGeneration);
     std::cout << "---------------------------\n" << std::endl;
-    for (auto entry : population) {
-      //  for (int i = 0; i < entry.GetOutput().size(); ++i) {
-      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1]
-                << ", " << entry->GetOutput()[3] << ", ";
-      //  }
-      std::cout << " | rank: " << fIndRank[entry] << " | crowding: ";
-      std::cout << fIndCrowDist[entry] << std::endl;
+        for (int i = 0; i < population.size(); ++i) {
+      std::cout << "Individual " << i << std::endl;
+      for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
+        std::cout << population.GetGeneValue(i, j) << "|";
+      }
+      std::cout << "\nFitness function value: " << std::endl;
+      for (int k = 0; k < population.GetTFitness(i).size(); ++k) {
+        std::cout << population.GetObjectiveValue(i, k) << "|";
+      }
+      auto ind = population[i];
+      std::cout << "\n| Rank: " << fIndRank[ind]
+                << " | Crowding distance value: ";
+      std::cout << fIndCrowDist[ind] << std::endl;
     }
+    std::cout << "---------------------------\n" << std::endl;
     std::cout << "---------------------------\n" << std::endl;
     Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)

@@ -25,11 +25,35 @@ public:
 
   typedef std::vector<double> Output;
 
+  DTLZ1() : fNGenes(7), fNObjectives(3) {}
+
+  virtual ~DTLZ1() {}
+
+  void SetNGenes(const int i) {
+    fNGenes = i;
+  };
+
+  void SetNObjectives(const int i) {
+    fNObjectives = i;
+  };
+
+  int GetNGenes() const {
+    return fNGenes;
+  };
+
+  int GetNObjectives() const {
+    return fNObjectives;
+  };
+
+private:
+  int fNGenes, fNObjectives;
+
+public:
   static double pi() { return std::atan(1) * 4; }
 
   static Output Evaluate(const Input &individual) {
     std::vector<double> fFitness, fParameters;
-    fFitness.reserve(individual.size());
+    fFitness.reserve(3);
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
@@ -57,7 +81,9 @@ public:
       if (i > 0) {
         f *= (1 - fParameters[j]);
       }
-      fFitness.push_back(f);
+      auto it = fFitness.begin();
+      // fFitness.push_back(f);
+      fFitness.insert(it + i, f);
     }
     return fFitness;
   }

@@ -94,7 +94,7 @@ public:
               << std::endl;
     char namepop[20], namefitn[20], namefile[10], namefolder[20],
         namescatter[20], x1str[10], x2str[10], y1str[10], y2str[10],
-        nameFitLand[20], name3dhist[20];
+        nameFitLand[20], name3dhist[20], name3dhistx[20], name3dhisty[20];
     std::vector<int> ScatterCombinationX, ScatterCombinationY;
     // TDirectory *folder;
     TObjArray HXList(0);
@@ -105,6 +105,8 @@ public:
     sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
     sprintf(nameFitLand, "%s%d", "FitLand", generation);
     sprintf(name3dhist, "%s%d", "h3a", generation);
+    sprintf(name3dhistx, "%s%d", "h3x", generation);
+    sprintf(name3dhisty, "%s%d", "h3y", generation);
     // sprintf(namefile, "%s%d%s", "StatisticsX", generation, ".png");
     TFile file(hfile, "update");
     file.mkdir(namefolder);
@@ -120,8 +122,8 @@ public:
     PopDist->SetMarkerColor(kBlue);
     PopDist->SetMarkerSize(.6); //
     /////// Population 3 DHistogram
-    TH3F *h3a =
-        new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, 0, 100, 20, 0, 100,
+                         20, 0, 100);
     /////// Fitness landscape
     // TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5",
     // 0,
@@ -132,11 +134,26 @@ public:
     h3a->SetMarkerColor(kBlue);
     h3a->SetMarkerSize(.6); //
     ////////////////////////////////
+    /////// Population 3 DHistogram
+    TH3F *h3y =
+        new TH3F(name3dhistx, "Y1/Y2/Y3", 20, 0, 10, 20, 0, 10, 20, 0, 10);
+    h3y->SetFillColor(kYellow); // Fill fill color to yellow
+    h3y->SetFillColor(kYellow); // Fill fill color to yellow
+    h3y->SetMarkerStyle(20);
+    h3y->SetMarkerColor(kBlue);
+    h3y->SetMarkerSize(.6); //
+    ////////////////////////////////
+    /////// Population 3 DHistogram
+    TH3F *h3x =
+        new TH3F(name3dhisty, "X1/X2/X3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    h3x->SetFillColor(kYellow); // Fill fill color to yellow
+    h3x->SetFillColor(kYellow); // Fill fill color to yellow
+    h3x->SetMarkerStyle(20);
+    h3x->SetMarkerColor(kBlue);
+    h3x->SetMarkerSize(.6); //
+    ////////////////////////////////
     TF3 *FitLand = new TF3(nameFitLand, F::TruePF, 0, 50, 0, 50, 0, 50, 3);
     FitLand->SetParameters(1, 1, 1);
-    // FitLand->FixParameter(0, 1);
-    // FitLand->FixParameter(1, 1);
-    // FitLand->FixParameter(2, 1);
     ROOT::Fit::Fitter fitter;
     // wrapped the TF1 in a IParamMultiFunction interface for teh Fitter class
     ROOT::Math::WrappedMultiTF1 wrapperfunction(*FitLand, 3);
@@ -258,6 +275,12 @@ public:
       function[1] = y;
       function[2] = z;
       h3a->Fill(x, y, z);
+      h3y->Fill(x, y, z);
+      ///Just to check...!!!
+      auto X1 = pop.GetGeneValue(i, 1);
+      auto X2 = pop.GetGeneValue(i, 2);
+      auto X3 = pop.GetGeneValue(i, 3);
+      h3x->Fill(X1, X2, X3);
       // predictor DTZ1
       predictor[i] = x + y + z - 0.5 + random.Gaus(0, error);
       // add the 3d-data coordinate, the predictor value  and its errors
@@ -276,6 +299,12 @@ public:
     h3a->Fit(FitLand);
     h3a->Write();
     ///////////////////
+    h3x->Draw();
+    h3x->Write();
+    ///////////////////
+    h3y->Draw();
+    h3y->Write();
+    ///////////
     bool ret = fitter.Fit(data);
     if (ret) {
       const ROOT::Fit::FitResult &res = fitter.Result();
@@ -302,7 +331,7 @@ private:
 
   ~HistogramManager() {}
 
-  //ClassDef(HistogramManager, 1)
+  // ClassDef(HistogramManager, 1)
 };
 
 // ClassDefT2(HistogramManager,F)

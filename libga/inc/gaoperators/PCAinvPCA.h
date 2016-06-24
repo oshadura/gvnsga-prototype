@@ -8,9 +8,11 @@
 #include "mva/LPCA.h"
 #include "mva/KPCA.h"
 #include "mva/RobustPCA.h"
+#include "mva/UncenteredLPCA.h"
 
 namespace geantvmoop {
 
+// TBD templated!
 class PCAinvPCA : public NoiseReduction<PCAinvPCA> {
 
 public:
@@ -23,7 +25,7 @@ public:
     return result;
   }
   */
-
+  /*
   template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {
     Population<F> result;
@@ -31,6 +33,15 @@ public:
     result = robustpca.MVA(population);
     return result;
   }
+  */
+    template <typename F>
+  Population<F> NoiseReductionImpl(Population<F> &population) {
+    Population<F> result;
+    UncenteredLPCA ulpca;
+    result = ulpca.MVA(population);
+    return result;
+  }
+
 };
 }
 

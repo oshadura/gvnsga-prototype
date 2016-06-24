@@ -42,7 +42,7 @@ private:
 public:
   template <typename F>
   individual_t<F> UnarySelectionImpl(const Population<F> &population) {
-    return *(select_randomly(population.begin(), population.end()));
+    return *(RandomSelection(population.begin(), population.end()));
   }
 
   template <typename F>

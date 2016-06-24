@@ -34,6 +34,17 @@ TEST_F(Moead, SolvingProblemDTLZ2) {
   moead.SolvePF();
   moead.PrintImpl(std::cout);
 }
+*/
+/*
+TEST_F(Moead, SolvingProblemDTLZ3) {
+  geantvmoop::DTLZ3 dtlz3;
+  geantvmoop::GAMOEAD<geantvmoop::DTLZ3> moead(dtlz3);
+  moead.fPopulationSize = 100;
+  moead.fMaxGeneration = 100;
+  moead.SolvePF();
+  moead.PrintImpl(std::cout);
+}
+*/
 
 /*
 TEST_F(Moead, SolvingProblemDTLZ4) {

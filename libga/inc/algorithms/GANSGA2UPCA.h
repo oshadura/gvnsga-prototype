@@ -1,4 +1,5 @@
-//===--- GANSGA2.h - LibGA ----------------------------------------------*- C++
+//===--- GANSGA2UPCA.h - LibGA ----------------------------------------------*-
+// C++
 //-*-===//
 //
 //                     LibGA Prototype
@@ -12,8 +13,28 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 
-#ifndef MOO_NSGAIIMOD_H
-#define MOO_NSGAIIMOD_H
+#ifndef MOO_NSGAIIUPCA_H
+#define MOO_NSGAIIUPCA_H
+
+#define RESET "\033[0m"
+#define BLACK "\033[30m"              /* Black */
+#define RED "\033[31m"                /* Red */
+#define GREEN "\033[32m"              /* Green */
+#define YELLOW "\033[33m"             /* Yellow */
+#define BLUE "\033[34m"               /* Blue */
+#define MAGENTA "\033[35m"            /* Magenta */
+#define CYAN "\033[36m"               /* Cyan */
+#define WHITE "\033[37m"              /* White */
+#define BOLDBLACK "\033[1m\033[30m"   /* Bold Black */
+#define BOLDRED "\033[1m\033[31m"     /* Bold Red */
+#define BOLDGREEN "\033[1m\033[32m"   /* Bold Green */
+#define BOLDYELLOW "\033[1m\033[33m"  /* Bold Yellow */
+#define BOLDBLUE "\033[1m\033[34m"    /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m" /* Bold Magenta */
+#define BOLDCYAN "\033[1m\033[36m"    /* Bold Cyan */
+#define BOLDWHITE "\033[1m\033[37m"   /* Bold White */
+
+#define CLEAR "\033[2J" // clear screen escape code
 
 #include "generic/GAAlgorithm.h"
 #include "generic/PF.h"
@@ -33,7 +54,8 @@
 
 namespace geantvmoop {
 
-template <typename F> class GANSGA2Mod : public GAAlgorithm<GANSGA2Mod<F>, F> {
+template <typename F>
+class GANSGA2UPCA : public GAAlgorithm<GANSGA2UPCA<F>, F> {
 
 private:
   Population<F> population;
@@ -41,7 +63,7 @@ private:
   std::unordered_map<individual_t<F>, int> fIndRank;
 
 public:
-  GANSGA2Mod(F problem) : GAAlgorithm<GANSGA2Mod<F>, F>(problem) {}
+  GANSGA2UPCA(F problem) : GAAlgorithm<GANSGA2UPCA<F>, F>(problem) {}
   int fPopulationSize = 10;
   double PMut = 0.2;
   int fCurrentGeneration = 0;
@@ -70,28 +92,28 @@ public:
     GAComparator<F> comp(&fIndRank, &fIndCrowDist);
     std::sort(population.begin(), population.end(), comp);
     HistogramManager<F>::GetInstance().HistoFill(
-        population, "population_nsga2_mod.root", fCurrentGeneration);
+        population, "population_nsga2_upcas.root", fCurrentGeneration);
     std::cout << "---------------------------\n" << std::endl;
     for (int i = 0; i < population.size(); ++i) {
       std::cout << "Individual " << i << std::endl;
       for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
-        std::cout << population.GetGeneValue(i, j) << "|";
+        std::cout << GREEN << population.GetGeneValue(i, j) << "|";
       }
-      std::cout << "\nFitness function value: " << std::endl;
+      std::cout << RESET << "\nFitness function value: " << std::endl;
       for (int k = 0; k < population.GetTFitness(i).size(); ++k) {
-        std::cout << population.GetObjectiveValue(i, k) << "|";
+        std::cout << BLUE << population.GetObjectiveValue(i, k) << "|";
       }
       auto ind = population[i];
-      std::cout << "\n| Rank: " << fIndRank[ind]
+      std::cout << RESET << "\n| Rank: " << RED << fIndRank[ind] << RESET
                 << " | Crowding distance value: ";
-      std::cout << fIndCrowDist[ind] << std::endl;
+      std::cout << MAGENTA << fIndCrowDist[ind] << RESET << std::endl;
     }
     std::cout << "---------------------------\n" << std::endl;
     Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     std::cout << "--------------TRANFORMATION-------------\n" << std::endl;
-    if (fCurrentGeneration % 11 == 0) {
+    if (fCurrentGeneration % 2 == 0) {
       PCAinvPCA cleanupoperator;
       population = cleanupoperator.NR(next);
     } else {
@@ -99,7 +121,7 @@ public:
     }
     std::cout << "Moving to next generation " << fCurrentGeneration
               << std::endl;
-    CSVManager::GetInstance().CSVOutput("output.nsgalpca", population);
+    CSVManager::GetInstance().CSVOutput("output.nsgaupca", population);
     ++fCurrentGeneration;
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "---------------------------\n" << std::endl;

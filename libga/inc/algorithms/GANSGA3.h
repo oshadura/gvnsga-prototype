@@ -35,8 +35,8 @@ template <typename F> class GANSGA3 : public GAAlgorithm<GANSGA3<F>, F> {
 
 private:
   Population<F> population;
-  //std::unordered_map<individual_t<F>, double> fIndCrowDist;
-  //std::unordered_map<individual_t<F>, int> fIndRank;
+  // std::unordered_map<individual_t<F>, double> fIndCrowDist;
+  // std::unordered_map<individual_t<F>, int> fIndRank;
   std::vector<ReferencePoint> fReference;
 
 public:
@@ -45,11 +45,11 @@ public:
   double PMut = 0.2;
 
   void InitializeImpl() {
-    population = Population<F>{fPopulationSize};
-    //Stupid solution only for DTLZ1!
+    population = Population<F>{ fPopulationSize };
+    // Stupid solution only for DTLZ1!
     GenerateRP(&fReference, 3, 4);
-    //fIndCrowDist = GACD::CalculateIndicator(population);
-    //fIndRank = GANDRank::CalculateIndicator(population);
+    // fIndCrowDist = GACD::CalculateIndicator(population);
+    // fIndRank = GANDRank::CalculateIndicator(population);
   }
 
   void EvolutionImpl() {
@@ -81,6 +81,22 @@ public:
     auto last = population[population.size() - 1];
     os << "Pareto front: " << fIndRank[last] << " | worst crowding: ";
     os << fIndCrowDist[last] << std::endl;
+ 
+    for (int i = 0; i < population.size(); ++i) {
+      std::cout << "Individual " << i << std::endl;
+      for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
+        std::cout << population.GetGeneValue(i, j) << "|";
+      }
+      std::cout << "\nFitness function value: " << std::endl;
+      for (int k = 0; k < population.GetTFitness(i).size(); ++k) {
+        std::cout << population.GetObjectiveValue(i, k) << "|";
+      }
+      auto ind = population[i];
+      std::cout << "\n| Rank: " << fIndRank[ind]
+                << " | Crowding distance value: ";
+      std::cout << fIndCrowDist[ind] << std::endl;
+    }
+    std::cout << "---------------------------\n" << std::endl;
     */
   }
 

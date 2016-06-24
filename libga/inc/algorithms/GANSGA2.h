@@ -15,6 +15,26 @@
 #ifndef MOO_NSGAII_H
 #define MOO_NSGAII_H
 
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+#define WHITE   "\033[37m"      /* White */
+#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+ 
+#define CLEAR "\033[2J"  // clear screen escape code 
+
 #include "generic/GAAlgorithm.h"
 #include "generic/PF.h"
 #include "gaoperators/GATournamentSelection.h"
@@ -75,23 +95,29 @@ public:
     HistogramManager<F>::GetInstance().HistoFill(
         population, "population_nsga2.root", fCurrentGeneration);
     std::cout << "---------------------------\n" << std::endl;
-    for (auto entry : population) {
-      //  for (int i = 0; i < entry.GetOutput().size(); ++i) {
-      std::cout << entry->GetOutput()[0] << ", " << entry->GetOutput()[1]
-                << ", " << entry->GetOutput()[3] << ", ";
-      //  }
-      std::cout << " | rank: " << fIndRank[entry] << " | crowding: ";
-      std::cout << fIndCrowDist[entry] << std::endl;
+    for (int i = 0; i < population.size(); ++i) {
+      std::cout << "Individual " << i << std::endl;
+      for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
+        std::cout << GREEN << population.GetGeneValue(i, j) << "|";
+      }
+      std::cout << RESET << "\nFitness function value: " << std::endl;
+      for (int k = 0; k < population.GetTFitness(i).size(); ++k) {
+        std::cout << BLUE << population.GetObjectiveValue(i, k) << "|";
+      }
+      auto ind = population[i];
+      std::cout << RESET << "\n| Rank: " << RED << fIndRank[ind]
+                << RESET << " | Crowding distance value: ";
+      std::cout << MAGENTA << fIndCrowDist[ind] << RESET <<std::endl;
     }
     std::cout << "---------------------------\n" << std::endl;
     Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
-    //std::cout << population << std::endl;
+    // std::cout << population << std::endl;
     CSVManager::GetInstance().CSVOutput("output.nsga", population);
     ++fCurrentGeneration;
-    std::cout << "Moving to next generation " << fCurrentGeneration
+    std::cout << "Moving to next generation->" << fCurrentGeneration
               << std::endl;
   }
 
