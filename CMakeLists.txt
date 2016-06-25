@@ -21,6 +21,10 @@ find_package(ROOT REQUIRED)
 include(${ROOT_USE_FILE})
 
 #----------------------------------------------------------------------------
+
+include(cmake/modules/ExternalDependencies.cmake)
+
+#----------------------------------------------------------------------------
 # BASH: export OMP_NUM_THREADS=1
 option(ENABLE_OPENMP "Adding OpenMP support" OFF)
 find_package(OpenMP)

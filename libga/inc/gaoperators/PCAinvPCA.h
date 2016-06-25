@@ -25,7 +25,7 @@ public:
     return result;
   }
   */
-  /*
+ 
   template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {
     Population<F> result;
@@ -33,7 +33,8 @@ public:
     result = robustpca.MVA(population);
     return result;
   }
-  */
+ 
+  /*
     template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {
     Population<F> result;
@@ -41,6 +42,7 @@ public:
     result = ulpca.MVA(population);
     return result;
   }
+  */
 
 };
 }

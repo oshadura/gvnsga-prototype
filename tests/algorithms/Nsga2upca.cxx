@@ -17,7 +17,7 @@ class Nsga2upca : public GATest {
 public:
 };
 
-
+/*
 TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ1> nsga2upca(dtlz1);
@@ -25,12 +25,12 @@ TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
   nsga2upca.fMaxGeneration = 4;
   nsga2upca.SolvePF();
 }
-
+*/
 
 /*
 TEST_F(Nsga2upca, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
-  geantvmoop::GANSGA2upca<geantvmoop::DTLZ2> nsga(dtlz2);
+  geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ2> nsga(dtlz2);
   nsga.fPopulationSize = 100;
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();

@@ -113,7 +113,7 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     std::cout << "--------------TRANFORMATION-------------\n" << std::endl;
-    if (fCurrentGeneration % 2 == 0) {
+    if (fCurrentGeneration > 35) {
       PCAinvPCA cleanupoperator;
       population = cleanupoperator.NR(next);
     } else {

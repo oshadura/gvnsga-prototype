@@ -122,8 +122,8 @@ public:
     PopDist->SetMarkerColor(kBlue);
     PopDist->SetMarkerSize(.6); //
     /////// Population 3 DHistogram
-    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, 0, 100, 20, 0, 100,
-                         20, 0, 100);
+    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1,
+                         20, 0, 1);
     /////// Fitness landscape
     // TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5",
     // 0,
@@ -136,7 +136,7 @@ public:
     ////////////////////////////////
     /////// Population 3 DHistogram
     TH3F *h3y =
-        new TH3F(name3dhistx, "Y1/Y2/Y3", 20, 0, 10, 20, 0, 10, 20, 0, 10);
+        new TH3F(name3dhistx, "Y1/Y2/Y3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetMarkerStyle(20);
