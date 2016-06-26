@@ -135,7 +135,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > eigen_pairs;
+    std::vector<std::pair<double, VectorXd> > fEigenValues;
     double c = 0.0;
 
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
@@ -143,20 +143,20 @@ public:
         double norm = eigenvectors.col(i).norm();
         eigenvectors.col(i) /= norm;
       }
-      eigen_pairs.push_back(
+      fEigenValues.push_back(
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
     // Sorting Eigen pairs [eigenvalue, eigenvector]
-    std::sort(eigen_pairs.begin(), eigen_pairs.end(),
+    std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> a,
                  const std::pair<double, VectorXd> b)
                   ->bool { return (a.first > b.first); });
 
-    for (unsigned int i = 0; i < eigen_pairs.size(); i++) {
-      eigenvalues(i) = eigen_pairs[i].first;
+    for (unsigned int i = 0; i < fEigenValues.size(); i++) {
+      eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;
-      eigenvectors.col(i) = eigen_pairs[i].second;
+      eigenvectors.col(i) = fEigenValues[i].second;
     }
     Transformed = X * eigenvectors;
     X = Transformed;
@@ -195,18 +195,18 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > eigen_pairs;
+    std::vector<std::pair<double, VectorXd> > fEigenValues;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
         double norm = eigenvectors.col(i).norm();
         eigenvectors.col(i) /= norm;
       }
-      eigen_pairs.push_back(
+      fEigenValues.push_back(
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
     // Sorting Eigen pairs [eigenvalue, eigenvector]
-    std::sort(eigen_pairs.begin(), eigen_pairs.end(),
+    std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> a,
                  const std::pair<double, VectorXd> b)
                   ->bool { return (a.first > b.first); });
@@ -216,10 +216,10 @@ public:
     // TransformedCentered = Xcentered * eigenvectors;
     // Varince based selection (< 85 %)
     while (totalvar <= 0.85) {
-      eigenvalues(i) = eigen_pairs[i].first;
+      eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;
-      eigenvectors.col(i) = eigen_pairs[i].second;
+      eigenvectors.col(i) = fEigenValues[i].second;
       totalvar = totalvar + (eigenvalues(i) / eigenvalues.sum());
       ++i;
     }
@@ -316,21 +316,30 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > eigen_pairs;
+    std::vector<std::pair<double, VectorXd> > fEigenValues;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
         double norm = eigenvectors.col(i).norm();
         eigenvectors.col(i) /= norm;
       }
-      eigen_pairs.push_back(
+      fEigenValues.push_back(
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
     // Sorting Eigen pairs [eigenvalue, eigenvector]
-    std::sort(eigen_pairs.begin(), eigen_pairs.end(),
-              [](const std::pair<double, VectorXd> a,
-                 const std::pair<double, VectorXd> b)
-                  ->bool { return (a.first > b.first); });
+    std::sort(fEigenValues.begin(), fEigenValues.end(),
+              [](const std::pair<double, VectorXd> &a,
+                 const std::pair<double, VectorXd> &b) {
+      if (a.first > b.first)
+        return true;
+      if (a.first == b.first)
+        return a.first > b.first;
+      return false;
+    });
+    for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
+      eigenvalues(i) = fEigenValues[i].first;
+      eigenvectors.col(i) = fEigenValues[i].second;
+    }
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     Transformed = X * eigenvectors;
@@ -339,10 +348,10 @@ public:
     //================ Inverse LPCA =================//
     // Varince based selection (< 80 %)
     while (totalvar <= 0.8) {
-      eigenvalues(i) = eigen_pairs[i].first;
+      eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;
-      eigenvectors.col(i) = eigen_pairs[i].second;
+      eigenvectors.col(i) = fEigenValues[i].second;
       totalvar = totalvar + (eigenvalues(i) / eigenvalues.sum());
       ++i;
     }
@@ -417,21 +426,30 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > eigen_pairs;
+    std::vector<std::pair<double, VectorXd> > fEigenValues;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
         double norm = eigenvectors.col(i).norm();
         eigenvectors.col(i) /= norm;
       }
-      eigen_pairs.push_back(
+      fEigenValues.push_back(
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
     // Sorting Eigen pairs [eigenvalue, eigenvector]
-    std::sort(eigen_pairs.begin(), eigen_pairs.end(),
-              [](const std::pair<double, VectorXd> a,
-                 const std::pair<double, VectorXd> b)
-                  ->bool { return (a.first >= b.first); });
+     std::sort(fEigenValues.begin(), fEigenValues.end(),
+              [](const std::pair<double, VectorXd> &a,
+                 const std::pair<double, VectorXd> &b) {
+      if (a.first > b.first)
+        return true;
+      if (a.first == b.first)
+        return a.first > b.first;
+      return false;
+    });
+    for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
+      eigenvalues(i) = fEigenValues[i].first;
+      eigenvectors.col(i) = fEigenValues[i].second;
+    }
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     Transformed = X * eigenvectors;
@@ -439,10 +457,10 @@ public:
     //================ Inverse LPCA =================//
     // Varince based selection (< 80 %)
     while (totalvar <= 0.80) {
-      eigenvalues(i) = eigen_pairs[i].first;
+      eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;
-      eigenvectors.col(i) = eigen_pairs[i].second;
+      eigenvectors.col(i) = fEigenValues[i].second;
       totalvar = totalvar + (eigenvalues(i) / eigenvalues.sum());
       ++i;
     }

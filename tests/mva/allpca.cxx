@@ -88,29 +88,25 @@ TEST_F(AllPCA, RunLPCAReductionofComponents) {
   lpca.WriteTransformed("outputlpcatransform");
 }
 
-/*
 TEST_F(AllPCA, RunLPCAReductionofComponentsNoScale) {
   lpca.LoadData("data");
   lpca.RunLPCAWithReductionOfComponentsNoScale();
   lpca.WriteTransformed("outputlpcatransformnoscale");
 }
-*/
 
-/*
 TEST_F(AllPCA, RunLPCAWhiteReductionofComponents) {
   lpcawhite.LoadData("data");
   lpcawhite.RunLPCAWhiteWithReductionOfComponents();
   lpcawhite.WriteTransformed("outputlpcawtransform");
 }
-*/
 
-/*
+
 TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
   lpcawhite.LoadData("data");
   lpcawhite.RunLPCAWhiteWithReductionOfComponentsNoScale();
   lpcawhite.WriteTransformed("outputlpcawtransformnoscale");
 }
-*/
+
 
 TEST_F(AllPCA, RunUncenteredLPCA) {
   ulpca.LoadData("data");
