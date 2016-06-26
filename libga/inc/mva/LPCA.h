@@ -467,7 +467,7 @@ public:
     std::cout << "REVERSE PCA: " << std::endl;
     eigenvectors.conservativeResize(eigenvectors.rows(), i);
     // Transformed.conservativeResize(Transformed.rows(), i);
-    TransformedCentered.conservativeResize(Transformed.rows(), i);
+    Transformed.conservativeResize(Transformed.rows(), i);
     std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
     std::cout << "Reduced tranformed matrix \n" << Transformed << std::endl;
     std::cout << "Total number of components to be used in transformed matrix: "
