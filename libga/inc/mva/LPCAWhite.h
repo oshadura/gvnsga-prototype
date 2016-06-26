@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __LPCA__
-#define __LPCA__
+#ifndef __LPCAWhite__
+#define __LPCAWhite__
 
 #include <fstream>
 #include <iostream>
@@ -18,30 +18,37 @@
 
 #include "PCA.h"
 
-// Centered version!
+// Principal component analysis (PCA) using randomized SVD
 
 namespace geantvmoop {
 
 using namespace Eigen;
 
-class LPCA : public PCA<LPCA> {
+class LPCAWhite : public PCA<LPCAWhite> {
 
 private:
   MatrixXd X, Xcentered, C, K, eigenvectors, Transformed, TransformedCentered,
       covariance, dev, mean, devnew, meannew;
-  VectorXd eigenvalues, cumulative, stddev, colmean, stddevnew, colmeannew, mean_column_centered;
+  VectorXd eigenvalues, cumulative, stddev, colmean, stddevnew, colmeannew,
+      mean_column_centered;
   unsigned int normalise;
+  double epsilon;
 
 public:
-  LPCA() : normalise(0) {}
+  LPCAWhite() : normalise(1), epsilon(0.1) {}
 
-  explicit LPCA(MatrixXd &d) : normalise(0) { X = d; }
+  explicit LPCAWhite(MatrixXd &d) : normalise(1), epsilon(0.1) { X = d; }
 
-  virtual ~LPCA() {}
+  virtual ~LPCAWhite() {}
 
   void SetNormalise(const int i) {
     normalise = i;
   };
+
+  void SetEpsilon(const int i) {
+    epsilon = i;
+  };
+
   MatrixXd &GetTransformed() { return TransformedCentered; }
 
   MatrixXd &GetX() { return X; }
@@ -49,7 +56,7 @@ public:
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {
     Population<F> result;
     UploadPopulation(pop);
-    RunLPCAWithReductionOfComponents();
+    RunLPCAWhiteWithReductionOfComponents();
     UnloadPopulation(result, X);
     return result;
   }
@@ -124,7 +131,7 @@ public:
     newpop = Population<F>(poplist);
   }
 
-  void RunLPCA() {
+  void RunLPCAWhite() {
     // Centered matrix
     Xcentered = X.rowwise() - X.colwise().mean();
     C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
@@ -159,12 +166,13 @@ public:
       eigenvectors.col(i) = eigen_pairs[i].second;
     }
     Transformed = X * eigenvectors;
-    X = Transformed;
+    // Transformed matrix
+    TransformedCentered = Xcentered * eigenvectors;
   }
 
   // Old theory...........
   /*
-  void RunLPCAWithReductionOfComponents() {
+  void RunLPCAWhiteWithReductionOfComponents() {
     // std dev
     double totalvar = 0;
     int i = 0;
@@ -272,7 +280,7 @@ public:
   }
   */
 
-  void RunLPCAWithReductionOfComponents() {
+  void RunLPCAWhiteWithReductionOfComponents() {
     // std dev
     double totalvar = 0;
     int i = 0;
@@ -286,12 +294,9 @@ public:
     Xcentered = (X.rowwise() - X.colwise().mean());
     // Vector of std deviation of colums
     //====== Std deviation (Scaling) =================//
-    stddev = (X.rowwise() - colmean.transpose())
-                 .array()
-                 .pow(2)
-                 .colwise()
-                 .sum() /
-             X.rows();
+    stddev =
+        (X.rowwise() - colmean.transpose()).array().pow(2).colwise().sum() /
+        X.rows();
     mean = MatrixXd::Zero(X.rows(), X.cols());
     dev = MatrixXd::Zero(X.rows(), X.cols());
     for (int i = 0; i < X.rows(); ++i) {
@@ -307,7 +312,7 @@ public:
     std::cout << "Column nean vector of matrix X:\n" << colmean << std::endl;
     std::cout << "Mean matrix:\n" << mean << std::endl;
     std::cout << "---------------------------\n" << std::endl;
-    //================== LPCA =======================//
+    //================== LPCAWhite =======================//
     C = (Xcentered.adjoint() * Xcentered) / double(Xcentered.rows());
     EigenSolver<MatrixXd> edecomp(C);
     // Eigen values
@@ -334,9 +339,8 @@ public:
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     Transformed = X * eigenvectors;
-    //TransformedCentered = Xcentered * eigenvectors;
     Print();
-    //================ Inverse LPCA =================//
+    //================ Inverse LPCAWhite =================//
     // Varince based selection (< 80 %)
     while (totalvar <= 0.8) {
       eigenvalues(i) = eigen_pairs[i].first;
@@ -348,47 +352,53 @@ public:
     }
     std::cout << "REVERSE PCA: " << std::endl;
     eigenvectors.conservativeResize(eigenvectors.rows(), i);
-    // Transformed.conservativeResize(Transformed.rows(), i);
+    eigenvalues.resize(i);
     Transformed.conservativeResize(Transformed.rows(), i);
     std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
     std::cout << "Reduced tranformed matrix \n" << Transformed << std::endl;
     std::cout << "Total number of components to be used in transformed matrix: "
               << i << std::endl;
     // Transformed matrix
-    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
-    NewDataMatrix = eigenvectors * Transformed.transpose();
+    MatrixXd NewDataMatrix, NewDataMatrixTransposed, WhiteMod;
+    WhiteMod = eigenvectors.array() / eigenvalues.transpose().array() *
+               std::sqrt(X.rows());
+    NewDataMatrix = WhiteMod * Transformed.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();
     std::cout << "Transformed data matrix:\n" << NewDataMatrixTransposed
               << std::endl;
     //========== Undo Scaling ======================//
     // Vector of std deviation of colums
     //========== Undo normalization ======================//
-    mean_column_centered = NewDataMatrixTransposed.colwise().sum() / NewDataMatrixTransposed.rows();
-    stddevnew = (NewDataMatrixTransposed.rowwise() - mean_column_centered.transpose())
-                    .array()
-                    .pow(2)
-                    .colwise()
-                    .sum() /
-                NewDataMatrixTransposed.rows();
+    mean_column_centered = NewDataMatrixTransposed.colwise().sum() /
+                           NewDataMatrixTransposed.rows();
+    stddevnew =
+        (NewDataMatrixTransposed.rowwise() - mean_column_centered.transpose())
+            .array()
+            .pow(2)
+            .colwise()
+            .sum() /
+        NewDataMatrixTransposed.rows();
     std::cout << "New std dev of matrix X':\n" << stddevnew << std::endl;
     meannew = MatrixXd::Zero(X.rows(), X.cols());
     devnew = MatrixXd::Zero(X.rows(), X.cols());
     for (int i = 0; i < X.rows(); ++i) {
       devnew.row(i) = stddevnew.transpose();
-      meannew.row(i) = mean_column_centered.transpose();
     }
     NewDataMatrixTransposed = NewDataMatrixTransposed.array() / devnew.array();
     std::cout << "New transformed data matrix X':\n" << NewDataMatrixTransposed
               << std::endl;
     NewDataMatrixTransposed = dev.array() * NewDataMatrixTransposed.array();
     //========== Undo normalization ======================//
+    for (int i = 0; i < NewDataMatrixTransposed.rows(); ++i) {
+      meannew.row(i) = mean_column_centered.transpose();
+    }
     std::cout << "New mean vector of matrix X':\n" << meannew << std::endl;
     X = NewDataMatrixTransposed + meannew;
     std::cout << "New Transformed data matrix with reverse = X:\n" << X
               << std::endl;
   }
 
-  void RunLPCAWithReductionOfComponentsNoScale() {
+  void RunLPCAWhiteWithReductionOfComponentsNoScale() {
     // std dev
     double totalvar = 0;
     int i = 0;
@@ -431,14 +441,14 @@ public:
     std::sort(eigen_pairs.begin(), eigen_pairs.end(),
               [](const std::pair<double, VectorXd> a,
                  const std::pair<double, VectorXd> b)
-                  ->bool { return (a.first >= b.first); });
+                  ->bool { return (a.first > b.first); });
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     Transformed = X * eigenvectors;
     Print();
-    //================ Inverse LPCA =================//
-    // Varince based selection (< 80 %)
-    while (totalvar <= 0.80) {
+    //================ Inverse LPCAWhite =================//
+    // Varince based selection (< 85 %)
+    while (totalvar <= 0.85) {
       eigenvalues(i) = eigen_pairs[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;
@@ -448,20 +458,24 @@ public:
     }
     std::cout << "REVERSE PCA: " << std::endl;
     eigenvectors.conservativeResize(eigenvectors.rows(), i);
-    // Transformed.conservativeResize(Transformed.rows(), i);
+    eigenvalues.resize(i);
     TransformedCentered.conservativeResize(Transformed.rows(), i);
     std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
-    std::cout << "Reduced tranformed matrix \n" << Transformed << std::endl;
+    std::cout << "Reduced tranformed matrix \n" << TransformedCentered
+              << std::endl;
     std::cout << "Total number of components to be used in transformed matrix: "
               << i << std::endl;
     // Transformed matrix
-    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
-    NewDataMatrix = eigenvectors * Transformed.transpose();
+    MatrixXd NewDataMatrix, NewDataMatrixTransposed, WhiteMod;
+    WhiteMod = eigenvectors.array() / eigenvalues.transpose().array() *
+               std::sqrt(X.rows());
+    NewDataMatrix = WhiteMod * TransformedCentered.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();
     std::cout << "Transformed data matrix:\n" << NewDataMatrixTransposed
               << std::endl;
     //========== Undo normalization ======================//
-    mean_column_centered = NewDataMatrixTransposed.colwise().sum() / NewDataMatrixTransposed.rows();
+    mean_column_centered = NewDataMatrixTransposed.colwise().sum() /
+                           NewDataMatrixTransposed.rows();
     meannew = MatrixXd::Zero(X.rows(), X.cols());
     //========== Undo normalization ======================//
     for (int i = 0; i < NewDataMatrixTransposed.rows(); ++i) {
@@ -472,7 +486,6 @@ public:
     std::cout << "New Transformed data matrix with reverse = X:\n" << X
               << std::endl;
   }
-
 
   void Print() {
     std::cout << "Input data:\n" << X << std::endl;

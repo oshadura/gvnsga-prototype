@@ -24,7 +24,6 @@ TEST_F(Moead, SolvingProblemDTLZ1) {
   moead.PrintImpl(std::cout);
 }
 */
-
 /*
 TEST_F(Moead, SolvingProblemDTLZ2) {
   geantvmoop::DTLZ2 dtlz2;

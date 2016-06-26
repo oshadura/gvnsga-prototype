@@ -32,31 +32,31 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-   /*
-    std::cout << "Vector input for evaluation function: ";
-    for (auto i : fParameters)
-      std::cout << i << ' ';
-    std::cout << ' ' << std::endl;
-   */
+    /*
+     std::cout << "Vector input for evaluation function: ";
+     for (auto i : fParameters)
+       std::cout << i << ' ';
+     std::cout << ' ' << std::endl;
+    */
 
     int alpha = 100;
     int n = 12;
     int m = 3;
     int k = n - m + 1; // 5
-    Double_t g = 0.0;
-    for (int i = m - 1; i < n; ++i) {
-      g += pow(fParameters[i] - 0.5, 2);
+    double g = 0.0;
+    for (int i = n - k; i < n; ++i) {
+      g += std::pow(fParameters[i] - 0.5, 2);
     }
     for (int i = 0; i < m; ++i) {
-      double f = (1 + g);
-      int j = 0;
-      for (; j + m <= m - 2; ++j) {
-        f *= cos(pow(fParameters[j], alpha) * pi() / 2);
+      double f = 1 + g;
+      for (std::size_t j = 0; j < m - i - 1; ++j) {
+        f *= std::cos(std::pow(fParameters[j], alpha) * pi() / 2);
       }
       if (i > 0) {
-        f *= sin(pow(fParameters[j], alpha) * pi() / 2);
+        f *= std::sin(std::pow(fParameters[m - i - 1], alpha) * pi() / 2);
       }
-      fFitness.push_back(f);
+      auto it = fFitness.begin();
+      fFitness.insert(it + i, f);
     }
     return fFitness;
   }

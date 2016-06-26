@@ -5,6 +5,7 @@
 #include "output/CSVManager.h"
 #include "mva/PCA.h"
 #include "mva/LPCA.h"
+#include "mva/LPCAWhite.h"
 #include "mva/KPCA.h"
 #include "mva/RobustPCA.h"
 #include "mva/UncenteredLPCA.h"
@@ -15,6 +16,7 @@ class AllPCA : public GATest {
 public:
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::LPCA lpca;
+  geantvmoop::LPCAWhite lpcawhite;
   geantvmoop::KPCA kpca;
   geantvmoop::RobustPCA robustpca;
   geantvmoop::UncenteredLPCA ulpca;
@@ -86,6 +88,30 @@ TEST_F(AllPCA, RunLPCAReductionofComponents) {
   lpca.WriteTransformed("outputlpcatransform");
 }
 
+/*
+TEST_F(AllPCA, RunLPCAReductionofComponentsNoScale) {
+  lpca.LoadData("data");
+  lpca.RunLPCAWithReductionOfComponentsNoScale();
+  lpca.WriteTransformed("outputlpcatransformnoscale");
+}
+*/
+
+/*
+TEST_F(AllPCA, RunLPCAWhiteReductionofComponents) {
+  lpcawhite.LoadData("data");
+  lpcawhite.RunLPCAWhiteWithReductionOfComponents();
+  lpcawhite.WriteTransformed("outputlpcawtransform");
+}
+*/
+
+/*
+TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
+  lpcawhite.LoadData("data");
+  lpcawhite.RunLPCAWhiteWithReductionOfComponentsNoScale();
+  lpcawhite.WriteTransformed("outputlpcawtransformnoscale");
+}
+*/
+
 TEST_F(AllPCA, RunUncenteredLPCA) {
   ulpca.LoadData("data");
   ulpca.RunUncenteredLPCA();
@@ -112,5 +138,5 @@ TEST_F(AllPCA, RunRobustPCA){
   robustpca.LoadData("data");
   robustpca.RobustPCAInexact();
   robustpca.Print();
-  //robustpca.WriteTransformed("outputkpca");
+  //robustpca.WriteTransformed("outputrobustpca");
 }

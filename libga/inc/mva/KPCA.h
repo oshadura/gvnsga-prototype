@@ -20,10 +20,10 @@ class KPCA : public PCA<KPCA> {
 
 public:
   KPCA()
-      : components(2), kernel_type(1), normalise(0), gamma(0.001),
+      : components(2), kernel_type(1), normalise(1), gamma(0.001),
         constant(1.0), order(2.0) {}
   explicit KPCA(MatrixXd &d)
-      : components(2), kernel_type(1), normalise(0), gamma(0.001),
+      : components(2), kernel_type(1), normalise(1), gamma(0.001),
         constant(1.0), order(2.0) {
     X = d;
   }

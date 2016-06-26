@@ -18,6 +18,8 @@
 
 #include "PCA.h"
 
+// Uncentered version!
+
 namespace geantvmoop {
 
 using namespace Eigen;

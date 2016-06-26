@@ -66,23 +66,43 @@ public:
     int n = 7;
     int m = 3;
     int k = n - m + 1; // 5
-    double g = 0.0;
-    for (int i = m - 1; i < n; ++i) {
-      g += pow(fParameters[i - 1] - 0.5, 2) -
-           cos(20 * pi() * (fParameters[i - 1] - 0.5));
-    }
-    g = 100 * (k + g);
-    for (int i = 0; i < m; ++i) {
-      Double_t f = 0.5 * (1 + g);
-      size_t j = 0;
-      for (; m >= 2 + i && j <= m - 2 - i; ++j) {
+                       /*
+double g = 0.0;
+
+for (int i = m - 1; i < n; ++i) {
+g += pow(fParameters[i - 1] - 0.5, 2) -
+cos(20 * pi() * (fParameters[i - 1] - 0.5));
+}
+
+g = 100 * (k + g);
+
+for (int i = 0; i < m; ++i) {
+Double_t f = 0.5 * (1 + g);
+size_t j = 0;
+for (; m >= 2 + i && j <= m - 2 - i; ++j) {
+f *= fParameters[j];
+}
+if (i > 0) {
+f *= (1 - fParameters[j]);
+}
+
+auto it = fFitness.begin();
+fFitness.insert(it + i, f);
+}
+
+*/
+    double g = k;
+    for (std::size_t i = n - k; i < n; i++)
+      g += pow(fParameters[i] - 0.5, 2) -
+           std::cos(20.0 * pi() * (fParameters[i] - 0.5));
+    g *= 100;
+    for (std::size_t i = 0; i < m; i++) {
+      double f = 0.5 * (1.0 + g);
+      for (std::size_t j = 0; j < m - i - 1; ++j)
         f *= fParameters[j];
-      }
-      if (i > 0) {
-        f *= (1 - fParameters[j]);
-      }
+      if (i > 0)
+        f *= 1 - fParameters[m - i - 1];
       auto it = fFitness.begin();
-      // fFitness.push_back(f);
       fFitness.insert(it + i, f);
     }
     return fFitness;

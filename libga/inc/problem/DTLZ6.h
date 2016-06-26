@@ -33,34 +33,32 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-  
-    std::cout << "Vector input for evaluation function: ";
-    for (auto i: fParameters)
-      std::cout << i << ' ';
-    std::cout << ' ' << std::endl;
-  
     int n = 7;
     int m = 3;
     int k = n - m + 1; // 5
     Double_t g = 0.0;
-    for (int i = m - 1; i < n; ++i) {
-    g += pow(fParameters[i], 0.1);
-  }
-  std::vector<double> theta(n);
-  theta[0] = fParameters[0] * pi()/2;
-  for (int i = 1; i < theta.size(); ++i) {
-    theta[i] = pi()/2 / (2 * (1 + g)) * (1 + 2 * g * fParameters[i]);
-  }
-  for (int i = 0; i < m; ++i) {
-    Double_t f = (1 + g);
-    int j = 0;
-    for (; i + m <= m - 2; ++j) {
-      f *= cos(theta[j]);
+    for (int i = m - k + 1; i <= n; ++i) {
+      g += pow(fParameters[i - 1], 0.1);
     }
-    if (m > 0) {
-      f *= sin(theta[j]);
+    std::vector<double> theta(m);
+
+    double t = pi() / (4 * (1 + g));
+
+    theta[0] = fParameters[0] * pi() / 2;
+
+    for (int i = 2; i <= theta.size(); ++i) {
+      theta[i - 1] = t * (1 + 2 * g * fParameters[i - 1]);
     }
-      fFitness.push_back(f);
+    for (int i = 1; i <= m; ++i) {
+      Double_t f = (1 + g);
+      for (std::size_t j = m - 1; j <= 1; j--) {
+        f *= cos(theta[j - 1]);
+      }
+      if (i > 1) {
+        f *= sin(theta[m - i + 1] - 1);
+      }
+      auto it = fFitness.begin();
+      fFitness.insert(it + i - 1, f);
     }
     return fFitness;
   }
@@ -70,6 +68,13 @@ public:
     for (int i = 0; i < 7; ++i)
       vector.push_back(GADouble(0, 1));
     return vector;
+  }
+
+  static Double_t TruePF(Double_t *x, Double_t *parameter) {
+    Double_t value =
+        std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] * x[1] * x[1] -
+                  parameter[2] * x[2] * x[2]);
+    return value;
   }
 
   static Output GetOutput() { return std::vector<double>(3); }

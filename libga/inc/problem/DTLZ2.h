@@ -45,19 +45,19 @@ public:
     int m = 3;
     int k = n - m + 1; // 10
     double g = 0.0;
-    for (int i = m - 1; i < n; ++i) {
-      g += pow(fParameters[i] - 0.5, 2);
+    for (int i = n - k; i < n; ++i) {
+      g += std::pow(fParameters[i] - 0.5, 2);
     }
     for (int i = 0; i < m; ++i) {
-      Double_t f = (1 + g);
-      size_t j = 0;
-      for (; i + m <= m - 2; ++j) {
-        f *= cos(fParameters[j] * pi() / 2);
+      double f = 1 + g;
+      for (std::size_t j = 0; j < m - i - 1; ++j) {
+        f *= std::cos(fParameters[j] * pi() / 2);
       }
-      if (m > 0) {
-        f *= sin(fParameters[j] * pi() / 2);
+      if (i > 0) {
+        f *= std::sin(fParameters[m - i - 1] * pi() / 2);
       }
-      fFitness.push_back(f);
+      auto it = fFitness.begin();
+      fFitness.insert(it + i, f);
     }
     return fFitness;
   }
@@ -71,8 +71,9 @@ public:
 
   // ROOT Fitting to true Pareto front
   static Double_t TruePF(Double_t *x, Double_t *parameter) {
-    Double_t value = std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] *
-  x[1] * x[1] - parameter[2] * x[2] * x[2]);
+    Double_t value =
+        std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] * x[1] * x[1] -
+                  parameter[2] * x[2] * x[2]);
     return value;
   }
 

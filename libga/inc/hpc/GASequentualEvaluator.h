@@ -85,7 +85,8 @@ public:
       std::cout << "We are back to master job::" << std::endl;
     }
     // Cleaning array of previos pids
-    fArrayDead[fNumberChildren] = 0;
+    //fArrayDead[fNumberChildren] = 0;
+    
     // How to return values....?
     // F::output = fOutput;
   }

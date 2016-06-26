@@ -36,21 +36,19 @@ public:
     int n = 7;
     int m = 3;
     int k = n - m + 1; // 5
-    double g = 0.0;
-    for (int i = n - k + 1; i <= n; i++) {
-      g += pow(fParameters[i - 1] - 0.5, 2) -
-           cos(20 * pi() * (fParameters[i - 1] - 0.5));
-    }
-    g = 100 * (k + g);
-    for (int i = 1; i <= m; i++) {
-      double f = (1 + g);
-      for (int j = m - i; j >= 1; j--) {
-        f *= cos(fParameters[j - 1] * pi() / 2);
-      }
-      if (i > 1) {
-        f *= sin(fParameters[m - i + 1] - 1) * pi() / 2;
-      }
-      fFitness.push_back(f);
+    double g = k;
+    for (std::size_t i = n - k; i < n; i++)
+      g += pow(fParameters[i] - 0.5, 2) -
+           std::cos(20.0 * pi() * (fParameters[i] - 0.5));
+    g *= 100;
+    for (std::size_t i = 0; i < m; i++) {
+      double f = 1.0 + g;
+      for (std::size_t j = 0; j < m - i - 1; ++j)
+        f *= std::cos(fParameters[j]) * pi() / 2;
+      if (i > 0)
+        f *= std::sin(fParameters[m - i - 1]) * pi() / 2;
+      auto it = fFitness.begin();
+      fFitness.insert(it + i, f);
     }
     return fFitness;
   }
