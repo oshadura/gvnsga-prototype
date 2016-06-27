@@ -83,9 +83,16 @@ public:
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
       individual_t<F> offspring =
           GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
+      std::cout << "Element for Crossover " << j << " and " << j + 1 << std::endl;
       if (Random::GetInstance().RandomDouble() < PMut)
         offspring = GAPolMutation::Mutation(offspring);
       population.push_back(offspring);
+      auto last = population.size() - 1;
+      std::cout << "Mutation had been happened with " << std::endl;
+      for (int j = 0; j < population.GetTGenes(last).size(); ++j) {
+        std::cout << population.GetGeneValue(last, j) << "|";
+      }
+      std::cout << std::endl;
     }
     fIndRank = GANDRank::CalculateIndicator(population);
     fIndCrowDist = GACD::CalculateIndicator(population);
@@ -113,7 +120,7 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     std::cout << "--------------TRANFORMATION-------------\n" << std::endl;
-    if (/*fCurrentGeneration > 9 && */fCurrentGeneration % 2 == 0) {
+    if (/*fCurrentGeneration > 9 && */ fCurrentGeneration % 2 == 0) {
       PCAinvPCA cleanupoperator;
       population = cleanupoperator.NR(next);
     } else {

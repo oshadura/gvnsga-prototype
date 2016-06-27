@@ -23,6 +23,7 @@ public:
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
+/*
 TEST_F(AllPCA, PCAConvertPopulationtoX) {
   lpca.UploadPopulation(pop);
   ASSERT_EQ(lpca.GetX().rows(), pop.size());
@@ -73,12 +74,12 @@ TEST_F(AllPCA, LoadingDataLPCAByHands) {
  Xtest = lpca.GetX().transpose();
  ASSERT_EQ(Xtest, test);
  */
-}
+//}
 
 ////////////////////// Methods ///////////////////////////////
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
-
+/*
 TEST_F(AllPCA, RunLPCA) {
   lpca.LoadData("bigdata");
   lpca.RunLPCA();
@@ -139,3 +140,4 @@ TEST_F(AllPCA, RunRobustPCA){
   robustpca.Print();
   //robustpca.WriteTransformed("outputrobustpca");
 }
+*/
