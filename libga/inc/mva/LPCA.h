@@ -147,11 +147,16 @@ public:
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
     // Sorting Eigen pairs [eigenvalue, eigenvector]
+    // Sorting Eigen pairs [eigenvalue, eigenvector]
     std::sort(fEigenValues.begin(), fEigenValues.end(),
-              [](const std::pair<double, VectorXd> a,
-                 const std::pair<double, VectorXd> b)
-                  ->bool { return (a.first > b.first); });
-
+              [](const std::pair<double, VectorXd> &a,
+                 const std::pair<double, VectorXd> &b) {
+      if (a.first > b.first)
+        return true;
+      if (a.first == b.first)
+        return a.first > b.first;
+      return false;
+    });
     for (unsigned int i = 0; i < fEigenValues.size(); i++) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
@@ -161,116 +166,6 @@ public:
     Transformed = X * eigenvectors;
     X = Transformed;
   }
-
-  // Old theory...........
-  /*
-  void RunLPCAWithReductionOfComponents() {
-    // std dev
-    double totalvar = 0;
-    int i = 0;
-    // Covariance matrix
-    covariance = (Xcentered.adjoint() * Xcentered) / double(X.rows() - 1);
-    // Mean of matrix X
-    colmean = X.colwise().sum() / X.rows();
-    // Vector of std deviation of colums
-    stddev =
-        (X.rowwise() - colmean.transpose()).array().pow(2).colwise().sum() /
-        X.rows();
-    mean = MatrixXd::Zero(X.rows(), X.cols());
-    dev = MatrixXd::Zero(X.rows(), X.cols());
-    for (int i = 0; i < X.rows(); ++i) {
-      mean.row(i) = colmean.transpose();
-      dev.row(i) = stddev.transpose();
-    }
-    // Centered matrix
-    Xcentered = (X.rowwise() - X.colwise().mean());
-    // Sqrt of sigma
-    stddev = stddev.cwiseSqrt();
-    Xcentered = Xcentered.array() / dev.array();
-    C = (Xcentered.adjoint() * Xcentered) / double(X.rows());
-    EigenSolver<MatrixXd> edecomp(C);
-    // Eigen values
-    eigenvalues = edecomp.eigenvalues().real();
-    // Eigen vectors
-    eigenvectors = edecomp.eigenvectors().real();
-    cumulative.resize(eigenvalues.rows());
-    // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > fEigenValues;
-    double c = 0.0;
-    for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
-      if (normalise) {
-        double norm = eigenvectors.col(i).norm();
-        eigenvectors.col(i) /= norm;
-      }
-      fEigenValues.push_back(
-          std::make_pair(eigenvalues(i), eigenvectors.col(i)));
-    }
-    // Sorting Eigen pairs [eigenvalue, eigenvector]
-    std::sort(fEigenValues.begin(), fEigenValues.end(),
-              [](const std::pair<double, VectorXd> a,
-                 const std::pair<double, VectorXd> b)
-                  ->bool { return (a.first > b.first); });
-    // Printing current state information before  PC cutoff
-    std::cout << "Printing original information after PCA" << std::endl;
-    Transformed = X * eigenvectors;
-    // TransformedCentered = Xcentered * eigenvectors;
-    // Varince based selection (< 85 %)
-    while (totalvar <= 0.85) {
-      eigenvalues(i) = fEigenValues[i].first;
-      c += eigenvalues(i);
-      cumulative(i) = c;
-      eigenvectors.col(i) = fEigenValues[i].second;
-      totalvar = totalvar + (eigenvalues(i) / eigenvalues.sum());
-      ++i;
-    }
-    Print();
-    std::cout << "Sqrt of std dev vector of matrix X:\n" << stddev << std::endl;
-    std::cout << "Sqrt of std dev matrix of matrix X:\n" << dev << std::endl;
-    std::cout << "Column nean vector of matrix X:\n" << colmean << std::endl;
-    std::cout << "Mean matrix:\n" << mean << std::endl;
-    std::cout << "---------------------------\n" << std::endl;
-    std::cout << "REVERSE PCA: " << std::endl;
-    eigenvectors.conservativeResize(eigenvectors.rows(), i);
-    Transformed.conservativeResize(Transformed.rows(), i);
-    // TransformedCentered.conservativeResize(Transformed.rows(), i);
-    std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
-    std::cout << "Reduced tranformed matrix \n" << Transformed << std::endl;
-    std::cout << "Total number of components to be used in transformed matrix: "
-              << i << std::endl;
-    // Transformed matrix
-    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
-    NewDataMatrix = eigenvectors * Transformed.transpose();
-    NewDataMatrixTransposed = NewDataMatrix.transpose();
-    std::cout << "Transformed data matrix:\n" << NewDataMatrixTransposed
-              << std::endl;
-    colmeannew = NewDataMatrixTransposed.colwise().sum() /
-                 NewDataMatrixTransposed.rows();
-    // Vector of std deviation of colums
-    stddevnew = (NewDataMatrixTransposed.rowwise() - colmeannew.transpose())
-                    .array()
-                    .pow(2)
-                    .colwise()
-                    .sum() /
-                NewDataMatrixTransposed.rows();
-    std::cout << "New mean vector of matrix X':\n" << colmeannew << std::endl;
-    std::cout << "New std dev of matrix X':\n" << stddevnew << std::endl;
-    meannew = MatrixXd::Zero(X.rows(), X.cols());
-    devnew = MatrixXd::Zero(X.rows(), X.cols());
-    for (int i = 0; i < X.rows(); ++i) {
-      devnew.row(i) = stddevnew.transpose();
-      meannew.row(i) = colmeannew.transpose();
-    }
-    NewDataMatrixTransposed = NewDataMatrixTransposed - meannew;
-    NewDataMatrixTransposed = NewDataMatrixTransposed.array()/devnew.array();
-    std::cout << "New Transformed data matrix X':\n" << NewDataMatrixTransposed
-  << std::endl;
-    /////////////////BACK///////////////////
-    X =  dev.array() * NewDataMatrixTransposed.array();
-    X = X + mean;
-     std::cout << "New Transformed data matrix with reverse = X:\n" << X <<
-  std::endl;
-  }
-  */
 
   void RunLPCAWithReductionOfComponents() {
     // std dev
@@ -301,12 +196,14 @@ public:
     // Sqrt of sigma
     stddev = stddev.cwiseSqrt();
     Xcentered = Xcentered.array() / dev.array();
+#ifdef DEBUG
     //=============== Output print===================//
     std::cout << "Sqrt of std dev vector of matrix X:\n" << stddev << std::endl;
     std::cout << "Sqrt of std dev matrix of matrix X:\n" << dev << std::endl;
     std::cout << "Column nean vector of matrix X:\n" << colmean << std::endl;
     std::cout << "Mean matrix:\n" << mean << std::endl;
     std::cout << "---------------------------\n" << std::endl;
+#endif
     //================== LPCA =======================//
     C = (Xcentered.adjoint() * Xcentered) / double(Xcentered.rows());
     EigenSolver<MatrixXd> edecomp(C);
@@ -379,7 +276,9 @@ public:
                     .colwise()
                     .sum() /
                 NewDataMatrixTransposed.rows();
+#ifdef DEBUG
     std::cout << "New std dev of matrix X':\n" << stddevnew << std::endl;
+#endif
     meannew = MatrixXd::Zero(X.rows(), X.cols());
     devnew = MatrixXd::Zero(X.rows(), X.cols());
     for (int i = 0; i < X.rows(); ++i) {
@@ -390,8 +289,10 @@ public:
     std::cout << "New transformed data matrix X':\n" << NewDataMatrixTransposed
               << std::endl;
     NewDataMatrixTransposed = dev.array() * NewDataMatrixTransposed.array();
+#ifdef DEBUG
     //========== Undo normalization ======================//
-    std::cout << "New mean vector of matrix X':\n" << meannew << std::endl;
+    std::cout << "New mean vector of matrix X':\n" << meannew << std::endl
+#endif
     X = NewDataMatrixTransposed + meannew;
     std::cout << "New Transformed data matrix with reverse = X:\n" << X
               << std::endl;
@@ -413,11 +314,13 @@ public:
     for (int i = 0; i < X.rows(); ++i) {
       mean.row(i) = colmean.transpose();
     }
+#ifdef DEBUG
     //=============== Output print===================//
     std::cout << "Column mean vector of matrix X:\n" << colmean << std::endl;
     std::cout << "Mean matrix:\n" << mean << std::endl;
     std::cout << "---------------------------\n" << std::endl;
     //================== LPCA =======================//
+#endif
     C = (Xcentered.adjoint() * Xcentered) / double(Xcentered.rows());
     EigenSolver<MatrixXd> edecomp(C);
     // Eigen values
@@ -485,7 +388,9 @@ public:
     for (int i = 0; i < NewDataMatrixTransposed.rows(); ++i) {
       meannew.row(i) = mean_column_centered.transpose();
     }
+#ifdef DEBUG
     std::cout << "New mean vector of matrix X':\n" << meannew << std::endl;
+#endif
     X = NewDataMatrixTransposed + meannew;
     std::cout << "New Transformed data matrix with reverse = X:\n" << X
               << std::endl;
@@ -494,8 +399,10 @@ public:
 
   void Print() {
     std::cout << "Input data:\n" << X << std::endl;
+#ifdef DEBUG
     std::cout << "Mean of columns:\n" << colmean << std::endl;
     std::cout << "Centered data:\n" << Xcentered << std::endl;
+#endif
     std::cout << "Covariance matrix:\n" << C << std::endl;
     std::cout << "Eigenvalues:\n" << eigenvalues << std::endl;
     std::cout << "Eigenvectors:\n" << eigenvectors << std::endl;

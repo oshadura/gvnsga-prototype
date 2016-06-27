@@ -25,7 +25,7 @@ public:
 
 TEST_F(AllPCA, PCAConvertPopulationtoX) {
   lpca.UploadPopulation(pop);
-  ASSERT_EQ(lpca.GetX().rows(), 5);
+  ASSERT_EQ(lpca.GetX().rows(), pop.size());
   ASSERT_EQ(lpca.GetX().cols(), 7);
 }
 
@@ -75,53 +75,57 @@ TEST_F(AllPCA, LoadingDataLPCAByHands) {
  */
 }
 
+////////////////////// Methods ///////////////////////////////
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
 TEST_F(AllPCA, RunLPCA) {
-  lpca.LoadData("data");
+  lpca.LoadData("bigdata");
   lpca.RunLPCA();
   lpca.Print();
   lpca.WriteTransformed("outputlpca");
 }
 
 TEST_F(AllPCA, RunLPCAReductionofComponents) {
-  lpca.LoadData("data");
+  lpca.LoadData("bigdata");
   lpca.RunLPCAWithReductionOfComponents();
   lpca.WriteTransformed("outputlpcatransform");
 }
 
 TEST_F(AllPCA, RunLPCAReductionofComponentsNoScale) {
-  lpca.LoadData("data");
+  lpca.LoadData("bigdata");
   lpca.RunLPCAWithReductionOfComponentsNoScale();
   lpca.WriteTransformed("outputlpcatransformnoscale");
 }
 
 TEST_F(AllPCA, RunLPCAWhiteReductionofComponents) {
-  lpcawhite.LoadData("data");
+  lpcawhite.LoadData("bigdata");
   lpcawhite.RunLPCAWhiteWithReductionOfComponents();
   lpcawhite.WriteTransformed("outputlpcawtransform");
 }
 
 
 TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
-  lpcawhite.LoadData("data");
+  lpcawhite.LoadData("bigdata");
   lpcawhite.RunLPCAWhiteWithReductionOfComponentsNoScale();
   lpcawhite.WriteTransformed("outputlpcawtransformnoscale");
 }
 
 
 TEST_F(AllPCA, RunUncenteredLPCA) {
-  ulpca.LoadData("data");
+  ulpca.LoadData("bigdata");
   ulpca.RunUncenteredLPCA();
   ulpca.Print();
   ulpca.WriteTransformed("outputulpca");
 }
 
 TEST_F(AllPCA, RunUncenteredLPCAReductionofComponents) {
-  ulpca.LoadData("data");
+  ulpca.LoadData("bigdata");
   ulpca.RunUncenteredLPCAWithReductionOfComponents();
   ulpca.WriteTransformed("outputulpcatransform");
 }
 
-
+// Too slow for bigdata set...
 TEST_F(AllPCA, RunKPCA) {
   kpca.LoadData("data");
   kpca.RunKPCA();
@@ -129,9 +133,8 @@ TEST_F(AllPCA, RunKPCA) {
   kpca.WriteTransformed("outputkpca");
 }
 
-
 TEST_F(AllPCA, RunRobustPCA){
-  robustpca.LoadData("data");
+  robustpca.LoadData("bigdata");
   robustpca.RobustPCAInexact();
   robustpca.Print();
   //robustpca.WriteTransformed("outputrobustpca");

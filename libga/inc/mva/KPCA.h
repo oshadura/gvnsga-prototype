@@ -142,7 +142,9 @@ public:
         // printf("k(%i,%i) = %f\n", i, j, K(i, j));
       }
     }
+#ifdef DEBUG
     std::cout << "Matrix X: \n" << K << std::endl;
+#endif
     EigenSolver<MatrixXd> edecomp(K);
     eigenvalues = edecomp.eigenvalues().real();
     eigenvectors = edecomp.eigenvectors().real();
@@ -157,11 +159,16 @@ public:
       fEigenValues.push_back(
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
-    // http://stackoverflow.com/questions/5122804/sorting-with-lambda
+    // Sorting Eigen pairs [eigenvalue, eigenvector]
     std::sort(fEigenValues.begin(), fEigenValues.end(),
-              [](const std::pair<double, VectorXd> a,
-                 const std::pair<double, VectorXd> b)
-                  ->bool { return (a.first > b.first); });
+              [](const std::pair<double, VectorXd> &a,
+                 const std::pair<double, VectorXd> &b) {
+      if (a.first > b.first)
+        return true;
+      if (a.first == b.first)
+        return a.first > b.first;
+      return false;
+    });
     for (unsigned int i = 0; i < fEigenValues.size(); i++) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
@@ -196,7 +203,9 @@ public:
         // printf("k(%i,%i) = %f\n", i, j, K(i, j));
       }
     }
+#ifdef DEBUG
     std::cout << "Matrix X: \n" << K << std::endl;
+#endif
     EigenSolver<MatrixXd> edecomp(K);
     eigenvalues = edecomp.eigenvalues().real();
     eigenvectors = edecomp.eigenvectors().real();
@@ -211,10 +220,16 @@ public:
       fEigenValues.push_back(
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
+    // Sorting Eigen pairs [eigenvalue, eigenvector]
     std::sort(fEigenValues.begin(), fEigenValues.end(),
-              [](const std::pair<double, VectorXd> a,
-                 const std::pair<double, VectorXd> b)
-                  ->bool { return (a.first > b.first); });
+              [](const std::pair<double, VectorXd> &a,
+                 const std::pair<double, VectorXd> &b) {
+      if (a.first > b.first)
+        return true;
+      if (a.first == b.first)
+        return a.first > b.first;
+      return false;
+    });
     for (unsigned int i = 0; i < fEigenValues.size(); i++) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
@@ -233,7 +248,9 @@ public:
 
   void Print() {
     std::cout << "Input data: \n" << X << std::endl;
+#ifdef DEBUG
     std::cout << "Centered data: \n" << Xcentered << std::endl;
+#endif
     std::cout << "Centered kernel matrix: \n" << K << std::endl;
     std::cout << "Eigenvalues: \n" << eigenvalues << std::endl;
     std::cout << "Eigenvectors: \n" << eigenvectors << std::endl;

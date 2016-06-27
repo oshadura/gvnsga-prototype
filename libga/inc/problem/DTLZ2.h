@@ -72,8 +72,8 @@ public:
   // ROOT Fitting to true Pareto front
   static Double_t TruePF(Double_t *x, Double_t *parameter) {
     Double_t value =
-        std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] * x[1] * x[1] -
-                  parameter[2] * x[2] * x[2]);
+        std::sqrt(parameter[0] - parameter[1] * x[0] * x[0] - parameter[2] * x[1] * x[1] /*-
+                  parameter[2] * x[2] * x[2]*/);
     return value;
   }
 
