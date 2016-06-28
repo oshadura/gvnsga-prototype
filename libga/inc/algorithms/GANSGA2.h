@@ -63,6 +63,7 @@ public:
   GANSGA2(F problem) : GAAlgorithm<GANSGA2<F>, F>(problem) {}
   int fPopulationSize = 10;
   double PMut = 0.2;
+  double PCross = 0.6; // 0.9
   int fCurrentGeneration = 0;
 
   void InitializeImpl() {
@@ -77,13 +78,14 @@ public:
   }
 
   void EvolutionImpl() {
+    individual_t<F> offspring;
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
     GATournamentSelection<GAComparator<F>> selector(cmp);
     Population<F> matingPool =
         selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
-      individual_t<F> offspring =
-          GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
+      if (Random::GetInstance().RandomDouble() < PCross)
+        offspring = GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
       if (Random::GetInstance().RandomDouble() < PMut)
         offspring = GAPolynomialMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
