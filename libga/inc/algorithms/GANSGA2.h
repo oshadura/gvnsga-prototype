@@ -15,31 +15,31 @@
 #ifndef MOO_NSGAII_H
 #define MOO_NSGAII_H
 
-#define RESET   "\033[0m"
-#define BLACK   "\033[30m"      /* Black */
-#define RED     "\033[31m"      /* Red */
-#define GREEN   "\033[32m"      /* Green */
-#define YELLOW  "\033[33m"      /* Yellow */
-#define BLUE    "\033[34m"      /* Blue */
-#define MAGENTA "\033[35m"      /* Magenta */
-#define CYAN    "\033[36m"      /* Cyan */
-#define WHITE   "\033[37m"      /* White */
-#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
-#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
-#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
-#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
-#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
-#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
-#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
-#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
- 
-#define CLEAR "\033[2J"  // clear screen escape code 
+#define RESET "\033[0m"
+#define BLACK "\033[30m"              /* Black */
+#define RED "\033[31m"                /* Red */
+#define GREEN "\033[32m"              /* Green */
+#define YELLOW "\033[33m"             /* Yellow */
+#define BLUE "\033[34m"               /* Blue */
+#define MAGENTA "\033[35m"            /* Magenta */
+#define CYAN "\033[36m"               /* Cyan */
+#define WHITE "\033[37m"              /* White */
+#define BOLDBLACK "\033[1m\033[30m"   /* Bold Black */
+#define BOLDRED "\033[1m\033[31m"     /* Bold Red */
+#define BOLDGREEN "\033[1m\033[32m"   /* Bold Green */
+#define BOLDYELLOW "\033[1m\033[33m"  /* Bold Yellow */
+#define BOLDBLUE "\033[1m\033[34m"    /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m" /* Bold Magenta */
+#define BOLDCYAN "\033[1m\033[36m"    /* Bold Cyan */
+#define BOLDWHITE "\033[1m\033[37m"   /* Bold White */
+
+#define CLEAR "\033[2J" // clear screen escape code
 
 #include "generic/GAAlgorithm.h"
 #include "generic/PF.h"
 #include "gaoperators/GATournamentSelection.h"
 #include "gaoperators/GASBXCrossover.h"
-#include "gaoperators/GAPolMutation.h"
+#include "gaoperators/GAPolynomialMutation.h"
 #include "addstructures/GAComparator.h"
 #include "addstructures/GANDRank.h"
 #include "addstructures/GACD.h"
@@ -67,7 +67,7 @@ public:
 
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
-    population = Population<F>{ fPopulationSize };
+    population = Population<F>{fPopulationSize};
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
     /*
@@ -78,14 +78,14 @@ public:
 
   void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
-    GATournamentSelection<GAComparator<F> > selector(cmp);
+    GATournamentSelection<GAComparator<F>> selector(cmp);
     Population<F> matingPool =
         selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
       individual_t<F> offspring =
           GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
       if (Random::GetInstance().RandomDouble() < PMut)
-        offspring = GAPolMutation::Mutation(offspring);
+        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
     }
     fIndRank = GANDRank::CalculateIndicator(population);
@@ -105,9 +105,9 @@ public:
         std::cout << BLUE << population.GetObjectiveValue(i, k) << "|";
       }
       auto ind = population[i];
-      std::cout << RESET << "\n| Rank: " << RED << fIndRank[ind]
-                << RESET << " | Crowding distance value: ";
-      std::cout << MAGENTA << fIndCrowDist[ind] << RESET <<std::endl;
+      std::cout << RESET << "\n| Rank: " << RED << fIndRank[ind] << RESET
+                << " | Crowding distance value: ";
+      std::cout << MAGENTA << fIndCrowDist[ind] << RESET << std::endl;
     }
     std::cout << "---------------------------\n" << std::endl;
     Population<F> next;

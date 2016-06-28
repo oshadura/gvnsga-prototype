@@ -22,9 +22,10 @@ namespace geantvmoop {
 template <typename Derived> class GAMutation {
 
 public:
-  template <typename F> static individual_t<F> Mutation(individual_t<F> &ind) {
+  template <typename F>
+  static individual_t<F> Mutation(individual_t<F> &ind, double prob = -1) {
     typename F::Input in = ind->GetInput();
-    Derived::MutationImpl(in);
+    Derived::MutationImpl(in, prob);
     return std::make_shared<geantvmoop::TGenes<F>>(in);
   }
 };

@@ -26,7 +26,7 @@
 
 #include "gaoperators/GATournamentSelection.h"
 #include "gaoperators/GASBXCrossover.h"
-#include "gaoperators/GAPolMutation.h"
+#include "gaoperators/GAPolynomialMutation.h"
 #include "addstructures/GAComparator.h"
 
 namespace geantvmoop {
@@ -45,7 +45,7 @@ public:
   double PMut = 0.2;
 
   void InitializeImpl() {
-    population = Population<F>{ fPopulationSize };
+    population = Population<F>{fPopulationSize};
     // Stupid solution only for DTLZ1!
     GenerateRP(&fReference, 3, 4);
     // fIndCrowDist = GACD::CalculateIndicator(population);
@@ -62,7 +62,7 @@ public:
       individual_t<F> offspring =
           GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
       if (Random::GetInstance().RandomDouble() < PMut)
-        offspring = GAPolMutation::Mutation(offspring);
+        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
     }
     fIndRank = GANDRank::CalculateIndicator(population);
@@ -81,7 +81,7 @@ public:
     auto last = population[population.size() - 1];
     os << "Pareto front: " << fIndRank[last] << " | worst crowding: ";
     os << fIndCrowDist[last] << std::endl;
- 
+
     for (int i = 0; i < population.size(); ++i) {
       std::cout << "Individual " << i << std::endl;
       for (int j = 0; j < population.GetTGenes(i).size(); ++j) {

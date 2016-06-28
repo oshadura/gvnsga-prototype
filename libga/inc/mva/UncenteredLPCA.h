@@ -27,23 +27,22 @@ using namespace Eigen;
 class UncenteredLPCA : public PCA<UncenteredLPCA> {
 
 private:
-  MatrixXd X, C, K, eigenvectors, Transformed,
-      covariance, dev, mean, devnew, meannew;
+  MatrixXd X, C, K, eigenvectors, Transformed, covariance, dev, mean, devnew,
+      meannew;
   VectorXd eigenvalues, cumulative, stddev, colmean, stddevnew, colmeannew;
   unsigned int normalise;
 
 public:
-  //We need to normalize for
-  // \hat{U}^{\,t }\cdot  \hat{U}=  \hat I, \quad {U}^{\,t }_{i,i'}   {U}_{i',j}=\delta_{i,j}.
+  // We need to normalize for
+  // \hat{U}^{\,t }\cdot  \hat{U}=  \hat I, \quad {U}^{\,t }_{i,i'}
+  // {U}_{i',j}=\delta_{i,j}.
   UncenteredLPCA() : normalise(1) {}
 
   explicit UncenteredLPCA(MatrixXd &d) : normalise(1) { X = d; }
 
   virtual ~UncenteredLPCA() {}
 
-  void SetNormalise(const int i) {
-    normalise = i;
-  };
+  void SetNormalise(const int i) { normalise = i; };
   MatrixXd &GetTransformed() { return Transformed; }
 
   MatrixXd &GetX() { return X; }
@@ -104,16 +103,17 @@ public:
   template <typename F>
   void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
     typename F::Input ind;
-    std::vector<individual_t<F> > poplist;
+    std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < data.rows(); ++i) {
       for (int j = 0; j < data.cols(); ++j) {
-        std::cout << "Gene to be added in a population[" << i << "," << j << "] is " << data(i, j) << std::endl;
+        std::cout << "Gene to be added in a population[" << i << "," << j
+                  << "] is " << data(i, j) << std::endl;
         ind.push_back(data(i, j));
       }
       std::cout << "New gene added." << std::endl;
       TGenes<F> newind = ind;
-      poplist.push_back(std::make_shared<geantvmoop::TGenes<F> >(newind));
+      poplist.push_back(std::make_shared<geantvmoop::TGenes<F>>(newind));
       ind.clear();
     }
     newpop = Population<F>(poplist);
@@ -128,7 +128,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > fEigenValues;
+    std::vector<std::pair<double, VectorXd>> fEigenValues;
     double c = 0.0;
 
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
@@ -144,12 +144,12 @@ public:
     std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> &a,
                  const std::pair<double, VectorXd> &b) {
-      if (a.first > b.first)
-        return true;
-      if (a.first == b.first)
-        return a.first > b.first;
-      return false;
-    });
+                if (a.first > b.first)
+                  return true;
+                if (a.first == b.first)
+                  return a.first > b.first;
+                return false;
+              });
     for (unsigned int i = 0; i < fEigenValues.size(); i++) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
@@ -170,7 +170,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > fEigenValues;
+    std::vector<std::pair<double, VectorXd>> fEigenValues;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
@@ -185,12 +185,12 @@ public:
     std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> &a,
                  const std::pair<double, VectorXd> &b) {
-      if (a.first > b.first)
-        return true;
-      if (a.first == b.first)
-        return a.first > b.first;
-      return false;
-    });
+                if (a.first > b.first)
+                  return true;
+                if (a.first == b.first)
+                  return a.first > b.first;
+                return false;
+              });
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     Transformed = X * eigenvectors;
@@ -219,9 +219,8 @@ public:
     NewDataMatrixTransposed = NewDataMatrix.transpose();
     std::cout << "Transformed data matrix:\n" << NewDataMatrixTransposed
               << std::endl;
-    X = NewDataMatrixTransposed;
+    X = NewDataMatrixTransposed.array().abs();
   }
-
 
   void Print() {
     std::cout << "Input data:\n" << X << std::endl;

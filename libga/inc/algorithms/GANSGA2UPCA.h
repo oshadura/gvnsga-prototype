@@ -40,7 +40,7 @@
 #include "generic/PF.h"
 #include "gaoperators/GATournamentSelection.h"
 #include "gaoperators/GASBXCrossover.h"
-#include "gaoperators/GAPolMutation.h"
+#include "gaoperators/GAPolynomialMutation.h"
 #include "gaoperators/PCAinvPCA.h"
 #include "addstructures/GAComparator.h"
 #include "addstructures/GANDRank.h"
@@ -70,22 +70,23 @@ public:
 
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
-    population = Population<F>{ fPopulationSize };
+    population = Population<F>{fPopulationSize};
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
   }
 
   void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
-    GATournamentSelection<GAComparator<F> > selector(cmp);
+    GATournamentSelection<GAComparator<F>> selector(cmp);
     Population<F> matingPool =
         selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
       individual_t<F> offspring =
           GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
-      std::cout << "Element for Crossover " << j << " and " << j + 1 << std::endl;
+      std::cout << "Element for Crossover " << j << " and " << j + 1
+                << std::endl;
       if (Random::GetInstance().RandomDouble() < PMut)
-        offspring = GAPolMutation::Mutation(offspring);
+        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
       auto last = population.size() - 1;
       std::cout << "Mutation had been happened with " << std::endl;

@@ -19,7 +19,7 @@
 #include "generic/PF.h"
 #include "gaoperators/GATournamentSelection.h"
 #include "gaoperators/GASBXCrossover.h"
-#include "gaoperators/GAPolMutation.h"
+#include "gaoperators/GAPolynomialMutation.h"
 #include "gaoperators/PCAinvPCA.h"
 #include "addstructures/GAComparator.h"
 #include "addstructures/GANDRank.h"
@@ -33,7 +33,8 @@
 
 namespace geantvmoop {
 
-template <typename F> class GANSGA2ModRPCA : public GAAlgorithm<GANSGA2ModRPCA<F>, F> {
+template <typename F>
+class GANSGA2ModRPCA : public GAAlgorithm<GANSGA2ModRPCA<F>, F> {
 
 private:
   Population<F> population;
@@ -48,21 +49,21 @@ public:
 
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
-    population = Population<F>{ fPopulationSize };
+    population = Population<F>{fPopulationSize};
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
   }
 
   void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
-    GATournamentSelection<GAComparator<F> > selector(cmp);
+    GATournamentSelection<GAComparator<F>> selector(cmp);
     Population<F> matingPool =
         selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
       individual_t<F> offspring =
           GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
       if (Random::GetInstance().RandomDouble() < PMut)
-        offspring = GAPolMutation::Mutation(offspring);
+        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
     }
     fIndRank = GANDRank::CalculateIndicator(population);
@@ -72,7 +73,7 @@ public:
     HistogramManager<F>::GetInstance().HistoFill(
         population, "population_nsga2_mod_rpca.root", fCurrentGeneration);
     std::cout << "---------------------------\n" << std::endl;
-        for (int i = 0; i < population.size(); ++i) {
+    for (int i = 0; i < population.size(); ++i) {
       std::cout << "Individual " << i << std::endl;
       for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
         std::cout << population.GetGeneValue(i, j) << "|";

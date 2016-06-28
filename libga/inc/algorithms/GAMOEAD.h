@@ -21,7 +21,7 @@
 #include "gaoperators/GASelection.h"
 #include "tools/Random.h"
 #include "gaoperators/GASBXCrossover.h"
-#include "gaoperators/GAPolMutation.h"
+#include "gaoperators/GAPolynomialMutation.h"
 #include "gaoperators/GASimpleSelection.h"
 #include "output/HistogramManager.h"
 
@@ -30,7 +30,7 @@ namespace geantvmoop {
 template <typename F> class GAMOEAD : public GAAlgorithm<GAMOEAD<F>, F> {
 private:
   std::vector<Weights> fWeights;
-  std::vector<std::vector<int> > fNearest;
+  std::vector<std::vector<int>> fNearest;
   std::vector<double> fRefPoint;
   Population<F> pop;
   std::vector<double> fFitness;
@@ -56,7 +56,7 @@ public:
       throw std::runtime_error("Please set T lower than population size!");
     for (auto w : fWeights)
       fNearest.push_back(w.GetNearestNeighbor(fWeights, T));
-    pop = Population<F>{ fPopulationSize };
+    pop = Population<F>{fPopulationSize};
     fRefPoint = GetRP(pop);
     fFitness = std::vector<double>(fPopulationSize,
                                    std::numeric_limits<double>::max());
@@ -77,7 +77,7 @@ public:
       auto b = pop[fNearest[i][RandomVectorIndex(fNearest[i])]];
       individual_t<F> offspring = GASBXCrossover::Crossover(a, b);
       if (Random::GetInstance().RandomDouble() < PMut)
-        offspring = GAPolMutation::Mutation(offspring);
+        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
       UpdateRP(fRefPoint, offspring);
       auto out = offspring->GetOutput();
       for (int IterNearest : fNearest[i]) {
@@ -91,7 +91,7 @@ public:
       fFront.Add(offspring);
     }
     // std::cout << fFront << std::endl;
-    //std::cout << pop << std::endl;
+    // std::cout << pop << std::endl;
     ++fCurrentGeneration;
   }
 
