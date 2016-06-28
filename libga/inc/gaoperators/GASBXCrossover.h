@@ -86,7 +86,20 @@ public:
       aValue = 0.5 * (x0 + x1 + b1 * (x0 - x1));
       bValue = 0.5 * (x0 + x1 + b0 * (x1 - x0));
     }
-    // guard against out-of-bounds values
+    // Checking nan and inf numbers
+    if (std::isinf(aValue)) {
+      a.SetGAValue(lb);
+    }
+    if (std::isnan(aValue)) {
+      a.SetGAValue(ub);
+    }
+    if (std::isinf(bValue)) {
+      b.SetGAValue(lb);
+    }
+    if (std::isnan(bValue)) {
+      b.SetGAValue(ub);
+    }
+    // Guard against out-of-bounds values
     if (aValue < lb) {
       a.SetGAValue(lb);
     } else if (aValue > ub) {
@@ -106,7 +119,7 @@ public:
       a.SetGAValue(b.GetGAValue());
       b.SetGAValue(temp);
     }
-    std::cout << "Crossover had been happened with" << a << " and " << b
+    std::cout << "Crossover had been happened with " << a << " and " << b
               << std::endl;
   }
 };

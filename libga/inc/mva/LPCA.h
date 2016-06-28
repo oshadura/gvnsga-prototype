@@ -33,9 +33,9 @@ private:
   unsigned int normalise;
 
 public:
-  LPCA() : normalise(0) {}
+  LPCA() : normalise(1) {}
 
-  explicit LPCA(MatrixXd &d) : normalise(0) { X = d; }
+  explicit LPCA(MatrixXd &d) : normalise(1) { X = d; }
 
   virtual ~LPCA() {}
 

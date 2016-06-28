@@ -101,7 +101,18 @@ public:
     std::sort(population.begin(), population.end(), comp);
     HistogramManager<F>::GetInstance().HistoFill(
         population, "population_nsga2_upcas.root", fCurrentGeneration);
-    std::cout << "---------------------------\n" << std::endl;
+    Population<F> next;
+    for (int l = 0; l < fPopulationSize; ++l)
+      next.push_back(population[l]);
+    std::cout << "--------------TRANFORMATION IS GOING-------------\n" << std::endl;
+    if (fCurrentGeneration > 9 && fCurrentGeneration % 2 == 0) {
+      PCAinvPCA cleanupoperator;
+      population = cleanupoperator.NR(next);
+    } else {
+      population = next;
+    }
+    std::cout << "-----------------------------------------------\n" << std::endl;
+    std::cout << "---------------After transformation------------\n" << std::endl;
     for (int i = 0; i < population.size(); ++i) {
       std::cout << "Individual " << i << std::endl;
       for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
@@ -117,16 +128,6 @@ public:
       std::cout << MAGENTA << fIndCrowDist[ind] << RESET << std::endl;
     }
     std::cout << "---------------------------\n" << std::endl;
-    Population<F> next;
-    for (int l = 0; l < fPopulationSize; ++l)
-      next.push_back(population[l]);
-    std::cout << "--------------TRANFORMATION-------------\n" << std::endl;
-    if (/*fCurrentGeneration > 9 && */ fCurrentGeneration % 2 == 0) {
-      PCAinvPCA cleanupoperator;
-      population = cleanupoperator.NR(next);
-    } else {
-      population = next;
-    }
     std::cout << "Moving to next generation " << fCurrentGeneration
               << std::endl;
     CSVManager::GetInstance().CSVOutput("output.nsgaupca", population);

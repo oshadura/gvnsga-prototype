@@ -9,6 +9,8 @@
 #include "mva/KPCA.h"
 #include "mva/RobustPCA.h"
 #include "mva/UncenteredLPCA.h"
+#include "mva/UncenteredWhiteLPCA.h"
+
 
 using namespace Eigen;
 
@@ -20,9 +22,12 @@ public:
   geantvmoop::KPCA kpca;
   geantvmoop::RobustPCA robustpca;
   geantvmoop::UncenteredLPCA ulpca;
+  geantvmoop::UncenteredWhiteLPCA uwlpca;
+
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
+/*
 TEST_F(AllPCA, PCAConvertPopulationtoX) {
   lpca.UploadPopulation(pop);
   ASSERT_EQ(lpca.GetX().rows(), pop.size());
@@ -79,7 +84,7 @@ TEST_F(AllPCA, LoadingDataLPCAByHands) {
 ////////////////////// Methods ///////////////////////////////
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
-
+/*
 TEST_F(AllPCA, RunLPCA) {
   lpca.LoadData("data");
   lpca.RunLPCA();
@@ -112,14 +117,14 @@ TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
   lpcawhite.WriteTransformed("outputlpcawtransformnoscale");
 }
 
-/*
+
 TEST_F(AllPCA, RunUncenteredLPCA) {
   ulpca.LoadData("bigdata");
   ulpca.RunUncenteredLPCA();
   ulpca.Print();
   ulpca.WriteTransformed("outputulpca");
 }
-*/
+
 
 TEST_F(AllPCA, RunUncenteredLPCAReductionofComponents) {
   ulpca.LoadData("data");
@@ -127,8 +132,21 @@ TEST_F(AllPCA, RunUncenteredLPCAReductionofComponents) {
   ulpca.WriteTransformed("outputulpcatransform");
 }
 
-/*
+TEST_F(AllPCA, RunUncenteredWhiteLPCA) {
+  uwlpca.LoadData("data");
+  uwlpca.RunUncenteredWhiteLPCA();
+  uwlpca.Print();
+  uwlpca.WriteTransformed("outputulpca");
+}
 
+
+TEST_F(AllPCA, RunUncenteredWhiteLPCAReductionofComponents) {
+  uwlpca.LoadData("data");
+  uwlpca.RunUncenteredWhiteLPCAWithReductionOfComponents();
+  uwlpca.WriteTransformed("outputulpcatransform");
+}
+
+/*
 // Too slow for bigdata set...
 TEST_F(AllPCA, RunKPCA) {
   kpca.LoadData("data");
@@ -136,9 +154,10 @@ TEST_F(AllPCA, RunKPCA) {
   kpca.Print();
   kpca.WriteTransformed("outputkpca");
 }
-
+*/
+/*
 TEST_F(AllPCA, RunRobustPCA){
-  robustpca.LoadData("bigdata");
+  robustpca.LoadData("data");
   robustpca.RobustPCAInexact();
   robustpca.Print();
   //robustpca.WriteTransformed("outputrobustpca");

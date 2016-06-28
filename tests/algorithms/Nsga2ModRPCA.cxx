@@ -17,7 +17,7 @@ class Nsga2ModRPCA : public GATest {
 public:
 };
 
-/*
+
 TEST_F(Nsga2ModRPCA, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2ModRPCA<geantvmoop::DTLZ1> nsga2modrpca(dtlz1);
@@ -25,7 +25,7 @@ TEST_F(Nsga2ModRPCA, SolvingDTLZ1Problem) {
   nsga2modrpca.fMaxGeneration = 100;
   nsga2modrpca.SolvePF();
 }
-*/
+
 
 /*
 TEST_F(Nsga2ModRPCA, SolvingDTLZ2Problem) {

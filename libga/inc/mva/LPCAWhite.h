@@ -170,9 +170,11 @@ public:
       cumulative(i) = c;
       eigenvectors.col(i) = fEigenValues[i].second;
     }
-    Transformed = X * eigenvectors;
-    // Transformed matrix
-    TransformedCentered = Xcentered * eigenvectors;
+    MatrixXd eigenval = eigenvalues.asDiagonal();
+    std::cout << "Diagonal eigenvalues:\n" << eigenval << std::endl;
+    MatrixXd WhiteMod = eigenvectors * eigenval.inverse() *
+               std::sqrt(X.rows());
+    Transformed = WhiteMod * Transformed.transpose();
   }
 
   void RunLPCAWhiteWithReductionOfComponents() {
