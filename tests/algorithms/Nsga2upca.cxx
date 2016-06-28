@@ -37,15 +37,15 @@ TEST_F(Nsga2upca, SolvingDTLZ2Problem) {
 }
 */
 
+/*
 TEST_F(Nsga2upca, SolvingDTLZ3Problem) {
   geantvmoop::DTLZ3 dtlz3;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ3> nsga(dtlz3);
-  nsga.fPopulationSize = 100;
+  nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 5;
   nsga.SolvePF();
 }
-
-
+*/
 
 /*
 TEST_F(Nsga2upca, SolvingDTLZ4Problem) {

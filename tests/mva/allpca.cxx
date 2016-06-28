@@ -23,7 +23,6 @@ public:
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
-/*
 TEST_F(AllPCA, PCAConvertPopulationtoX) {
   lpca.UploadPopulation(pop);
   ASSERT_EQ(lpca.GetX().rows(), pop.size());
@@ -51,6 +50,7 @@ TEST_F(AllPCA, PCAConvertXtoPopulation) {
   ASSERT_EQ(lpca.GetX().cols(), 7);
 }
 
+/*
 TEST_F(AllPCA, LoadingDataLPCAByHands) {
   /*
  lpca.LoadData("data");
@@ -79,52 +79,55 @@ TEST_F(AllPCA, LoadingDataLPCAByHands) {
 ////////////////////// Methods ///////////////////////////////
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
-/*
+
 TEST_F(AllPCA, RunLPCA) {
-  lpca.LoadData("bigdata");
+  lpca.LoadData("data");
   lpca.RunLPCA();
   lpca.Print();
   lpca.WriteTransformed("outputlpca");
 }
 
 TEST_F(AllPCA, RunLPCAReductionofComponents) {
-  lpca.LoadData("bigdata");
+  lpca.LoadData("data");
   lpca.RunLPCAWithReductionOfComponents();
   lpca.WriteTransformed("outputlpcatransform");
 }
 
 TEST_F(AllPCA, RunLPCAReductionofComponentsNoScale) {
-  lpca.LoadData("bigdata");
+  lpca.LoadData("data");
   lpca.RunLPCAWithReductionOfComponentsNoScale();
   lpca.WriteTransformed("outputlpcatransformnoscale");
 }
 
 TEST_F(AllPCA, RunLPCAWhiteReductionofComponents) {
-  lpcawhite.LoadData("bigdata");
+  lpcawhite.LoadData("data");
   lpcawhite.RunLPCAWhiteWithReductionOfComponents();
   lpcawhite.WriteTransformed("outputlpcawtransform");
 }
 
 
 TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
-  lpcawhite.LoadData("bigdata");
+  lpcawhite.LoadData("data");
   lpcawhite.RunLPCAWhiteWithReductionOfComponentsNoScale();
   lpcawhite.WriteTransformed("outputlpcawtransformnoscale");
 }
 
-
+/*
 TEST_F(AllPCA, RunUncenteredLPCA) {
   ulpca.LoadData("bigdata");
   ulpca.RunUncenteredLPCA();
   ulpca.Print();
   ulpca.WriteTransformed("outputulpca");
 }
+*/
 
 TEST_F(AllPCA, RunUncenteredLPCAReductionofComponents) {
-  ulpca.LoadData("bigdata");
+  ulpca.LoadData("data");
   ulpca.RunUncenteredLPCAWithReductionOfComponents();
   ulpca.WriteTransformed("outputulpcatransform");
 }
+
+/*
 
 // Too slow for bigdata set...
 TEST_F(AllPCA, RunKPCA) {

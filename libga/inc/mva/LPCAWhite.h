@@ -298,7 +298,7 @@ public:
     NewDataMatrixTransposed = NewDataMatrixTransposed.array() / devnew.array();
     std::cout << "New transformed data matrix X':\n" << NewDataMatrixTransposed
               << std::endl;
-    NewDataMatrixTransposed = dev.array() * NewDataMatrixTransposed.array();
+    NewDataMatrixTransposed = devnew.array() * NewDataMatrixTransposed.array();
     //========== Undo normalization ======================//
     for (int i = 0; i < NewDataMatrixTransposed.rows(); ++i) {
       meannew.row(i) = mean_column_centered.transpose();

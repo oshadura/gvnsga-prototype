@@ -288,7 +288,7 @@ public:
     NewDataMatrixTransposed = NewDataMatrixTransposed.array() / devnew.array();
     std::cout << "New transformed data matrix X':\n" << NewDataMatrixTransposed
               << std::endl;
-    NewDataMatrixTransposed = dev.array() * NewDataMatrixTransposed.array();
+    NewDataMatrixTransposed = devnew.array() * NewDataMatrixTransposed.array();
 #ifdef DEBUG
     //========== Undo normalization ======================//
     std::cout << "New mean vector of matrix X':\n" << meannew << std::endl
