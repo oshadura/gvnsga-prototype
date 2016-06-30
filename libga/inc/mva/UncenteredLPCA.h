@@ -222,6 +222,10 @@ public:
     X = NewDataMatrixTransposed.array().abs();
   }
 
+  void HistoFill(){
+    
+  }
+
   void Print() {
     std::cout << "Input data:\n" << X << std::endl;
 #ifdef DEBUG

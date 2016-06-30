@@ -27,15 +27,14 @@ TEST_F(Nsga2Mod, SolvingDTLZ1Problem) {
 }
 */
 
-/*
+
 TEST_F(Nsga2Mod, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
   geantvmoop::GANSGA2Mod<geantvmoop::DTLZ2> nsga(dtlz2);
-  nsga.fPopulationSize = 100;
+  nsga.fPopulationSize = 1000;
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-*/
 
 /*
 TEST_F(Nsga2Mod, SolvingDTLZ3Problem) {

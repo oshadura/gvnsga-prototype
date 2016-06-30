@@ -24,25 +24,24 @@ class GASimpleMutation : public GAMutation<GASimpleMutation> {
 
 public:
   template <typename T> static void MutationImpl(T &in, double prob = -1) {
-    double y;
     double lb = in[0].GetDownLimit();
     double ub = in[0].GetUpLimit();
     if (prob == -1)
       prob = 1 / (double)in.size();
     for (unsigned int i = 0; i < in.size(); ++i) {
       if (Random::GetInstance().RandomDouble() < prob) {
-        y = in[i].random();
+        auto y = in[i].random().GetGAValue();
         if (std::isinf(y)) {
-          in[j] = lb;
+          in[i] = lb;
         }
         if (std::isnan(y)) {
-          in[j] = ub;
+          in[i] = ub;
         }
         if (y < lb)
           y = lb;
         if (y > ub)
           y = ub;
-        in[j] = y;
+        in[i] = y;
       }
     }
   }

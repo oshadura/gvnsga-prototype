@@ -32,7 +32,7 @@ TEST_F(Nsga2ModRPCA, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
   geantvmoop::GANSGA2ModRPCA<geantvmoop::DTLZ2> nsga(dtlz2);
   nsga.fPopulationSize = 1000;
-  nsga.fMaxGeneration = 40;
+  nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
 */

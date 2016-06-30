@@ -44,6 +44,18 @@
 #include "Fit/Fitter.h"
 #include "Math/WrappedMultiTF1.h"
 #include "TRandom2.h"
+#include "TVirtualFitter.h"
+#include "TLegend.h"
+#include "TDirectory.h"
+#include "TMath.h"
+#include "TGraphAsymmErrors.h"
+#include "TMultiGraph.h"
+#include "TKey.h"
+#include "TFile.h"
+#include "THStack.h"
+#include "TMatrixD.h"
+
+#include "TGraphQQ.h"
 
 #include <vector>
 #include <iostream>
@@ -89,17 +101,185 @@ public:
     return ScattComb;
   }
 
+  // get a TCanvas with a QQ plot with confidence band
+  TCanvas *GetQQPlotCanvas(TH3F *h1, TH3F *h2) {
+
+    // Quantiles: 20
+    const int nq = 20;
+    Double_t xq[nq];  // position where to compute the quantiles in [0,1]
+    Double_t yq1[nq]; // array to contain the quantiles
+    Double_t yq2[nq]; // array to contain the quantiles
+
+    for (Int_t i = 0; i < nq; i++)
+      xq[i] = Float_t(i + 1) / nq;
+    h1->GetQuantiles(nq, yq1, xq);
+    h2->GetQuantiles(nq, yq2, xq);
+
+    Double_t xq_plus[nq];
+    Double_t xq_minus[nq];
+    Double_t yq2_plus[nq];
+    Double_t yq2_minus[nq];
+
+    /* KS_cv: KS critical value
+
+               1.36
+    KS_cv = -----------
+             sqrt( N )
+
+    Where 1.36 is for alpha = 0.05 (confidence level 1-5%=95%, about 2 sigma)
+
+    For 1 sigma (alpha=0.32, CL=68%), the value in the nominator is 0.9561, it
+    is gotten by
+    GetCriticalValue(1, 1 - 0.68).
+
+    NOTE:
+    o For 1-sample KS test (data and theoretic), N should be n
+    o For 2-sample KS test (2 data set), N should be sqrt(m*n/(m+n))! Here is
+    the case
+      m or n (size of samples) should be effective size for a histogram
+    o Critival value here is valid for only for sample size >= 80 (some
+    references say 35)
+      which means, for example, for a unweighted histogram, it must have more
+    than 80 (or 35)
+      entries filled and then confidence band is reliable.
+
+    */
+
+    float esum1 = GetEffectiveSampleSize(h1);
+    float esum2 = GetEffectiveSampleSize(h2);
+    std::cout << esum1 << std::endl;
+
+    // one sigma band
+    float KS_cv = GetCriticalValue(1, 1 - 0.68) /
+                  TMath::Sqrt((esum1 * esum2) / (esum1 + esum2));
+
+    for (Int_t i = 0; i < nq; i++)
+      xq_plus[i] = (Float_t)(xq[i] + KS_cv); // upper limit
+    for (Int_t i = 0; i < nq; i++)
+      xq_minus[i] = (Float_t)(xq[i] - KS_cv); // lower limit
+
+    h2->GetQuantiles(nq, yq2_plus, xq_plus);
+    h2->GetQuantiles(nq, yq2_minus, xq_minus);
+
+    double yq2_err_plus[nq];
+    double yq2_err_minus[nq];
+    for (Int_t i = 0; i < nq; i++) {
+      yq2_err_plus[i] = yq2_plus[i] - yq2[i];
+      yq2_err_minus[i] = yq2[i] - yq2_minus[i];
+    }
+
+    TCanvas *c = new TCanvas("c", "QQ with CL", 600, 450);
+    TGraph *gr = new TGraph(
+        nq - 1, yq1, yq2); // forget the last point, so number of points: (nq-1)
+    gr->SetLineColor(kRed + 2);
+    gr->SetMarkerColor(kRed + 2);
+    gr->SetMarkerStyle(20);
+    gr->SetTitle(Form("QQ plot; %s Quantile; %s Quantile", h1->GetName(),
+                      h2->GetName()));
+    gr->Draw("ap");
+    double x_min = gr->GetXaxis()->GetXmin();
+    double x_max = gr->GetXaxis()->GetXmax();
+    double y_min = gr->GetXaxis()->GetXmin();
+    double y_max = gr->GetXaxis()->GetXmax();
+    c->Clear();
+
+    // some debug codes:
+    //   printf("x_min: %f\n", (float)x_min);
+    //   printf("x_max: %f\n", (float)x_max);
+    //   printf("y_min: %f\n", (float)y_min);
+    //   printf("y_max: %f\n", (float)y_max);
+
+    // add confidence level band in gray
+    TGraphAsymmErrors *ge = new TGraphAsymmErrors(nq - 1, yq1, yq2, 0, 0,
+                                                  yq2_err_minus, yq2_err_plus);
+    ge->SetFillColor(17);
+
+    ///////////////////
+    // put all together
+    TMultiGraph *mg = new TMultiGraph("mg", "");
+    mg->SetMinimum(y_min);
+    mg->SetMaximum(y_max);
+    mg->Add(gr, "ap");
+    mg->Add(ge, "3");
+    mg->Add(gr, "p");
+    mg->Draw();
+
+    // a straight line y=x to be a reference
+    TF1 *f_dia = new TF1("f_dia", "x", h1->GetXaxis()->GetXmin(),
+                         h1->GetXaxis()->GetXmax());
+    f_dia->SetLineColor(9);
+    f_dia->SetLineWidth(2);
+    f_dia->SetLineStyle(2);
+    f_dia->Draw("same");
+
+    TLegend *leg = new TLegend(0.52, 0.15, 0.87, 0.35);
+    leg->SetFillColor(0);
+    leg->SetShadowColor(17);
+    leg->SetBorderSize(3);
+    leg->AddEntry(gr, "QQ points", "p");
+    leg->AddEntry(ge, "68% CL band", "f");
+    leg->AddEntry(f_dia, "Diagonal line", "l");
+    leg->Draw();
+
+    return c;
+  }
+
+  // calculate effective sample size for a histogram
+  // same way as ROOT does.
+  float GetEffectiveSampleSize(TH3F *h) {
+    TAxis *axis = h->GetXaxis();
+    Int_t last = axis->GetNbins();
+    float esum = 0;
+    float sum = 0, ew = 0, w = 0;
+    for (int bin = 1; bin <= last; bin++) {
+      sum += h->GetBinContent(bin);
+      ew = h->GetBinError(bin);
+      w += ew * ew;
+    }
+    esum = sum * sum / w;
+    return esum;
+  }
+
+  //====================================================
+  // the routine is used to calculate critical value given
+  // n and p, confidential level = 1 - p.
+  // Original Reference:
+  // http://velveeta.che.wisc.edu/octave/lists/archive//octave-sources.2003/msg00031.html
+  // I just checked it, but it is not available now...
+  double GetCriticalValue(int n, double p) {
+    double dn = 1;
+    double delta = 0.5;
+    double res;
+    res = TMath::KolmogorovProb(dn * sqrt(n));
+    while (res > 1.0001 * p || res < 0.9999 * p) {
+      if (res > 1.0001 * p)
+        dn = dn + delta;
+      if (res < 0.9999 * p)
+        dn = dn - delta;
+      delta = delta / 2.;
+      res = TMath::KolmogorovProb(dn * sqrt(n));
+    }
+    return dn;
+  }
+  //========================================================
+
   bool HistoFill(Population<F> &pop, char *hfile, int generation) {
     std::cout << "Building output statistics for generation " << generation
               << std::endl;
     char namepop[20], namefitn[20], namefile[10], namefolder[20],
-        namescatter[20], x1str[10], x2str[10], y1str[10], y2str[10],
-        nameFitLand[20], name3dhist[20], name3dhistx[20], name3dhisty[20];
+        namefolderprevious[20], namescatter[20], x1str[10], x2str[10],
+        y1str[10], y2str[10], nameFitLand[20], name3dhist[20], name3dhistx[20],
+        name3dhisty[20], name3dhistyprevious[20];
     std::vector<int> ScatterCombinationX, ScatterCombinationY;
-    // TDirectory *folder;
     TObjArray HXList(0);
     TObjArray HYList(0);
     TRandom2 random;
+    gROOT->Reset();
+    gROOT->SetStyle("Plain");
+    gStyle->SetOptStat(111111);
+    gStyle->SetOptFit(1111);
+    gStyle->SetPalette(1);
+    gStyle->SetOptTitle(0);
     sprintf(namepop, "%s%d", "PopDist", generation);
     sprintf(namefitn, "%s%d", "PopFitnessDist", generation);
     sprintf(namefolder, "%s%d", "PopulationStatisticsGeneration", generation);
@@ -122,8 +302,8 @@ public:
     PopDist->SetMarkerColor(kBlue);
     PopDist->SetMarkerSize(.6); //
     /////// Population 3 DHistogram
-    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1,
-                         20, 0, 1);
+    TH3F *h3a =
+        new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     /////// Fitness landscape
     // TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5",
     // 0,
@@ -135,8 +315,7 @@ public:
     h3a->SetMarkerSize(.6); //
     ////////////////////////////////
     /////// Population 3 DHistogram
-    TH3F *h3y =
-        new TH3F(name3dhistx, "Y1/Y2/Y3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    TH3F *h3y = new TH3F(name3dhistx, "Y1/Y2/Y3", 20, 0, 5, 20, 0, 5, 20, 0, 5);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetMarkerStyle(20);
@@ -144,8 +323,7 @@ public:
     h3y->SetMarkerSize(.6); //
     ////////////////////////////////
     /////// Population 3 DHistogram
-    TH3F *h3x =
-        new TH3F(name3dhisty, "X1/X2/X3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    TH3F *h3x = new TH3F(name3dhisty, "X1/X2/X3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     h3x->SetFillColor(kYellow); // Fill fill color to yellow
     h3x->SetFillColor(kYellow); // Fill fill color to yellow
     h3x->SetMarkerStyle(20);
@@ -217,18 +395,35 @@ public:
         myhistx->GetXaxis()->SetTitle(x1str);
         myhistx->GetYaxis()->SetTitle(x2str);
         myhistx->Fill(x1, x2);
-        /*
-        Xcanvas->Divide(2, 2);
-        Xcanvas->cd(1);
-        myhistx->DrawClone("Contz");
-        Xcanvas->cd(2);
-        myhistx->DrawClone("surf3");
-        Xcanvas->cd(3);
-        myhistx->ProfileX()->DrawClone();
-        Xcanvas->cd(4);
-        myhistx->ProfileY()->DrawClone();
-        Xcanvas->Draw();
-        */
+        ///////////////////////////////
+        // Previous generation
+        sprintf(namefolderprevious, "%s%d", "PopulationStatisticsGeneration",
+                generation - 1);
+        sprintf(name3dhistyprevious, "%s%d", "h3y", generation - 1);
+        // TString rootname = namefolderprevious + "/" + name3dhistyprevious;
+        TDirectory *dir = file.GetDirectory(namefolderprevious);
+        if (dir == 0) {
+          std::cout << "Fatal error: folder " << namefolderprevious
+                    << " does not exist." << std::endl;
+          return 0;
+        }
+        dir->cd();
+        TH3F *myhistxold = (TH3F *)gROOT->FindObject(name3dhistyprevious);
+        THStack *hs =
+            new THStack("hs", "2 distributions POpulatiion N-1 & Population N");
+        hs->Add(h3y);
+        hs->Add(myhistxold);
+        hs->Draw("nostack");
+        // draw legend
+        TLegend *leg = new TLegend(1, 1, 1, 1);
+        leg->SetFillColor(0);
+        leg->AddEntry(h3y, h3y->GetTitle(), "pl");
+        leg->AddEntry(myhistxold, myhistxold->GetTitle(), "pl");
+        leg->Draw();
+
+        TCanvas *can_qq = GetQQPlotCanvas(h3y, myhistxold);
+        can_qq->Draw();
+        file.cd(namefolder);
       }
       // Y Scatter plots
       for (int it = 0; it < ScatterCombinationY.size(); it += 2) {
@@ -276,7 +471,7 @@ public:
       function[2] = z;
       h3a->Fill(x, y, z);
       h3y->Fill(x, y, z);
-      ///Just to check...!!!
+      /// Just to check...!!!
       auto X1 = pop.GetGeneValue(i, 1);
       auto X2 = pop.GetGeneValue(i, 2);
       auto X3 = pop.GetGeneValue(i, 3);
@@ -297,6 +492,11 @@ public:
     ////////////////////
     h3a->Draw("surf3");
     h3a->Fit(FitLand);
+    TVirtualFitter *fit = TVirtualFitter::GetFitter();
+    fit->PrintResults(2, 0.);
+    TMatrixD *covMatrix =
+        new TMatrixD(pop.GetTGenes(0).size(), pop.GetTGenes(0).size(), fit->GetCovarianceMatrix());
+    covMatrix->Print();
     h3a->Write();
     ///////////////////
     h3x->Draw();

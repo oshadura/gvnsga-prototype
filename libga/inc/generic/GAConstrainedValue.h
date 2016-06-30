@@ -34,6 +34,8 @@ public:
   ~GAConstrainedValue() {}
 
   virtual void SetGAValue(const Type &value) {
+    if (value < fDown || value > fUp)
+      throw std::runtime_error("Boundary Exception.");
     /*
     if (value < fDown) {
       std::cout << "Redefining value " << value << std::endl;

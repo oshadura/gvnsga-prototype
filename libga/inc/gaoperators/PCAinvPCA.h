@@ -32,7 +32,6 @@ public:
       return result;
     }
 */
-
   template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {
     Population<F> result;

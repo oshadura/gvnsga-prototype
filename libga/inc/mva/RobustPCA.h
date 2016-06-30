@@ -157,7 +157,7 @@ public:
 
     // Parameters
     const double lambda = 1.0 / sqrt(std::max(M, N));
-    const double rho = 1.5;
+    const double rho = 1.5; // 1.5
 
     JacobiSVD<MatrixXd> svd_only_singlar_values(Y);
 

@@ -41,6 +41,7 @@
 #include "gaoperators/GATournamentSelection.h"
 #include "gaoperators/GASBXCrossover.h"
 #include "gaoperators/GAPolynomialMutation.h"
+#include "gaoperators/GASimpleMutation.h"
 #include "gaoperators/PCAinvPCA.h"
 #include "addstructures/GAComparator.h"
 #include "addstructures/GANDRank.h"
@@ -66,6 +67,7 @@ public:
   GANSGA2UPCA(F problem) : GAAlgorithm<GANSGA2UPCA<F>, F>(problem) {}
   int fPopulationSize = 10;
   double PMut = 0.2;
+  double PCross = 0.9;
   int fCurrentGeneration = 0;
 
   void InitializeImpl() {
@@ -86,7 +88,8 @@ public:
       std::cout << "Element for Crossover " << j << " and " << j + 1
                 << std::endl;
       if (Random::GetInstance().RandomDouble() < PMut)
-        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
+      //  offspring = GAPolynomialMutation::Mutation(offspring, PMut);
+        offspring = GASimpleMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
       auto last = population.size() - 1;
       std::cout << "Mutation had been happened with " << std::endl;
@@ -105,7 +108,7 @@ public:
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     std::cout << "--------------TRANFORMATION IS GOING-------------\n" << std::endl;
-    if (fCurrentGeneration > 9 && fCurrentGeneration % 2 == 0) {
+    if (fCurrentGeneration > 9 && fCurrentGeneration % 5 == 0) {
       PCAinvPCA cleanupoperator;
       population = cleanupoperator.NR(next);
     } else {
