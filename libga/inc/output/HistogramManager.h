@@ -101,168 +101,6 @@ public:
     return ScattComb;
   }
 
-  // get a TCanvas with a QQ plot with confidence band
-  TCanvas *GetQQPlotCanvas(TH3F *h1, TH3F *h2) {
-
-    // Quantiles: 20
-    const int nq = 20;
-    Double_t xq[nq];  // position where to compute the quantiles in [0,1]
-    Double_t yq1[nq]; // array to contain the quantiles
-    Double_t yq2[nq]; // array to contain the quantiles
-
-    for (Int_t i = 0; i < nq; i++)
-      xq[i] = Float_t(i + 1) / nq;
-    h1->GetQuantiles(nq, yq1, xq);
-    h2->GetQuantiles(nq, yq2, xq);
-
-    Double_t xq_plus[nq];
-    Double_t xq_minus[nq];
-    Double_t yq2_plus[nq];
-    Double_t yq2_minus[nq];
-
-    /* KS_cv: KS critical value
-
-               1.36
-    KS_cv = -----------
-             sqrt( N )
-
-    Where 1.36 is for alpha = 0.05 (confidence level 1-5%=95%, about 2 sigma)
-
-    For 1 sigma (alpha=0.32, CL=68%), the value in the nominator is 0.9561, it
-    is gotten by
-    GetCriticalValue(1, 1 - 0.68).
-
-    NOTE:
-    o For 1-sample KS test (data and theoretic), N should be n
-    o For 2-sample KS test (2 data set), N should be sqrt(m*n/(m+n))! Here is
-    the case
-      m or n (size of samples) should be effective size for a histogram
-    o Critival value here is valid for only for sample size >= 80 (some
-    references say 35)
-      which means, for example, for a unweighted histogram, it must have more
-    than 80 (or 35)
-      entries filled and then confidence band is reliable.
-
-    */
-
-    float esum1 = GetEffectiveSampleSize(h1);
-    float esum2 = GetEffectiveSampleSize(h2);
-    std::cout << esum1 << std::endl;
-
-    // one sigma band
-    float KS_cv = GetCriticalValue(1, 1 - 0.68) /
-                  TMath::Sqrt((esum1 * esum2) / (esum1 + esum2));
-
-    for (Int_t i = 0; i < nq; i++)
-      xq_plus[i] = (Float_t)(xq[i] + KS_cv); // upper limit
-    for (Int_t i = 0; i < nq; i++)
-      xq_minus[i] = (Float_t)(xq[i] - KS_cv); // lower limit
-
-    h2->GetQuantiles(nq, yq2_plus, xq_plus);
-    h2->GetQuantiles(nq, yq2_minus, xq_minus);
-
-    double yq2_err_plus[nq];
-    double yq2_err_minus[nq];
-    for (Int_t i = 0; i < nq; i++) {
-      yq2_err_plus[i] = yq2_plus[i] - yq2[i];
-      yq2_err_minus[i] = yq2[i] - yq2_minus[i];
-    }
-
-    TCanvas *c = new TCanvas("c", "QQ with CL", 600, 450);
-    TGraph *gr = new TGraph(
-        nq - 1, yq1, yq2); // forget the last point, so number of points: (nq-1)
-    gr->SetLineColor(kRed + 2);
-    gr->SetMarkerColor(kRed + 2);
-    gr->SetMarkerStyle(20);
-    gr->SetTitle(Form("QQ plot; %s Quantile; %s Quantile", h1->GetName(),
-                      h2->GetName()));
-    gr->Draw("ap");
-    double x_min = gr->GetXaxis()->GetXmin();
-    double x_max = gr->GetXaxis()->GetXmax();
-    double y_min = gr->GetXaxis()->GetXmin();
-    double y_max = gr->GetXaxis()->GetXmax();
-    c->Clear();
-
-    // some debug codes:
-    //   printf("x_min: %f\n", (float)x_min);
-    //   printf("x_max: %f\n", (float)x_max);
-    //   printf("y_min: %f\n", (float)y_min);
-    //   printf("y_max: %f\n", (float)y_max);
-
-    // add confidence level band in gray
-    TGraphAsymmErrors *ge = new TGraphAsymmErrors(nq - 1, yq1, yq2, 0, 0,
-                                                  yq2_err_minus, yq2_err_plus);
-    ge->SetFillColor(17);
-
-    ///////////////////
-    // put all together
-    TMultiGraph *mg = new TMultiGraph("mg", "");
-    mg->SetMinimum(y_min);
-    mg->SetMaximum(y_max);
-    mg->Add(gr, "ap");
-    mg->Add(ge, "3");
-    mg->Add(gr, "p");
-    mg->Draw();
-
-    // a straight line y=x to be a reference
-    TF1 *f_dia = new TF1("f_dia", "x", h1->GetXaxis()->GetXmin(),
-                         h1->GetXaxis()->GetXmax());
-    f_dia->SetLineColor(9);
-    f_dia->SetLineWidth(2);
-    f_dia->SetLineStyle(2);
-    f_dia->Draw("same");
-
-    TLegend *leg = new TLegend(0.52, 0.15, 0.87, 0.35);
-    leg->SetFillColor(0);
-    leg->SetShadowColor(17);
-    leg->SetBorderSize(3);
-    leg->AddEntry(gr, "QQ points", "p");
-    leg->AddEntry(ge, "68% CL band", "f");
-    leg->AddEntry(f_dia, "Diagonal line", "l");
-    leg->Draw();
-
-    return c;
-  }
-
-  // calculate effective sample size for a histogram
-  // same way as ROOT does.
-  float GetEffectiveSampleSize(TH3F *h) {
-    TAxis *axis = h->GetXaxis();
-    Int_t last = axis->GetNbins();
-    float esum = 0;
-    float sum = 0, ew = 0, w = 0;
-    for (int bin = 1; bin <= last; bin++) {
-      sum += h->GetBinContent(bin);
-      ew = h->GetBinError(bin);
-      w += ew * ew;
-    }
-    esum = sum * sum / w;
-    return esum;
-  }
-
-  //====================================================
-  // the routine is used to calculate critical value given
-  // n and p, confidential level = 1 - p.
-  // Original Reference:
-  // http://velveeta.che.wisc.edu/octave/lists/archive//octave-sources.2003/msg00031.html
-  // I just checked it, but it is not available now...
-  double GetCriticalValue(int n, double p) {
-    double dn = 1;
-    double delta = 0.5;
-    double res;
-    res = TMath::KolmogorovProb(dn * sqrt(n));
-    while (res > 1.0001 * p || res < 0.9999 * p) {
-      if (res > 1.0001 * p)
-        dn = dn + delta;
-      if (res < 0.9999 * p)
-        dn = dn - delta;
-      delta = delta / 2.;
-      res = TMath::KolmogorovProb(dn * sqrt(n));
-    }
-    return dn;
-  }
-  //========================================================
-
   bool HistoFill(Population<F> &pop, char *hfile, int generation) {
     std::cout << "Building output statistics for generation " << generation
               << std::endl;
@@ -397,10 +235,9 @@ public:
         myhistx->Fill(x1, x2);
         ///////////////////////////////
         // Previous generation
+        /*
         sprintf(namefolderprevious, "%s%d", "PopulationStatisticsGeneration",
                 generation - 1);
-        sprintf(name3dhistyprevious, "%s%d", "h3y", generation - 1);
-        // TString rootname = namefolderprevious + "/" + name3dhistyprevious;
         TDirectory *dir = file.GetDirectory(namefolderprevious);
         if (dir == 0) {
           std::cout << "Fatal error: folder " << namefolderprevious
@@ -409,21 +246,8 @@ public:
         }
         dir->cd();
         TH3F *myhistxold = (TH3F *)gROOT->FindObject(name3dhistyprevious);
-        THStack *hs =
-            new THStack("hs", "2 distributions POpulatiion N-1 & Population N");
-        hs->Add(h3y);
-        hs->Add(myhistxold);
-        hs->Draw("nostack");
-        // draw legend
-        TLegend *leg = new TLegend(1, 1, 1, 1);
-        leg->SetFillColor(0);
-        leg->AddEntry(h3y, h3y->GetTitle(), "pl");
-        leg->AddEntry(myhistxold, myhistxold->GetTitle(), "pl");
-        leg->Draw();
-
-        TCanvas *can_qq = GetQQPlotCanvas(h3y, myhistxold);
-        can_qq->Draw();
         file.cd(namefolder);
+        */
       }
       // Y Scatter plots
       for (int it = 0; it < ScatterCombinationY.size(); it += 2) {
@@ -492,11 +316,13 @@ public:
     ////////////////////
     h3a->Draw("surf3");
     h3a->Fit(FitLand);
+    /*
     TVirtualFitter *fit = TVirtualFitter::GetFitter();
     fit->PrintResults(2, 0.);
     TMatrixD *covMatrix =
         new TMatrixD(pop.GetTGenes(0).size(), pop.GetTGenes(0).size(), fit->GetCovarianceMatrix());
     covMatrix->Print();
+    */
     h3a->Write();
     ///////////////////
     h3x->Draw();

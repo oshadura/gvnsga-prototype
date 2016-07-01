@@ -84,7 +84,6 @@ TEST_F(AllPCA, LoadingDataLPCAByHands) {
 ////////////////////// Methods ///////////////////////////////
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
-/*
 TEST_F(AllPCA, RunLPCA) {
   lpca.LoadData("data");
   lpca.RunLPCA();
@@ -119,7 +118,7 @@ TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
 
 
 TEST_F(AllPCA, RunUncenteredLPCA) {
-  ulpca.LoadData("bigdata");
+  ulpca.LoadData("data");
   ulpca.RunUncenteredLPCA();
   ulpca.Print();
   ulpca.WriteTransformed("outputulpca");
@@ -146,7 +145,6 @@ TEST_F(AllPCA, RunUncenteredWhiteLPCAReductionofComponents) {
   uwlpca.WriteTransformed("outputulpcatransform");
 }
 
-/*
 // Too slow for bigdata set...
 TEST_F(AllPCA, RunKPCA) {
   kpca.LoadData("data");
@@ -154,12 +152,10 @@ TEST_F(AllPCA, RunKPCA) {
   kpca.Print();
   kpca.WriteTransformed("outputkpca");
 }
-*/
-/*
+
 TEST_F(AllPCA, RunRobustPCA){
   robustpca.LoadData("data");
   robustpca.RobustPCAInexact();
   robustpca.Print();
   //robustpca.WriteTransformed("outputrobustpca");
 }
-*/

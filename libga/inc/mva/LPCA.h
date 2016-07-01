@@ -389,6 +389,7 @@ public:
     for (int i = 0; i < NewDataMatrixTransposed.rows(); ++i) {
       meannew.row(i) = mean_column_centered.transpose();
     }
+
 #ifdef DEBUG
     std::cout << "New mean vector of matrix X':\n" << meannew << std::endl;
 #endif

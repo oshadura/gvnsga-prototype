@@ -25,7 +25,6 @@ TEST_F(Nsga2Mod, SolvingDTLZ1Problem) {
   nsga2mod.fMaxGeneration = 100;
   nsga2mod.SolvePF();
 }
-*/
 
 
 TEST_F(Nsga2Mod, SolvingDTLZ2Problem) {
@@ -36,7 +35,6 @@ TEST_F(Nsga2Mod, SolvingDTLZ2Problem) {
   nsga.SolvePF();
 }
 
-/*
 TEST_F(Nsga2Mod, SolvingDTLZ3Problem) {
   geantvmoop::DTLZ3 dtlz3;
   geantvmoop::GANSGA2Mod<geantvmoop::DTLZ3> nsga(dtlz3);
