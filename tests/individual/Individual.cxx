@@ -1,5 +1,5 @@
 #include "GATest.h"
-#include "problem/DTLZ1.h"
+#include "problem/DTLZ2.h"
 #include "generic/Population.h"
 #include "generic/Functions.h"
 #include "generic/TGenes.h"
@@ -9,9 +9,9 @@ public:
 };
 
 TEST_F(Individual, GeneratingIndividual) {
-  geantvmoop::TGenes<geantvmoop::DTLZ1> i;
+  geantvmoop::TGenes<geantvmoop::DTLZ2> i;
 }
 
 TEST_F(Individual, GenerationPopulation) {
-  geantvmoop::Population<geantvmoop::DTLZ1> pop;
+  geantvmoop::Population<geantvmoop::DTLZ2> pop;
 }

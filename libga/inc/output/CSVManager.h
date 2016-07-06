@@ -43,18 +43,23 @@ private:
 
 public:
   template <typename F>
-  void CSVOutput(std::string file, const Population<F> &pop) {
+  void CSVOutput(std::string file, const Population<F> &population, std::unordered_map<individual_t<F>, int> fIndRank, std::unordered_map<individual_t<F>, double> fIndCrowDist) {
     std::ofstream populationcvs;
     populationcvs.open(file.c_str(), std::fstream::app);
     // Suppose to be variadic...
-    populationcvs << "Gene1, Gene2, Gene3\n";
+    populationcvs << "Gene1, Gene2, Gene3, Gene4, Gene5, Gene6, Gene7, "
+                     "Fitness1, Fitness2, Fitness3, Rank, CrowdingDistance\n";
     // CVS format for R ananlysis..
-    for (int i = 0; i < pop.size(); ++i) {
-      auto individual = pop.GetTGenes(i);
-      for (int i = 0; i < individual.size(); ++i) {
-        auto parameter = individual[i];
-        populationcvs << parameter << ",";
+    for (int i = 0; i < population.size(); ++i) {
+      for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
+        populationcvs << population.GetGeneValue(i, j) << ",";
       }
+      for (int k = 0; k < population.GetTFitness(i).size(); ++k) {
+        populationcvs << population.GetObjectiveValue(i, k) << ",";
+      }
+      auto ind = population[i];
+      populationcvs << fIndRank[ind] << ",";
+      populationcvs << fIndCrowDist[ind];
       populationcvs << "\n";
     }
     populationcvs << "-=================-\n";

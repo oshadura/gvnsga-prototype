@@ -143,9 +143,7 @@ public:
     TH3F *h3a =
         new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     /////// Fitness landscape
-    // TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5",
-    // 0,
-    //                      100, 0, 100, 0, 100, 3);
+    //TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5", 0, 100, 0, 100, 0, 100, 3);
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
     h3a->SetMarkerStyle(20);
@@ -168,8 +166,8 @@ public:
     h3x->SetMarkerColor(kBlue);
     h3x->SetMarkerSize(.6); //
     ////////////////////////////////
-    TF3 *FitLand = new TF3(nameFitLand, F::TruePF, 0, 50, 0, 50, 0, 50, 3);
-    FitLand->SetParameters(1, 1, 1);
+    TF3 *FitLand = new TF3(nameFitLand, F::TruePF, 0, 1, 0, 1, 0, 1, 3);
+    FitLand->SetParameters(1, 1, 1, 1);
     ROOT::Fit::Fitter fitter;
     // wrapped the TF1 in a IParamMultiFunction interface for teh Fitter class
     ROOT::Math::WrappedMultiTF1 wrapperfunction(*FitLand, 3);
