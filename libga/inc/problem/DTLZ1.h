@@ -29,21 +29,13 @@ public:
 
   virtual ~DTLZ1() {}
 
-  void SetNGenes(const int i) {
-    fNGenes = i;
-  };
+  void SetNGenes(const int i) { fNGenes = i; };
 
-  void SetNObjectives(const int i) {
-    fNObjectives = i;
-  };
+  void SetNObjectives(const int i) { fNObjectives = i; };
 
-  int GetNGenes() const {
-    return fNGenes;
-  };
+  int GetNGenes() const { return fNGenes; };
 
-  int GetNObjectives() const {
-    return fNObjectives;
-  };
+  int GetNObjectives() const { return fNObjectives; };
 
 private:
   int fNGenes, fNObjectives;
@@ -66,31 +58,6 @@ public:
     int n = 7;
     int m = 3;
     int k = n - m + 1; // 5
-                       /*
-double g = 0.0;
-
-for (int i = m - 1; i < n; ++i) {
-g += pow(fParameters[i - 1] - 0.5, 2) -
-cos(20 * pi() * (fParameters[i - 1] - 0.5));
-}
-
-g = 100 * (k + g);
-
-for (int i = 0; i < m; ++i) {
-Double_t f = 0.5 * (1 + g);
-size_t j = 0;
-for (; m >= 2 + i && j <= m - 2 - i; ++j) {
-f *= fParameters[j];
-}
-if (i > 0) {
-f *= (1 - fParameters[j]);
-}
-
-auto it = fFitness.begin();
-fFitness.insert(it + i, f);
-}
-
-*/
     double g = k;
     for (std::size_t i = n - k; i < n; i++)
       g += pow(fParameters[i] - 0.5, 2) -

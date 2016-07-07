@@ -93,6 +93,13 @@ public:
         if (X.cols() < j + 1) {
           X.conservativeResize(X.rows(), j + 1);
         }
+        // Stupid thing, but it works..
+        if (std::isinf(gene.GetGAValue())) {
+          gene.SetGAValue(1);
+        }
+        if (std::isnan(gene.GetGAValue())) {
+          gene.SetGAValue(0);
+        }
         X(i, j) = gene.GetGAValue();
       }
     }
@@ -195,7 +202,7 @@ public:
     std::cout << "Printing original information after PCA" << std::endl;
     Transformed = X * eigenvectors;
     // Varince based selection (< 85 %)
-    while (totalvar <= 0.85) {
+    while (totalvar <= 0.95) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;
@@ -222,9 +229,7 @@ public:
     X = NewDataMatrixTransposed.array().abs();
   }
 
-  void HistoFill(){
-    
-  }
+  void HistoFill() {}
 
   void Print() {
     std::cout << "Input data:\n" << X << std::endl;

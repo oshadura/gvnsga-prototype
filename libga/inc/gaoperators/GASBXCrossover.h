@@ -119,8 +119,8 @@ public:
       a.SetGAValue(b.GetGAValue());
       b.SetGAValue(temp);
     }
-    std::cout << "Crossover had been happened with " << a << " and " << b
-              << std::endl;
+    // std::cout << "Crossover had been happened with " << a << " and " << b
+    //          << std::endl;
   }
 };
 }

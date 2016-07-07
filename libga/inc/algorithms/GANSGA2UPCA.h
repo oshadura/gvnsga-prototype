@@ -88,15 +88,15 @@ public:
       std::cout << "Element for Crossover " << j << " and " << j + 1
                 << std::endl;
       if (Random::GetInstance().RandomDouble() < PMut)
-      //  offspring = GAPolynomialMutation::Mutation(offspring, PMut);
+        //  offspring = GAPolynomialMutation::Mutation(offspring, PMut);
         offspring = GASimpleMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
       auto last = population.size() - 1;
-      std::cout << "Mutation had been happened with " << std::endl;
-      for (int j = 0; j < population.GetTGenes(last).size(); ++j) {
-        std::cout << population.GetGeneValue(last, j) << "|";
-      }
-      std::cout << std::endl;
+      // std::cout << "Mutation had been happened with " << std::endl;
+      // for (int j = 0; j < population.GetTGenes(last).size(); ++j) {
+      //     std::cout << population.GetGeneValue(last, j) << "|";
+      // }
+      // std::cout << std::endl;
     }
     fIndRank = GANDRank::CalculateIndicator(population);
     fIndCrowDist = GACD::CalculateIndicator(population);
@@ -107,15 +107,18 @@ public:
     Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
-    std::cout << "--------------TRANFORMATION IS GOING-------------\n" << std::endl;
-    if (fCurrentGeneration > 9 && fCurrentGeneration % 5 == 0) {
+    std::cout << "--------------TRANFORMATION IS GOING-------------\n"
+              << std::endl;
+    if (fCurrentGeneration > 9 && fCurrentGeneration % 3 == 0) {
       PCAinvPCA cleanupoperator;
       population = cleanupoperator.NR(next);
     } else {
       population = next;
     }
-    std::cout << "-----------------------------------------------\n" << std::endl;
-    std::cout << "---------------After transformation------------\n" << std::endl;
+    std::cout << "-----------------------------------------------\n"
+              << std::endl;
+    std::cout << "---------------After transformation------------\n"
+              << std::endl;
     for (int i = 0; i < population.size(); ++i) {
       std::cout << "Individual " << i << std::endl;
       for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
@@ -133,7 +136,8 @@ public:
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "Moving to next generation " << fCurrentGeneration
               << std::endl;
-    CSVManager::GetInstance().CSVOutput("output.nsgaupca", population, fIndRank, fIndCrowDist);
+    CSVManager::GetInstance().CSVOutput("output.nsgaupca", population, fIndRank,
+                                        fIndCrowDist);
     ++fCurrentGeneration;
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "---------------------------\n" << std::endl;
