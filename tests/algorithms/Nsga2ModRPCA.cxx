@@ -41,13 +41,11 @@ TEST_F(Nsga2ModRPCA, SolvingDTLZ2Problem) {
 TEST_F(Nsga2ModRPCA, SolvingDTLZ3Problem) {
   geantvmoop::DTLZ3 dtlz3;
   geantvmoop::GANSGA2ModRPCA<geantvmoop::DTLZ3> nsga(dtlz3);
-  nsga.fPopulationSize = 100;
-  nsga.fMaxGeneration = 50;
+  nsga.fPopulationSize = 1000;
+  nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-*/
 
-/*
 TEST_F(Nsga2ModRPCA, SolvingDTLZ4Problem) {
   geantvmoop::DTLZ4 dtlz4;
   geantvmoop::GANSGA2ModRPCA<geantvmoop::DTLZ4> nsga(dtlz4);

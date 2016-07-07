@@ -43,7 +43,7 @@ public:
     // Here we taking random 1 element..
     double lb = ind[0].GetDownLimit();
     double ub = ind[0].GetUpLimit();
-    std::cout << "Checking limits: " << lb << " and " << ub << std::endl;
+    //std::cout << "Checking limits: " << lb << " and " << ub << std::endl;
     for (Int_t j = 0; j < ind.size(); ++j) {
       if (rand(gen) <= prob) {
         y = ind[j].GetGAValue();
@@ -64,7 +64,7 @@ public:
                    2.0 * (fRnd - 0.5) * (pow(xy, (etamutation + 1.0)));
           fDelta = 1.0 - (pow(fValue, fMutPow));
         }
-        std::cout << "Checking new gene: " << y << std::endl;
+        //std::cout << "Checking new gene: " << y << std::endl;
         y = y + fDelta * (ub - lb);
         // std::cout << "New part of Gene<T> for Mutation() " << y << std::endl;
         if (std::isinf(y)) {

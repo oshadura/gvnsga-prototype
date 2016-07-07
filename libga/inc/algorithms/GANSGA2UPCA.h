@@ -85,11 +85,11 @@ public:
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
       individual_t<F> offspring =
           GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
-      std::cout << "Element for Crossover " << j << " and " << j + 1
-                << std::endl;
+      //std::cout << "Element for Crossover " << j << " and " << j + 1
+      //          << std::endl;
       if (Random::GetInstance().RandomDouble() < PMut)
-        //  offspring = GAPolynomialMutation::Mutation(offspring, PMut);
-        offspring = GASimpleMutation::Mutation(offspring, PMut);
+        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
+        //offspring = GASimpleMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
       auto last = population.size() - 1;
       // std::cout << "Mutation had been happened with " << std::endl;

@@ -87,8 +87,8 @@ public:
       // if (Random::GetInstance().RandomDouble() < PCross)
       individual_t<F> offspring = GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
       if (Random::GetInstance().RandomDouble() < PMut)
-        // offspring = GAPolynomialMutation::Mutation(offspring, PMut);
-        offspring = GASimpleMutation::Mutation(offspring, PMut);
+        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
+        //offspring = GASimpleMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
     }
     fIndRank = GANDRank::CalculateIndicator(population);

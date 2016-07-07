@@ -139,12 +139,8 @@ public:
     PopDist->SetMarkerStyle(20);
     PopDist->SetMarkerColor(kBlue);
     PopDist->SetMarkerSize(.6); //
-    /////// Population 3 DHistogram
-    TH3F *h3a =
-        new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1, 20, 0, 1);
-    /////// Fitness landscape
-    // TF3 *FitLand = new TF3(nameFitLand, "[0] * x + [1] * y  + [3] * z - 0.5",
-    // 0, 100, 0, 100, 0, 100, 3);
+    /////// Population 3D Histogram
+    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
     h3a->SetMarkerStyle(20);
@@ -152,7 +148,8 @@ public:
     h3a->SetMarkerSize(.6); //
     ////////////////////////////////
     /////// Population 3 DHistogram
-    TH3F *h3y = new TH3F(name3dhistx, "Y1/Y2/Y3", 20, 0, 5, 20, 0, 5, 20, 0, 5);
+    TH3F *h3y =
+        new TH3F(name3dhisty, "Y1/Y2/Y3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetMarkerStyle(20);
@@ -160,12 +157,23 @@ public:
     h3y->SetMarkerSize(.6); //
     ////////////////////////////////
     /////// Population 3 DHistogram
-    TH3F *h3x = new TH3F(name3dhisty, "X1/X2/X3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    TH3F *h3x = new TH3F(name3dhistx, "X1/X2/X3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     h3x->SetFillColor(kYellow); // Fill fill color to yellow
     h3x->SetFillColor(kYellow); // Fill fill color to yellow
     h3x->SetMarkerStyle(20);
     h3x->SetMarkerColor(kBlue);
     h3x->SetMarkerSize(.6); //
+                            ////////////////////////////////
+    // MISSING GENERATION OF DATA PREDICTION
+    ROOT::Fit::BinData data(pop.size(), 3);
+    double function[3];
+    double predictor[pop.size()];
+    double parameterspredictor[3];
+    // Predictor values for all DTLZ
+    parameterspredictor[0] = 1;
+    parameterspredictor[1] = 1;
+    parameterspredictor[2] = 1;
+    double error = 0.1;
     ////////////////////////////////
     TF3 *FitLand = new TF3(nameFitLand, F::TruePF, 0, 1, 0, 1, 0, 1, 3);
     FitLand->SetParameters(1, 1, 1);
@@ -173,12 +181,7 @@ public:
     // wrapped the TF1 in a IParamMultiFunction interface for teh Fitter class
     ROOT::Math::WrappedMultiTF1 wrapperfunction(*FitLand, 3);
     fitter.SetFunction(wrapperfunction);
-    ROOT::Fit::BinData data(pop.size(), 3);
-    double function[3];
-    double predictor[pop.size()];
-    double error = 0.1;
     ////// Preparation for scatter combination
-    // std::cout << "Lets check Scatter combination vector" << std::endl;
     ScatterCombinationX =
         ScatterCombinationCalculator(pop.GetTGenes(0).size(), 2);
     ScatterCombinationY =
@@ -194,16 +197,9 @@ public:
     PopFitnessDist->SetMarkerStyle(20);
     PopFitnessDist->SetMarkerColor(kBlue);
     PopFitnessDist->SetMarkerSize(.6); //
-    //////// Canvas distribution
-    // TCanvas *Xcanvas = new TCanvas("Xcanvas");
-    ////////////////////////////////////////////////////////////////
-    /*
-    for (auto i : ScatterCombination)
-      std::cout << i << ' ';
-    std::cout << std::endl;
-    */
     /////////////////////////////////////////////////////////////////
     for (int i = 0; i < pop.size(); ++i) {
+      double genearray[pop.GetTGenes(0).size()];
       // X Scatter plots
       for (int it = 0; it < ScatterCombinationX.size(); it += 2) {
         // Taking correct X ID
@@ -282,25 +278,26 @@ public:
       for (int j = 0; j < pop.GetTGenes(0).size(); ++j) {
         auto ind = pop.GetGeneValue(i, j);
         auto fitness = pop.GetObjectiveValue(i, j);
+        genearray[j] = ind;
         PopDist->Fill(ind);
         PopFitnessDist->Fill(fitness);
       }
-      // for TGraph2D - ONLY DTLZ1 - 3 objectives
-      auto x = pop.GetObjectiveValue(i, 1);
-      auto y = pop.GetObjectiveValue(i, 2);
-      auto z = pop.GetObjectiveValue(i, 3);
+      // for TGraph2D - ONLY DTLZ - 3 objectives
+      //////////////////////////////////////////
+      // DATA + PREDICTOR for FIT
+      auto x = pop.GetObjectiveValue(i, 0);
+      auto y = pop.GetObjectiveValue(i, 1);
+      auto z = pop.GetObjectiveValue(i, 2);
       function[0] = x;
       function[1] = y;
       function[2] = z;
       h3a->Fill(x, y, z);
       h3y->Fill(x, y, z);
-      /// Just to check...!!!
-      auto X1 = pop.GetGeneValue(i, 1);
-      auto X2 = pop.GetGeneValue(i, 2);
-      auto X3 = pop.GetGeneValue(i, 3);
+      auto X1 = pop.GetGeneValue(i, 0);
+      auto X2 = pop.GetGeneValue(i, 1);
+      auto X3 = pop.GetGeneValue(i, 2);
       h3x->Fill(X1, X2, X3);
-      // predictor DTZ1
-      predictor[i] = x + y + z - 0.5 + random.Gaus(0, error);
+      predictor[i] = F::TruePF(genearray, parameterspredictor) + random.Gaus(0, error);
       // add the 3d-data coordinate, the predictor value  and its errors
       data.Add(function, predictor[i], error);
     }

@@ -101,7 +101,7 @@ public:
     }
     std::cout << "Moving to next generation " << fCurrentGeneration
               << std::endl;
-    CSVManager::GetInstance().CSVOutput("output.nsgarobustpca", population);
+    CSVManager::GetInstance().CSVOutput("output.nsgarobustpca", population, fIndRank, fIndCrowDist);
     ++fCurrentGeneration;
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "---------------------------\n" << std::endl;
