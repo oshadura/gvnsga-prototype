@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __UncenteredLPCA__
-#define __UncenteredLPCA__
+#ifndef __UncenteredTrickLPCA__
+#define __UncenteredTrickLPCA__
 
 #include <fstream>
 #include <iostream>
@@ -24,11 +24,11 @@ namespace geantvmoop {
 
 using namespace Eigen;
 
-class UncenteredLPCA : public PCA<UncenteredLPCA> {
+class UncenteredTrickLPCA : public PCA<UncenteredTrickLPCA> {
 
 private:
-  MatrixXd X, C, K, eigenvectors, Transformed, covariance, dev, mean, devnew,
-      meannew;
+  MatrixXd X, Xtrick, C, K, eigenvectors, Transformed, covariance, dev, mean,
+      devnew, meannew;
   VectorXd eigenvalues, cumulative, stddev, colmean, stddevnew, colmeannew;
   unsigned int normalise;
 
@@ -36,11 +36,11 @@ public:
   // We need to normalize for
   // \hat{U}^{\,t }\cdot  \hat{U}=  \hat I, \quad {U}^{\,t }_{i,i'}
   // {U}_{i',j}=\delta_{i,j}.
-  UncenteredLPCA() : normalise(0) {}
+  UncenteredTrickLPCA() : normalise(1) {}
 
-  explicit UncenteredLPCA(MatrixXd &d) : normalise(1) { X = d; }
+  explicit UncenteredTrickLPCA(MatrixXd &d) : normalise(1) { X = d; }
 
-  virtual ~UncenteredLPCA() {}
+  virtual ~UncenteredTrickLPCA() {}
 
   void SetNormalise(const int i) { normalise = i; };
   MatrixXd &GetTransformed() { return Transformed; }
@@ -50,7 +50,7 @@ public:
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {
     Population<F> result;
     UploadPopulation(pop);
-    RunUncenteredLPCAWithReductionOfComponents();
+    RunUncenteredTrickLPCAWithReductionOfComponents();
     UnloadPopulation(result, X);
     return result;
   }
@@ -77,6 +77,8 @@ public:
         row++;
       }
       reader.close();
+      Xtrick = X;
+      X = X.rightCols(X.cols() - 2);
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
     }
@@ -103,6 +105,8 @@ public:
         X(i, j) = gene.GetGAValue();
       }
     }
+    Xtrick = X;
+    X = X.rightCols(X.cols() - 2);
     std::string sep = "\n----------------------------------------\n";
     std::cout << X << sep;
   }
@@ -110,12 +114,17 @@ public:
   template <typename F>
   void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
     typename F::Input ind;
+    MatrixXd population;
+    population.conservativeResize(Xtrick.cols(), Xtrick.rows());
+    // population.leftCols(2) = Xtrick.leftCols(2);
+    // population.rightCols(X.cols() - 2) = data;
+    population << Xtrick.leftCols(2), data;
     std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";
-    for (int i = 0; i < data.rows(); ++i) {
-      for (int j = 0; j < data.cols(); ++j) {
+    for (int i = 0; i < population.rows(); ++i) {
+      for (int j = 0; j < population.cols(); ++j) {
         std::cout << "Gene to be added in a population[" << i << "," << j
-                  << "] is " << data(i, j) << std::endl;
+                  << "] is " << population(i, j) << std::endl;
         ind.push_back(data(i, j));
       }
       std::cout << "New gene added." << std::endl;
@@ -126,7 +135,7 @@ public:
     newpop = Population<F>(poplist);
   }
 
-  void RunUncenteredLPCA() {
+  void RunUncenteredTrickLPCA() {
     C = (X.adjoint() * X) / double(X.rows());
     EigenSolver<MatrixXd> edecomp(C);
     // Eigen values
@@ -166,7 +175,7 @@ public:
     Transformed = X * eigenvectors;
   }
 
-  void RunUncenteredLPCAWithReductionOfComponents() {
+  void RunUncenteredTrickLPCAWithReductionOfComponents() {
     double totalvar = 0;
     int i = 0;
     C = (X.adjoint() * X) / double(X.rows());
@@ -227,6 +236,7 @@ public:
     std::cout << "Transformed data matrix:\n" << NewDataMatrixTransposed
               << std::endl;
     X = NewDataMatrixTransposed.array().abs();
+    std::cout << "Done." << std::endl;
   }
 
   void HistoFill() {}

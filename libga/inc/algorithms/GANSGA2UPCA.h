@@ -66,7 +66,7 @@ private:
 public:
   GANSGA2UPCA(F problem) : GAAlgorithm<GANSGA2UPCA<F>, F>(problem) {}
   int fPopulationSize = 10;
-  double PMut = 0.2;
+  double PMut = 0.6;
   double PCross = 0.9;
   int fCurrentGeneration = 0;
 
@@ -85,11 +85,11 @@ public:
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
       individual_t<F> offspring =
           GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
-      //std::cout << "Element for Crossover " << j << " and " << j + 1
+      // std::cout << "Element for Crossover " << j << " and " << j + 1
       //          << std::endl;
       if (Random::GetInstance().RandomDouble() < PMut)
         offspring = GAPolynomialMutation::Mutation(offspring, PMut);
-        //offspring = GASimpleMutation::Mutation(offspring, PMut);
+      // offspring = GASimpleMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
       auto last = population.size() - 1;
       // std::cout << "Mutation had been happened with " << std::endl;
@@ -109,9 +109,14 @@ public:
       next.push_back(population[l]);
     std::cout << "--------------TRANFORMATION IS GOING-------------\n"
               << std::endl;
-    if (fCurrentGeneration > 9 && fCurrentGeneration % 3 == 0) {
+    if (fCurrentGeneration > 1 && fCurrentGeneration % 1 == 0) {
       PCAinvPCA cleanupoperator;
       population = cleanupoperator.NR(next);
+      // Modification to avoid 0 equal ranks and crowding distance
+      fIndRank = GANDRank::CalculateIndicator(population);
+      fIndCrowDist = GACD::CalculateIndicator(population);
+      GAComparator<F> comp(&fIndRank, &fIndCrowDist);
+      std::sort(population.begin(), population.end(), comp);
     } else {
       population = next;
     }

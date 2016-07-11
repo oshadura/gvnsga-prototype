@@ -140,7 +140,8 @@ public:
     PopDist->SetMarkerColor(kBlue);
     PopDist->SetMarkerSize(.6); //
     /////// Population 3D Histogram
-    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, 0, 100, 20, 0, 100,
+                         20, 0, 100);
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
     h3a->SetMarkerStyle(20);
@@ -148,8 +149,7 @@ public:
     h3a->SetMarkerSize(.6); //
     ////////////////////////////////
     /////// Population 3 DHistogram
-    TH3F *h3y =
-        new TH3F(name3dhisty, "Y1/Y2/Y3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetMarkerStyle(20);
@@ -297,7 +297,8 @@ public:
       auto X2 = pop.GetGeneValue(i, 1);
       auto X3 = pop.GetGeneValue(i, 2);
       h3x->Fill(X1, X2, X3);
-      predictor[i] = F::TruePF(genearray, parameterspredictor) + random.Gaus(0, error);
+      predictor[i] =
+          F::TruePF(genearray, parameterspredictor) + random.Gaus(0, error);
       // add the 3d-data coordinate, the predictor value  and its errors
       data.Add(function, predictor[i], error);
     }
