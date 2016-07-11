@@ -115,17 +115,18 @@ public:
   void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
     typename F::Input ind;
     MatrixXd population;
-    population.conservativeResize(Xtrick.cols(), Xtrick.rows());
+    population.conservativeResize(Xtrick.rows(), Xtrick.cols());
     // population.leftCols(2) = Xtrick.leftCols(2);
     // population.rightCols(X.cols() - 2) = data;
     population << Xtrick.leftCols(2), data;
+    std::cout << "Finally..\n" << population << std::endl;
     std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < population.rows(); ++i) {
       for (int j = 0; j < population.cols(); ++j) {
         std::cout << "Gene to be added in a population[" << i << "," << j
                   << "] is " << population(i, j) << std::endl;
-        ind.push_back(data(i, j));
+        ind.push_back(population(i, j));
       }
       std::cout << "New gene added." << std::endl;
       TGenes<F> newind = ind;
