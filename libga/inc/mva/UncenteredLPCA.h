@@ -36,7 +36,7 @@ public:
   // We need to normalize for
   // \hat{U}^{\,t }\cdot  \hat{U}=  \hat I, \quad {U}^{\,t }_{i,i'}
   // {U}_{i',j}=\delta_{i,j}.
-  UncenteredLPCA() : normalise(0) {}
+  UncenteredLPCA() : normalise(1) {}
 
   explicit UncenteredLPCA(MatrixXd &d) : normalise(1) { X = d; }
 

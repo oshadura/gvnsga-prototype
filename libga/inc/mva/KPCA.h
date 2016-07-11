@@ -248,7 +248,7 @@ public:
       }
     }
     std::cout << "Sorted eigenvectors:\n" << eigenvectors << std::endl;
-    std::cout << "Transformed data:\n" << X * eigenvectors << std::endl;
+    //std::cout << "Transformed data:\n" << X * eigenvectors << std::endl;
     // std::cout << "Transformed centred data:\n" << transformed << std::endl;
   }
 

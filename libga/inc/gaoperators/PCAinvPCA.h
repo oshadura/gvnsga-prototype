@@ -8,6 +8,7 @@
 #include "mva/LPCA.h"
 #include "mva/KPCA.h"
 #include "mva/RobustPCA.h"
+#include "mva/RobustTrickPCA.h"
 #include "mva/UncenteredLPCA.h"
 #include "mva/UncenteredTrickLPCA.h"
 
@@ -32,6 +33,14 @@ public:
       result = robustpca.MVA(population);
       return result;
     }
+
+        template <typename F>
+    Population<F> NoiseReductionImpl(Population<F> &population) {
+      Population<F> result;
+      RobustTrickPCA robustpca;
+      result = robustpca.MVA(population);
+      return result;
+    }
 */
   /*
     template <typename F>
@@ -42,7 +51,6 @@ public:
       return result;
     }
     */
-
   template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {
     Population<F> result;
@@ -50,6 +58,7 @@ public:
     result = ulpca.MVA(population);
     return result;
   }
+  
 };
 }
 

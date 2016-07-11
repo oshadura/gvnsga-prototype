@@ -7,6 +7,7 @@
 #include "problem/DTLZ6.h"
 #include "problem/DTLZ7.h"
 #include "problem/Shwefel.h"
+#include "problem/UFC9.h"
 #include "generic/Population.h"
 #include "generic/Functions.h"
 #include "generic/TGenes.h"
@@ -61,8 +62,8 @@ TEST_F(Nsga2upca, SolvingDTLZ4Problem) {
 TEST_F(Nsga2upca, SolvingDTLZ5Problem) {
   geantvmoop::DTLZ5 dtlz5;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ5> nsga(dtlz5);
-  nsga.fPopulationSize = 1000;
-  nsga.fMaxGeneration = 100;
+  nsga.fPopulationSize = 100;
+  nsga.fMaxGeneration = 200;
   nsga.SolvePF();
 }
 
@@ -76,9 +77,18 @@ TEST_F(Nsga2upca, SolvingDTLZ6Problem) {
 
 TEST_F(Nsga2upca, SolvingDTLZ7Problem) {
   geantvmoop::DTLZ7 dtlz7;
-  geantvmoop::GANSGA2upca<geantvmoop::DTLZ7> nsga(dtlz7);
-  nsga.fPopulationSize = 10;
-  nsga.fMaxGeneration = 10;
+  geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ7> nsga(dtlz7);
+  nsga.fPopulationSize = 1000;
+  nsga.fMaxGeneration = 100;
+  nsga.SolvePF();
+}
+
+/*
+TEST_F(Nsga2upca, SolvingDTLZ7Problem) {
+  geantvmoop::UFC9 dtlz7;
+  geantvmoop::GANSGA2UPCA<geantvmoop::UFC9> nsga(dtlz7);
+  nsga.fPopulationSize = 1000;
+  nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
 */
