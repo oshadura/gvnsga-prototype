@@ -175,6 +175,13 @@ public:
     MatrixXd WhiteMod = eigenvectors * eigenval.inverse() *
                std::sqrt(X.rows());
     Transformed = WhiteMod * Transformed.transpose();
+        // Checkout if we are right 
+    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
+    NewDataMatrix = eigenvectors * Transformed.transpose();
+    NewDataMatrixTransposed = NewDataMatrix.transpose();
+    std::cout << "Transformed back data matrix:\n" << NewDataMatrixTransposed
+              << std::endl;
+    X = NewDataMatrixTransposed.array();
   }
 
   void RunLPCAWhiteWithReductionOfComponents() {

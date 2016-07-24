@@ -165,7 +165,13 @@ public:
       eigenvectors.col(i) = fEigenValues[i].second;
     }
     Transformed = X * eigenvectors;
-    X = Transformed;
+    // Checkout if we are right 
+    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
+    NewDataMatrix = eigenvectors * Transformed.transpose();
+    NewDataMatrixTransposed = NewDataMatrix.transpose();
+    std::cout << "Transformed back data matrix:\n" << NewDataMatrixTransposed
+              << std::endl;
+    X = NewDataMatrixTransposed.array();
   }
 
   void RunLPCAWithReductionOfComponents() {
@@ -359,7 +365,7 @@ public:
     Print();
     //================ Inverse LPCA =================//
     // Varince based selection (< 80 %)
-    while (totalvar <= 0.80) {
+    while (totalvar <= 0.95) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
       cumulative(i) = c;

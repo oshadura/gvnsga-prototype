@@ -78,7 +78,7 @@ public:
       }
       reader.close();
       Xtrick = X;
-      X = X.rightCols(X.cols() - 2);
+      X = X.rightCols(X.cols() - 1); // should be 2
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
     }
@@ -106,7 +106,7 @@ public:
       }
     }
     Xtrick = X;
-    X = X.rightCols(X.cols() - 2);
+    X = X.rightCols(X.cols() - 1); // should be
     std::string sep = "\n----------------------------------------\n";
     std::cout << X << sep;
   }
@@ -174,6 +174,12 @@ public:
       eigenvectors.col(i) = fEigenValues[i].second;
     }
     Transformed = X * eigenvectors;
+        // Checkout if we are right
+    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
+    NewDataMatrix = eigenvectors * Transformed.transpose();
+    NewDataMatrixTransposed = NewDataMatrix.transpose();
+    std::cout << "CHECK:::::::::::Transformed back data matrix:\n" << NewDataMatrixTransposed
+              << std::endl;
   }
 
   void RunUncenteredTrickLPCAWithReductionOfComponents() {
@@ -240,10 +246,8 @@ public:
     std::cout << "Done." << std::endl;
   }
 
-  void HistoFill() {}
-
   void Print() {
-    std::cout << "Input data:\n" << X << std::endl;
+    std::cout << "Input data:\n" << Xtrick << std::endl;
 #ifdef DEBUG
     std::cout << "Mean of columns:\n" << colmean << std::endl;
 #endif

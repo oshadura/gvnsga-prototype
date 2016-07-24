@@ -42,7 +42,9 @@ public:
 
   virtual ~UncenteredLPCA() {}
 
-  void SetNormalise(const int i) { normalise = i; };
+  void SetNormalise(const int i) {
+    normalise = i;
+  };
   MatrixXd &GetTransformed() { return Transformed; }
 
   MatrixXd &GetX() { return X; }
@@ -110,7 +112,7 @@ public:
   template <typename F>
   void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
     typename F::Input ind;
-    std::vector<individual_t<F>> poplist;
+    std::vector<individual_t<F> > poplist;
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < data.rows(); ++i) {
       for (int j = 0; j < data.cols(); ++j) {
@@ -120,7 +122,7 @@ public:
       }
       std::cout << "New gene added." << std::endl;
       TGenes<F> newind = ind;
-      poplist.push_back(std::make_shared<geantvmoop::TGenes<F>>(newind));
+      poplist.push_back(std::make_shared<geantvmoop::TGenes<F> >(newind));
       ind.clear();
     }
     newpop = Population<F>(poplist);
@@ -135,7 +137,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd>> fEigenValues;
+    std::vector<std::pair<double, VectorXd> > fEigenValues;
     double c = 0.0;
 
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
@@ -147,16 +149,15 @@ public:
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
     // Sorting Eigen pairs [eigenvalue, eigenvector]
-    // Sorting Eigen pairs [eigenvalue, eigenvector]
     std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> &a,
                  const std::pair<double, VectorXd> &b) {
-                if (a.first > b.first)
-                  return true;
-                if (a.first == b.first)
-                  return a.first > b.first;
-                return false;
-              });
+      if (a.first > b.first)
+        return true;
+      if (a.first == b.first)
+        return a.first > b.first;
+      return false;
+    });
     for (unsigned int i = 0; i < fEigenValues.size(); i++) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
@@ -164,6 +165,13 @@ public:
       eigenvectors.col(i) = fEigenValues[i].second;
     }
     Transformed = X * eigenvectors;
+    // Checkout if we are right
+    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
+    NewDataMatrix = eigenvectors * Transformed.transpose();
+    NewDataMatrixTransposed = NewDataMatrix.transpose();
+    std::cout << "Transformed back data matrix:\n" << NewDataMatrixTransposed
+              << std::endl;
+    X = NewDataMatrixTransposed.array();
   }
 
   void RunUncenteredLPCAWithReductionOfComponents() {
@@ -177,7 +185,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd>> fEigenValues;
+    std::vector<std::pair<double, VectorXd> > fEigenValues;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
@@ -192,12 +200,12 @@ public:
     std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> &a,
                  const std::pair<double, VectorXd> &b) {
-                if (a.first > b.first)
-                  return true;
-                if (a.first == b.first)
-                  return a.first > b.first;
-                return false;
-              });
+      if (a.first > b.first)
+        return true;
+      if (a.first == b.first)
+        return a.first > b.first;
+      return false;
+    });
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     Transformed = X * eigenvectors;

@@ -10,6 +10,7 @@
 #include "mva/RobustPCA.h"
 #include "mva/UncenteredLPCA.h"
 #include "mva/UncenteredWhiteLPCA.h"
+#include "mva/UncenteredTrickLPCA.h"
 
 
 using namespace Eigen;
@@ -23,6 +24,8 @@ public:
   geantvmoop::RobustPCA robustpca;
   geantvmoop::UncenteredLPCA ulpca;
   geantvmoop::UncenteredWhiteLPCA uwlpca;
+  geantvmoop::UncenteredTrickLPCA twlpca;
+
 
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
@@ -143,6 +146,20 @@ TEST_F(AllPCA, RunUncenteredWhiteLPCAReductionofComponents) {
   uwlpca.LoadData("data");
   uwlpca.RunUncenteredWhiteLPCAWithReductionOfComponents();
   uwlpca.WriteTransformed("outputulpcatransform");
+}
+
+TEST_F(AllPCA, RunUncenteredTrickLPCA) {
+  twlpca.LoadData("data");
+  twlpca.RunUncenteredTrickLPCA();
+  twlpca.Print();
+  twlpca.WriteTransformed("outputtlpca");
+}
+
+
+TEST_F(AllPCA, RunUncenteredTrickLPCAReductionofComponents) {
+  twlpca.LoadData("data");
+  twlpca.RunUncenteredTrickLPCAWithReductionOfComponents();
+  twlpca.WriteTransformed("outputtlpcatransform");
 }
 
 // Too slow for bigdata set...
