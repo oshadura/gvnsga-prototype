@@ -26,7 +26,6 @@ public:
   geantvmoop::UncenteredWhiteLPCA uwlpca;
   geantvmoop::UncenteredTrickLPCA twlpca;
 
-
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 

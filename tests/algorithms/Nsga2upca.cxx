@@ -18,15 +18,15 @@
 class Nsga2upca : public GATest {
 public:
 };
-/*
-TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
-  geantvmoop::DTLZ1 dtlz1;
-  geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ1> nsga2upca(dtlz1);
-  nsga2upca.fPopulationSize = 1000;
-  nsga2upca.fMaxGeneration = 100;
+
+TEST_F(Nsga2upca, SolvingShwefelProblem) {
+  geantvmoop::Shwefel shw;
+  geantvmoop::GANSGA2UPCA<geantvmoop::Shwefel> nsga2upca(shw);
+  nsga2upca.fPopulationSize = 100;
+  nsga2upca.fMaxGeneration = 30;
   nsga2upca.SolvePF();
 }
-
+/*
 TEST_F(Nsga2upca, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ2> nsga(dtlz2);

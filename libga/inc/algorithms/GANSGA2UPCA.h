@@ -73,6 +73,22 @@ public:
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
     population = Population<F>{fPopulationSize};
+    /*
+    for (int i = 0; i < population.size(); ++i) {
+      std::cout << "Individual " << i << std::endl;
+      for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
+        std::cout << GREEN << population.GetGeneValue(i, j) << "|";
+      }
+      std::cout << RESET << "\nFitness function value: " << std::endl;
+      for (int k = 0; k < population.GetTFitness(i).size(); ++k) {
+        std::cout << BLUE << population.GetObjectiveValue(i, k) << "|";
+      }
+      auto ind = population[i];
+      std::cout << RESET << "\n| Rank: " << RED << fIndRank[ind] << RESET
+                << " | Crowding distance value: ";
+      std::cout << MAGENTA << fIndCrowDist[ind] << RESET << std::endl;
+    }
+    */
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
   }

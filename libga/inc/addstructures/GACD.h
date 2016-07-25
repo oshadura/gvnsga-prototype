@@ -50,12 +50,15 @@ public:
 
   template <typename T>
   static Map<T> CalculateIndicatorImpl(const Population<T> &pop,
-                                   std::vector<double> &fMin,
-                                   std::vector<double> &fMax) {
+                                       std::vector<double> &fMin,
+                                       std::vector<double> &fMax) {
     Map<T> fMap;
     for (auto it = pop.begin(); it != pop.end(); ++it)
       fMap[*it] = 0;
     int numOfObjectives = pop[0]->GetOutput().size();
+    std::cout << "Number of objectives " << numOfObjectives << std::endl;
+    std::cout << "fMin " << fMin.size() << std::endl;
+    std::cout << "fMax " << fMin.size() << std::endl;
     if (fMin.size() != numOfObjectives || fMax.size() != numOfObjectives)
       throw std::runtime_error(
           "The boundary size and objective size does not match!");

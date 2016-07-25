@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __PROBLEMSHWEFEL__
-#define __PROBLEMSHWEFEL__
+#ifndef __PROBLEMF48__
+#define __PROBLEMF48__
 
 #include "generic/TGenes.h"
 #include "generic/Population.h"
@@ -18,7 +18,7 @@
 
 namespace geantvmoop {
 
-class Shwefel : public Functions<Shwefel> {
+class F48 : public Functions<F48> {
 
 public:
   typedef GAVector<GADouble> Input;
