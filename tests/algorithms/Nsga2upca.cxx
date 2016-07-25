@@ -8,6 +8,7 @@
 #include "problem/DTLZ7.h"
 #include "problem/Shwefel.h"
 #include "problem/UFC9.h"
+#include "problem/Kursawe.h"
 #include "generic/Population.h"
 #include "generic/Functions.h"
 #include "generic/TGenes.h"
@@ -19,9 +20,9 @@ class Nsga2upca : public GATest {
 public:
 };
 
-TEST_F(Nsga2upca, SolvingShwefelProblem) {
-  geantvmoop::Shwefel shw;
-  geantvmoop::GANSGA2UPCA<geantvmoop::Shwefel> nsga2upca(shw);
+TEST_F(Nsga2upca, SolvingKursaweProblem) {
+  geantvmoop::Kursawe kurs;
+  geantvmoop::GANSGA2UPCA<geantvmoop::Kursawe> nsga2upca(kurs);
   nsga2upca.fPopulationSize = 100;
   nsga2upca.fMaxGeneration = 30;
   nsga2upca.SolvePF();

@@ -118,6 +118,8 @@ public:
     population.conservativeResize(Xtrick.rows(), Xtrick.cols());
     // population.leftCols(2) = Xtrick.leftCols(2);
     // population.rightCols(X.cols() - 2) = data;
+    std::cout << Xtrick.leftCols(2) << std::cout;
+    std::cout << data << std::cout;
     population << Xtrick.leftCols(2), data;
     std::cout << "Finally..\n" << population << std::endl;
     std::vector<individual_t<F>> poplist;
@@ -174,12 +176,12 @@ public:
       eigenvectors.col(i) = fEigenValues[i].second;
     }
     Transformed = X * eigenvectors;
-        // Checkout if we are right
+    // Checkout if we are right
     MatrixXd NewDataMatrix, NewDataMatrixTransposed;
     NewDataMatrix = eigenvectors * Transformed.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();
-    std::cout << "CHECK:::::::::::Transformed back data matrix:\n" << NewDataMatrixTransposed
-              << std::endl;
+    std::cout << "CHECK:::::::::::Transformed back data matrix:\n"
+              << NewDataMatrixTransposed << std::endl;
   }
 
   void RunUncenteredTrickLPCAWithReductionOfComponents() {
@@ -242,7 +244,7 @@ public:
     NewDataMatrixTransposed = NewDataMatrix.transpose();
     std::cout << "Transformed data matrix:\n" << NewDataMatrixTransposed
               << std::endl;
-    X = NewDataMatrixTransposed.array().abs();
+    X = NewDataMatrixTransposed /*.array().abs()*/;
     std::cout << "Done." << std::endl;
   }
 

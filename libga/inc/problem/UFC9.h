@@ -39,7 +39,9 @@ public:
     sum1 = sum2 = sum3 = 0.0;
     count1 = count2 = count3 = 0;
     for (j = 3; j <= fParameters.size(); j++) {
-      yj = fParameters[j - 1] - 2.0 * fParameters[1] * sin(2.0 * pi() * fParameters[0] + j * pi() / fParameters.size());
+      yj = fParameters[j - 1] -
+           2.0 * fParameters[1] *
+               sin(2.0 * pi() * fParameters[0] + j * pi() / fParameters.size());
       if (j % 3 == 1) {
         sum1 += yj * yj;
         count1++;
@@ -51,12 +53,15 @@ public:
         count3++;
       }
     }
-    yj = (0.5 + E) * (1.0 - 4.0 * (2.0 * fParameters[0] - 1.0) * (2.0 * fParameters[0] - 1.0));
+    yj = (0.5 + E) *
+         (1.0 -
+          4.0 * (2.0 * fParameters[0] - 1.0) * (2.0 * fParameters[0] - 1.0));
     if (yj < 0.0)
       yj = 0.0;
-    fFitness[0] = 0.5 * (yj + 2 * fParameters[0]) * fParameters[1] + 2.0 * sum1 / (double)count1;
-    fFitness[1] =
-        0.5 * (yj - 2 * fParameters[0] + 2.0) * fParameters[1] + 2.0 * sum2 / (double)count2;
+    fFitness[0] = 0.5 * (yj + 2 * fParameters[0]) * fParameters[1] +
+                  2.0 * sum1 / (double)count1;
+    fFitness[1] = 0.5 * (yj - 2 * fParameters[0] + 2.0) * fParameters[1] +
+                  2.0 * sum2 / (double)count2;
     fFitness[2] = 1.0 - fParameters[1] + 2.0 * sum3 / (double)count3;
     return fFitness;
   }
