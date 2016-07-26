@@ -23,8 +23,8 @@ public:
 TEST_F(Nsga2upca, SolvingKursaweProblem) {
   geantvmoop::Kursawe kurs;
   geantvmoop::GANSGA2UPCA<geantvmoop::Kursawe> nsga2upca(kurs);
-  nsga2upca.fPopulationSize = 100;
-  nsga2upca.fMaxGeneration = 30;
+  nsga2upca.fPopulationSize = 1000;
+  nsga2upca.fMaxGeneration = 100;
   nsga2upca.SolvePF();
 }
 /*
