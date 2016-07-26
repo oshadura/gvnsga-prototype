@@ -7,7 +7,6 @@
 #pragma link C++ nestedclass;
 #pragma link C++ nestedtypedef;
 
-
 #pragma link C++ namespace geantvmoop;
 
 #pragma link C++ class GACD + ;
@@ -59,15 +58,14 @@
 // csv.h
 #pragma link C++ class CSVManager + ;
 
-#pragma link C++ class HistogramManager<RunGeantV> + ;
-#pragma link C++ class HistogramManager<DTLZ1> + ;
-#pragma link C++ class HistogramManager<DTLZ2> + ;
-#pragma link C++ class HistogramManager<DTLZ3> + ;
-#pragma link C++ class HistogramManager<DTLZ4> + ;
-#pragma link C++ class HistogramManager<DTLZ5> + ;
-#pragma link C++ class HistogramManager<DTLZ6> + ;
-#pragma link C++ class HistogramManager<DTLZ7> + ;
-
+#pragma link C++ class HistogramManager < RunGeantV > +;
+#pragma link C++ class HistogramManager < DTLZ1 > +;
+#pragma link C++ class HistogramManager < DTLZ2 > +;
+#pragma link C++ class HistogramManager < DTLZ3 > +;
+#pragma link C++ class HistogramManager < DTLZ4 > +;
+#pragma link C++ class HistogramManager < DTLZ5 > +;
+#pragma link C++ class HistogramManager < DTLZ6 > +;
+#pragma link C++ class HistogramManager < DTLZ7 > +;
 
 #pragma link C++ class DTLZ1;
 #pragma link C++ class DTLZ2;

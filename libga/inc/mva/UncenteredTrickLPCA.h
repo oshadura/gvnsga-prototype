@@ -3,18 +3,18 @@
 #ifndef __UncenteredTrickLPCA__
 #define __UncenteredTrickLPCA__
 
-#include <fstream>
-#include <iostream>
-#include <cmath>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
+#include <cmath>
+#include <fstream>
+#include <iostream>
 
 #include <unsupported/Eigen/MatrixFunctions>
 
+#include "generic/GADouble.h"
+#include "generic/GAVector.h"
 #include "generic/Population.h"
 #include "generic/TGenes.h"
-#include "generic/GAVector.h"
-#include "generic/GADouble.h"
 
 #include "PCA.h"
 
@@ -42,9 +42,7 @@ public:
 
   virtual ~UncenteredTrickLPCA() {}
 
-  void SetNormalise(const int i) {
-    normalise = i;
-  };
+  void SetNormalise(const int i) { normalise = i; };
   MatrixXd &GetTransformed() { return Transformed; }
 
   MatrixXd &GetX() { return X; }
@@ -80,7 +78,7 @@ public:
       }
       reader.close();
       Xtrick = X;
-      X = X.rightCols(X.cols() - 1); // should be 2
+      X = X.rightCols(X.cols() - 2); // should be 2
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
     }
@@ -108,7 +106,7 @@ public:
       }
     }
     Xtrick = X;
-    X = X.rightCols(X.cols() - 1); // should be
+    X = X.rightCols(X.cols() - 2); // should be
     std::string sep = "\n----------------------------------------\n";
     std::cout << X << sep;
   }
@@ -118,9 +116,11 @@ public:
     typename F::Input ind;
     MatrixXd population;
     population.conservativeResize(Xtrick.rows(), Xtrick.cols());
+    std::cout << data << "\n";
+    std::cout << Xtrick.leftCols(2) << "\n";
     population << Xtrick.leftCols(2), data;
     std::cout << "Finally..\n" << population << std::endl;
-    std::vector<individual_t<F> > poplist;
+    std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < population.rows(); ++i) {
       for (int j = 0; j < population.cols(); ++j) {
@@ -130,7 +130,7 @@ public:
       }
       std::cout << "New gene added." << std::endl;
       TGenes<F> newind = ind;
-      poplist.push_back(std::make_shared<geantvmoop::TGenes<F> >(newind));
+      poplist.push_back(std::make_shared<geantvmoop::TGenes<F>>(newind));
       ind.clear();
     }
     newpop = Population<F>(poplist);
@@ -145,7 +145,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > fEigenValues;
+    std::vector<std::pair<double, VectorXd>> fEigenValues;
     double c = 0.0;
 
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
@@ -161,12 +161,12 @@ public:
     std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> &a,
                  const std::pair<double, VectorXd> &b) {
-      if (a.first > b.first)
-        return true;
-      if (a.first == b.first)
-        return a.first > b.first;
-      return false;
-    });
+                if (a.first > b.first)
+                  return true;
+                if (a.first == b.first)
+                  return a.first > b.first;
+                return false;
+              });
     for (unsigned int i = 0; i < fEigenValues.size(); i++) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
@@ -193,7 +193,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd> > fEigenValues;
+    std::vector<std::pair<double, VectorXd>> fEigenValues;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
@@ -243,8 +243,8 @@ public:
     MatrixXd NewDataMatrix, NewDataMatrixTransposed;
     NewDataMatrix = eigenvectors * Transformed.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();
-    std::cout << "Transformed data matrix:\n" << NewDataMatrixTransposed
-              << std::endl;
+    std::cout << "Transformed data matrix:\n"
+              << NewDataMatrixTransposed << std::endl;
     X = NewDataMatrixTransposed /*.array().abs()*/;
     std::cout << "Done." << std::endl;
   }
