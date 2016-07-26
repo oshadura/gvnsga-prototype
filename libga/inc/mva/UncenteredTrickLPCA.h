@@ -42,7 +42,9 @@ public:
 
   virtual ~UncenteredTrickLPCA() {}
 
-  void SetNormalise(const int i) { normalise = i; };
+  void SetNormalise(const int i) {
+    normalise = i;
+  };
   MatrixXd &GetTransformed() { return Transformed; }
 
   MatrixXd &GetX() { return X; }
@@ -116,13 +118,9 @@ public:
     typename F::Input ind;
     MatrixXd population;
     population.conservativeResize(Xtrick.rows(), Xtrick.cols());
-    // population.leftCols(2) = Xtrick.leftCols(2);
-    // population.rightCols(X.cols() - 2) = data;
-    std::cout << Xtrick.leftCols(2) << std::cout;
-    std::cout << data << std::cout;
     population << Xtrick.leftCols(2), data;
     std::cout << "Finally..\n" << population << std::endl;
-    std::vector<individual_t<F>> poplist;
+    std::vector<individual_t<F> > poplist;
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < population.rows(); ++i) {
       for (int j = 0; j < population.cols(); ++j) {
@@ -132,7 +130,7 @@ public:
       }
       std::cout << "New gene added." << std::endl;
       TGenes<F> newind = ind;
-      poplist.push_back(std::make_shared<geantvmoop::TGenes<F>>(newind));
+      poplist.push_back(std::make_shared<geantvmoop::TGenes<F> >(newind));
       ind.clear();
     }
     newpop = Population<F>(poplist);
@@ -147,7 +145,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd>> fEigenValues;
+    std::vector<std::pair<double, VectorXd> > fEigenValues;
     double c = 0.0;
 
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
@@ -163,12 +161,12 @@ public:
     std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> &a,
                  const std::pair<double, VectorXd> &b) {
-                if (a.first > b.first)
-                  return true;
-                if (a.first == b.first)
-                  return a.first > b.first;
-                return false;
-              });
+      if (a.first > b.first)
+        return true;
+      if (a.first == b.first)
+        return a.first > b.first;
+      return false;
+    });
     for (unsigned int i = 0; i < fEigenValues.size(); i++) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
@@ -195,7 +193,7 @@ public:
     eigenvectors = edecomp.eigenvectors().real();
     cumulative.resize(eigenvalues.rows());
     // Eigen pairs [eigenvalue, eigenvector]
-    std::vector<std::pair<double, VectorXd>> fEigenValues;
+    std::vector<std::pair<double, VectorXd> > fEigenValues;
     double c = 0.0;
     for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
       if (normalise) {
@@ -206,20 +204,23 @@ public:
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
     // Sorting Eigen pairs [eigenvalue, eigenvector]
-    // Sorting Eigen pairs [eigenvalue, eigenvector]
-    std::sort(fEigenValues.begin(), fEigenValues.end(),
-              [](const std::pair<double, VectorXd> &a,
-                 const std::pair<double, VectorXd> &b) {
-                if (a.first > b.first)
-                  return true;
-                if (a.first == b.first)
-                  return a.first > b.first;
-                return false;
-              });
+    std::sort(
+        fEigenValues.begin(), fEigenValues.end(),
+        [](std::pair<double, VectorXd> &a, std::pair<double, VectorXd> &b) {
+          if (a.first > b.first)
+            return true;
+          if (a.first == b.first)
+            return a.first > b.first;
+          return false;
+        });
+    for (unsigned int i = 0; i < eigenvectors.cols(); i++) {
+      eigenvalues(i) = fEigenValues[i].first;
+      eigenvectors.col(i) = fEigenValues[i].second;
+    }
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     Transformed = X * eigenvectors;
-    // Varince based selection (< 85 %)
+    // Varince based selection (< 95 %)
     while (totalvar <= 0.95) {
       eigenvalues(i) = fEigenValues[i].first;
       c += eigenvalues(i);
@@ -260,9 +261,7 @@ public:
     for (unsigned int i = 0; i < eigenvalues.rows(); i++) {
       if (eigenvalues(i) > 0) {
         std::cout << "PC " << i + 1 << ": Eigenvalue:\n " << eigenvalues(i);
-        printf("\t(%3.3f of variance, cumulative =  %3.3f)\n",
-               eigenvalues(i) / eigenvalues.sum(),
-               cumulative(i) / eigenvalues.sum());
+        printf("\t(%3.3f of variance)\n", eigenvalues(i) / eigenvalues.sum());
       }
     }
     std::cout << std::endl;
