@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __PROBLEMFONTECA__
-#define __PROBLEMFONTECA__
+#ifndef __PROBLEMFONSECA__
+#define __PROBLEMFONSECA__
 
 #include "generic/TGenes.h"
 #include "generic/Population.h"
@@ -18,7 +18,7 @@
 
 namespace geantvmoop {
 
-class Fonteca : public Functions<Fonteca> {
+class Fonseca : public Functions<Fonseca> {
 
 public:
   typedef GAVector<GADouble> Input;
@@ -37,15 +37,16 @@ public:
       sum1 += std::sqrt(fParameters[i] - d);
       sum2 += std::sqrt(fParameters[i] + d);
     }
-    fFitness[0] = 1 - std::exp(-sum1);
-    fFitness[1] = 1 - std::exp(-sum2);
+    auto it = fFitness.begin();
+    fFitness.insert(it, 1 - std::exp(-sum1));
+    fFitness.insert(it, 1 - std::exp(-sum2));
     return fFitness;
   }
 
   static Input GetInput() {
     Input vector;
-    for (int i = 0; i < 2; ++i)
-      vector.push_back(GADouble(0, 1));
+    for (int i = 0; i < 5; ++i)
+      vector.push_back(GADouble(-4, 4));
     return vector;
   }
 

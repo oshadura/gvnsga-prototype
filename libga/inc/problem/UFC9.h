@@ -53,16 +53,17 @@ public:
         count3++;
       }
     }
-    yj = (0.5 + E) *
-         (1.0 -
-          4.0 * (2.0 * fParameters[0] - 1.0) * (2.0 * fParameters[0] - 1.0));
+    yj = (0.5 + E) * (1.0 - 4.0 * (2.0 * fParameters[0] - 1.0) *
+                                (2.0 * fParameters[0] - 1.0));
     if (yj < 0.0)
       yj = 0.0;
-    fFitness[0] = 0.5 * (yj + 2 * fParameters[0]) * fParameters[1] +
-                  2.0 * sum1 / (double)count1;
-    fFitness[1] = 0.5 * (yj - 2 * fParameters[0] + 2.0) * fParameters[1] +
-                  2.0 * sum2 / (double)count2;
-    fFitness[2] = 1.0 - fParameters[1] + 2.0 * sum3 / (double)count3;
+    auto it = fFitness.begin();
+    fFitness.insert(it, (0.5 * (yj + 2 * fParameters[0]) * fParameters[1] +
+                         2.0 * sum1 / (double)count1));
+    fFitness.insert(it + 1,
+                    (0.5 * (yj - 2 * fParameters[0] + 2.0) * fParameters[1] +
+                     2.0 * sum2 / (double)count2));
+    fFitness.insert(it +2, (1.0 - fParameters[1] + 2.0 * sum3 / (double)count3));
     return fFitness;
   }
 

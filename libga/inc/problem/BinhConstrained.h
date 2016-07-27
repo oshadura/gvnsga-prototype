@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __PROBLEMKURSAWE__
-#define __PROBLEMKURSAWE__
+#ifndef __PROBLEMBINH__
+#define __PROBLEMBINH__
 
 #include "generic/TGenes.h"
 #include "generic/Population.h"
@@ -18,50 +18,40 @@
 
 namespace geantvmoop {
 
-class Kursawe : public Functions<Kursawe> {
+class Binh : public Functions<Binh> {
 
 public:
   typedef GAVector<GADouble> Input;
 
   typedef std::vector<double> Output;
 
+  // We need to add possibility to get constrained data generation,
+  // here is: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+
   static Output Evaluate(const Input &individual) {
-    std::vector<double> fFitness, fParameters, fFit;
+    std::vector<double> fFitness, fParameters;
     fFitness.reserve(individual.size());
-    fFit.reserve(individual.size());
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    double aux, xi, xj;
-    fFit[0] = 0.0;
-    for (int var = 0; var < individual.size() - 1; var++) {
-      xi = fParameters[var] * fParameters[var];
-      xj = fParameters[var + 1] * fParameters[var + 1];
-      aux = (-0.2) * sqrt(xi + xj);
-      fFit[0] += (-10.0) * exp(aux);
-    }
-    fFit[1] = 0.0;
-    for (int var = 0; var < individual.size(); var++) {
-      fFit[1] += pow(fabs(fParameters[var]), 0.8) +
-                 5.0 * sin(pow(fParameters[var], 3.0));
-    }
     auto it = fFitness.begin();
-    fFitness.insert(it, fFit[0]);
-    fFitness.insert(it + 1, fFit[2]);
+    fFitness.insert(it, (4 * fParameters[0] * fParameters[0] + 4 * fParameters[1]* fParameters[1]);
+    fFitness.insert(it + 1, ((fParameters[0] - 5) * (fParameters[0] - 5) + (fParameters[1] - 5)* (fParameters[1] - 5)));
     return fFitness;
   }
 
   static Input GetInput() {
     Input vector;
-    for (int i = 0; i < 10; ++i)
-      vector.push_back(GADouble(-5, 5));
+    for (int i = 0; i < 2; ++i)
+      vector.push_back(GADouble(-100, 100));
     return vector;
   }
 
-  // No true
+  // Crap Here
   static Double_t TruePF(Double_t *x, Double_t *parameter) {
     Double_t value =
-        std::sqrt(-parameter[0] - parameter[0] * x[0] - parameter[1] * x[1]);
+        std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] * x[1] * x[1] -
+                  parameter[2] * x[2] * x[2]);
     return value;
   }
 

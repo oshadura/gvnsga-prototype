@@ -25,7 +25,7 @@ class GADouble : public GAConstrainedValue<double> {
 
 public:
   // Only DTLZ..
-  GADouble(double value) : GAConstrainedValue(value, -5, 5) {} // was 0,1
+  GADouble(double value) : GAConstrainedValue(value, 0, 1) {} // was 0,1 // Put any other value
   GADouble(double value, double d, double u)
       : GAConstrainedValue(value, d, u){};
   GADouble(double d, double u) : GAConstrainedValue(0, d, u){};

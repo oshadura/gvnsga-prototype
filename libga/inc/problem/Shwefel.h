@@ -33,7 +33,7 @@ public:
       fParameters.push_back(parameter.GetGAValue());
     auto it = fFitness.begin();
     fFitness.insert(it, fParameters[0] * fParameters[0]);
-    fFitness.insert(it+1, ((fParameters[1] - 2) * (fParameters[1] - 2)));
+    fFitness.insert(it + 1, ((fParameters[1] - 2) * (fParameters[1] - 2)));
     return fFitness;
   }
 

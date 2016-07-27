@@ -9,6 +9,7 @@
 #include "problem/Shwefel.h"
 #include "problem/UFC9.h"
 #include "problem/Kursawe.h"
+#include "problem/Fonseca.h"
 #include "generic/Population.h"
 #include "generic/Functions.h"
 #include "generic/TGenes.h"
@@ -19,23 +20,23 @@
 class Nsga2upca : public GATest {
 public:
 };
-
+/*
 TEST_F(Nsga2upca, SolvingKursaweProblem) {
-  geantvmoop::Kursawe kurs;
-  geantvmoop::GANSGA2UPCA<geantvmoop::Kursawe> nsga2upca(kurs);
+  geantvmoop::Kursawe f;
+  geantvmoop::GANSGA2UPCA<geantvmoop::Kursawe> nsga2upca(f);
   nsga2upca.fPopulationSize = 1000;
-  nsga2upca.fMaxGeneration = 100;
+  nsga2upca.fMaxGeneration = 500;
   nsga2upca.SolvePF();
 }
-/*
-TEST_F(Nsga2upca, SolvingDTLZ2Problem) {
-  geantvmoop::DTLZ2 dtlz2;
-  geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ2> nsga(dtlz2);
-  nsga.fPopulationSize = 1000;
+*/
+TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
+  geantvmoop::DTLZ1 dtlz1;
+  geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ1> nsga(dtlz1);
+  nsga.fPopulationSize = 50;
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-
+/*
 TEST_F(Nsga2upca, SolvingDTLZ3Problem) {
   geantvmoop::DTLZ3 dtlz3;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ3> nsga(dtlz3);

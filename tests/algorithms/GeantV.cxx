@@ -11,9 +11,13 @@ class Nsga2 : public GATest {
 public:
 };
 
+#ifdef ENABLE_GEANTV
+
 TEST_F(Nsga2, SolvingGeantVProblem) {
   geantvmoop::RunGeantV runc;
   geantvmoop::GANSGA2<geantvmoop::RunGeantV> nsga(runc);
   nsga.fPopulationSize = 8;
   nsga.SolvePF();
 }
+
+#endif
