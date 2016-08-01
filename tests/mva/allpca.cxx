@@ -1,17 +1,16 @@
-#include "gtest/gtest.h"
 #include "GATest.h"
 #include "generic/Population.h"
-#include "problem/DTLZ1.h"
-#include "output/CSVManager.h"
-#include "mva/PCA.h"
+#include "mva/KPCA.h"
 #include "mva/LPCA.h"
 #include "mva/LPCAWhite.h"
-#include "mva/KPCA.h"
+#include "mva/PCA.h"
 #include "mva/RobustPCA.h"
 #include "mva/UncenteredLPCA.h"
-#include "mva/UncenteredWhiteLPCA.h"
 #include "mva/UncenteredTrickLPCA.h"
-
+#include "mva/UncenteredWhiteLPCA.h"
+#include "output/CSVManager.h"
+#include "problem/DTLZ1.h"
+#include "gtest/gtest.h"
 
 using namespace Eigen;
 
@@ -98,7 +97,7 @@ TEST_F(AllPCA, RunLPCAReductionofComponents) {
   lpca.RunLPCAWithReductionOfComponents();
   lpca.WriteTransformed("outputlpcatransform");
 }
-
+/*
 TEST_F(AllPCA, RunLPCAReductionofComponentsNoScale) {
   lpca.LoadData("data");
   lpca.RunLPCAWithReductionOfComponentsNoScale();
@@ -117,7 +116,7 @@ TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
   lpcawhite.RunLPCAWhiteWithReductionOfComponentsNoScale();
   lpcawhite.WriteTransformed("outputlpcawtransformnoscale");
 }
-
+*/
 
 TEST_F(AllPCA, RunUncenteredLPCA) {
   ulpca.LoadData("data");
@@ -126,13 +125,19 @@ TEST_F(AllPCA, RunUncenteredLPCA) {
   ulpca.WriteTransformed("outputulpca");
 }
 
-
 TEST_F(AllPCA, RunUncenteredLPCAReductionofComponents) {
   ulpca.LoadData("data");
   ulpca.RunUncenteredLPCAWithReductionOfComponents();
   ulpca.WriteTransformed("outputulpcatransform");
 }
 
+TEST_F(AllPCA, RunUncenteredLPCAScale) {
+  ulpca.LoadData("data");
+  ulpca.RunUncenteredLPCAWithReductionOfComponentsScale();
+  ulpca.Print();
+  ulpca.WriteTransformed("outputtlpca");
+}
+/*
 TEST_F(AllPCA, RunUncenteredWhiteLPCA) {
   uwlpca.LoadData("data");
   uwlpca.RunUncenteredWhiteLPCA();
@@ -146,7 +151,7 @@ TEST_F(AllPCA, RunUncenteredWhiteLPCAReductionofComponents) {
   uwlpca.RunUncenteredWhiteLPCAWithReductionOfComponents();
   uwlpca.WriteTransformed("outputulpcatransform");
 }
-
+*/
 TEST_F(AllPCA, RunUncenteredTrickLPCA) {
   twlpca.LoadData("data");
   twlpca.RunUncenteredTrickLPCA();
@@ -154,13 +159,12 @@ TEST_F(AllPCA, RunUncenteredTrickLPCA) {
   twlpca.WriteTransformed("outputtlpca");
 }
 
-
 TEST_F(AllPCA, RunUncenteredTrickLPCAReductionofComponents) {
   twlpca.LoadData("data");
   twlpca.RunUncenteredTrickLPCAWithReductionOfComponents();
   twlpca.WriteTransformed("outputtlpcatransform");
 }
-
+/*
 // Too slow for bigdata set...
 TEST_F(AllPCA, RunKPCA) {
   kpca.LoadData("data");
@@ -175,3 +179,4 @@ TEST_F(AllPCA, RunRobustPCA){
   robustpca.Print();
   //robustpca.WriteTransformed("outputrobustpca");
 }
+*/

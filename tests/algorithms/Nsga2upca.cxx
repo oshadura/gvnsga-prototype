@@ -1,4 +1,10 @@
 #include "GATest.h"
+#include "algorithms/GANSGA2UPCA.h"
+#include "generic/Functions.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
+#include "instrumentation/GeantVFitness.h"
+#include "output/HistogramManager.h"
 #include "problem/DTLZ1.h"
 #include "problem/DTLZ2.h"
 #include "problem/DTLZ3.h"
@@ -6,16 +12,10 @@
 #include "problem/DTLZ5.h"
 #include "problem/DTLZ6.h"
 #include "problem/DTLZ7.h"
+#include "problem/Fonseca.h"
+#include "problem/Kursawe.h"
 #include "problem/Shwefel.h"
 #include "problem/UFC9.h"
-#include "problem/Kursawe.h"
-#include "problem/Fonseca.h"
-#include "generic/Population.h"
-#include "generic/Functions.h"
-#include "generic/TGenes.h"
-#include "output/HistogramManager.h"
-#include "algorithms/GANSGA2UPCA.h"
-#include "instrumentation/GeantVFitness.h"
 
 class Nsga2upca : public GATest {
 public:
@@ -28,7 +28,6 @@ TEST_F(Nsga2upca, SolvingKursaweProblem) {
   nsga2upca.fMaxGeneration = 500;
   nsga2upca.SolvePF();
 }
-*/
 TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ1> nsga(dtlz1);
@@ -36,7 +35,6 @@ TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-/*
 TEST_F(Nsga2upca, SolvingDTLZ3Problem) {
   geantvmoop::DTLZ3 dtlz3;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ3> nsga(dtlz3);

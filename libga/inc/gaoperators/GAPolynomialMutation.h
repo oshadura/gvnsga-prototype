@@ -15,18 +15,18 @@
 #ifndef __GAPOLMUTATION__
 #define __GAPOLMUTATION__
 
-#include <vector>
-#include <ostream>
-#include <string>
-#include <utility>
-#include <random>
 #include <algorithm>
-#include <stdexcept>
 #include <chrono>
 #include <ctime>
+#include <ostream>
+#include <random>
+#include <stdexcept>
+#include <string>
+#include <utility>
+#include <vector>
 
-#include "tools/Random.h"
 #include "GAMutation.h"
+#include "tools/Random.h"
 
 namespace geantvmoop {
 
@@ -43,8 +43,8 @@ public:
     // Here we taking random 1 element..
     double lb = ind[0].GetDownLimit();
     double ub = ind[0].GetUpLimit();
-    //std::cout << "Checking limits: " << lb << " and " << ub << std::endl;
-    for (Int_t j = 0; j < ind.size(); ++j) {
+    // std::cout << "Checking limits: " << lb << " and " << ub << std::endl;
+    for (int j = 0; j < ind.size(); ++j) {
       if (rand(gen) <= prob) {
         y = ind[j].GetGAValue();
         fDelta1 = (y - lb) / (ub - lb);
@@ -64,7 +64,7 @@ public:
                    2.0 * (fRnd - 0.5) * (pow(xy, (etamutation + 1.0)));
           fDelta = 1.0 - (pow(fValue, fMutPow));
         }
-        //std::cout << "Checking new gene: " << y << std::endl;
+        // std::cout << "Checking new gene: " << y << std::endl;
         y = y + fDelta * (ub - lb);
         // std::cout << "New part of Gene<T> for Mutation() " << y << std::endl;
         if (std::isinf(y)) {
