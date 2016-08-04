@@ -16,6 +16,8 @@
 #include <cmath>
 #include <utility>
 
+// Second fitness values is nan..
+
 namespace geantvmoop {
 
 class Fonseca : public Functions<Fonseca> {
@@ -45,7 +47,7 @@ public:
 
   static Input GetInput() {
     Input vector;
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < 3; ++i)
       vector.push_back(GADouble(-4, 4));
     return vector;
   }

@@ -63,8 +63,8 @@ private:
 public:
   GANSGA2(F problem) : GAAlgorithm<GANSGA2<F>, F>(problem) {}
   int fPopulationSize = 10;
-  double PMut = 0.2;
-  double PCross = 0.6; // 0.9
+  double PMut = 0.6;
+  double PCross = 0.9;
   int fCurrentGeneration = 0;
 
   void InitializeImpl() {

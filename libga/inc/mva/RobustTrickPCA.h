@@ -63,7 +63,7 @@ public:
       MatrixXd A = MatrixXd::Zero(D.rows(), D.cols());
       MatrixXd E = MatrixXd::Zero(D.rows(), D.cols());
       Xtrick = D;
-      D = D.rightCols(D.cols() - 2);
+      D = D.rightCols(D.cols() - 1);
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
     }
@@ -86,7 +86,7 @@ public:
     MatrixXd A = MatrixXd::Zero(D.rows(), D.cols());
     MatrixXd E = MatrixXd::Zero(D.rows(), D.cols());
     Xtrick = D;
-    D = D.rightCols(D.cols() - 2);
+    D = D.rightCols(D.cols() - 1);
     //D = D.array() * D.array();
     std::string sep = "\n----------------------------------------\n";
     std::cout << D << sep;
@@ -102,7 +102,7 @@ public:
     population.conservativeResize(Xtrick.rows(), Xtrick.cols());
     // population.leftCols(2) = Xtrick.leftCols(2);
     // population.rightCols(X.cols() - 2) = data;
-    population << Xtrick.leftCols(2), data;
+    population << Xtrick.leftCols(1), data;
     std::vector<individual_t<F> > poplist;
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < population.rows(); ++i) {

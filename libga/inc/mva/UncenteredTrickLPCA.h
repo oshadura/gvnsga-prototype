@@ -78,7 +78,7 @@ public:
       }
       reader.close();
       Xtrick = X;
-      X = X.rightCols(X.cols() - 2); // should be 2
+      X = X.rightCols(X.cols() - 2); // was 2
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
     }
@@ -106,9 +106,15 @@ public:
       }
     }
     Xtrick = X;
-    X = X.rightCols(X.cols() - 2); // should be
+    X = X.rightCols(X.cols() - 2); // was 2
     std::string sep = "\n----------------------------------------\n";
-    std::cout << X << sep;
+    MatrixXd Y = Xtrick;
+    JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
+    std::cout << "Its singular values are:" << std::endl << svd.singularValues() << std::endl;
+    std::cout << "Its left singular vectors are the columns of the thin U matrix:"
+         << std::endl << svd.matrixU() << std::endl;
+    std::cout << "Its right singular vectors are the columns of the thin V matrix:"
+         << std::endl << svd.matrixV() << std::endl;
   }
 
   template <typename F>
@@ -117,18 +123,18 @@ public:
     MatrixXd population;
     population.conservativeResize(Xtrick.rows(), Xtrick.cols());
     std::cout << data << "\n";
-    std::cout << Xtrick.leftCols(2) << "\n";
-    population << Xtrick.leftCols(2), data;
+    std::cout << Xtrick.leftCols(2) << "\n"; // was 2
+    population << Xtrick.leftCols(2), data; // was 2
     std::cout << "Finally..\n" << population << std::endl;
     std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";
     for (int i = 0; i < population.rows(); ++i) {
       for (int j = 0; j < population.cols(); ++j) {
-        std::cout << "Gene to be added in a population[" << i << "," << j
-                  << "] is " << population(i, j) << std::endl;
+        //std::cout << "Gene to be added in a population[" << i << "," << j
+        //          << "] is " << population(i, j) << std::endl;
         ind.push_back(population(i, j));
       }
-      std::cout << "New gene added." << std::endl;
+      //std::cout << "New gene added." << std::endl;
       TGenes<F> newind = ind;
       poplist.push_back(std::make_shared<geantvmoop::TGenes<F>>(newind));
       ind.clear();
@@ -157,7 +163,6 @@ public:
           std::make_pair(eigenvalues(i), eigenvectors.col(i)));
     }
     // Sorting Eigen pairs [eigenvalue, eigenvector]
-    // Sorting Eigen pairs [eigenvalue, eigenvector]
     std::sort(fEigenValues.begin(), fEigenValues.end(),
               [](const std::pair<double, VectorXd> &a,
                  const std::pair<double, VectorXd> &b) {
@@ -178,7 +183,7 @@ public:
     MatrixXd NewDataMatrix, NewDataMatrixTransposed;
     NewDataMatrix = eigenvectors * Transformed.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();
-    std::cout << "CHECK:::::::::::Transformed back data matrix:\n"
+    std::cout << "Check::Transformed back data matrix:\n"
               << NewDataMatrixTransposed << std::endl;
   }
 

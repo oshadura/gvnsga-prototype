@@ -33,7 +33,7 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    int n = 30;
+    int n = 11;
     int m = 3;
     Int_t k = n - m + 1;
     double g = 0.0;
@@ -57,7 +57,7 @@ public:
 
   static Input GetInput() {
     Input vector;
-    for (int i = 0; i < 30; ++i)
+    for (int i = 0; i < 11; ++i)
       vector.push_back(GADouble(0, 1));
     return vector;
   }

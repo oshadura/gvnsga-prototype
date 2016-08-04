@@ -35,7 +35,7 @@ public:
 
   int GetNGenes() const { return fNGenes; };
 
-  int GetNObjectives() const { return fNObjectives; };
+//  int GetNObjectives() const { return fNObjectives; };
 
 private:
   int fNGenes, fNObjectives;

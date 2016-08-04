@@ -131,7 +131,7 @@ public:
     file.cd(namefolder);
     //////// Population distribution
     TH1F *PopDist =
-        new TH1F(namepop, "Population distribution", pop.size(), -5., 5.);
+        new TH1F(namepop, "Population distribution", pop.size(), 0, 1);
     PopDist->GetXaxis()->SetTitle("TGenes / bins");
     PopDist->GetYaxis()->SetTitle("N");
     PopDist->SetFillColor(kYellow); // Fill fill color to yellow
@@ -139,32 +139,36 @@ public:
     PopDist->SetMarkerStyle(20);
     PopDist->SetMarkerColor(kBlue);
     PopDist->SetMarkerSize(.6); //
-    /////// Population 3D Histogram
+                                /////// Population 3D Histogram
     TH3F *h3a =
-        new TH3F(name3dhist, "3D Population", 20, -5, 5, 20, -5, 5, 20, -5, 5);
+        new TH3F(name3dhist, "3D Population", 20, 0, 100, 20, 0, 100, 20, 0, 100);
+    // TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, -30, 5, 20, -30, 5,
+    //                     20, -30, 5);
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
     h3a->SetMarkerStyle(20);
     h3a->SetMarkerColor(kBlue);
     h3a->SetMarkerSize(.6); //
-    ////////////////////////////////
-    /////// Population 3 DHistogram
-    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -90, 1, 20, -5, 1, 20, 0, 1);
+                            ////////////////////////////////
+                            /////// Population 3 DHistogram
+    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, 0, 100, 20, 0, 100, 20, 0, 100);
+    // TH3F *h3y =
+    //    new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -30, 5, 20, -30, 5, 20, -30, 5);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
     h3y->SetMarkerStyle(20);
     h3y->SetMarkerColor(kBlue);
     h3y->SetMarkerSize(.6); //
-    ////////////////////////////////
-    /////// Population 3 DHistogram
-    TH3F *h3x = new TH3F(name3dhistx, "X1/X2/X3", 20, -5, 1, 20, -5, 1, 20, -5, 1);
+                            ////////////////////////////////
+                            /////// Population 3 DHistogram
+    TH3F *h3x = new TH3F(name3dhistx, "X1/X2/X3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    // TH3F *h3x =
+    //    new TH3F(name3dhistx, "X1/X2/X3", 20, -5, 5, 20, -5, 5, 20, -5, 5);
     h3x->SetFillColor(kYellow); // Fill fill color to yellow
     h3x->SetFillColor(kYellow); // Fill fill color to yellow
     h3x->SetMarkerStyle(20);
     h3x->SetMarkerColor(kBlue);
     h3x->SetMarkerSize(.6); //
-                            ////////////////////////////////
-    // MISSING GENERATION OF DATA PREDICTION
     ROOT::Fit::BinData data(pop.size(), 3);
     double function[3];
     double predictor[pop.size()];
@@ -175,8 +179,12 @@ public:
     parameterspredictor[2] = 1;
     double error = 0.1;
     ////////////////////////////////
-    TF3 *FitLand = new TF3(nameFitLand, F::TruePF, -90, 1, -5, 0, 0, 1, 3);
-    FitLand->SetParameters(12, 1, 1);
+    // DTLZ b.
+    TF3 *FitLand = new TF3(nameFitLand, F::TruePF, 0, 100, 0, 100, 0, 100, 3);
+    // TF3 *FitLand = new TF3(nameFitLand, F::TruePF, -30, 5, -30, 5, -30, 5,
+    // 3);
+
+    FitLand->SetParameters(1, 1, 1);
     ROOT::Fit::Fitter fitter;
     // wrapped the TF1 in a IParamMultiFunction interface for teh Fitter class
     ROOT::Math::WrappedMultiTF1 wrapperfunction(*FitLand, 3);
@@ -188,8 +196,11 @@ public:
         ScatterCombinationCalculator(pop.GetTFitness(0).size(), 2);
 
     //////// Fitness distribution
-    TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution",
-                                    pop.size(), 0., 1.);
+    // DTLZ b.
+    TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution ",pop.size(), 0., 100.);
+    // TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness
+    // distribution",
+    //                                pop.size(), -30., 5.);
     PopFitnessDist->GetXaxis()->SetTitle("TGenes / bins");
     PopFitnessDist->GetYaxis()->SetTitle("N");
     PopFitnessDist->SetFillColor(kYellow); // Fill fill color to yellow
@@ -216,8 +227,12 @@ public:
         TH2F *myhistx = ((TH2F *)(HXList.FindObject(histoname)));
         if (!myhistx) {
           myhistx = new TH2F(TString::Format(namescatter),
-                             "Scatter plot of different TGenes", pop.size(), -5,
-                             5, pop.size(), -5, 5);
+                             "Scatter plot of different TGenes", pop.size(), 0,
+                             1, pop.size(), 0, 1);
+          // myhistx = new TH2F(TString::Format(namescatter),
+          //                   "Scatter plot of different TGenes", pop.size(),
+          // -5,
+          //                   5, pop.size(), -5, 5);
           myhistx->SetFillColor(kYellow); // Fill fill color to yellow
           myhistx->SetFillColor(kYellow); // Fill fill color to yellow
           myhistx->SetMarkerStyle(20);
@@ -259,9 +274,14 @@ public:
         TString histoname = TString::Format(namescatter);
         TH2F *myhisty = ((TH2F *)(HYList.FindObject(histoname)));
         if (!myhisty) {
+          // DTLZ b.
           myhisty = new TH2F(TString::Format(namescatter),
-                             "Scatter plot of different TGenes", pop.size(), -90,
-                             1., pop.size(), -5, 1.);
+                             "Scatter plot of different TGenes", pop.size(), 0,
+                             100., pop.size(), 0, 100.);
+          // Kursawe b.
+          // myhisty = new TH2F(TString::Format(namescatter),
+          //                   "Scatter plot of different TGenes", pop.size(),
+          //                   -30, 5., pop.size(), -30, 5.);
           myhisty->SetFillColor(kYellow); // Fill fill color to yellow
           myhisty->SetFillColor(kYellow); // Fill fill color to yellow
           myhisty->SetMarkerStyle(20);

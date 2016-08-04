@@ -154,6 +154,7 @@ public:
                 << " | Crowding distance value: ";
       std::cout << MAGENTA << fIndCrowDist[ind] << RESET << std::endl;
     }
+
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "Moving to next generation " << fCurrentGeneration
               << std::endl;
