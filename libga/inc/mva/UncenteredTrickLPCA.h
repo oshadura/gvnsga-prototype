@@ -78,7 +78,7 @@ public:
       }
       reader.close();
       Xtrick = X;
-      X = X.rightCols(X.cols() - 2); // was 2
+      X = X.rightCols(X.cols() - 1); // was 2
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
     }
@@ -106,7 +106,7 @@ public:
       }
     }
     Xtrick = X;
-    X = X.rightCols(X.cols() - 2); // was 2
+    X = X.rightCols(X.cols() - 1); // was 2
     std::string sep = "\n----------------------------------------\n";
     MatrixXd Y = Xtrick;
     JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
@@ -123,8 +123,8 @@ public:
     MatrixXd population;
     population.conservativeResize(Xtrick.rows(), Xtrick.cols());
     std::cout << data << "\n";
-    std::cout << Xtrick.leftCols(2) << "\n"; // was 2
-    population << Xtrick.leftCols(2), data; // was 2
+    std::cout << Xtrick.leftCols(1) << "\n"; // was 2
+    population << Xtrick.leftCols(1), data; // was 2
     std::cout << "Finally..\n" << population << std::endl;
     std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";

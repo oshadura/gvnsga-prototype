@@ -60,13 +60,13 @@ TEST_F(Nsga2upca, SolvingDTLZ7Problem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-
 */
+
 TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ1> nsga(dtlz1);
   nsga.fPopulationSize =  1000;
-  nsga.fMaxGeneration = 200;
+  nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
 
@@ -117,4 +117,5 @@ TEST_F(Nsga2upca, SolvingDTLZ7Problem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
+
 

@@ -141,7 +141,7 @@ public:
     PopDist->SetMarkerSize(.6); //
                                 /////// Population 3D Histogram
     TH3F *h3a =
-        new TH3F(name3dhist, "3D Population", 20, 0, 100, 20, 0, 100, 20, 0, 100);
+        new TH3F(name3dhist, "3D Population", 20, -10, 30, 20, -10, 30, 20, -10, 30);
     // TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, -30, 5, 20, -30, 5,
     //                     20, -30, 5);
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
@@ -151,7 +151,7 @@ public:
     h3a->SetMarkerSize(.6); //
                             ////////////////////////////////
                             /////// Population 3 DHistogram
-    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, 0, 100, 20, 0, 100, 20, 0, 100);
+    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -20, 30, 20, -10, 30, 20, -10, 30);
     // TH3F *h3y =
     //    new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -30, 5, 20, -30, 5, 20, -30, 5);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
@@ -180,7 +180,7 @@ public:
     double error = 0.1;
     ////////////////////////////////
     // DTLZ b.
-    TF3 *FitLand = new TF3(nameFitLand, F::TruePF, 0, 100, 0, 100, 0, 100, 3);
+    TF3 *FitLand = new TF3(nameFitLand, F::TruePF, -10, 20, -10, 20, -10, 20, 3);
     // TF3 *FitLand = new TF3(nameFitLand, F::TruePF, -30, 5, -30, 5, -30, 5,
     // 3);
 
@@ -197,7 +197,7 @@ public:
 
     //////// Fitness distribution
     // DTLZ b.
-    TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution ",pop.size(), 0., 100.);
+    TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution ",pop.size(), -10., 20.);
     // TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness
     // distribution",
     //                                pop.size(), -30., 5.);
@@ -277,7 +277,7 @@ public:
           // DTLZ b.
           myhisty = new TH2F(TString::Format(namescatter),
                              "Scatter plot of different TGenes", pop.size(), 0,
-                             100., pop.size(), 0, 100.);
+                             100., pop.size(), -10, 20.);
           // Kursawe b.
           // myhisty = new TH2F(TString::Format(namescatter),
           //                   "Scatter plot of different TGenes", pop.size(),
