@@ -1,11 +1,11 @@
 #include "GATest.h"
-//#include "problem/RunGeantV.h"
-#include "generic/Population.h"
-#include "generic/Functions.h"
-#include "generic/TGenes.h"
-#include "output/HistogramManager.h"
 #include "algorithms/GANSGA2.h"
+#include "generic/Functions.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
+#include "output/HistogramManager.h"
+#include "problem/RunGeantV.h"
 
 class Nsga2 : public GATest {
 public:

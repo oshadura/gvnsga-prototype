@@ -3,28 +3,28 @@
 #ifndef __RUNGEANTV__
 #define __RUNGEANTV__
 
-#include <cmath>
-#include <utility>
-#include <iostream>  // std::cout
-#include <iterator>  // std::ostream_iterator
-#include <vector>    // std::vector
 #include <algorithm> // std::copy
+#include <cmath>
+#include <iostream> // std::cout
+#include <iterator> // std::ostream_iterator
+#include <utility>
+#include <vector> // std::vector
 
 #ifdef ENABLE_GEANTV
 
-#include "generic/Population.h"
-#include "generic/Functions.h"
-#include "output/HistogramManager.h"
-#include "generic/TGenes.h"
-#include "instrumentation/GeantVFitness.h"
-#include "generic/TGenes.h"
-#include "generic/Population.h"
-#include "generic/Functions.h"
-#include "generic/GAVector.h"
-#include "generic/GADouble.h"
-#include "output/HistogramManager.h"
 #include "algorithms/GANSGA2.h"
+#include "generic/Functions.h"
+#include "generic/Functions.h"
+#include "generic/GADouble.h"
+#include "generic/GAVector.h"
+#include "generic/Population.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
+#include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
+#include "instrumentation/GeantVFitness.h"
+#include "output/HistogramManager.h"
+#include "output/HistogramManager.h"
 #include <boost/math/constants/constants.hpp>
 
 #include <cmath>
@@ -37,15 +37,15 @@
 #include "Rtypes.h"
 #include "TGeoManager.h"
 
-#include "GunGenerator.h"
-#include "HepMCGenerator.h"
-#include "TaskBroker.h"
-#include "WorkloadManager.h"
-#include "GeantPropagator.h"
-#include "TTabPhysProcess.h"
 #include "CMSApplication.h"
 #include "ExN03Application.h"
+#include "GeantPropagator.h"
 #include "GeantVApplication.h"
+#include "GunGenerator.h"
+#include "HepMCGenerator.h"
+#include "TTabPhysProcess.h"
+#include "TaskBroker.h"
+#include "WorkloadManager.h"
 
 #ifndef COPROCESSOR_REQUEST
 #define COPROCESSOR_REQUEST false
@@ -169,7 +169,7 @@ public:
 #ifdef ENABLE_PERFMON
     perfcontrol.Stop();
 #endif
-    fFitness.push_back(prop->fTimer->RealTime());
+    // fFitness.push_back(prop->fTimer->RealTime());
     fFitness.push_back(-(prop->fNprimaries.load()));
 #ifdef ENABLE_PERFMON
     fFitness.push_back(perfcontrol.GetNInstructions());
