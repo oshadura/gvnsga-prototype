@@ -16,8 +16,8 @@
 #define __NSGA3__
 
 #include "addstructures/GACD.h"
-#include "addstructures/GAComparator.h"
-#include "addstructures/GANDRank.h"
+#//include "addstructures/GAComparator.h"
+//#include "addstructures/GANDRank.h"
 #include "generic/GAAlgorithm.h"
 #include "generic/PF.h"
 #include "generic/ReferencePoint.h"
@@ -35,8 +35,6 @@ template <typename F> class GANSGA3 : public GAAlgorithm<GANSGA3<F>, F> {
 
 private:
   Population<F> population;
-  // std::unordered_map<individual_t<F>, double> fIndCrowDist;
-  // std::unordered_map<individual_t<F>, int> fIndRank;
   std::vector<ReferencePoint> fReference;
 
 public:
@@ -46,42 +44,31 @@ public:
 
   void InitializeImpl() {
     population = Population<F>{fPopulationSize};
-    // Stupid solution only for DTLZ1!
+    // more genertic..
     GenerateRP(&fReference, 3, 4);
-    // fIndCrowDist = GACD::CalculateIndicator(population);
-    // fIndRank = GANDRank::CalculateIndicator(population);
   }
 
   void EvolutionImpl() {
-    /*
-    GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
-    GATournamentSelection<GAComparator<F>> selector(cmp);
-    Population<F> matingPool =
-        selector.MultipleSelection(population, fPopulationSize * 2);
-    for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
-      individual_t<F> offspring =
-          GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
-      if (Random::GetInstance().RandomDouble() < PMut)
-        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
-      population.push_back(offspring);
-    }
-    fIndRank = GANDRank::CalculateIndicator(population);
-    fIndCrowDist = GACD::CalculateIndicator(population);
-    GAComparator<F> comp(&fIndRank, &fIndCrowDist);
-    std::sort(population.begin(), population.end(), comp);
+    // Comparator based on reference points
+    //GATournamentSelection<GAComparator<F> > selector(cmp);
+    //Population<F> matingPool =
+    //   selector.MultipleSelection(population, fPopulationSize * 2);
+    //for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
+      //individual_t<F> offspring =
+      //   GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
+      //if (Random::GetInstance().RandomDouble() < PMut)
+       // offspring = GAPolynomialMutation::Mutation(offspring, PMut);
+      //population.push_back(offspring);
+    //}
+    //....
     Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
-    */
+
   }
 
   void PrintImpl(std::ostream &os) {
-    /*
-    auto last = population[population.size() - 1];
-    os << "Pareto front: " << fIndRank[last] << " | worst crowding: ";
-    os << fIndCrowDist[last] << std::endl;
-
     for (int i = 0; i < population.size(); ++i) {
       std::cout << "Individual " << i << std::endl;
       for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
@@ -91,13 +78,8 @@ public:
       for (int k = 0; k < population.GetTFitness(i).size(); ++k) {
         std::cout << population.GetObjectiveValue(i, k) << "|";
       }
-      auto ind = population[i];
-      std::cout << "\n| Rank: " << fIndRank[ind]
-                << " | Crowding distance value: ";
-      std::cout << fIndCrowDist[ind] << std::endl;
     }
     std::cout << "---------------------------\n" << std::endl;
-    */
   }
 
   PF<F> GetParetoFrontImpl() {
@@ -109,7 +91,6 @@ public:
 
 private:
   Population<F> pop;
-
   PF<F> fFront;
 };
 }

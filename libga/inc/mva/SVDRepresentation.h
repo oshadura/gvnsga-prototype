@@ -143,14 +143,6 @@ public:
          << std::endl << svd.matrixU() << std::endl;
     std::cout << "Its right singular vectors are the columns of the thin V matrix:"
          << std::endl << svd.matrixV() << std::endl;
-    //Vector3f rhs(1, 0, 0);
-    //cout << "Now consider this rhs vector:" << endl << rhs << endl;
-    //cout << "A least-squares solution of m*x = rhs is:" << endl
-    //     << svd.solve(rhs) << endl;
-    const double norm_two = svd.singularValues()(0); // can be tuned
-    const double norm_inf = Y.array().abs().maxCoeff() / lambda;
-    const double dual_norm = std::max(norm_two, norm_inf);
-    const double d_norm = D.norm();
   }
 };
 }

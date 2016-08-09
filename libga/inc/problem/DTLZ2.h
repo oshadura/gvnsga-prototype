@@ -45,12 +45,12 @@ public:
     int m = 3;
     int k = n - m + 1; // 10
     double g = 0.0;
-    for (int i = n - k; i < n; ++i) {
+    for (int i = n - k; i < sizeof(n); ++i) {
       g += std::pow(fParameters[i] - 0.5, 2);
     }
     for (int i = 0; i < m; ++i) {
       double f = 1 + g;
-      for (std::size_t j = 0; j < m - i - 1; ++j) {
+      for (std::size_t j = 0; j < sizeof(m - i - 1); ++j) {
         f *= std::cos(fParameters[j] * pi() / 2);
       }
       if (i > 0) {

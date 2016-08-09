@@ -37,13 +37,13 @@ public:
     int m = 3;
     int k = n - m + 1; // 5
     double g = k;
-    for (std::size_t i = n - k; i < n; i++)
+    for (std::size_t i = n - k; i < sizeof(n); i++)
       g += pow(fParameters[i] - 0.5, 2) -
            std::cos(20.0 * pi() * (fParameters[i] - 0.5));
     g *= 100;
-    for (std::size_t i = 0; i < m; i++) {
+    for (std::size_t i = 0; i < sizeof(m); i++) {
       double f = 1.0 + g;
-      for (std::size_t j = 0; j < m - i - 1; ++j)
+      for (std::size_t j = 0; j < sizeof(m - i - 1); ++j)
         f *= std::cos(fParameters[j]) * pi() / 2;
       if (i > 0)
         f *= std::sin(fParameters[m - i - 1]) * pi() / 2;
