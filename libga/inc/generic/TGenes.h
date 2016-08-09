@@ -15,16 +15,17 @@
 #ifndef __TGENES__
 #define __TGENES__
 
-#include <vector>
-#include <memory>
 #include <functional>
+#include <memory>
+#include <vector>
 
+#include "hpc/GAEvaluate.h"
 #include "hpc/GASequentualEvaluator.h"
 
 namespace geantvmoop {
 
 template <typename F> class TGenes;
-template <typename F> using individual_t = std::shared_ptr<TGenes<F> >;
+template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
 // TBD: Add one more templated typename for evaluation procedure (fork-,
 // MPI-based..)
 template <typename F> class TGenes {
@@ -68,22 +69,22 @@ public:
   }
 
   void Evaluate() {
-    //output = GASequentualEvaluator::Evaluate(input);
+    // output = GASequentualEvaluator::Evaluate();
     // Was..
-    output = F::Evaluate(input); 
+    output = F::Evaluate(input);
   }
 
-    const typename F::Input &GetInput() const { return input; }
+  const typename F::Input &GetInput() const { return input; }
 
-    const typename F::Output &GetOutput() const { return output; }
+  const typename F::Output &GetOutput() const { return output; }
 
-    friend std::ostream &operator<<(std::ostream & os, const TGenes<F> & ind) {
-      auto indvector = ind.GetInput();
-      for (int i = 0; i < indvector.size(); ++i)
-        os << indvector[i] << " ";
-      return os;
-    }
-  };
+  friend std::ostream &operator<<(std::ostream &os, const TGenes<F> &ind) {
+    auto indvector = ind.GetInput();
+    for (int i = 0; i < indvector.size(); ++i)
+      os << indvector[i] << " ";
+    return os;
+  }
+};
 }
 
 #endif

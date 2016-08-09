@@ -8,16 +8,16 @@
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 class ParallelEvaluateClient : private ParallelEvaluator {
   EvaluatorBase &eval;
 
 public:
   ParallelEvaluateClient(boost::mpi::environment &_mpi_env,
-                            boost::mpi::communicator &_world,
-                            ProblemDefinitions &_problem_defs,
-                            EvaluatorBase &_eval)
+                         boost::mpi::communicator &_world,
+                         ProblemDefinitions &_problem_defs,
+                         EvaluatorBase &_eval)
       : ParallelEvaluatorBase(_mpi_env, _world, _problem_defs), eval(_eval) {
     // Send skeleton of decision variable to make sending dvs to clients/slaves
     // more efficient
@@ -29,14 +29,13 @@ public:
   }
 
   void operator()() {
-
     bool do_continue = true;
     while (do_continue) {
-      //            std::cout << "waiting to receive" << std::endl;
+      std::cout << "waiting to receive" << std::endl;
       boost::mpi::status s = world.recv(0, boost::mpi::any_tag, dv_c);
-      //            std::cout << " received " << decision_vars.first[0] << " "
-      //            << decision_vars.first[1] << " for individual " << s.tag()
-      //            << std::endl;
+      std::cout << " received " << decision_vars.first[0] << " "
+                << decision_vars.first[1] << " for individual " << s.tag()
+                << std::endl;
       if (s.tag() == max_tag) {
         do_continue = false;
       } else {
@@ -46,9 +45,7 @@ public:
       }
     }
   }
-
 };
-
 }
 
 #endif

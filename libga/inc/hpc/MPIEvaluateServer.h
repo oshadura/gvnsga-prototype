@@ -3,32 +3,32 @@
 #ifndef __MPIEVALUATESERVER__
 #define __MPIEVALUATESERVER__
 
-#include <boost/mpi.hpp>
 #include "generic/Population.h"
 #include "generic/TGenes.h"
+#include <boost/mpi.hpp>
 
-namespace geantvmoop{
+namespace geantvmoop {
 
 class ParallelEvaluateServer : private ParallelEvaluator,
-                                  public EvaluatePopulation{
+                               public EvaluatePopulation {
 
 public:
   ParallelEvaluateServer(boost::mpi::environment &_mpi_env,
-                            boost::mpi::communicator &_world,
-                            ProblemDefinitions &_problem_defs)
+                         boost::mpi::communicator &_world,
+                         ProblemDefinitions &_problem_defs)
       : ParallelEvaluator(_mpi_env, _world, _problem_defs) {
     // Send skeleton of decision variable to make sending dvs to clients/slaves
     // more efficient
     // Send skeleton of decision variable to make sending dvs to clients/slaves
     // more efficient
-    decision_vars = std::pair<std::vector<double>, std::vector<int> >(
+    decision_vars = std::pair<std::vector<double>, std::vector<int>>(
         std::piecewise_construct,
         std::forward_as_tuple(
             std::vector<double>(problem_defs.real_lowerbounds.size(), 0.0)),
         std::forward_as_tuple(
             std::vector<int>(problem_defs.int_lowerbounds.size(), 0)));
 
-    objs_and_constraints = std::pair<std::vector<double>, std::vector<double> >(
+    objs_and_constraints = std::pair<std::vector<double>, std::vector<double>>(
         std::piecewise_construct,
         std::forward_as_tuple(
             std::vector<double>(problem_defs.minimise_or_maximise.size(), 0.0)),
@@ -53,8 +53,8 @@ public:
   void operator()(PopulationSPtr population) {
     // Sanity check - that we can represent each individual by an mpi tag.
     if (population->populationSize() > (max_tag - 1)) {
-      //            std::cout << "problem: max tag too small, population too
-      //            large for mpi\n";
+      std::cout << "problem: max tag too small, population too
+                 large for mpi\n";
     }
 
     int individual = 0;
@@ -94,7 +94,6 @@ public:
     }
   }
 };
-
 }
 
 #endif

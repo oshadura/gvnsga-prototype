@@ -4,18 +4,18 @@
 #define __SEQUENTUALEVALUATOR__
 
 #include "GAEvaluate.h"
-#include "generic/GAVector.h"
 #include "generic/GADouble.h"
+#include "generic/GAVector.h"
 #include "tools/Random.h"
 
 #include <cmath>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <strings.h>
 #include <errno.h>
-#include <sys/wait.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
 #include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #define READ 0
 #define WRITE 1
@@ -27,7 +27,7 @@ class GASequentualEvaluator : public GAEvaluate<GASequentualEvaluator> {
 public:
   // void Evaluate() { output = F::Evaluate(input); }
   template <typename F> static void EvaluateImpl() {
-    //GAVector<GADouble> fOutput;
+    // GAVector<GADouble> fOutput;
     size_t sizeofOutput = sizeof(F::output) + sizeof(F) * F::output.capacity();
     std::cout << "Size of expected buffer for fitness is :" << sizeofOutput
               << std::endl;
@@ -55,7 +55,7 @@ public:
           for (auto i : F::output)
             std::cout << i << ' ' << std::endl;
           std::cout << "===============" << std::endl;
-          //ind.SetFitness(tempFitness);
+          // ind.SetFitness(tempFitness);
         }
         std::cout << "===============" << std::endl;
         std::cout << "We are stoping to read.." << std::endl;
@@ -72,9 +72,9 @@ public:
         exit(EXIT_FAILURE);
       } else {
         std::cout << "Starting child.." << std::endl;
-        F::output = F::Evaluate(F::input);
+        // output = F::Evaluate(input);
         close(pipeGA[READ]);
-        //tempFitness = ind.GetFitnessVector();
+        // tempFitness = ind.GetFitnessVector();
         write(pipeGA[WRITE], &F::output, sizeofOutput);
         std::cout << "=======Child writes:========" << std::endl;
         std::cout << "===============" << std::endl;
@@ -85,8 +85,8 @@ public:
       std::cout << "We are back to master job::" << std::endl;
     }
     // Cleaning array of previos pids
-    //fArrayDead[fNumberChildren] = 0;
-    
+    // fArrayDead[fNumberChildren] = 0;
+
     // How to return values....?
     // F::output = fOutput;
   }

@@ -56,9 +56,7 @@ TEST_F(AllPCA, PCAConvertXtoPopulation) {
   ASSERT_EQ(lpca.GetX().cols(), 7);
 }
 
-/*
 TEST_F(AllPCA, LoadingDataLPCAByHands) {
-  /*
  lpca.LoadData("data");
  MatrixXd test(3, 5);
  test(0, 0) = 2.0;
@@ -79,8 +77,8 @@ TEST_F(AllPCA, LoadingDataLPCAByHands) {
  MatrixXd Xtest;
  Xtest = lpca.GetX().transpose();
  ASSERT_EQ(Xtest, test);
- */
-//}
+}
+*/
 
 ////////////////////// Methods ///////////////////////////////
 //////////////////////////////////////////////////////////////
@@ -97,7 +95,7 @@ TEST_F(AllPCA, RunLPCAReductionofComponents) {
   lpca.RunLPCAWithReductionOfComponents();
   lpca.WriteTransformed("outputlpcatransform");
 }
-/*
+
 TEST_F(AllPCA, RunLPCAReductionofComponentsNoScale) {
   lpca.LoadData("data");
   lpca.RunLPCAWithReductionOfComponentsNoScale();
@@ -110,13 +108,11 @@ TEST_F(AllPCA, RunLPCAWhiteReductionofComponents) {
   lpcawhite.WriteTransformed("outputlpcawtransform");
 }
 
-
 TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
   lpcawhite.LoadData("data");
   lpcawhite.RunLPCAWhiteWithReductionOfComponentsNoScale();
   lpcawhite.WriteTransformed("outputlpcawtransformnoscale");
 }
-*/
 
 TEST_F(AllPCA, RunUncenteredLPCA) {
   ulpca.LoadData("data");
@@ -137,7 +133,7 @@ TEST_F(AllPCA, RunUncenteredLPCAScale) {
   ulpca.Print();
   ulpca.WriteTransformed("outputtlpca");
 }
-/*
+
 TEST_F(AllPCA, RunUncenteredWhiteLPCA) {
   uwlpca.LoadData("data");
   uwlpca.RunUncenteredWhiteLPCA();
@@ -145,13 +141,12 @@ TEST_F(AllPCA, RunUncenteredWhiteLPCA) {
   uwlpca.WriteTransformed("outputulpca");
 }
 
-
 TEST_F(AllPCA, RunUncenteredWhiteLPCAReductionofComponents) {
   uwlpca.LoadData("data");
   uwlpca.RunUncenteredWhiteLPCAWithReductionOfComponents();
   uwlpca.WriteTransformed("outputulpcatransform");
 }
-*/
+
 TEST_F(AllPCA, RunUncenteredTrickLPCA) {
   twlpca.LoadData("data");
   twlpca.RunUncenteredTrickLPCA();

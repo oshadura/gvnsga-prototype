@@ -15,19 +15,19 @@
 #ifndef __NSGA3__
 #define __NSGA3__
 
+#include "addstructures/GACD.h"
+#include "addstructures/GAComparator.h"
+#include "addstructures/GANDRank.h"
 #include "generic/GAAlgorithm.h"
 #include "generic/PF.h"
 #include "generic/ReferencePoint.h"
-#include "addstructures/GANDRank.h"
-#include "addstructures/GACD.h"
-#include "addstructures/GAComparator.h"
 #include "tools/Random.h"
 #include <iostream>
 
-#include "gaoperators/GATournamentSelection.h"
-#include "gaoperators/GASBXCrossover.h"
-#include "gaoperators/GAPolynomialMutation.h"
 #include "addstructures/GAComparator.h"
+#include "gaoperators/GAPolynomialMutation.h"
+#include "gaoperators/GASBXCrossover.h"
+#include "gaoperators/GATournamentSelection.h"
 
 namespace geantvmoop {
 
@@ -41,7 +41,7 @@ private:
 
 public:
   GANSGA3(F problem) : GAAlgorithm<GANSGA3<F>, F>(problem) {}
-  int fPopulationSize = 1000;
+  int fPopulationSize = 100;
   double PMut = 0.2;
 
   void InitializeImpl() {
