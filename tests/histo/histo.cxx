@@ -11,6 +11,7 @@ public:
 };
 
 TEST_F(HistoOutput, SimpleHistoOutputofPopulation) {
+	std::cout << pop;
   bool IsTrue = HistogramManager<geantvmoop::DTLZ2>::GetInstance().HistoFill(
       pop, "testpopulation.root", 0);
   ASSERT_EQ(IsTrue, true);
