@@ -107,7 +107,7 @@ public:
     char namepop[20], namefitn[20], /* namefile[10],*/ namefolder[20],
         /* namefolderprevious[20],*/ namescatter[20], x1str[10], x2str[10],
         y1str[10], y2str[10], nameFitLand[20], name3dhist[20], name3dhistx[20],
-        name3dhisty[20]/*, name3dhistyprevious[20]*/;
+        name3dhisty[20] /*, name3dhistyprevious[20]*/;
     std::vector<int> ScatterCombinationX, ScatterCombinationY;
     TObjArray HXList(0);
     TObjArray HYList(0);
@@ -140,8 +140,8 @@ public:
     PopDist->SetMarkerColor(kBlue);
     PopDist->SetMarkerSize(.6); //
                                 /////// Population 3D Histogram
-    TH3F *h3a =
-        new TH3F(name3dhist, "3D Population", 20, -10, 30, 20, -10, 30, 20, -10, 30);
+    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, -10, 30, 20, -10, 30,
+                         20, -10, 30);
     // TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, -30, 5, 20, -30, 5,
     //                     20, -30, 5);
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
@@ -151,7 +151,8 @@ public:
     h3a->SetMarkerSize(.6); //
                             ////////////////////////////////
                             /////// Population 3 DHistogram
-    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -20, 30, 20, -10, 30, 20, -10, 30);
+    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -20, 30, 20, -10, 30, 20,
+                         -10, 30);
     // TH3F *h3y =
     //    new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -30, 5, 20, -30, 5, 20, -30, 5);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
@@ -180,7 +181,8 @@ public:
     double error = 0.1;
     ////////////////////////////////
     // DTLZ b.
-    TF3 *FitLand = new TF3(nameFitLand, F::TruePF, -10, 20, -10, 20, -10, 20, 3);
+    TF3 *FitLand =
+        new TF3(nameFitLand, F::TruePF, -10, 20, -10, 20, -10, 20, 3);
     // TF3 *FitLand = new TF3(nameFitLand, F::TruePF, -30, 5, -30, 5, -30, 5,
     // 3);
 
@@ -197,7 +199,8 @@ public:
 
     //////// Fitness distribution
     // DTLZ b.
-    TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness distribution ",pop.size(), -10., 20.);
+    TH1F *PopFitnessDist = new TH1F(
+        namefitn, "Population fitness distribution ", pop.size(), -10., 20.);
     // TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness
     // distribution",
     //                                pop.size(), -30., 5.);
@@ -223,13 +226,13 @@ public:
 
         auto x1 = pop.GetGeneValue(i, it);
         auto x2 = pop.GetGeneValue(i, it + 1);
-        TString histoname = TString::Format(namescatter);
+        TString histoname = TString::Format("%s", namescatter);
         TH2F *myhistx = ((TH2F *)(HXList.FindObject(histoname)));
         if (!myhistx) {
-          myhistx = new TH2F(TString::Format(namescatter),
+          myhistx = new TH2F(TString::Format("%s", namescatter),
                              "Scatter plot of different TGenes", pop.size(), 0,
                              1, pop.size(), 0, 1);
-          // myhistx = new TH2F(TString::Format(namescatter),
+          // myhistx = new TH2F(TString::Format("%s",namescatter),
           //                   "Scatter plot of different TGenes", pop.size(),
           // -5,
           //                   5, pop.size(), -5, 5);
@@ -271,15 +274,15 @@ public:
 
         auto y1 = pop.GetObjectiveValue(i, it);
         auto y2 = pop.GetObjectiveValue(i, it + 1);
-        TString histoname = TString::Format(namescatter);
+        TString histoname = TString::Format("%s", namescatter);
         TH2F *myhisty = ((TH2F *)(HYList.FindObject(histoname)));
         if (!myhisty) {
           // DTLZ b.
-          myhisty = new TH2F(TString::Format(namescatter),
+          myhisty = new TH2F(TString::Format("%s", namescatter),
                              "Scatter plot of different TGenes", pop.size(), 0,
                              100., pop.size(), -10, 20.);
           // Kursawe b.
-          // myhisty = new TH2F(TString::Format(namescatter),
+          // myhisty = new TH2F(TString::Format("%s",namescatter),
           //                   "Scatter plot of different TGenes", pop.size(),
           //                   -30, 5., pop.size(), -30, 5.);
           myhisty->SetFillColor(kYellow); // Fill fill color to yellow
