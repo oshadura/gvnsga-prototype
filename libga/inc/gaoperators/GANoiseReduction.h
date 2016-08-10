@@ -1,3 +1,15 @@
+//===--- GANoiseReduction.h - LibGA ---------------------------------*- C++
+//-*-===//
+//
+//                     LibGA Prototype
+//
+//===----------------------------------------------------------------------===//
+/**
+ * @file GANoiseReduction.h
+ * @brief Implementation of noise reduction operationa for LibGA
+ * prototype
+ */
+ //
 #pragma once
 
 #ifndef __NOISEREDUCTION__

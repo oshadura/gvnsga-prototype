@@ -63,6 +63,9 @@ endif()
 #-------------------
 
 include_directories(inc)
+if(Shark_FOUND)
+  include_directories(${SHARK_INCLUDE_DIRS})
+endif()
 if(ENABLE_GEANTV)
   include_directories(${GEANTV_INCLUDE_DIR})
   include_directories(${VECGEOM_INCLUDE_DIR})

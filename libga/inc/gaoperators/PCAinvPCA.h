@@ -1,3 +1,16 @@
+//===--- PCAinvPCA.h - LibGA ---------------------------------*- C++
+//-*-===//
+//
+//                     LibGA Prototype
+//
+//===----------------------------------------------------------------------===//
+/**
+ * @file PCAinvPCA.h
+ * @brief Implementation of  PCA-Inverse-PCA for LibGA
+ * prototype
+ */
+//===----------------------------------------------------------------------===//
+
 #pragma once
 
 #ifndef __PCAINVPCA__
@@ -15,10 +28,12 @@
 
 namespace geantvmoop {
 
-// TBD templated!
 class PCAinvPCA : public NoiseReduction<PCAinvPCA> {
 
 public:
+
+  // Need to change it in templated way..
+
   /*
   template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {
