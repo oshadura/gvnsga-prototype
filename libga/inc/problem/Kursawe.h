@@ -34,14 +34,14 @@ public:
       fParameters.push_back(parameter.GetGAValue());
     double aux, xi, xj;
     fFit[0] = 0.0;
-    for (int var = 0; var < individual.size() - 1; var++) {
+    for (std::size_t var = 0; var < individual.size() - 1; var++) {
       xi = fParameters[var] * fParameters[var];
       xj = fParameters[var + 1] * fParameters[var + 1];
       aux = (-0.2) * sqrt(xi + xj);
       fFit[0] += (-10.0) * exp(aux);
     }
     fFit[1] = 0.0;
-    for (int var = 0; var < individual.size(); var++) {
+    for (std::size_t var = 0; var < individual.size(); var++) {
       fFit[1] += pow(fabs(fParameters[var]), 0.8) +
                  5.0 * sin(pow(fParameters[var], 3.0));
     }

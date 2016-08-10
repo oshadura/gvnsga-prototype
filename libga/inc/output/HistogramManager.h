@@ -101,13 +101,13 @@ public:
     return ScattComb;
   }
 
-  bool HistoFill(Population<F> &pop, char *hfile, int generation) {
+  bool HistoFill(Population<F> &pop, char const *hfile, int generation) {
     std::cout << "Building output statistics for generation " << generation
               << std::endl;
-    char namepop[20], namefitn[20], namefile[10], namefolder[20],
-        namefolderprevious[20], namescatter[20], x1str[10], x2str[10],
+    char namepop[20], namefitn[20], /* namefile[10],*/ namefolder[20],
+        /* namefolderprevious[20],*/ namescatter[20], x1str[10], x2str[10],
         y1str[10], y2str[10], nameFitLand[20], name3dhist[20], name3dhistx[20],
-        name3dhisty[20], name3dhistyprevious[20];
+        name3dhisty[20]/*, name3dhistyprevious[20]*/;
     std::vector<int> ScatterCombinationX, ScatterCombinationY;
     TObjArray HXList(0);
     TObjArray HYList(0);
@@ -209,10 +209,10 @@ public:
     PopFitnessDist->SetMarkerColor(kBlue);
     PopFitnessDist->SetMarkerSize(.6); //
     /////////////////////////////////////////////////////////////////
-    for (int i = 0; i < pop.size(); ++i) {
+    for (std::size_t i = 0; i < pop.size(); ++i) {
       double genearray[pop.GetTGenes(0).size()];
       // X Scatter plots
-      for (int it = 0; it < ScatterCombinationX.size(); it += 2) {
+      for (std::size_t it = 0; it < ScatterCombinationX.size(); it += 2) {
         // Taking correct X ID
         auto valueX1 = ScatterCombinationX.at(it);
         auto valueX2 = ScatterCombinationX.at(it + 1);
@@ -260,7 +260,7 @@ public:
         */
       }
       // Y Scatter plots
-      for (int it = 0; it < ScatterCombinationY.size(); it += 2) {
+      for (std::size_t it = 0; it < ScatterCombinationY.size(); it += 2) {
         // Taking correct Y ID
         auto valueY1 = ScatterCombinationY.at(it);
         auto valueY2 = ScatterCombinationY.at(it + 1);
@@ -295,7 +295,7 @@ public:
         // HYList.Draw("surf3");
       }
       // Distribution plots
-      for (int j = 0; j < pop.GetTGenes(0).size(); ++j) {
+      for (std::size_t j = 0; j < pop.GetTGenes(0).size(); ++j) {
         auto ind = pop.GetGeneValue(i, j);
         auto fitness = pop.GetObjectiveValue(i, j);
         genearray[j] = ind;

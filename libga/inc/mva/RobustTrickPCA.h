@@ -38,14 +38,14 @@ public:
   virtual ~RobusTrickPCA() {}
 
   void LoadData(const char *data, char sep = ',') {
-    unsigned int row = 0;
+    int row = 0;
     std::ifstream reader;
     reader.open(data);
     if (reader.is_open()) {
       std::string line, token;
       while (std::getline(reader, line)) {
         std::stringstream tmp(line);
-        unsigned int col = 0;
+        int col = 0;
         while (std::getline(tmp, token, sep)) {
           if (D.rows() < row + 1) {
             D.conservativeResize(row + 1, D.cols());
@@ -70,14 +70,14 @@ public:
   }
 
   template <typename F> void UploadPopulation(Population<F> &pop) {
-    for (int i = 0; i < pop.size(); ++i) {
+    for (std::size_t i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
-      for (int j = 0; j < individual.size(); ++j) {
+      for (std::size_t j = 0; j < individual.size(); ++j) {
         auto gene = individual[j];
-        if (D.rows() < i + 1) {
+        if (D.rows() < (int)i + 1) {
           D.conservativeResize(i + 1, D.cols());
         }
-        if (D.cols() < j + 1) {
+        if (D.cols() < (int)j + 1) {
           D.conservativeResize(D.rows(), j + 1);
         }
         D(i, j) = gene.GetGAValue();

@@ -44,7 +44,7 @@ public:
     double lb = ind[0].GetDownLimit();
     double ub = ind[0].GetUpLimit();
     // std::cout << "Checking limits: " << lb << " and " << ub << std::endl;
-    for (int j = 0; j < ind.size(); ++j) {
+    for (std::size_t j = 0; j < ind.size(); ++j) {
       if (rand(gen) <= prob) {
         y = ind[j].GetGAValue();
         fDelta1 = (y - lb) / (ub - lb);

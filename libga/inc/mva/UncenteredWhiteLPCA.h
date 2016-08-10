@@ -58,14 +58,14 @@ public:
   }
 
   void LoadData(const char *data, char sep = ',') {
-    unsigned int row = 0;
+    int row = 0;
     std::ifstream reader;
     reader.open(data);
     if (reader.is_open()) {
       std::string line, token;
       while (std::getline(reader, line)) {
         std::stringstream tmp(line);
-        unsigned int col = 0;
+        int col = 0;
         while (std::getline(tmp, token, sep)) {
           if (X.rows() < row + 1) {
             X.conservativeResize(row + 1, X.cols());
@@ -89,10 +89,10 @@ public:
       auto individual = pop.GetTGenes(i);
       for (int j = 0; j < individual.size(); ++j) {
         auto gene = individual[j];
-        if (X.rows() < i + 1) {
+        if (X.rows() < (int)i + 1) {
           X.conservativeResize(i + 1, X.cols());
         }
-        if (X.cols() < j + 1) {
+        if (X.cols() < (int)j + 1) {
           X.conservativeResize(X.rows(), j + 1);
         }
         X(i, j) = gene.GetGAValue();
@@ -122,8 +122,6 @@ public:
   }
 
   void RunUncenteredWhiteLPCA() {
-    double totalvar = 0;
-    int i;
     C = (X.adjoint() * X) / double(X.rows());
     EigenSolver<MatrixXd> edecomp(C);
     // Eigen values

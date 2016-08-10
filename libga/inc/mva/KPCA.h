@@ -52,9 +52,9 @@ public:
   }
 
   template <typename F> void UploadPopulation(Population<F> &pop) {
-    for (int i = 0; i < pop.size(); ++i) {
+    for (std::size_t i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
-      for (int j = 0; j < individual.size(); ++j) {
+      for (std::size_t j = 0; j < individual.size(); ++j) {
         auto gene = individual[j];
         if (X.rows() < i + 1) {
           X.conservativeResize(i + 1, X.cols());
@@ -73,13 +73,13 @@ public:
   template <typename F>
   void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
     // check if they are both the same size!
-    // if (data.cols() != newpop.size())
-    //  return;
+    if (data.cols() != newpop.size())
+      return;
     typename F::Input ind;
     std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";
-    for (int i = 0; i < data.rows(); ++i) {
-      for (int j = 0; j < data.cols(); ++j) {
+    for (unsigned int i = 0; i < data.rows(); ++i) {
+      for (unsigned int j = 0; j < data.cols(); ++j) {
         // std::cout << "Gene to be added in a population[" << i << "," << j
         //          << "] is " << data(i, j) << std::endl;
         ind.push_back(data(i, j));
@@ -95,13 +95,13 @@ public:
 
   void LoadData(const char *data, char sep = ',') {
     // Read data
-    unsigned int row = 0;
+    int row = 0;
     std::ifstream file(data);
     if (file.is_open()) {
       std::string line, token;
       while (std::getline(file, line)) {
         std::stringstream tmp(line);
-        unsigned int col = 0;
+        int col = 0;
         while (std::getline(tmp, token, sep)) {
           if (X.rows() < row + 1) {
             X.conservativeResize(row + 1, X.cols());

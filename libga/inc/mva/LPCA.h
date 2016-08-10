@@ -54,14 +54,14 @@ public:
   }
 
   void LoadData(const char *data, char sep = ',') {
-    unsigned int row = 0;
+    int row = 0;
     std::ifstream reader;
     reader.open(data);
     if (reader.is_open()) {
       std::string line, token;
       while (std::getline(reader, line)) {
         std::stringstream tmp(line);
-        unsigned int col = 0;
+        int col = 0;
         while (std::getline(tmp, token, sep)) {
           if (X.rows() < row + 1) {
             X.conservativeResize(row + 1, X.cols());
@@ -82,14 +82,14 @@ public:
   }
 
   template <typename F> void UploadPopulation(Population<F> &pop) {
-    for (int i = 0; i < pop.size(); ++i) {
+    for (std::size_t i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
-      for (int j = 0; j < individual.size(); ++j) {
+      for (std::size_t j = 0; j < individual.size(); ++j) {
         auto gene = individual[j];
-        if (X.rows() < i + 1) {
+        if (X.rows() < (int)i + 1) {
           X.conservativeResize(i + 1, X.cols());
         }
-        if (X.cols() < j + 1) {
+        if (X.cols() < (int)j + 1) {
           X.conservativeResize(X.rows(), j + 1);
         }
         X(i, j) = gene.GetGAValue();
@@ -103,8 +103,8 @@ public:
   template <typename F>
   void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
     // check if they are both the same size!
-    // if (data.cols() != newpop.size())
-    //  return;
+    if (data.cols() != newpop.size())
+      return;
     typename F::Input ind;
     std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";
@@ -191,7 +191,7 @@ public:
         X.rows();
     mean = MatrixXd::Zero(X.rows(), X.cols());
     dev = MatrixXd::Zero(X.rows(), X.cols());
-    for (int i = 0; i < X.rows(); ++i) {
+    for (unsigned int i = 0; i < X.rows(); ++i) {
       mean.row(i) = colmean.transpose();
       dev.row(i) = stddev.transpose();
     }
@@ -286,7 +286,7 @@ public:
     //#endif
     meannew = MatrixXd::Zero(X.rows(), X.cols());
     devnew = MatrixXd::Zero(X.rows(), X.cols());
-    for (int i = 0; i < X.rows(); ++i) {
+    for (unsigned int i = 0; i < X.rows(); ++i) {
       devnew.row(i) = stddevnew.transpose();
       meannew.row(i) = mean_column_centered.transpose();
     }

@@ -38,7 +38,7 @@ public:
     E = 0.1;
     sum1 = sum2 = sum3 = 0.0;
     count1 = count2 = count3 = 0;
-    for (j = 3; j <= fParameters.size(); j++) {
+    for (std::size_t j = 3; j <= fParameters.size(); j++) {
       yj = fParameters[j - 1] -
            2.0 * fParameters[1] *
                sin(2.0 * pi() * fParameters[0] + j * pi() / fParameters.size());
@@ -63,7 +63,8 @@ public:
     fFitness.insert(it + 1,
                     (0.5 * (yj - 2 * fParameters[0] + 2.0) * fParameters[1] +
                      2.0 * sum2 / (double)count2));
-    fFitness.insert(it +2, (1.0 - fParameters[1] + 2.0 * sum3 / (double)count3));
+    fFitness.insert(it + 2,
+                    (1.0 - fParameters[1] + 2.0 * sum3 / (double)count3));
     return fFitness;
   }
 

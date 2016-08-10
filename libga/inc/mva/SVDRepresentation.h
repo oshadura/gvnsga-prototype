@@ -38,14 +38,14 @@ public:
   virtual ~SVDRepresentation() {}
 
   void LoadData(const char *data, char sep = ',') {
-    unsigned int row = 0;
+    int row = 0;
     std::ifstream reader;
     reader.open(data);
     if (reader.is_open()) {
       std::string line, token;
       while (std::getline(reader, line)) {
         std::stringstream tmp(line);
-        unsigned int col = 0;
+        int col = 0;
         while (std::getline(tmp, token, sep)) {
           if (D.rows() < row + 1) {
             D.conservativeResize(row + 1, D.cols());
@@ -65,14 +65,14 @@ public:
   }
 
   template <typename F> void UploadPopulation(Population<F> &pop) {
-    for (int i = 0; i < pop.size(); ++i) {
+    for (std::size_t i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
-      for (int j = 0; j < individual.size(); ++j) {
+      for (std::size_t j = 0; j < individual.size(); ++j) {
         auto gene = individual[j];
-        if (D.rows() < i + 1) {
+        if (D.rows() < (int)i + 1) {
           D.conservativeResize(i + 1, D.cols());
         }
-        if (D.cols() < j + 1) {
+        if (D.cols() < (int)j + 1) {
           D.conservativeResize(D.rows(), j + 1);
         }
         D(i, j) = gene.GetGAValue();
@@ -132,10 +132,6 @@ public:
    * For Checking how Pareto Fronty is dependable from singular values..
    */
   void SVDOutput() {
-    //Print();
-    const int M = D.rows();
-    const int N = D.cols();
-    const double lambda = 1.0 / sqrt(std::max(M, N));
     MatrixXd Y = D;
     JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
     std::cout << "Its singular values are:" << std::endl << svd.singularValues() << std::endl;

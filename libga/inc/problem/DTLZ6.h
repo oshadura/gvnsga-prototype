@@ -46,7 +46,7 @@ public:
 
     theta[0] = fParameters[0] * pi() / 2;
 
-    for (int i = 2; i <= theta.size(); ++i) {
+    for (std::size_t i = 2; i <= theta.size(); ++i) {
       theta[i - 1] = t * (1 + 2 * g * fParameters[i - 1]);
     }
     for (int i = 1; i <= m; ++i) {

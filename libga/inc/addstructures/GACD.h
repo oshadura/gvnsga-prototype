@@ -55,7 +55,7 @@ public:
     Map<T> fMap;
     for (auto it = pop.begin(); it != pop.end(); ++it)
       fMap[*it] = 0;
-    int numOfObjectives = pop[0]->GetOutput().size();
+    unsigned int numOfObjectives = pop[0]->GetOutput().size();
     //Debug purposes...
     //std::cout << "Number of objectives " << numOfObjectives << std::endl;
     //std::cout << "fMin " << fMin.size() << std::endl;
@@ -63,7 +63,7 @@ public:
     if (fMin.size() != numOfObjectives || fMax.size() != numOfObjectives)
       throw std::runtime_error(
           "The boundary size and objective size does not match!");
-    for (int i = 0; i < numOfObjectives; ++i) {
+    for (unsigned int i = 0; i < numOfObjectives; ++i) {
       auto obj = pop.GetObjective(i);
       auto index = pop.SortIndex(obj);
       double fDenominator = fMax[i] - fMin[i];

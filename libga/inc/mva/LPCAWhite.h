@@ -62,14 +62,14 @@ public:
   }
 
   void LoadData(const char *data, char sep = ',') {
-    unsigned int row = 0;
+    int row = 0;
     std::ifstream reader;
     reader.open(data);
     if (reader.is_open()) {
       std::string line, token;
       while (std::getline(reader, line)) {
         std::stringstream tmp(line);
-        unsigned int col = 0;
+        int col = 0;
         while (std::getline(tmp, token, sep)) {
           if (X.rows() < row + 1) {
             X.conservativeResize(row + 1, X.cols());
@@ -90,9 +90,9 @@ public:
   }
 
   template <typename F> void UploadPopulation(Population<F> &pop) {
-    for (int i = 0; i < pop.size(); ++i) {
+    for (std::size_t i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
-      for (int j = 0; j < individual.size(); ++j) {
+      for (std::size_t j = 0; j < individual.size(); ++j) {
         auto gene = individual[j];
         if (X.rows() < i + 1) {
           X.conservativeResize(i + 1, X.cols());

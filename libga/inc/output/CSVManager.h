@@ -50,11 +50,11 @@ public:
     populationcvs << "Gene1, Gene2, Gene3, Gene4, Gene5, Gene6, Gene7, "
                      "Fitness1, Fitness2, Fitness3, Rank, CrowdingDistance\n";
     // CVS format for R ananlysis..
-    for (int i = 0; i < population.size(); ++i) {
-      for (int j = 0; j < population.GetTGenes(i).size(); ++j) {
+    for (std::size_t i = 0; i < population.size(); ++i) {
+      for (std::size_t j = 0; j < population.GetTGenes(i).size(); ++j) {
         populationcvs << population.GetGeneValue(i, j) << ",";
       }
-      for (int k = 0; k < population.GetTFitness(i).size(); ++k) {
+      for (std::size_t k = 0; k < population.GetTFitness(i).size(); ++k) {
         populationcvs << population.GetObjectiveValue(i, k) << ",";
       }
       auto ind = population[i];

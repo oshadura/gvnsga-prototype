@@ -37,13 +37,13 @@ public:
   }
 
   template <typename F>
-  Population<F> MultipleSelectionImpl(const Population<F> &population, int n) {
+  Population<F> MultipleSelectionImpl(const Population<F> &population, unsigned int n) {
     Population<F> result;
     Population<F> pool;
     while (result.size() < n) {
       auto index = population.GetIndex();
       std::random_shuffle(index.begin(), index.end());
-      for (unsigned int i = 0; i < index.size() - 1; i += 2) {
+      for (std::size_t i = 0; i < index.size() - 1; i += 2) {
         result.push_back(
             std::min(population[index[i]], population[index[i + 1]]));
         if (result.size() >= n)

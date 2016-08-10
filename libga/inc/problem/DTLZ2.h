@@ -45,7 +45,7 @@ public:
     int m = 3;
     int k = n - m + 1; // 10
     double g = 0.0;
-    for (int i = n - k; i < sizeof(n); ++i) {
+    for (std::size_t i = n - k; i < sizeof(n); ++i) {
       g += std::pow(fParameters[i] - 0.5, 2);
     }
     for (int i = 0; i < m; ++i) {
