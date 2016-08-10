@@ -9,7 +9,7 @@
  * @brief Implementation of TGenes for LibGA
  * prototype
  */
-//
+
 #pragma once
 
 #ifndef __TGENES__
@@ -21,13 +21,14 @@
 
 #include "hpc/GAEvaluate.h"
 #include "hpc/GASequentualEvaluator.h"
+#include "hpc/GASimpleEvaluator.h"
+
 
 namespace geantvmoop {
 
 template <typename F> class TGenes;
 template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
-// TBD: Add one more templated typename for evaluation procedure (fork-,
-// MPI-based..)
+
 template <typename F> class TGenes {
 
 private:
@@ -39,7 +40,7 @@ public:
 
   TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
     if (fEvaluated)
-      Evaluate();
+      GASimpleEvaluator::GAEvaluate();
   };
 
   ~TGenes() {}
@@ -68,11 +69,12 @@ public:
     return true;
   }
 
+  /*
   void Evaluate() {
     // output = GASequentualEvaluator::Evaluate();
-    // Was..
     output = F::Evaluate(input);
   }
+  */
 
   const typename F::Input &GetInput() const { return input; }
 

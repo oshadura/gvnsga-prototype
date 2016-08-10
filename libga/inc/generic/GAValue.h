@@ -3,13 +3,13 @@
 //
 //                     LibGA Prototype
 //
-//===----------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===/
+
 /**
  * @file GaValue.h
  * @brief Implementation of generic value class for LibGA
  * prototype
  */
-//
  #pragma once
 
 #ifndef __GAVALUE__

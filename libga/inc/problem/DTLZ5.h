@@ -68,8 +68,8 @@ public:
   }
 
   static Double_t TruePF(Double_t *x, Double_t *parameter) {
-    Double_t value =
-        std::sqrt(parameter[0] - parameter[1] * x[0] * x[0] - parameter[2] * x[1] * x[1]);
+    Double_t value = std::sqrt(parameter[0] - parameter[1] * x[0] * x[0] -
+                               parameter[2] * x[1] * x[1]);
     return value;
   }
 

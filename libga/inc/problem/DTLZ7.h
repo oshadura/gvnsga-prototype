@@ -62,7 +62,7 @@ public:
     return vector;
   }
 
-  //Crap
+  // Crap
   static Double_t TruePF(Double_t *x, Double_t *parameter) {
     Double_t value =
         std::sqrt(1 - parameter[0] * x[0] * x[0] - parameter[1] * x[1] * x[1] -

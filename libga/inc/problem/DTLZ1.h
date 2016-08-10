@@ -29,13 +29,19 @@ public:
 
   virtual ~DTLZ1() {}
 
-  void SetNGenes(const int i) { fNGenes = i; };
+  void SetNGenes(const int i) {
+    fNGenes = i;
+  };
 
-  void SetNObjectives(const int i) { fNObjectives = i; };
+  void SetNObjectives(const int i) {
+    fNObjectives = i;
+  };
 
-  int GetNGenes() const { return fNGenes; };
+  int GetNGenes() const {
+    return fNGenes;
+  };
 
-//  int GetNObjectives() const { return fNObjectives; };
+  //  int GetNObjectives() const { return fNObjectives; };
 
 private:
   int fNGenes, fNObjectives;
@@ -84,8 +90,7 @@ public:
 
   // ROOT Fitting to true Pareto front
   static Double_t TruePF(Double_t *x, Double_t *parameter) {
-    Double_t value =
-        parameter[0] * x[0] + parameter[1] * x[1] - parameter[2];
+    Double_t value = parameter[0] * x[0] + parameter[1] * x[1] - parameter[2];
     return value;
   }
 

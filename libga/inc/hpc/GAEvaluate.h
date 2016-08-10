@@ -1,5 +1,5 @@
 //===--- GAEvaluate.h - LibGA ---------------------------------------------*-
-//C++
+// C++
 //-*-===//
 //
 //                     LibGA Prototype
@@ -24,11 +24,7 @@ namespace geantvmoop {
 template <typename Derived> class GAEvaluate {
 
 public:
-
-  //void Evaluate() { output = F::Evaluate(input); }
-  template <typename F> static void Evaluate() {
-    Derived::GAEvaluateImpl();
-  }
+  template <typename F> static void Evaluate() { Derived::GAEvaluateImpl(); }
 };
 }
 

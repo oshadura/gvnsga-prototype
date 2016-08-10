@@ -9,7 +9,6 @@ namespace geantvmoop {
 class GAMPIEvaluator : public GAEvaluate<GAMPIEvaluator> {
 
 public:
-  // void Evaluate() { output = F::Evaluate(input); }
   template <typename T> static void Evaluate() {
     boost::mpi::environment env;
     boost::mpi::communicator world;

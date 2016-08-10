@@ -226,13 +226,13 @@ public:
 
         auto x1 = pop.GetGeneValue(i, it);
         auto x2 = pop.GetGeneValue(i, it + 1);
-        TString histoname = TString::Format("%s", namescatter);
+        TString histoname = TString::Format(namescatter);
         TH2F *myhistx = ((TH2F *)(HXList.FindObject(histoname)));
         if (!myhistx) {
-          myhistx = new TH2F(TString::Format("%s", namescatter),
+          myhistx = new TH2F(TString::Format(namescatter),
                              "Scatter plot of different TGenes", pop.size(), 0,
                              1, pop.size(), 0, 1);
-          // myhistx = new TH2F(TString::Format("%s",namescatter),
+          // myhistx = new TH2F(TString::Format(namescatter),
           //                   "Scatter plot of different TGenes", pop.size(),
           // -5,
           //                   5, pop.size(), -5, 5);
@@ -274,15 +274,15 @@ public:
 
         auto y1 = pop.GetObjectiveValue(i, it);
         auto y2 = pop.GetObjectiveValue(i, it + 1);
-        TString histoname = TString::Format("%s", namescatter);
+        TString histoname = TString::Format(namescatter);
         TH2F *myhisty = ((TH2F *)(HYList.FindObject(histoname)));
         if (!myhisty) {
           // DTLZ b.
-          myhisty = new TH2F(TString::Format("%s", namescatter),
+          myhisty = new TH2F(TString::Format(namescatter),
                              "Scatter plot of different TGenes", pop.size(), 0,
                              100., pop.size(), -10, 20.);
           // Kursawe b.
-          // myhisty = new TH2F(TString::Format("%s",namescatter),
+          // myhisty = new TH2F(TString::Format(namescatter),
           //                   "Scatter plot of different TGenes", pop.size(),
           //                   -30, 5., pop.size(), -30, 5.);
           myhisty->SetFillColor(kYellow); // Fill fill color to yellow

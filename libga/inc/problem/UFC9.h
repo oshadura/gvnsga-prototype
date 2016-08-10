@@ -33,7 +33,7 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    unsigned int j, count1, count2, count3;
+    unsigned int count1, count2, count3;
     double sum1, sum2, sum3, yj, E;
     E = 0.1;
     sum1 = sum2 = sum3 = 0.0;

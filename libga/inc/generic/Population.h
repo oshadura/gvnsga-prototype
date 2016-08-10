@@ -31,7 +31,7 @@ namespace geantvmoop {
 template <typename F> class Population : public std::vector<individual_t<F>> {
 
 public:
-  // for creation of new population
+  // For creation of new population
   Population(std::initializer_list<individual_t<F>> list)
       : std::vector<individual_t<F>>(list) {}
 
@@ -158,21 +158,18 @@ public:
   friend std::ostream &operator<<(std::ostream &s, const Population<F> &pop) {
     std::cout << "---------------------------\n";
     std::cout << "Size of population: " << pop.size() << std::endl;
-    std::cout << "---------------------------\n";
+    std::cout << "---------------------------\n" << std::endl;
     for (int i = 0; i < pop.size(); ++i) {
-      auto entry = pop[i];
-      // for (int j = 0; j < entry.GetOutput().size(); ++j) {
-      std::cout << "Fitness function values -> " << entry->GetOutput()[0]
-                << ", " << entry->GetOutput()[1] << ", "
-                << entry->GetOutput()[3] << ", " << std::endl;
-      // std::cout << "<- Fitness function output" << std::endl;
-      std::cout << "Optimisation parameter values -> " << entry->GetInput()[0]
-                << ", " << entry->GetInput()[1] << ", " << entry->GetInput()[3]
-                << ", " << entry->GetInput()[4] << ", " << entry->GetInput()[5]
-                << ", " << entry->GetInput()[6] << ", " << entry->GetInput()[7]
-                << std::endl;
+      std::cout << "Individual " << i << std::endl;
+      for (int j = 0; j < pop.GetTGenes(i).size(); ++j) {
+        std::cout << pop.GetGeneValue(i, j) << "|";
+      }
+      std::cout << "\nFitness function value: " << std::endl;
+      for (int k = 0; k < pop.GetTFitness(i).size(); ++k) {
+        std::cout << pop.GetObjectiveValue(i, k) << "|";
+      }
     }
-    std::cout << "---------------------------\n";
+    std::cout << "---------------------------\n" << std::endl;
     return s;
   }
 };

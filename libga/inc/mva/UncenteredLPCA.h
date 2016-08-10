@@ -88,10 +88,10 @@ public:
       auto individual = pop.GetTGenes(i);
       for (std::size_t j = 0; j < individual.size(); ++j) {
         auto gene = individual[j];
-        if (X.rows() < i + 1) {
+        if (X.rows() < (int)i + 1) {
           X.conservativeResize(i + 1, X.cols());
         }
-        if (X.cols() < j + 1) {
+        if (X.cols() < (int)j + 1) {
           X.conservativeResize(X.rows(), j + 1);
         }
         // Stupid thing, but it works..

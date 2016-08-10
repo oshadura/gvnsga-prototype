@@ -32,13 +32,6 @@ public:
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-    /*
-     std::cout << "Vector input for evaluation function: ";
-     for (auto i : fParameters)
-       std::cout << i << ' ';
-     std::cout << ' ' << std::endl;
-    */
-
     int alpha = 100;
     int n = 12;
     int m = 3;
