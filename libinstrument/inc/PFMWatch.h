@@ -3,7 +3,7 @@
 // Sandro Wenzel - sandro.wenzel@cern.ch
 //
 ////////////////////////////////////////
-#ifdef ENABLE_PERFMON
+//#ifdef ENABLE_PERFMON
 #ifndef PFMWATCH_H
 #define PFMWATCH_H
 
@@ -57,8 +57,7 @@ private:
   uint64_t stopvalues[3 * GROUPSIZE];
   double countoverhead[GROUPSIZE];
 
-  //.ClassDef(PFMWatch,1)
 };
 
 #endif
-#endif
+//#endif

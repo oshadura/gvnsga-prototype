@@ -170,7 +170,7 @@ void PAPIWatch::setPapiEvents()
 	ret = PAPI_add_event(EventSet, PAPI_DP_OPS);		if (ret != PAPI_OK) cout << "ERRO: PAPI_DP_OPS" << endl;		else strcat(header, "DP_OPS;");		// [104	] 	Floating point operations; optimized to count scaled double precision vector operations
 	ret = PAPI_add_event(EventSet, PAPI_VEC_SP);		if (ret != PAPI_OK) cout << "ERRO: PAPI_VEC_SP" << endl;		else strcat(header, "VEC_SP;");		// [105	] 	Single precision vector/SIMD instructions
 	ret = PAPI_add_event(EventSet, PAPI_VEC_DP);		if (ret != PAPI_OK) cout << "ERRO: PAPI_VEC_DP" << endl;		else strcat(header, "VEC_DP;");		// [106	] 	Double precision vector/SIMD instructions
-	ret = PAPI_add_event(EventSet, PAPI_REF_CYC);		if (ret != PAPI_OK) cout << "ERRO: PAPI_REF_CYC" << endl;		else strcat(header, "REF_CYC;");		// [107	] 	Reference clock cycles
+	//ret = PAPI_add_event(EventSet, PAPI_REF_CYC);		if (ret != PAPI_OK) cout << "ERRO: PAPI_REF_CYC" << endl;		else strcat(header, "REF_CYC;");		// [107	] 	Reference clock cycles
 
 	strcat(header, "\n");
 }
@@ -297,6 +297,6 @@ void PAPIWatch::removeAndDestoyPapi()
 	ret = PAPI_remove_event(EventSet, PAPI_DP_OPS);		if (ret != PAPI_OK)			std::cout << "FAIL remove PAPI_DP_OPS event" << endl;
 	ret = PAPI_remove_event(EventSet, PAPI_VEC_SP);		if (ret != PAPI_OK)			std::cout << "FAIL remove PAPI_VEC_SP event" << endl;
 	ret = PAPI_remove_event(EventSet, PAPI_VEC_DP);		if (ret != PAPI_OK)			std::cout << "FAIL remove PAPI_VEC_DP event" << endl;
-	ret = PAPI_remove_event(EventSet, PAPI_REF_CYC);	if (ret != PAPI_OK)			std::cout << "FAIL remove PAPI_REF_CYC event" << endl;
+	//ret = PAPI_remove_event(EventSet, PAPI_REF_CYC);	if (ret != PAPI_OK)			std::cout << "FAIL remove PAPI_REF_CYC event" << endl;
 	ret = PAPI_destroy_eventset( &EventSet );			if (ret != PAPI_OK)			std::cout << "FAIL destroy" << endl;
 }

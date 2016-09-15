@@ -55,6 +55,8 @@ if(APPLE)
           ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
           ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
           ${MLPACK_LIBRARY}
+          papi
+          pfm
           )
 elseif(UNIX)
   target_link_libraries(gagtests
@@ -73,6 +75,8 @@ elseif(UNIX)
           ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
           ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
           ${MLPACK_LIBRARY}
+          papi
+          pfm
           )
 endif()
 

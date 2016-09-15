@@ -40,7 +40,8 @@ public:
 
   TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
     if (fEvaluated)
-      GASimpleEvaluator::GAEvaluate();
+      Evaluate();
+      //GASimpleEvaluator::GAEvaluate();
   };
 
   ~TGenes() {}
@@ -69,12 +70,12 @@ public:
     return true;
   }
 
-  /*
+  
   void Evaluate() {
     // output = GASequentualEvaluator::Evaluate();
     output = F::Evaluate(input);
   }
-  */
+  
 
   const typename F::Input &GetInput() const { return input; }
 
