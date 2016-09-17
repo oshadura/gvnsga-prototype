@@ -7,11 +7,11 @@
 
 FIND_PATH(DLIB_INCLUDE_DIR clustering.h
 	  PATHS
-    ${CMAKE_PREFIX_PATH}/include/dlib
+    ${CMAKE_MODULE_PATH}/include/dlib
     )
 
 FIND_LIBRARY(DLIB_LIBRARY NAMES dlib PATHS
-  ${CMAKE_PREFIX_PATH}/lib/)
+${CMAKE_MODULE_PATH}/lib/)
 
 INCLUDE(FindPackageHandleStandardArgs)
 

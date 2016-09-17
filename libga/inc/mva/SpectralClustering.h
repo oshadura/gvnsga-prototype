@@ -37,10 +37,10 @@ class Spectral {
 
 public:
   Spectral()
-      : centers(6), kernel_type(1), normalise(1), max_iters(1000), gamma(0.001),
+      : centers(2), kernel_type(2), normalise(1), max_iters(1000), gamma(0.001),
         constant(1.0), order(2.0) {}
   explicit Spectral(MatrixXd &d)
-      : centers(6), kernel_type(1), normalise(1), max_iters(1000), gamma(0.001),
+      : centers(2), kernel_type(2), normalise(1), max_iters(1000), gamma(0.001),
         constant(1.0), order(2.0) {
     X = d;
   }
