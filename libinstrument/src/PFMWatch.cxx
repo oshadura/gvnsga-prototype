@@ -1,6 +1,6 @@
 #ifdef ENABLE_PERFMON
-#include "PFMWatch.h"
 
+#include "PFMWatch.h"
 #include <iostream>
 
 PFMWatch::PFMWatch() {

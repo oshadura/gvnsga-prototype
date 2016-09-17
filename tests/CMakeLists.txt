@@ -16,6 +16,10 @@ include_directories(/usr/local/include/eigen3)
 # Mac OS X
 include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 
+#DLIB
+find_package(DLIB)
+include_directories(${DLIB_INCLUDE_DIR})
+
 if(ENABLE_GEANTV)
   include_directories(${GEANTV_INCLUDE_DIR})
   include_directories(${VECGEOM_INCLUDE_DIR})
@@ -55,8 +59,9 @@ if(APPLE)
           ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
           ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
           ${MLPACK_LIBRARY}
-          papi
-          pfm
+          ${DLIB_LIBRARY}
+#          papi
+#          pfm
           )
 elseif(UNIX)
   target_link_libraries(gagtests
@@ -75,8 +80,9 @@ elseif(UNIX)
           ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
           ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
           ${MLPACK_LIBRARY}
-          papi
-          pfm
+          ${DLIB_LIBRARY}
+#          papi
+#          pfm
           )
 endif()
 

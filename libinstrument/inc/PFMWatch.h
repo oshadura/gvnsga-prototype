@@ -3,7 +3,8 @@
 // Sandro Wenzel - sandro.wenzel@cern.ch
 //
 ////////////////////////////////////////
-//#ifdef ENABLE_PERFMON
+#ifdef ENABLE_PERFMON
+
 #ifndef PFMWATCH_H
 #define PFMWATCH_H
 
@@ -13,20 +14,20 @@
 
 #include <cstdlib>
 
-#include <sys/types.h>
+#include <err.h>
+#include <errno.h>
 #include <inttypes.h>
+#include <iomanip>
+#include <locale.h>
+#include <perfmon/pfmlib_perf_event.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
-#include <errno.h>
-#include <unistd.h>
 #include <string.h>
-#include <locale.h>
 #include <sys/ioctl.h>
-#include <err.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <vector>
-#include <perfmon/pfmlib_perf_event.h>
-#include <iomanip>
 
 #define GROUPSIZE 8 // 8 is the maximum number of counted events
 
@@ -56,8 +57,8 @@ private:
   uint64_t startvalues[3 * GROUPSIZE];
   uint64_t stopvalues[3 * GROUPSIZE];
   double countoverhead[GROUPSIZE];
-
 };
 
 #endif
-//#endif
+
+#endif
