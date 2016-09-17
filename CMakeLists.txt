@@ -138,14 +138,14 @@ if(ENABLE_CMAES)
 endif()
 
 #----------------------------------------------------------------------------
-option(ENABLE_PERFMON "Adding PerfMon support" OFF)
+option(ENABLE_PERF "Adding PerfMon support" OFF)
 
-if(ENABLE_PERFMON)
-  find_package(PerfMon)
-  if(PERFMON_FOUND)
+if(ENABLE_PERF)
+  find_package(Perf)
+  if(PERF_FOUND)
     set(GVNSGA_COMPILATION_FLAGS "${GVNSGA_COMPILATION_FLAGS} ${GA_COMPILATION_FLAGS} -DENABLE_PERFMON")
-    message(STATUS "PerfMon_LIBRARY is ${PerfMon_LIBRARY}")
-    message(STATUS "PerfMon_INCLUDE_DIR is ${PerfMon_INCLUDE_DIR}")
+    message(STATUS "PerfMon_LIBRARY is ${Perf_LIBRARY}")
+    message(STATUS "PerfMon_INCLUDE_DIR is ${Perf_INCLUDE_DIR}")
   endif()
 endif()
 

@@ -1,4 +1,4 @@
-//#ifdef ENABLE_PERFMON
+#ifdef ENABLE_PERFMON
 #include "PFMWatch.h"
 
 #include <iostream>
@@ -167,4 +167,4 @@ void PFMWatch::printSummary() {
               << "\t: " << count[i] << std::endl;
   }
 }
-//#endif
+#endif

@@ -41,21 +41,21 @@ public:
 	void set_constant(const double i){constant = i;};
 	void set_order(const double i){order = i;};
 	void set_max_iters(const unsigned int i){max_iters = i;};
-	const vector<int> &get_assignments() const {return assignments;};
+	const std::vector<int> &get_assignments() const {return assignments;};
 private:
 	MatrixXd X, K, eigenvectors;
 	VectorXd eigenvalues, cumulative;
 	unsigned int centers, kernel_type, normalise, max_iters;
 	double gamma, constant, order;
-	vector<int> assignments;
+	std::vector<int> assignments;
 public:
 	int read_data(const char* data, char sep){
 	unsigned int row = 0;
 	std::ifstream file(data);
 	if(file.is_open()){
-		string line,token;
+		std::string line,token;
 		while(getline(file, line)){
-			stringstream tmp(line);
+			std::stringstream tmp(line);
 			unsigned int col = 0;
 			while(getline(tmp, token, sep)){
 				if(X.rows() < row+1){
@@ -84,7 +84,7 @@ int write_data(const char* data, char sep){
 			for(unsigned int j = 0; j < X.cols(); j++){
 				file << X(i,j) << sep;
 			}
-			file << assignments[row] << endl;
+			file << assignments[row] << std::endl;
 			row++;
 		}	
 		file.close();
@@ -130,17 +130,17 @@ void eigendecomposition(){
 	eigenvalues = edecomp.eigenvalues().real();
 	eigenvectors = edecomp.eigenvectors().real();
 	cumulative.resize(eigenvalues.rows());
-	std::vector<pair<double,VectorXd> > eigen_pairs; 
+	std::vector<std::pair<double,VectorXd> > eigen_pairs; 
 	double c = 0.0; 
 	for(unsigned int i = 0; i < eigenvectors.cols(); i++){
 		if(normalise){
 			double norm = eigenvectors.col(i).norm();
 			eigenvectors.col(i) /= norm;
 		}
-		eigen_pairs.push_back(make_pair(eigenvalues(i),eigenvectors.col(i)));
+		eigen_pairs.push_back(std::make_pair(eigenvalues(i),eigenvectors.col(i)));
 	}
 	// http://stackoverflow.com/questions/5122804/sorting-with-lambda
-	std::sort(eigen_pairs.begin(),eigen_pairs.end(), [](const pair<double,VectorXd> a, const pair<double,VectorXd> b) -> bool {return (a.first > b.first);} );
+	std::sort(eigen_pairs.begin(),eigen_pairs.end(), [](const std::pair<double,VectorXd> a, const std::pair<double,VectorXd> b) -> bool {return (a.first > b.first);} );
 	if(centers > eigen_pairs.size()) centers = eigen_pairs.size();
 	for(unsigned int i = 0; i < eigen_pairs.size(); i++){	
 		eigenvalues(i) = eigen_pairs[i].first;
@@ -235,7 +235,7 @@ void kmeans(){
 		double ediff = std::fabs(old_e-e);
 		double cdiff = (centroids-old_centroids).cwiseAbs().maxCoeff();
 		printf("Iterations %i : Error %2.4f : Error delta %2.4f : Centroid movement %2.4f\n",n+1,e,ediff,cdiff);
-		if(n && cdiff < numeric_limits<double>::epsilon() && ediff < numeric_limits<double>::epsilon()){
+		if(n && cdiff < std::numeric_limits<double>::epsilon() && ediff < std::numeric_limits<double>::epsilon()){
 			break;
 		}
 		old_e = e;
