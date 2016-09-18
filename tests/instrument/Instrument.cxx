@@ -1,11 +1,12 @@
 #include "GATest.h"
 #include "PAPIWatch.h"
 #include "PFMWatch.h"
+#include "Memory.h"
 #include "generic/Functions.h"
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 #include "problem/DTLZ2.h"
-// Externals
+// Externals pap-wrap from third-externals
 #include "PapiCollectors.h"
 #include "papi_wrap.h"
 
@@ -37,4 +38,11 @@ TEST_F(Instrument, CheckingPapiWrap){
   pw_stop_collector(handle);
   pw_print();
   pw_print_table();
-} 
+}
+
+TEST_F(Instrument, CheckMemory){
+  size_t currentSize = getCurrentRSS( );
+  size_t peakSize    = getPeakRSS( );
+  std::cout << "Current RSS Size: " << currentSize << std::endl;
+  std::cout << "Peak RSS Size: " << peakSize << std::endl;
+}
