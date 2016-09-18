@@ -3,7 +3,7 @@
 // Sandro Wenzel - sandro.wenzel@cern.ch
 //
 ////////////////////////////////////////
-#ifdef ENABLE_PERFMON
+//#ifdef ENABLE_PERF
 
 #ifndef PFMWATCH_H
 #define PFMWATCH_H
@@ -61,4 +61,4 @@ private:
 
 #endif
 
-#endif
+//#endif

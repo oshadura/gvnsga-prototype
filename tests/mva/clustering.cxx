@@ -25,13 +25,13 @@ TEST_F(Clustering, SpectralClustering) {
   spcl.Cluster();
 }
 
-/*
+
 TEST_F(Clustering, DlibSpectral) {
   // Here we declare that our samples will be 2 dimensional column vectors.
   // (Note that if you don't know the dimensionality of your vectors at
   // compile time
   // you can change the 2 to a 0 and then set the size at runtime)
-  typedef matrix<double, 2, 1> sample_type;
+  typedef matrix<double, 10, 1> sample_type;
 
   // Now we are making a typedef for the kind of kernel we want to use.  I
   // picked the
@@ -72,8 +72,8 @@ TEST_F(Clustering, DlibSpectral) {
 
   dlib::rand rnd;
 
-  // we will make 50 points from each class
-  const long num = 50;
+  // we will make 1000 points from each class
+  const long num = 1000;
 
   // make some samples near the origin
   double radius = 0.5;
@@ -134,11 +134,13 @@ TEST_F(Clustering, DlibSpectral) {
   // now loop over all our samples and print out their predicted class.  In
   // this example
   // all points are correctly identified.
+  /*
   for (unsigned long i = 0; i < samples.size() / 3; ++i) {
-    cout << test(samples[i]) << " ";
-    cout << test(samples[i + num]) << " ";
-    cout << test(samples[i + 2 * num]) << "\n";
+    std::cout << test(samples[i]) << " ";
+    std::cout << test(samples[i + num]) << " ";
+    std::cout << test(samples[i + 2 * num]) << "\n";
   }
+  */
 
   // Now print out how many dictionary vectors each center used.  Note that
   // the maximum number of 8 was reached.  If you went back to the kcentroid
@@ -146,12 +148,12 @@ TEST_F(Clustering, DlibSpectral) {
   // these
   // numbers would go up.  However, 8 is all we need to correctly cluster this
   // dataset.
-  cout << "num dictionary vectors for center 0: "
-       << test.get_kcentroid(0).dictionary_size() << endl;
-  cout << "num dictionary vectors for center 1: "
-       << test.get_kcentroid(1).dictionary_size() << endl;
-  cout << "num dictionary vectors for center 2: "
-       << test.get_kcentroid(2).dictionary_size() << endl;
+  std::cout << "num dictionary vectors for center 0: "
+       << test.get_kcentroid(0).dictionary_size() << std::endl;
+  std::cout << "num dictionary vectors for center 1: "
+       << test.get_kcentroid(1).dictionary_size() << std::endl;
+  std::cout << "num dictionary vectors for center 2: "
+       << test.get_kcentroid(2).dictionary_size() << std::endl;
 
   // Finally, we can also solve the same kind of non-linear clustering problem
   // with
@@ -161,6 +163,6 @@ TEST_F(Clustering, DlibSpectral) {
   // cluster.
   std::vector<unsigned long> assignments =
       spectral_cluster(kernel_type(0.1), samples, 3);
-  cout << mat(assignments) << endl;
+  //std::cout << mat(assignments);
 }
-*/
+

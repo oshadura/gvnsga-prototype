@@ -42,6 +42,12 @@ if(ENABLE_PAPI)
   set(INSTR_COMPILATION_FLAGS "${INSTR_COMPILATION_FLAGS} -DPAPI")
 endif()
 #----------------------------------------------------------------------------
+option(ENABLE_PERF "Adding Perfmon benchmarking support" ON)
+find_package(PERF QUIET)
+if(ENABLE_PERF)
+  set(INSTR_COMPILATION_FLAGS "${INSTR_COMPILATION_FLAGS} -DPERF")
+endif()
+#----------------------------------------------------------------------------
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${_build_type}} ${INSTR_CXX_FLAGS} ${INSTR_COMPILATION_FLAGS}")
 message(STATUS "Compiling with C++ flags: ${CMAKE_CXX_FLAGS}")

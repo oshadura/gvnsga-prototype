@@ -16,14 +16,14 @@ include_directories(/usr/local/include/eigen3)
 # Mac OS X
 include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 
-#DLIB
-find_package(DLIB REQUIRED)
-if(DLIB_FOUND)
-  message(STATUS "DLIB_LIBRARY is ${DLIB_LIBRARY}")
-  message(STATUS "DLIB_INCLUDE_DIR is ${PDLIB_INCLUDE_DIR}")
-endif()
+# DLIB
+find_package(dlib REQUIRED)
+include_directories(${dlib_INCLUDE_DIRS})
 
-include_directories(${DLIB_INCLUDE_DIR})
+# STUPUD TEST
+include_directories(/home/geant/Install/perfmon/include)
+include_directories(/home/geant/Install/dlib/include)
+
 
 if(ENABLE_GEANTV)
   include_directories(${GEANTV_INCLUDE_DIR})
@@ -62,11 +62,14 @@ if(APPLE)
           ${GEANTV_LIBRARIES}
           ${VECGEOM_LIBRARIES}
           ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
-          ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
+          ${Boost_LIBRARY_DIRS} ${PERF_LIBRARY}
           ${MLPACK_LIBRARY}
-          ${DLIB_LIBRARY}
-#          papi
+          ${dlib_LIBRARIES}
+          papi
 #          pfm
+          lapack
+# STUPID TEST
+          /home/geant/Install/perfmon/lib/libpfm.so
           )
 elseif(UNIX)
   target_link_libraries(gagtests
@@ -83,11 +86,15 @@ elseif(UNIX)
           ${GEANTV_LIBRARIES}
           ${VECGEOM_LIBRARIES}
           ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
-          ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY}
+          ${Boost_LIBRARY_DIRS} ${PERF_LIBRARY}
           ${MLPACK_LIBRARY}
-          ${DLIB_LIBRARY}
-#          papi
+          ${dlib_LIBRARIES}
+          papi
 #          pfm
+          lapack
+# STUPID TEST
+          /home/geant/Install/perfmon/lib/libpfm.so
+          ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a
           )
 endif()
 

@@ -1,6 +1,3 @@
-#ifdef ENABLE_PAPI
-#ifdef ENABLE_PERF
-
 #include "GATest.h"
 #include "PAPIWatch.h"
 #include "PFMWatch.h"
@@ -8,6 +5,9 @@
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 #include "problem/DTLZ2.h"
+// Externals
+#include "PapiCollectors.h"
+#include "papi_wrap.h"
 
 class Instrument : public GATest {
 public:
@@ -30,5 +30,11 @@ TEST_F(Instrument, CheckingPerf) {
   pfw.printSummary();
 }
 
-#endif
-#endif
+TEST_F(Instrument, CheckingPapiWrap){
+  int handle = pw_new_collector("PapiTestOnPopulation");
+  pw_start_collector(handle);
+  geantvmoop::TGenes<geantvmoop::DTLZ2> i;
+  pw_stop_collector(handle);
+  pw_print();
+  pw_print_table();
+} 

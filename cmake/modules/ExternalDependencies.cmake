@@ -26,3 +26,24 @@ set(gmock_INCLUDE_DIR ${gtest_SOURCE_DIR}/googlemock/include)
 include_directories(${gmock_INCLUDE_DIR})
 set(gmock_LIBRARY ${gtest_BINARY_DIR}/googlemock/libgmock.a)
 set(gmock_MAIN_LIBRARY ${gtest_BINARY_DIR}/googlemock/libgmock_main.a)
+
+
+################################################################################
+# PAPI-WRAP
+ExternalProject_Add(
+	papi-wrap
+	GIT_REPOSITORY https://github.com/bcumming/papi-wrap.git
+	TIMEOUT 10
+	PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third_party/papi-wrap
+	CMAKE_ARGS
+	INSTALL_COMMAND ""
+	LOG_DOWNLOAD ON
+	LOG_BUILD ON)
+
+ExternalProject_Get_Property(papi-wrap BINARY_DIR)
+ExternalProject_Get_Property(papi-wrap SOURCE_DIR)
+set(papi_BINARY_DIR ${BINARY_DIR})
+set(papi_SOURCE_DIR ${SOURCE_DIR})
+set(papi_INCLUDE_DIR ${papi_SOURCE_DIR})
+include_directories(${papi_INCLUDE_DIR})
+set(gtest_LIBRARY ${papi_BINARY_DIR}/lib/libpapi_wrap.a)
