@@ -7,11 +7,11 @@
 #include <iostream>
 #include <vector>
 
-//#include <dlib/clustering.h>
-//#include <dlib/rand.h>
+#include <dlib/clustering.h>
+#include <dlib/rand.h>
 
 using namespace Eigen;
-// using namespace dlib;
+using namespace dlib;
 
 class Clustering : public GATest {
 public:

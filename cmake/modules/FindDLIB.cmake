@@ -5,13 +5,17 @@
 # DLIB_INCLUDE_DIRS    - the DLIB include directories
 # DLIB_LIBRARIES       - Link these to use DLIB
 
+if(NOT DLIB_ROOT)
+   find_path(DLIB_ROOT "clustering.h")
+endif()
+
 FIND_PATH(DLIB_INCLUDE_DIR clustering.h
 	  PATHS
-    ${CMAKE_MODULE_PATH}/include/dlib
+    ${DLIB_ROOT}/include/dlib
     )
 
 FIND_LIBRARY(DLIB_LIBRARY NAMES dlib PATHS
-${CMAKE_MODULE_PATH}/lib/)
+${DLIB_ROOT}/lib/)
 
 INCLUDE(FindPackageHandleStandardArgs)
 

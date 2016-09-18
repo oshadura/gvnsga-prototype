@@ -17,7 +17,12 @@ include_directories(/usr/local/include/eigen3)
 include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 
 #DLIB
-find_package(DLIB)
+find_package(DLIB REQUIRED)
+if(DLIB_FOUND)
+  message(STATUS "DLIB_LIBRARY is ${DLIB_LIBRARY}")
+  message(STATUS "DLIB_INCLUDE_DIR is ${PDLIB_INCLUDE_DIR}")
+endif()
+
 include_directories(${DLIB_INCLUDE_DIR})
 
 if(ENABLE_GEANTV)
