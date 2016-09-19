@@ -58,16 +58,16 @@ size_t getPeakRSS( )
 		return (size_t)0L;		/* Can't read? */
 	}
 	close( fd );
-	return (size_t)(psinfo.pr_rssize * 1024L);
+	return (size_t)(psinfo.pr_rssize * 1024L) / 1000000;
 
 #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
 	/* BSD, Linux, and OSX -------------------------------------- */
 	struct rusage rusage;
 	getrusage( RUSAGE_SELF, &rusage );
 #if defined(__APPLE__) && defined(__MACH__)
-	return (size_t)rusage.ru_maxrss;
+	return (size_t)rusage.ru_maxrss / 1000000;
 #else
-	return (size_t)(rusage.ru_maxrss * 1024L);
+	return (size_t)(rusage.ru_maxrss * 1024L) / 1000000;
 #endif
 
 #else
@@ -75,10 +75,6 @@ size_t getPeakRSS( )
 	return (size_t)0L;			/* Unsupported. */
 #endif
 }
-
-
-
-
 
 /**
  * Returns the current resident set size (physical memory use) measured
@@ -90,7 +86,7 @@ size_t getCurrentRSS( )
 	/* Windows -------------------------------------------------- */
 	PROCESS_MEMORY_COUNTERS info;
 	GetProcessMemoryInfo( GetCurrentProcess( ), &info, sizeof(info) );
-	return (size_t)info.WorkingSetSize;
+	return (size_t)info.WorkingSetSize / 1000000;
 
 #elif defined(__APPLE__) && defined(__MACH__)
 	/* OSX ------------------------------------------------------ */
@@ -99,7 +95,7 @@ size_t getCurrentRSS( )
 	if ( task_info( mach_task_self( ), MACH_TASK_BASIC_INFO,
 		(task_info_t)&info, &infoCount ) != KERN_SUCCESS )
 		return (size_t)0L;		/* Can't access? */
-	return (size_t)info.resident_size;
+	return (size_t)info.resident_size / 1000000;
 
 #elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
 	/* Linux ---------------------------------------------------- */
@@ -113,7 +109,7 @@ size_t getCurrentRSS( )
 		return (size_t)0L;		/* Can't read? */
 	}
 	fclose( fp );
-	return (size_t)rss * (size_t)sysconf( _SC_PAGESIZE);
+	return (size_t)rss * (size_t)sysconf( _SC_PAGESIZE) / 1000000;
 
 #else
 	/* AIX, BSD, Solaris, and Unknown OS ------------------------ */

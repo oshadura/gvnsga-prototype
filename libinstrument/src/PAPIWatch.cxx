@@ -62,9 +62,9 @@ void PAPIWatch::setPapiEvents() {
 
   strcpy(header, "Dimension;Time(s);");
 
-  ret = PAPI_add_event(EventSet, PAPI_L1_DCM);
+  ret = PAPI_add_event(EventSet, PAPI_TOT_INS);
   if (ret != PAPI_OK)
-    cout << "ERRO: PAPI_L1_DCM" << endl;
+    cout << "ERRO: PAPI_TOT_INS" << endl;
   else
     strcat(header, "L1_DCM;"); // [0	] 	Level 1 data cache misses
   ret = PAPI_add_event(EventSet, PAPI_L1_ICM);

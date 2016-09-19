@@ -32,6 +32,8 @@ if(ENABLE_GEANTV)
   include_directories(${HEPMC_INCLUDE_DIR})
 endif()
 
+include_directories(${CMAKE_BINARY_DIR}/third_party/papi-wrap/src)
+
 #-------------------
 # Setting up Ctest also
 #-------------------
@@ -68,6 +70,7 @@ if(APPLE)
           papi
 #          pfm
           lapack
+          hwloc
 # STUPID TEST
           /home/geant/Install/perfmon/lib/libpfm.so
           )
@@ -92,6 +95,7 @@ elseif(UNIX)
           papi
 #          pfm
           lapack
+          hwloc
 # STUPID TEST
           /home/geant/Install/perfmon/lib/libpfm.so
           ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a
