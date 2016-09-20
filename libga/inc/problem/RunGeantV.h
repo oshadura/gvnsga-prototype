@@ -30,7 +30,7 @@
 #include <cmath>
 #include <utility>
 
-#ifdef ENABLE_PERFMON
+#ifdef ENABLE_PERF
 #include "PFMWatch.h"
 #endif
 
@@ -66,7 +66,7 @@ public:
     std::vector<double> fParameters;
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
-#ifdef ENABLE_PERFMON
+#ifdef ENABLE_PERF
     PFMWatch perfcontrol;
     perfcontrol.Start();
 #endif
@@ -166,18 +166,18 @@ public:
     // Monitor the application
     prop->fUseAppMonitoring = false;
     prop->PropagatorGeom(geomfile, nthreads, graphics);
-#ifdef ENABLE_PERFMON
+#ifdef ENABLE_PERF
     perfcontrol.Stop();
 #endif
-    // fFitness.push_back(prop->fTimer->RealTime());
+    fFitness.push_back(prop->fTimer->Elapsed());
     fFitness.push_back(-(prop->fNprimaries.load()));
-#ifdef ENABLE_PERFMON
+#ifdef ENABLE_PERF
     fFitness.push_back(perfcontrol.GetNInstructions());
     fFitness.push_back(perfcontrol.GetBranchMisses());
     perfcontrol.printSummary();
 #endif
     delete prop;
-    return fParameters;
+    return fFitness;
   }
 
   static Input GetInput() {
@@ -186,7 +186,7 @@ public:
       vector.push_back(GADouble(1, 5));
     return vector;
   }
-#ifdef ENABLE_PERFMON
+#ifdef ENABLE_PERF
   static Output GetOutput() { return std::vector<double>(2); }
 #else
   static Output GetOutput() { return std::vector<double>(4); }

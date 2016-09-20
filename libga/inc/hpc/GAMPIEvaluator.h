@@ -10,6 +10,7 @@ class GAMPIEvaluator : public GAEvaluate<GAMPIEvaluator> {
 
 public:
   template <typename T> static void Evaluate() {
+  /*
     boost::mpi::environment env;
     boost::mpi::communicator world;
     Int eval; // Summary
@@ -34,5 +35,7 @@ public:
       eval_client();
     }
   }
+  */
+}
 };
 }

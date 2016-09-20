@@ -160,7 +160,7 @@ public:
       std::cout << "We are back to master job::" << std::endl;
     }
     */
-    double fitness; // wtf
+    double fitness; 
     // Forking a child process - should be in loop too
     cpid = fork();
     // Loop if we have more children

@@ -103,8 +103,10 @@ include_directories(${CMAKE_SOURCE_DIR}/libinstrument/inc)
 # Files
 #-------------------
 
-file(GLOB sources src/algorithms/*.cxx
-                  src/addstructures/*cxx
+file(GLOB sources src/addstructures/*.cxx
+                  src/algorithms/*.cxx
+                  src/gaoperators/*.cxx
+                  #src/hpc/*.cxx
                   src/generic/*.cxx
                   src/instrumentation/*.cxx
                   src/mva/*.cxx
@@ -112,12 +114,16 @@ file(GLOB sources src/algorithms/*.cxx
                   src/problem/*.cxx
                   src/tools/*cxx
                   )
-file(GLOB headers inc/algorithms/*.h
+file(GLOB headers inc/addstructures/*.h
+                  inc/algorithms/*.h
+                  inc/gaoperators/*.h
                   inc/generic/*.h
+                  #inc/hpc/*.h
                   inc/instrumentation/*.h
                   inc/mva/*.h
                   inc/output/*.h
                   inc/problem/*.h
+                  inc/statistic/*.h
                   inc/tools/*.h
                   )
 

@@ -45,7 +45,7 @@ endif()
 option(ENABLE_PERF "Adding Perfmon benchmarking support" ON)
 find_package(PERF QUIET)
 if(ENABLE_PERF)
-  set(INSTR_COMPILATION_FLAGS "${INSTR_COMPILATION_FLAGS} -DPERF")
+  set(INSTR_COMPILATION_FLAGS "${INSTR_COMPILATION_FLAGS} -DENABLE_PERF")
 endif()
 #----------------------------------------------------------------------------
 
@@ -59,9 +59,23 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -W -Wall -ansi -ldl")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -W -Wall -ansi -ldl")
 add_library(Instrument SHARED ${sources})
 if(PAPI_FOUND)
-  target_link_libraries(Instrument ${PAPI_LIBRARY})
+  target_link_libraries(Instrument ${PAPI_LIBRARY}
+          papi
+#         pfm
+          lapack
+          hwloc
+# STUPID TEST
+          /home/geant/Install/perfmon/lib/libpfm.so
+          ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a)
 else()
-  target_link_libraries(Instrument)
+  target_link_libraries(Instrument          
+          papi
+#         pfm
+          lapack
+          hwloc
+# STUPID TEST
+          /home/geant/Install/perfmon/lib/libpfm.so
+          ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a)
 endif()
 set_target_properties(Instrument PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 install(TARGETS Instrument DESTINATION ${CMAKE_BINARY_DIR})

@@ -16,6 +16,7 @@
 #define __GANDRANK__
 
 #include "GAGenericIndicator.h"
+#include "generic/PF.h"
 #include <vector>
 
 namespace geantvmoop {

@@ -11,6 +11,7 @@ namespace geantvmoop{
 
 class MPIEvaluate {
 protected:
+  /*
   boost::mpi::environment &mpi_env;
   boost::mpi::communicator &world;
   Functions &func;
@@ -29,6 +30,8 @@ public:
       : mpi_env(_mpi_env), world(_world), problem_defs(_problem_defs),
         number_processes(world.size()), number_clients(number_processes - 1),
         max_tag(mpi_env.max_tag()) {}
+
+*/
 };
 
 }
