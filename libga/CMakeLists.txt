@@ -5,8 +5,6 @@ project(libga)
 #-------------------
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 #-------------------
-find_package(ROOT REQUIRED)
-include(${ROOT_USE_FILE})
 # Dependency for MVA
 #find_package(Eigen3 REQUIRED)
 
@@ -72,6 +70,10 @@ if(ENABLE_GEANTV)
   include_directories(${HEPMC_INCLUDE_DIR})
   include_directories(${GEANTV_INCLUDE_DIR})
 endif()
+
+find_package(ROOT REQUIRED)
+include(${ROOT_USE_FILE})
+
 if(ENABLE_PERF)
   include_directories(${Perf_INCLUDE_DIR})
 endif()
@@ -139,6 +141,6 @@ ROOT_GENERATE_ROOTMAP(GADict LINKDEF LinkDef.h)
 #-------------------
 
 add_library(GA SHARED ${sources} GADict.cxx)
-target_link_libraries(GA ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer ${VC_LIBRARIES} ${VECGEOM_LIBRARIES} ${GEANTV_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY} ${MLPACK_LIBRARY})
+target_link_libraries(GA ${VC_LIBRARIES} ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer ${VC_LIBRARIES} ${VECGEOM_LIBRARIES} ${GEANTV_LIBRARIES} ${HEPMC_LIBRARIES} ${Boost_LIBRARY_DIRS} ${PerfMon_LIBRARY} ${MLPACK_LIBRARY})
 set_target_properties(GA PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 install(TARGETS GA DESTINATION ${CMAKE_BINARY_DIR})
