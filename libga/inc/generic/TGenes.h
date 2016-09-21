@@ -48,6 +48,7 @@ public:
 
   TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
     if (fEvaluated) {
+      /*
       CPUManager cpumgr;
       cpumgr.InitCPU();
       hwloc_topology_t topology;
@@ -65,12 +66,13 @@ public:
       if (ccores < 0.3) {
         usleep(microseconds);
       } else {
+        */
         Evaluate();
 //}
 #ifdef EVOLUTION
         GASimpleEvaluator::GAEvaluate();
 #endif
-      }
+      //}
     }
   }
 

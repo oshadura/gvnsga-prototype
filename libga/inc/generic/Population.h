@@ -18,6 +18,8 @@
 #include "TGenes.h"
 #include "GAVector.h"
 #include "GADouble.h"
+#include "instrumentation/CPUManager.h"
+
 #include <vector>
 #include <list>
 #include <stack>
@@ -28,23 +30,42 @@
 
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F>> {
+template <typename F> class Population : public std::vector<individual_t<F> > {
 
 public:
   // For creation of new population
-  Population(std::initializer_list<individual_t<F>> list)
-      : std::vector<individual_t<F>>(list) {}
+  Population(std::initializer_list<individual_t<F> > list)
+      : std::vector<individual_t<F> >(list) {}
 
-  Population() : std::vector<individual_t<F>>() {}
+  Population() : std::vector<individual_t<F> >() {}
 
-  Population(const std::vector<individual_t<F>> &individuals)
-      : std::vector<individual_t<F>>(individuals) {}
+  Population(const std::vector<individual_t<F> > &individuals)
+      : std::vector<individual_t<F> >(individuals) {}
 
   Population(int n) {
     for (int i = 0; i < n; ++i) {
-      typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F>>(gene);
-      this->push_back(individual);
+      CPUManager cpumgr;
+      cpumgr.InitCPU();
+      hwloc_topology_t topology;
+      int nbcores, ccores;
+      unsigned int microseconds;
+      microseconds = 3000;
+      hwloc_topology_init(&topology); // initialization
+      hwloc_topology_load(topology);  // actual detection
+      nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
+      // printf(" Number of free cores %d cores\n", nbcores);
+      hwloc_topology_destroy(topology);
+      ccores =
+          nbcores - cpumgr.GetCurrentValue() / 100 * nbcores; // just a test
+      printf(" Number of free cores %d cores\n", ccores);
+      if (ccores < 0.3) {
+        usleep(microseconds);
+      } else {
+        fork();
+        typename F::Input gene = F::GetInput().random();
+        auto individual = std::make_shared<TGenes<F> >(gene);
+        this->push_back(individual);
+      }
     }
   }
 
@@ -134,14 +155,12 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] > m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] < m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
   }
 
   void SortObj(int objective, bool isDescending = false) {
