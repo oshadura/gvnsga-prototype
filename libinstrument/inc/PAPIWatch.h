@@ -1,4 +1,4 @@
-//#ifdef ENABLE_PAPI
+#ifdef ENABLE_PAPI
 #ifndef __PAPIWATCH__
 #define __PAPIWATCH__
 
@@ -26,4 +26,4 @@ public:
 
 #endif
 
-//#endif
+#endif

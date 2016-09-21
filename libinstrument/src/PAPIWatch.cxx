@@ -1,4 +1,4 @@
-//#ifdef ENABLE_PAPI
+#ifdef ENABLE_PAPI
 #include "PAPIWatch.h"
 #include <cstdlib>
 #include <iostream>
@@ -983,4 +983,4 @@ void PAPIWatch::removeAndDestoyPapi() {
     std::cout << "FAIL destroy" << endl;
 }
 
-//#endif
+#endif

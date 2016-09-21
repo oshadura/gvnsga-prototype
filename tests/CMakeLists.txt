@@ -68,11 +68,11 @@ if(APPLE)
           ${MLPACK_LIBRARY}
           ${dlib_LIBRARIES}
           papi
-#          pfm
+          pfm
           lapack
           hwloc
 # STUPID TEST
-          /home/geant/Install/perfmon/lib/libpfm.so
+#          /home/geant/Install/perfmon/lib/libpfm.so
           )
 elseif(UNIX)
   target_link_libraries(gagtests
@@ -93,11 +93,11 @@ elseif(UNIX)
           ${MLPACK_LIBRARY}
           ${dlib_LIBRARIES}
           papi
-#          pfm
+          pfm
           lapack
           hwloc
 # STUPID TEST
-          /home/geant/Install/perfmon/lib/libpfm.so
+#          /home/geant/Install/perfmon/lib/libpfm.so
           ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a
           )
 endif()
