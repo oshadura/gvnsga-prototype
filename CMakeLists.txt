@@ -17,11 +17,6 @@ include(CheckCXXCompilerFlag)
 
 #----------------------------------------------------------------------------
 
-find_package(ROOT REQUIRED)
-include(${ROOT_USE_FILE})
-
-#----------------------------------------------------------------------------
-
 include(cmake/modules/ExternalDependencies.cmake)
 
 #----------------------------------------------------------------------------
@@ -126,8 +121,6 @@ endif()
 option(ENABLE_CMAES "If we are using libGA already with libcmaes" OFF)
 
 if(ENABLE_CMAES)
-  # Stupid idea..
-  # set(CMAKE_MODULE_PATH  ${CMAKE_SOURCE_DIR}/cmake/modules/)
   find_package(Libcmaes)
   if(LIBCMAES_FOUND)
       message(STATUS "LIBCMAES_LIBRARIES is ${LIBCMAES_LIBRARIES}")
@@ -145,6 +138,12 @@ if(ENABLE_PERF)
 endif()
 
 #----------------------------------------------------------------------------
+
+find_package(ROOT REQUIRED)
+include(${ROOT_USE_FILE})
+
+#----------------------------------------------------------------------------
+
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GA_CXX_FLAGS} ${GVNSGA_COMPILATION_FLAGS}")
 message(STATUS "Compiling GA with C++ flags: ${CMAKE_CXX_FLAGS}")

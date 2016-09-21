@@ -48,11 +48,10 @@ public:
 
   TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
     if (fEvaluated) {
-      /*
       CPUManager cpumgr;
       cpumgr.InitCPU();
       hwloc_topology_t topology;
-      int nbcores, ccores;
+      double nbcores, ccores;
       unsigned int microseconds;
       microseconds = 3000;
       hwloc_topology_init(&topology); // initialization
@@ -66,13 +65,11 @@ public:
       if (ccores < 0.3) {
         usleep(microseconds);
       } else {
-        */
         Evaluate();
-//}
+      }
 #ifdef EVOLUTION
-        GASimpleEvaluator::GAEvaluate();
+      GASimpleEvaluator::GAEvaluate();
 #endif
-      //}
     }
   }
 
@@ -116,53 +113,7 @@ public:
     pid_t cpid;
     ssize_t result;
     pipe(pipega);
-    /*
-    cpid = fork();
-    for (int i = 0; i < fNumberChildren; ++i) {
-      //  cpid = fork();
-      if (cpid > 0) {
-        std::cout << "Starting father.." << std::endl;
-        fArrayDead[i] = cpid;
-        close(pipega[WRITE]);
-        std::cout << "=======New fitness just created:========" << std::endl;
-        for (auto i : tmpoutput)
-          std::cout << i << ' ' << std::endl;
-        std::cout << "===============" << std::endl;
-        std::cout << "We are starting to read.." << std::endl;
-        while (read(pipega[READ], &output, sizeofOutput * 2) > 0) {
-          std::cout << "=======Parent reads:========" << std::endl;
-          for (auto i : output)
-            std::cout << i << ' ' << std::endl;
-          std::cout << "===============" << std::endl;
-        }
-        std::cout << "===============" << std::endl;
-        std::cout << "We are stoping to read.." << std::endl;
-        close(pipega[READ]);
-        for (int i = 0; i < fNumberChildren; ++i) {
-          std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
-                    << std::endl;
-          waitpid(fArrayDead[i], NULL, 0);
-          std::cout << "PID: " << fArrayDead[i] << " has shut down.."
-                    << std::endl;
-        }
-      } else if (cpid < 0) {
-        std::cerr << "Fork for evaluation was failed." << std::endl;
-        exit(EXIT_FAILURE);
-      } else {
-        std::cout << "Starting child.." << std::endl;
-        output = F::Evaluate(input);
-        close(pipega[READ]);
-        write(pipega[WRITE], &output, sizeofOutput);
-        std::cout << "=======Child writes:========" << std::endl;
-        std::cout << "===============" << std::endl;
-        close(pipega[WRITE]); // close the read-end of the pipe
-        wait(NULL);
-        exit(EXIT_SUCCESS);
-      }
-      std::cout << "We are back to master job::" << std::endl;
-    }
-    */
-    double fitness; 
+    double fitness;
     // Forking a child process - should be in loop too
     cpid = fork();
     // Loop if we have more children
@@ -174,9 +125,9 @@ public:
         close(pipega[WRITE]);
         std::cout << "We are starting to read.." << std::endl;
         memset(&tmpoutput, 0, sizeof(tmpoutput));
-        //for (int i = 0; i < output.size(); ++i) {
-          //read(pipega[READ], &fitness, sizeof(double));
-      while (read(pipega[READ], &fitness, sizeofOutput * 2) > 0) {
+        // for (int i = 0; i < output.size(); ++i) {
+        // read(pipega[READ], &fitness, sizeof(double));
+        while (read(pipega[READ], &fitness, sizeofOutput * 2) > 0) {
           tmpoutput.push_back(fitness);
           std::cout << "Parent read next value: " << fitness << std::endl;
         }

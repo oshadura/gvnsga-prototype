@@ -45,9 +45,9 @@ public:
   Population(int n) {
     for (int i = 0; i < n; ++i) {
       CPUManager cpumgr;
-      cpumgr.InitCPU();
+      cpumgr.InitAllCPU();
       hwloc_topology_t topology;
-      int nbcores, ccores;
+      double nbcores, ccores;
       unsigned int microseconds;
       microseconds = 3000;
       hwloc_topology_init(&topology); // initialization
@@ -56,15 +56,19 @@ public:
       // printf(" Number of free cores %d cores\n", nbcores);
       hwloc_topology_destroy(topology);
       ccores =
-          nbcores - cpumgr.GetCurrentValue() / 100 * nbcores; // just a test
-      printf(" Number of free cores %d cores\n", ccores);
+          nbcores - cpumgr.GetCurrentValueAllCPU() / 100 * nbcores; // just a test
+      printf(" Number of total free cores %d cores\n", ccores);
       if (ccores < 0.3) {
         usleep(microseconds);
       } else {
-        fork();
-        typename F::Input gene = F::GetInput().random();
-        auto individual = std::make_shared<TGenes<F> >(gene);
-        this->push_back(individual);
+        pid_t pid = fork();
+        if (pid == 0) {
+          typename F::Input gene = F::GetInput().random();
+          auto individual = std::make_shared<TGenes<F> >(gene);
+          this->push_back(individual);
+        } else {
+          std::cout << "Evaluated one more individual.." << std::endl;
+        }
       }
     }
   }
