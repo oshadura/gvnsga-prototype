@@ -63,7 +63,7 @@ public:
           nbcores - cpumgr.GetCurrentValue() / 100 * nbcores; // just a test
       printf(" Number of free cores %d cores\n", ccores);
       if (ccores < 0.3) {
-        usleep(microseconds);
+        sleep(50);
       } else {
         Evaluate();
       }

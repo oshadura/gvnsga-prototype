@@ -55,20 +55,33 @@ public:
       nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
       // printf(" Number of free cores %d cores\n", nbcores);
       hwloc_topology_destroy(topology);
-      ccores =
-          nbcores - cpumgr.GetCurrentValueAllCPU() / 100 * nbcores; // just a test
+      ccores = nbcores -
+               cpumgr.GetCurrentValueAllCPU() / 100 * nbcores; // just a test
       printf(" Number of total free cores %d cores\n", ccores);
       if (ccores < 0.3) {
         usleep(microseconds);
       } else {
+        pid_t fArrayDead[n];
         pid_t pid = fork();
+        fArrayDead[i] = pid;
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
           auto individual = std::make_shared<TGenes<F> >(gene);
           this->push_back(individual);
-        } else {
-          std::cout << "Evaluated one more individual.." << std::endl;
         }
+        else if(pid > 0) {
+          std::cout << "Evaluated one more individual.." << std::endl;
+          for (int i = 0; i < n; ++i) {
+            std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
+                      << std::endl;
+            waitpid(fArrayDead[i], NULL, 0);
+            std::cout << "PID: " << fArrayDead[i] << " has shut down.."
+                      << std::endl;
+          }
+        }else{
+         std::cout << "Evaluation through fork was failed........." << std::endl; 
+        }
+
       }
     }
   }
