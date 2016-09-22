@@ -12,7 +12,7 @@ public:
 };
 
 
-#ifdef ENABLE_GEANTVVV
+#ifdef ENABLE_GEANTV
 TEST_F(Nsga2, SolvingGeantVProblem) {
   geantvmoop::RunGeantV runc;
   geantvmoop::GANSGA2<geantvmoop::RunGeantV> nsga(runc);

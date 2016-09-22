@@ -125,7 +125,7 @@ public:
         memset(&tmpoutput, 0, sizeof(tmpoutput));
         // for (int i = 0; i < output.size(); ++i) {
         // read(pipega[READ], &fitness, sizeof(double));
-        while (read(pipega[READ], &fitness, sizeofOutput * 2) > 0) {
+        while (read(pipega[READ], &fitness, sizeof(double)) > 0) {
           tmpoutput.push_back(fitness);
           std::cout << "Parent read next value: " << fitness << std::endl;
         }
@@ -146,7 +146,6 @@ public:
         std::cout << "Starting child.." << std::endl;
         output = F::Evaluate(input);
         close(pipega[READ]);
-        memset(&tmpoutput, 0, sizeof(tmpoutput));
         for (auto it : output) {
           write(pipega[WRITE], &it, sizeof(double));
           std::cout << "Vector part to be send: " << it << std::endl;
