@@ -103,11 +103,11 @@ public:
 #ifdef EVOLUTION
     output = GASequentualEvaluator::Evaluate();
 #endif
-#ifdef ENABLE_GEANTV
+#ifdef ENABLE_GEANTVNO
     size_t sizeofOutput = sizeof(output) + sizeof(double) * output.capacity();
     const int fNumberChildren = 1;
     int pipega[fNumberChildren + 1];
-    pid_t fArrayDead[fNumberChildren];
+    pid_t fArrayfNumberChildren];
     pid_t cpid;
     ssize_t result;
     pipe(pipega);
@@ -119,7 +119,7 @@ public:
       //  cpid = fork();
       if (cpid > 0) {
         std::cout << "Starting father process: " << std::endl;
-        fArrayDead[i] = cpid;
+        fArray[i] = cpid;
         close(pipega[WRITE]);
         std::cout << "We are starting to read.." << std::endl;
         memset(&tmpoutput, 0, sizeof(tmpoutput));
@@ -133,10 +133,10 @@ public:
         std::cout << "We are stoping to read.." << std::endl;
         close(pipega[READ]);
         for (int i = 0; i < fNumberChildren; ++i) {
-          std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
+          std::cout << "Waiting for PID: " << fArray[i] << " to finish.."
                     << std::endl;
-          waitpid(fArrayDead[i], NULL, 0);
-          std::cout << "PID: " << fArrayDead[i] << " has shut down.."
+          waitpid(fArray[i], NULL, 0);
+          std::cout << "PID: " << fArray[i] << " has shut down.."
                     << std::endl;
         }
       } else if (cpid < 0) {
@@ -158,7 +158,7 @@ public:
       std::cout << "We are back to master job::" << std::endl;
     }
     // Cleaning array from previos pids info
-    std::fill(fArrayDead, fArrayDead + fNumberChildren, 0);
+    std::fill(fArray, fArray + fNumberChildren, 0);
 #else
     output = F::Evaluate(input);
 #endif
