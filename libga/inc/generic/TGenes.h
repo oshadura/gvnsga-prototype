@@ -60,8 +60,8 @@ public:
       // printf(" Number of free cores %d cores\n", nbcores);
       hwloc_topology_destroy(topology);
       ccores =
-          nbcores - cpumgr.GetCurrentValue() / 100 * nbcores; // just a test
-      printf(" Number of free cores %d cores\n", ccores);
+          nbcores - cpumgr.GetCurrentValueCPU() / 100 * nbcores; // just a test
+      std::cout << " Number of total free cores " << ccores << std::endl;
       if (ccores < 0.3) {
         sleep(50);
       } else {
@@ -105,8 +105,6 @@ public:
 #endif
 #ifdef ENABLE_GEANTV
     size_t sizeofOutput = sizeof(output) + sizeof(double) * output.capacity();
-    std::cout << "Size of expected buffer for fitness container is :"
-              << sizeofOutput << std::endl;
     const int fNumberChildren = 1;
     int pipega[fNumberChildren + 1];
     pid_t fArrayDead[fNumberChildren];

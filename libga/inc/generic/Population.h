@@ -45,21 +45,19 @@ public:
   Population(int n) {
     for (int i = 0; i < n; ++i) {
       CPUManager cpumgr;
-      cpumgr.InitAllCPU();
+      cpumgr.InitCPU();
       hwloc_topology_t topology;
       double nbcores, ccores;
-      unsigned int microseconds;
-      microseconds = 3000;
       hwloc_topology_init(&topology); // initialization
       hwloc_topology_load(topology);  // actual detection
       nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
-      // printf(" Number of free cores %d cores\n", nbcores);
       hwloc_topology_destroy(topology);
-      ccores = nbcores -
-               cpumgr.GetCurrentValueAllCPU() / 100 * nbcores; // just a test
-      printf(" Number of total free cores %d cores\n", ccores);
+      ccores =
+          nbcores - cpumgr.GetCurrentValueCPU() / 100 * nbcores; // just a test
+      std::cout << " Number of total free cores " << ccores << std::endl;
       if (ccores < 0.3) {
-        usleep(microseconds);
+        std::cout << "Sleeping, because free CPU ratio  " << ccores
+                  << " is low.." << sleep(50);
       } else {
         pid_t fArrayDead[n];
         pid_t pid = fork();
@@ -68,8 +66,7 @@ public:
           typename F::Input gene = F::GetInput().random();
           auto individual = std::make_shared<TGenes<F> >(gene);
           this->push_back(individual);
-        }
-        else if(pid > 0) {
+        } else if (pid > 0) {
           std::cout << "Evaluated one more individual.." << std::endl;
           for (int i = 0; i < n; ++i) {
             std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
@@ -78,10 +75,11 @@ public:
             std::cout << "PID: " << fArrayDead[i] << " has shut down.."
                       << std::endl;
           }
-        }else{
-         std::cout << "Evaluation through fork was failed........." << std::endl; 
+        } else {
+          std::cout << "Evaluation through fork was failed........."
+                    << std::endl;
         }
-
+        std::fill(fArrayDead, fArrayDead + n, 0);
       }
     }
   }

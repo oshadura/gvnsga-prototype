@@ -10,9 +10,11 @@ public:
   geantvmoop::Population<geantvmoop::DTLZ2> pop{5};
 };
 
+/*
 TEST_F(HistoOutput, SimpleHistoOutputofPopulation) {
 	std::cout << pop;
   bool IsTrue = HistogramManager<geantvmoop::DTLZ2>::GetInstance().HistoFill(
       pop, "testpopulation.root", 0);
   ASSERT_EQ(IsTrue, true);
 }
+*/

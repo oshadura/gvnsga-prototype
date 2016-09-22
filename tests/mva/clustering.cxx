@@ -27,6 +27,7 @@ TEST_F(Clustering, SpectralClustering) {
 }
 
 
+/*
 TEST_F(Clustering, DlibSpectral) {
   // Here we declare that our samples will be 2 dimensional column vectors.
   // (Note that if you don't know the dimensionality of your vectors at
@@ -149,6 +150,7 @@ TEST_F(Clustering, DlibSpectral) {
   // these
   // numbers would go up.  However, 8 is all we need to correctly cluster this
   // dataset.
+  /*
   std::cout << "num dictionary vectors for center 0: "
        << test.get_kcentroid(0).dictionary_size() << std::endl;
   std::cout << "num dictionary vectors for center 1: "
@@ -166,4 +168,4 @@ TEST_F(Clustering, DlibSpectral) {
       spectral_cluster(kernel_type(0.1), samples, 3);
   //std::cout << mat(assignments);
 }
-
+*/

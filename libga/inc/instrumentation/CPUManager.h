@@ -75,7 +75,7 @@ public:
     return percent;
   }
 
-  double GetCurrentValue() {
+  double GetCurrentValueCPU() {
     struct tms timeSample;
     clock_t now;
     double percent;
