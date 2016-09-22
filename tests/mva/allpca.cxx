@@ -24,8 +24,8 @@ public:
   geantvmoop::UncenteredLPCA ulpca;
   geantvmoop::UncenteredWhiteLPCA uwlpca;
   geantvmoop::UncenteredTrickLPCA twlpca;
-
-  geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
+  // Pointless allocation during tests
+  //geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
 /*
