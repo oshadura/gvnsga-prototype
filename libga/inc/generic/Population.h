@@ -59,9 +59,10 @@ public:
       if (ccores < 0.3) {
         std::cout << "Sleeping, because free CPU ratio  " << ccores
                   << " is low.." << std::endl;
-                  sleep(50);
+        sleep(50);
+
       } else {
-        pid_t fArrayDead[n];
+        std::array<pid_t,n> fArrayDead;
         pid_t pid = fork();
         fArrayDead[i] = pid;
         if (pid == 0) {
@@ -70,16 +71,20 @@ public:
           this->push_back(individual);
           wait(NULL);
           exit(EXIT_SUCCESS);
+
         } else if (pid < 0) {
           std::cout << "Error on fork" << std::endl;
         }
+        else{
         for (int i = 0; i < n; ++i) {
           std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
                     << std::endl;
           waitpid(fArrayDead[i], NULL, 0);
+          std::cout << "PID: " << fArrayDead[i] << " has shut down.."
+                    << std::endl;
         }
-        std::cout << "PID: " << fArrayDead[i] << " has shut down.."
-                  << std::endl;
+      }
+
         std::fill(fArrayDead, fArrayDead + n, 0);
       }
     }
