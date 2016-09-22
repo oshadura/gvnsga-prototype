@@ -61,20 +61,20 @@ add_library(Instrument SHARED ${sources})
 if(PAPI_FOUND)
   target_link_libraries(Instrument ${PAPI_LIBRARY}
           papi
- #        pfm
+          pfm
           lapack
           hwloc
 # STUPID TEST
-          /home/geant/Install/perfmon/lib/libpfm.so
+#          /home/geant/Install/perfmon/lib/libpfm.so
           ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a)
 else()
   target_link_libraries(Instrument          
           papi
-#         pfm
+         pfm
           lapack
           hwloc
 # STUPID TEST
-          /home/geant/Install/perfmon/lib/libpfm.so
+#          /home/geant/Install/perfmon/lib/libpfm.so
           ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a)
 endif()
 set_target_properties(Instrument PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
