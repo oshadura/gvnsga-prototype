@@ -66,8 +66,9 @@ public:
           typename F::Input gene = F::GetInput().random();
           auto individual = std::make_shared<TGenes<F>>(gene);
           this->push_back(individual);
-        } else if (pid > 0) {
-          std::cout << "Evaluated one more individual.." << std::endl;
+          exit(EXIT_SUCCESS);
+        } else if (pid < 0) {
+          std::cout << "Error on fork" << std::endl;
         }
         for (int i = 0; i < n; ++i) {
           std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
