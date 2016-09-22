@@ -13,5 +13,5 @@ TEST_F(Individual, GeneratingIndividual) {
 }
 
 TEST_F(Individual, GenerationPopulation) {
-  geantvmoop::Population<geantvmoop::DTLZ2> pop;
+  geantvmoop::Population<geantvmoop::DTLZ2> pop{10};
 }
