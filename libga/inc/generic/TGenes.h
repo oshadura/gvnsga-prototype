@@ -103,7 +103,7 @@ public:
 #ifdef EVOLUTION
     output = GASequentualEvaluator::Evaluate();
 #endif
-#ifdef ENABLE_GEANTVNO
+#ifdef ENABLE_GEANTV
     size_t sizeofOutput = sizeof(output) + sizeof(double) * output.capacity();
     const int fNumberChildren = 1;
     int pipega[fNumberChildren + 1];

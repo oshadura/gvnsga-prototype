@@ -30,19 +30,20 @@
 
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F>> {
+template <typename F> class Population : public std::vector<individual_t<F> > {
 
 public:
   // For creation of new population
-  Population(std::initializer_list<individual_t<F>> list)
-      : std::vector<individual_t<F>>(list) {}
+  Population(std::initializer_list<individual_t<F> > list)
+      : std::vector<individual_t<F> >(list) {}
 
-  Population() : std::vector<individual_t<F>>() {}
+  Population() : std::vector<individual_t<F> >() {}
 
-  Population(const std::vector<individual_t<F>> &individuals)
-      : std::vector<individual_t<F>>(individuals) {}
+  Population(const std::vector<individual_t<F> > &individuals)
+      : std::vector<individual_t<F> >(individuals) {}
 
   Population(int n) {
+#ifdef ENABLE_GEANTVVV
     for (int i = 0; i < n; ++i) {
       CPUManager cpumgr;
       cpumgr.InitCPU();
@@ -64,7 +65,7 @@ public:
         fArrayDead[i] = pid;
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F>>(gene);
+          auto individual = std::make_shared<TGenes<F> >(gene);
           this->push_back(individual);
           wait(NULL);
           exit(EXIT_SUCCESS);
@@ -81,6 +82,27 @@ public:
         std::fill(fArrayDead, fArrayDead + n, 0);
       }
     }
+#else
+    CPUManager cpumgr;
+    cpumgr.InitCPU();
+    hwloc_topology_t topology;
+    double nbcores, ccores;
+    hwloc_topology_init(&topology); // initialization
+    hwloc_topology_load(topology);  // actual detection
+    nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
+    hwloc_topology_destroy(topology);
+    ccores =
+        nbcores - cpumgr.GetCurrentValueCPU() / 100 * nbcores; // just a test
+    std::cout << " Number of total free cores " << ccores << std::endl;
+    if (ccores < 0.3) {
+      std::cout << "Sleeping, because free CPU ratio  " << ccores << " is low.."
+                << sleep(50);
+    } else {
+      typename F::Input gene = F::GetInput().random();
+      auto individual = std::make_shared<TGenes<F> >(gene);
+      this->push_back(individual);
+    }
+#endif
   }
 
   ~Population() {}
@@ -169,14 +191,12 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] > m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] < m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
   }
 
   void SortObj(int objective, bool isDescending = false) {
