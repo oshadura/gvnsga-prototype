@@ -19,7 +19,7 @@ if(ENABLE_GEANTV)
   find_package(HepMC)
 endif()
 #---------------------------------------------------------------------------
-include_directories(BEFORE SYSTEM ${Vc_INCLUDE_DIR})
+include_directories(AFTER SYSTEM ${Vc_INCLUDE_DIR})
 include_directories(${HEPMC_INCLUDE_DIR} ${VECGEOM_INCLUDE_DIR} ${GEANTV_INCLUDE_DIR} ${PerfMon_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/libga/inc)
 include_directories(${CMAKE_SOURCE_DIR}/libinstrument/inc)

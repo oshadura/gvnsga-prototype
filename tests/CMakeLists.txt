@@ -28,7 +28,7 @@ include_directories(/home/geant/Install/dlib/include)
 if(ENABLE_GEANTV)
   include_directories(${GEANTV_INCLUDE_DIR})
   include_directories(${VECGEOM_INCLUDE_DIR})
-  include_directories(BEFORE SYSTEM ${Vc_INCLUDE_DIR})
+  include_directories(AFTER SYSTEM ${Vc_INCLUDE_DIR})
   include_directories(${HEPMC_INCLUDE_DIR})
 endif()
 
