@@ -43,7 +43,7 @@ public:
       : std::vector<individual_t<F> >(individuals) {}
 
   Population(int n) {
-#ifdef ENABLE_GEANTVVV
+#ifdef ENABLE_GEANTV
     for (int i = 0; i < n; ++i) {
       CPUManager cpumgr;
       cpumgr.InitCPU();
