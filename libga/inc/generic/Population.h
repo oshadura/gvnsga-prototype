@@ -66,6 +66,7 @@ public:
           typename F::Input gene = F::GetInput().random();
           auto individual = std::make_shared<TGenes<F>>(gene);
           this->push_back(individual);
+          wait(NULL);
           exit(EXIT_SUCCESS);
         } else if (pid < 0) {
           std::cout << "Error on fork" << std::endl;
