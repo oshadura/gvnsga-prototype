@@ -107,7 +107,7 @@ public:
     size_t sizeofOutput = sizeof(output) + sizeof(double) * output.capacity();
     const int fNumberChildren = 1;
     int pipega[fNumberChildren + 1];
-    pid_t fArrayfNumberChildren];
+    pid_t fArray[fNumberChildren];
     pid_t cpid;
     ssize_t result;
     pipe(pipega);
