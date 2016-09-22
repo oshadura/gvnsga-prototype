@@ -58,7 +58,8 @@ public:
       std::cout << " Number of total free cores " << ccores << std::endl;
       if (ccores < 0.3) {
         std::cout << "Sleeping, because free CPU ratio  " << ccores
-                  << " is low.." << sleep(50);
+                  << " is low.." << std::endl;
+                  sleep(50);
       } else {
         pid_t fArrayDead[n];
         pid_t pid = fork();
