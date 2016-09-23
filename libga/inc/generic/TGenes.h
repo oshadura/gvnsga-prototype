@@ -84,7 +84,7 @@ public:
   }
 
   ~TGenes() {}
-  
+
 private:
 
   friend class cereal::access;

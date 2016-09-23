@@ -30,6 +30,7 @@
 #include <fstream>
 #include <cstring>
 #include <sstream>
+#include <cstdlib>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -40,14 +41,16 @@
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
- #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/asio.hpp>
+#include <boost/thread.hpp>
 
 namespace geantvmoop {
 
 template <typename F> class Population : public std::vector<individual_t<F> > {
 
 public:
-
   Population(std::initializer_list<individual_t<F> > list)
       : std::vector<individual_t<F> >(list) {}
 
@@ -61,7 +64,7 @@ private:
   // Cereal
   friend class cereal::access;
 
-  //template <class Archive> void serialize(Archive &ar) { ar(ind); }
+  // template <class Archive> void serialize(Archive &ar) { ar(ind); }
 
   // BOOST
   friend class boost::serialization::access;
@@ -73,7 +76,12 @@ private:
 public:
   Population(int n) {
     pid_t fArrayDead[n];
-
+    boost::filesystem::path endpoint_name =
+        boost::filesystem::unique_path("data");
+    using boost::asio::local::stream_protocol;
+    boost::asio::local::stream_protocol::endpoint ep(endpoint_name.native());
+    boost::asio::io_service io_service;
+    boost::asio::local::stream_protocol::acceptor acceptor(io_service, ep);
 #ifdef ENABLE_GEANTV
     for (int i = 0; i < n; ++i) {
       CPUManager cpumgr;
@@ -92,15 +100,17 @@ public:
         sleep(50);
 
       } else {
-        //std::stringstream ss;
+        // std::stringstream ss;
         std::ofstream ofs("gene");
         pid_t pid = fork();
         fArrayDead[i] = pid;
         if (pid == 0) {
+          boost::asio::local::stream_protocol::stream_protocol::endpoint ep(endpoint_name.native());
+          boost::asio::local::stream_protocol::stream_protocol::iostream stream(ep);
           typename F::Input gene = F::GetInput().random();
           individual_t<F> individual = std::make_shared<TGenes<F> >(gene);
-          //cereal::BinaryOutputArchive oarchive(ss);
-          //oarchive(individual);
+          // cereal::BinaryOutputArchive oarchive(ss);
+          // oarchive(individual);
           ////this->push_back(individual);
           boost::archive::text_oarchive oa(ofs);
           oa << individual;
@@ -109,9 +119,11 @@ public:
         } else if (pid < 0) {
           std::cout << "Error on fork" << std::endl;
         } else {
-          //cereal::BinaryInputArchive iarchive(ss);
+          boost::asio::local::stream_protocol::stream_protocol::iostream stream;
+          acceptor.accept(*stream.rdbuf());
+          // cereal::BinaryInputArchive iarchive(ss);
           individual_t<F> transfer;
-          //iarchive(transfer);
+          // iarchive(transfer);
           std::ifstream ifs("filename");
           boost::archive::text_iarchive ia(ifs);
           ia >> transfer;
@@ -126,6 +138,7 @@ public:
       waitpid(fArrayDead[i], NULL, 0);
       std::cout << "PID: " << fArrayDead[i] << " has shut down.." << std::endl;
     }
+    boost::filesystem::remove(endpoint_name);
     std::fill(fArrayDead, fArrayDead + n, 0);
 
 #else
