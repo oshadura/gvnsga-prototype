@@ -66,7 +66,10 @@ if(APPLE)
           ${GEANTV_LIBRARIES}
           ${VECGEOM_LIBRARIES}
           ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
-          ${Boost_LIBRARY_DIRS} ${PERF_LIBRARY}
+          ${Boost_LIBRARY_DIRS}/libboost_serialization.a
+          ${Boost_LIBRARY_DIRS}/libboost_wserialization.a
+          ${Boost_LIBRARY_DIRS}/libboost_iostreams.a
+           ${PERF_LIBRARY}
           ${MLPACK_LIBRARY}
           ${dlib_LIBRARIES}
           ${PAPI_LIBRARY}
@@ -91,7 +94,10 @@ elseif(UNIX)
           ${GEANTV_LIBRARIES}
           ${VECGEOM_LIBRARIES}
           ${VC_LIBRARIES} ${HEPMC_LIBRARIES}
-          ${Boost_LIBRARY_DIRS} ${PERF_LIBRARY}
+          ${Boost_LIBRARY_DIRS}/libboost_serialization.a
+          ${Boost_LIBRARY_DIRS}/libboost_wserialization.a
+          ${Boost_LIBRARY_DIRS}/libboost_iostreams.a
+          ${PERF_LIBRARY}
           ${MLPACK_LIBRARY}
           ${dlib_LIBRARIES}
           ${PAPI_LIBRARY}
