@@ -27,13 +27,27 @@
 #include <stack>
 #include <unordered_map>
 #include <vector>
+#include <fstream>
+#include <cstring>
+#include <sstream>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#include <cereal/access.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/memory.hpp>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+ #include <boost/serialization/shared_ptr.hpp>
 
 namespace geantvmoop {
 
 template <typename F> class Population : public std::vector<individual_t<F> > {
 
 public:
-  // For creation of new population
+
   Population(std::initializer_list<individual_t<F> > list)
       : std::vector<individual_t<F> >(list) {}
 
@@ -42,39 +56,67 @@ public:
   Population(const std::vector<individual_t<F> > &individuals)
       : std::vector<individual_t<F> >(individuals) {}
 
+private:
+  individual_t<F> ind;
+  // Cereal
+  friend class cereal::access;
+
+  //template <class Archive> void serialize(Archive &ar) { ar(ind); }
+
+  // BOOST
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar &ind;
+  }
+
+public:
   Population(int n) {
-      pid_t fArrayDead[n];
+    pid_t fArrayDead[n];
+
 #ifdef ENABLE_GEANTV
     for (int i = 0; i < n; ++i) {
       CPUManager cpumgr;
-      cpumgr.InitCPU();
       hwloc_topology_t topology;
       double nbcores, ccores;
       hwloc_topology_init(&topology); // initialization
       hwloc_topology_load(topology);  // actual detection
       nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
       hwloc_topology_destroy(topology);
-      ccores =
-          nbcores - cpumgr.GetCurrentValueCPU() / 100 * nbcores; // just a test
+      ccores = nbcores -
+               cpumgr.GetCurrentValueAllCPU() / 100 * nbcores; // just a test
       std::cout << " Number of total free cores " << ccores << std::endl;
-      if (ccores < 0.3) {
+      if (ccores < 1) {
         std::cout << "Sleeping, because free CPU ratio  " << ccores
                   << " is low.." << std::endl;
         sleep(50);
 
       } else {
+        //std::stringstream ss;
+        std::ofstream ofs("gene");
         pid_t pid = fork();
         fArrayDead[i] = pid;
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F> >(gene);
-          this->push_back(individual);
+          individual_t<F> individual = std::make_shared<TGenes<F> >(gene);
+          //cereal::BinaryOutputArchive oarchive(ss);
+          //oarchive(individual);
+          ////this->push_back(individual);
+          boost::archive::text_oarchive oa(ofs);
+          oa << individual;
           wait(NULL);
           exit(EXIT_SUCCESS);
         } else if (pid < 0) {
           std::cout << "Error on fork" << std::endl;
         } else {
-          std::cout << "WE ARE ALIVE!" << std::endl;
+          //cereal::BinaryInputArchive iarchive(ss);
+          individual_t<F> transfer;
+          //iarchive(transfer);
+          std::ifstream ifs("filename");
+          boost::archive::text_iarchive ia(ifs);
+          ia >> transfer;
+          this->push_back(transfer);
+          std::cout << "Done reading TGenes<F> ..." << std::endl;
         }
       }
     }
@@ -115,6 +157,10 @@ public:
   //#if defined __clang__
   //  void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
   //#endif
+
+  template <class Archive> void save(Archive &ar) const { ar(ind); }
+
+  template <class Archive> void load(Archive &ar) { ar(ind); }
 
   const typename F::Input &GetTGenes(int i) const {
     return (*this)[i]->GetInput();

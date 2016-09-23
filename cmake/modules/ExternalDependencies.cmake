@@ -1,5 +1,8 @@
 include(ExternalProject)
 
+set (CMAKE_C_COMPILER /afs/cern.ch/sw/lcg/external/gcc/4.9.2/x86_64-slc6/bin/gcc)
+set (CMAKE_CXX_COMPILER /afs/cern.ch/sw/lcg/external/gcc/4.9.2/x86_64-slc6/bin/c++)
+
 ###############################################################################
 # Google Test
 ExternalProject_Add(
@@ -42,8 +45,67 @@ ExternalProject_Add(
 
 ExternalProject_Get_Property(papi-wrap BINARY_DIR)
 ExternalProject_Get_Property(papi-wrap SOURCE_DIR)
-set(papi_BINARY_DIR ${BINARY_DIR})
-set(papi_SOURCE_DIR ${SOURCE_DIR})
-set(papi_INCLUDE_DIR ${papi_SOURCE_DIR})
-include_directories(${papi_INCLUDE_DIR})
-set(gtest_LIBRARY ${papi_BINARY_DIR}/lib/libpapi_wrap.a)
+set(papiw_BINARY_DIR ${BINARY_DIR})
+set(papiw_SOURCE_DIR ${SOURCE_DIR})
+set(papiw_INCLUDE_DIR ${papiw_SOURCE_DIR})
+include_directories(${papiw_INCLUDE_DIR})
+set(papiw_LIBRARY ${papiw_BINARY_DIR}/lib/libpapi_wrap.a)
+
+#################################################################################
+# Cereal
+
+ExternalProject_Add(
+    cereal
+    GIT_REPOSITORY https://github.com/USCiLab/cereal.git
+    TIMEOUT 10
+    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third_party/cereal
+    STEP_TARGETS builds
+    EXCLUDE_FROM_ALL TRUE
+    )
+
+ExternalProject_Get_Property(cereal BINARY_DIR)
+ExternalProject_Get_Property(cereal SOURCE_DIR)
+set(CEREAL_INCLUDE_DIR ${BINARY_DIR})
+include_directories(${CEREAL_INCLUDE_DIR})
+
+##################################################################################
+# PFM
+
+#ExternalProject_Add(
+#    perf
+#    GIT_REPOSITORY git://git.code.sf.net/p/perfmon2/libpfm4 perfmon2-libpfm4
+#    GIT_TAG v4.7.1
+#    CONFIGURE_COMMAND <SOURCE_DIR>/configure
+#                        --prefix=<INSTALL_DIR>
+#    BUILD_IN_SOURCE 1
+#    LOG_DOWNLOAD ON
+#    LOG_BUILD ON)
+
+#ExternalProject_Get_Property(perf BINARY_DIR)
+#ExternalProject_Get_Property(perf SOURCE_DIR)
+#set(PERF_BINARY_DIR ${BINARY_DIR})
+#set(PERF_SOURCE_DIR ${SOURCE_DIR})
+#set(PERF_INCLUDE_DIR ${PERF_SOURCE_DIR})
+#include_directories(${PERF_INCLUDE_DIR})
+#set(PERF_LIBRARY ${PERF_BINARY_DIR}/lib/libpfm4.a)
+
+##################################################################################
+# PAPI
+
+#ExternalProject_Add(
+#    papi
+#    GIT_REPOSITORY https://icl.cs.utk.edu/git/papi.git
+#    GIT_TAG papi-5-5-0-t
+#    CONFIGURE_COMMAND <SOURCE_DIR>/src/configure
+#                        --prefix=<INSTALL_DIR>
+#    BUILD_IN_SOURCE 1
+#    LOG_DOWNLOAD ON
+#    LOG_BUILD ON)
+
+#ExternalProject_Get_Property(papi BINARY_DIR)
+#ExternalProject_Get_Property(papi SOURCE_DIR)
+#set(PAPI_BINARY_DIR ${BINARY_DIR})
+#set(PAPI_SOURCE_DIR ${SOURCE_DIR})
+#set(PAPI_INCLUDE_DIR ${PAPI_SOURCE_DIR}/include)
+#include_directories(${PAPI_INCLUDE_DIR})
+#set(PAPI_LIBRARY ${PAPI_BINARY_DIR}/lib/libpapi.a)

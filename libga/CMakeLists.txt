@@ -100,6 +100,8 @@ include_directories(/usr/include/eigen3)
 include_directories(/usr/local/Cellar/eigen/3.2.6/include/eigen3/)
 # Lib Instrument backward
 include_directories(${CMAKE_SOURCE_DIR}/libinstrument/inc)
+###
+include_directories(${CMAKE_BINARY_DIR}/third_party/cereal/src/cereal/include/)
 
 #-------------------
 # Files

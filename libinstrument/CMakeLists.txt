@@ -60,7 +60,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -W -Wall -ansi -ldl")
 add_library(Instrument SHARED ${sources})
 if(PAPI_FOUND)
   target_link_libraries(Instrument ${PAPI_LIBRARY}
-          papi
+          ${PAPI_LIBRARY}
           pfm
           lapack
           hwloc
@@ -69,8 +69,8 @@ if(PAPI_FOUND)
           ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a)
 else()
   target_link_libraries(Instrument          
-          papi
-         pfm
+          ${PAPI_LIBRARY}
+          pfm
           lapack
           hwloc
 # STUPID TEST

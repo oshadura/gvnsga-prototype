@@ -31,8 +31,10 @@ if(ENABLE_GEANTV)
   include_directories(AFTER SYSTEM ${Vc_INCLUDE_DIR})
   include_directories(${HEPMC_INCLUDE_DIR})
 endif()
-
+###
 include_directories(${CMAKE_BINARY_DIR}/third_party/papi-wrap/src)
+###
+include_directories(${CMAKE_BINARY_DIR}/third_party/cereal/src/cereal/include/)
 
 #-------------------
 # Setting up Ctest also
@@ -67,7 +69,7 @@ if(APPLE)
           ${Boost_LIBRARY_DIRS} ${PERF_LIBRARY}
           ${MLPACK_LIBRARY}
           ${dlib_LIBRARIES}
-          papi
+          ${PAPI_LIBRARY}
           pfm
           lapack
           hwloc
@@ -92,7 +94,7 @@ elseif(UNIX)
           ${Boost_LIBRARY_DIRS} ${PERF_LIBRARY}
           ${MLPACK_LIBRARY}
           ${dlib_LIBRARIES}
-          papi
+          ${PAPI_LIBRARY}
           pfm
           lapack
           hwloc

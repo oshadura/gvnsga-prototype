@@ -66,7 +66,6 @@ public:
       percent /= total;
       percent *= 100;
     }
-
     lastTotalUser = totalUser;
     lastTotalUserLow = totalUserLow;
     lastTotalSys = totalSys;

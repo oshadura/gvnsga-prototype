@@ -17,6 +17,14 @@
 
 #include <iostream>
 
+#include <cereal/access.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/memory.hpp>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+
 namespace geantvmoop {
 
 template <typename Type> class GAValue {
@@ -30,6 +38,18 @@ public:
   ~GAValue() {}
 
   Type GetGAValue() const { return value; }
+
+private:
+
+  friend class cereal::access;
+
+  //template <class Archive> void serialize(Archive &ar, TGenes<F> tg) { ar(type); }
+
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar &value;
+  }
 
   virtual void SetGAValue(const Type &value) { GAValue::value = value; }
 };

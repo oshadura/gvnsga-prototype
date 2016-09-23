@@ -28,12 +28,21 @@
 
 #include "instrumentation/CPUManager.h"
 
+#include <cereal/access.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/memory.hpp>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
 #define READ 0
 #define WRITE 1
 
 namespace geantvmoop {
 
 template <typename F> class TGenes;
+
 template <typename F> using individual_t = std::shared_ptr<TGenes<F> >;
 
 template <typename F> class TGenes {
@@ -41,6 +50,7 @@ template <typename F> class TGenes {
 private:
   typename F::Input input;
   typename F::Output output;
+  // Temporary object..
   typename F::Output tmpoutput;
 
 public:
@@ -74,7 +84,21 @@ public:
   }
 
   ~TGenes() {}
+  
+private:
 
+  friend class cereal::access;
+
+  //template <class Archive> void serialize(Archive &ar, TGenes<F> tg) { ar(tg.GetInput(), tg.GetOutput()); }
+
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar &output;
+    ar &input;
+  }
+
+public:
   bool IsDominating(const TGenes &other) const {
     for (unsigned int i = 0; i < GetOutput().size(); ++i) {
       if (output[i] > other.output[i])
@@ -136,8 +160,7 @@ public:
           std::cout << "Waiting for PID: " << fArray[i] << " to finish.."
                     << std::endl;
           waitpid(fArray[i], NULL, 0);
-          std::cout << "PID: " << fArray[i] << " has shut down.."
-                    << std::endl;
+          std::cout << "PID: " << fArray[i] << " has shut down.." << std::endl;
         }
       } else if (cpid < 0) {
         std::cerr << "Fork for evaluation was failed." << std::endl;

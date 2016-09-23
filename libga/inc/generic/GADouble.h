@@ -24,7 +24,7 @@ namespace geantvmoop {
 class GADouble : public GAConstrainedValue<double> {
 
 public:
-  // Only DTLZ..
+  GADouble(){}
   GADouble(double value) : GAConstrainedValue(value, 0, 10) {} // was 0,1 // Put any other value!
   GADouble(double value, double d, double u)
       : GAConstrainedValue(value, d, u){};
