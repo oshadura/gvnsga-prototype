@@ -1,8 +1,5 @@
 include(ExternalProject)
 
-set (CMAKE_C_COMPILER /afs/cern.ch/sw/lcg/external/gcc/4.9.2/x86_64-slc6/bin/gcc)
-set (CMAKE_CXX_COMPILER /afs/cern.ch/sw/lcg/external/gcc/4.9.2/x86_64-slc6/bin/c++)
-
 ###############################################################################
 # Google Test
 ExternalProject_Add(
