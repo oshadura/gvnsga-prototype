@@ -39,10 +39,27 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/memory.hpp>
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/archive_exception.hpp>
+
+#include <boost/archive/basic_text_iarchive.hpp>
+#include <boost/archive/basic_text_oarchive.hpp>
+#include <boost/archive/basic_xml_iarchive.hpp>
+#include <boost/archive/basic_xml_oarchive.hpp>
+#include <boost/archive/basic_binary_iarchive.hpp>
+#include <boost/archive/basic_binary_oarchive.hpp>
+
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/list.hpp>
+#include <boost/serialization/map.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/version.hpp>
+#include <boost/serialization/optional.hpp>
+ 
 #include <boost/filesystem.hpp>
+
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 
