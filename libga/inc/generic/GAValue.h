@@ -21,8 +21,6 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/memory.hpp>
 
-#include <boost/archive/archive_exception.hpp>
-
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
