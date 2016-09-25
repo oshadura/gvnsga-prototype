@@ -77,7 +77,7 @@ public:
   Population(int n) {
     pid_t fArrayDead[n];
     boost::filesystem::path endpoint_name =
-        boost::filesystem::path("%%%%-%%%%-%%%%-%%%%");
+        boost::filesystem::unique_path("%%%%-%%%%-%%%%-%%%%");
     using boost::asio::local::stream_protocol;
     boost::asio::local::stream_protocol::endpoint ep(endpoint_name.native());
     boost::asio::io_service io_service;
