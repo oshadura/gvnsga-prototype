@@ -145,9 +145,11 @@ ROOT_GENERATE_ROOTMAP(GADict LINKDEF LinkDef.h)
 add_library(GA SHARED ${sources} GADict.cxx)
 target_link_libraries(GA ${VC_LIBRARIES} ${ROOT_LIBRARIES} Hist RIO Tree Gui TreePlayer
                          ${VECGEOM_LIBRARIES} ${GEANTV_LIBRARIES} ${HEPMC_LIBRARIES}
-                         ${Boost_LIBRARY_DIRS}/libboost_serialization.a
-                         ${Boost_LIBRARY_DIRS}/libboost_wserialization.a
-                         ${Boost_LIBRARY_DIRS}/libboost_iostreams.a
+                         ${Boost_LIBRARY_DIRS}/libboost_serialization.so
+                         #${Boost_LIBRARY_DIRS}/libboost_wserialization.so
+                         ${Boost_LIBRARY_DIRS}/libboost_iostreams.so
+                         ${Boost_LIBRARY_DIRS}/libboost_system.so
+                         ${Boost_LIBRARY_DIRS}/libboost_filesystem.so
                          ${PerfMon_LIBRARY} ${MLPACK_LIBRARY})
 set_target_properties(GA PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 install(TARGETS GA DESTINATION ${CMAKE_BINARY_DIR})
