@@ -5,6 +5,7 @@ include(ExternalProject)
 #-------------------
 # Includes
 #-------------------
+include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(${gtest_INCLUDE_DIR} ${gmock_INCLUDE_DIR})
 include_directories(inc)
