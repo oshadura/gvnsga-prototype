@@ -41,12 +41,12 @@
 
 #include <boost/archive/archive_exception.hpp>
 
-#include <boost/archive/basic_text_iarchive.hpp>
-#include <boost/archive/basic_text_oarchive.hpp>
-#include <boost/archive/basic_xml_iarchive.hpp>
-#include <boost/archive/basic_xml_oarchive.hpp>
-#include <boost/archive/basic_binary_iarchive.hpp>
-#include <boost/archive/basic_binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/utility.hpp>
@@ -57,7 +57,7 @@
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/version.hpp>
 #include <boost/serialization/optional.hpp>
- 
+
 #include <boost/filesystem.hpp>
 
 #include <boost/asio.hpp>
@@ -129,7 +129,7 @@ public:
           // cereal::BinaryOutputArchive oarchive(ss);
           // oarchive(individual);
           ////this->push_back(individual);
-          boost::archive::text_oarchive oa(ofs);
+          boost::archive::basic_text_oarchive oa(ofs);
           oa << individual;
           wait(NULL);
           exit(EXIT_SUCCESS);
@@ -142,7 +142,7 @@ public:
           individual_t<F> transfer;
           // iarchive(transfer);
           std::ifstream ifs("filename");
-          boost::archive::text_iarchive ia(ifs);
+          boost::archive::basic_text_iarchive ia(ifs);
           ia >> transfer;
           this->push_back(transfer);
           std::cout << "Done reading TGenes<F> ..." << std::endl;

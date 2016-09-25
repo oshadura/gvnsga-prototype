@@ -25,12 +25,12 @@
 
 #include <boost/archive/archive_exception.hpp>
 
-#include <boost/archive/basic_text_iarchive.hpp>
-#include <boost/archive/basic_text_oarchive.hpp>
-#include <boost/archive/basic_xml_iarchive.hpp>
-#include <boost/archive/basic_xml_oarchive.hpp>
-#include <boost/archive/basic_binary_iarchive.hpp>
-#include <boost/archive/basic_binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/utility.hpp>
