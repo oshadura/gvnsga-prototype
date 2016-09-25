@@ -129,7 +129,7 @@ public:
           // cereal::BinaryOutputArchive oarchive(ss);
           // oarchive(individual);
           ////this->push_back(individual);
-          boost::archive::basic_text_oarchive oa(ofs);
+          boost::archive::text_oarchive oa(ofs);
           oa << individual;
           wait(NULL);
           exit(EXIT_SUCCESS);
@@ -142,7 +142,7 @@ public:
           individual_t<F> transfer;
           // iarchive(transfer);
           std::ifstream ifs("filename");
-          boost::archive::basic_text_iarchive ia(ifs);
+          boost::archive::text_iarchive ia(ifs);
           ia >> transfer;
           this->push_back(transfer);
           std::cout << "Done reading TGenes<F> ..." << std::endl;
