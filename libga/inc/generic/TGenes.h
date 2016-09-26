@@ -34,22 +34,22 @@
 
 #include <boost/archive/archive_exception.hpp>
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
 
-#include <boost/serialization/nvp.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/vector.hpp>
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/optional.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
-#include <boost/serialization/optional.hpp>
 
 #define READ 0
 #define WRITE 1
@@ -58,7 +58,7 @@ namespace geantvmoop {
 
 template <typename F> class TGenes;
 
-template <typename F> using individual_t = std::shared_ptr<TGenes<F> >;
+template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
 
 template <typename F> class TGenes {
 
@@ -107,7 +107,7 @@ private:
 
   template <class Archive>
   void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<GAVector<F>>(*this);
+    ar &boost::serialization::base_object<GAVector<F>>(*this);
     ar &output;
     ar &input;
   }
