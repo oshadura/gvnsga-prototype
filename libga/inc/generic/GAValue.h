@@ -10,7 +10,7 @@
  * @brief Implementation of generic value class for LibGA
  * prototype
  */
- #pragma once
+#pragma once
 
 #ifndef __GAVALUE__
 #define __GAVALUE__
@@ -46,22 +46,23 @@ protected:
   Type value;
 
 public:
-  GAValue() {}
+  GAValue() : value(0) {}
   GAValue(Type value) : value(value) {}
   ~GAValue() {}
 
   Type GetGAValue() const { return value; }
 
 private:
-
   friend class cereal::access;
 
-  //template <class Archive> void serialize(Archive &ar, TGenes<F> tg) { ar(type); }
+  // template <class Archive> void serialize(Archive &ar, TGenes<F> tg) {
+  // ar(type); }
 
   friend class boost::serialization::access;
+
   template <class Archive>
   void serialize(Archive &ar, const unsigned int version) {
-    ar &value;
+    ar & BOOST_SERIALIZATION_NVP(value);
   }
 
   virtual void SetGAValue(const Type &value) { GAValue::value = value; }

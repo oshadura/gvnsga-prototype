@@ -60,9 +60,10 @@ private:
   //template <class Archive> void serialize(Archive &ar, TGenes<F> tg) { ar(type); }
 
   friend class boost::serialization::access;
+  
   template <class Archive>
   void serialize(Archive &ar, const unsigned int version) {
-    ar &type;
+    ar & BOOST_SERIALIZATION_NVP(type);
   }
 
 public:

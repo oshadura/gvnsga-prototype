@@ -6,6 +6,7 @@
 #include <stdlib.h> /* srand, rand */
 #include <time.h>   /* time */
 #include <cstdlib>
+#include <ctime>
 
 namespace geantvmoop {
 
@@ -22,13 +23,22 @@ public:
   double RandomDouble() { return ((double)std::rand() / (RAND_MAX)); }
 
   int RandomInt(int min, int max) {
-    return min + (std::rand() % (int)(max - min + 1));
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<int> unif(min, max);
+    double a_random_int = unif(mt);
+    return a_random_int;
   }
 
   bool RandomBool() { return rand() % 2 == 1; }
 
   double RandomDouble(int min, int max) {
-    return min + (double)std::rand() / RAND_MAX * (max - min);
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<double> unif(min, max);
+    std::default_random_engine re;
+    double a_random_double = unif(mt);
+    return a_random_double;
   }
 
 private:

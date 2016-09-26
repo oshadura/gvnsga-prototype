@@ -80,7 +80,6 @@ private:
   individual_t<F> ind;
   // Cereal
   friend class cereal::access;
-
   friend class boost::serialization::access;
 
   /*
@@ -94,11 +93,14 @@ private:
 
 public:
   Population(int n) {
+#ifdef ENABLE_GEANTV
     pid_t fArrayDead[n];
     boost::filesystem::path endpoint_name =
-        boost::filesystem::unique_path("%%%%-%%%%-%%%%-%%%%");
+        boost::filesystem::unique_path("/tmp/ga-%%%%-%%%%-%%%%-%%%%");
+    boost::asio::io_service io_service;
+    boost::asio::local::stream_protocol::endpoint ep(endpoint_name.native());
+    boost::asio::local::stream_protocol::acceptor acceptor(io_service, ep);
     std::cout << "Endpoint was created..." << std::endl;
-#ifdef ENABLE_GEANTV
     for (int i = 0; i < n; ++i) {
       CPUManager cpumgr;
       hwloc_topology_t topology;
@@ -109,60 +111,69 @@ public:
       hwloc_topology_destroy(topology);
       ccores = nbcores -
                cpumgr.GetCurrentValueAllCPU() / 100 * nbcores; // just a test
-      std::cout << " Number of total free cores " << ccores << std::endl;
+      std::cout << "Number of total free cores " << ccores << std::endl;
       if (ccores < 1) {
         std::cout << "Sleeping, because free CPU ratio  " << ccores
                   << " is low.." << std::endl;
-        sleep(10);
+        sleep(1);
 
       } else {
         // std::stringstream ss;
+        io_service.notify_fork(boost::asio::io_service::fork_prepare);
         pid_t pid = fork();
         fArrayDead[i] = pid;
         if (pid == 0) {
-          boost::asio::local::stream_protocol::stream_protocol::endpoint ep(
-              endpoint_name.native());
-          boost::asio::local::stream_protocol::stream_protocol::iostream stream(
-              ep);
+          io_service.notify_fork(boost::asio::io_service::fork_child);
           // Lets generate gene
-          std::cout << "Generating individual in a child..." << std::endl;
+          std::cout << "Generating individual in a child #" << i << std::endl;
           typename F::Input gene = F::GetInput().random();
-          individual_t<F> individual = std::make_shared<TGenes<F> >(gene);
+          auto individual = std::make_shared<TGenes<F> >(gene);
           // cereal::BinaryOutputArchive oarchive(ss);
           // oarchive(individual);
           ////this->push_back(individual);
+          auto indvector = (*individual).GetInput();
+          for (int i = 0; i < indvector.size(); ++i)
+            std::cout << indvector[i] << " ";
+          std::cout << std::endl;
           std::cout << "Open a stream for a child..." << std::endl;
-          boost::archive::binary_oarchive oa(stream);
-          // oa << individual;
-          oa &i &BOOST_SERIALIZATION_NVP(individual);
+          {
+            boost::asio::local::stream_protocol::stream_protocol::endpoint ep(
+                endpoint_name.native());
+            boost::asio::local::stream_protocol::stream_protocol::iostream
+            stream(ep);
+            boost::archive::binary_oarchive oa(stream);
+            // oa << individual;
+            oa &i &BOOST_SERIALIZATION_NVP(individual);
+          }
           wait(NULL);
           exit(EXIT_SUCCESS);
         } else if (pid < 0) {
           std::cout << "Error on fork" << std::endl;
         } else {
+          io_service.notify_fork(boost::asio::io_service::fork_parent);
           std::cout << "..." << std::endl;
         }
       }
     }
-    boost::asio::local::stream_protocol::endpoint ep(endpoint_name.native());
-    boost::asio::io_service io_service;
-    boost::asio::local::stream_protocol::acceptor acceptor(io_service, ep);
 
     for (int i = 0; i < n; ++i) {
-      std::cout << "Creating a listener..." << std::endl;
-      boost::asio::local::stream_protocol::stream_protocol::iostream stream;
-      acceptor.accept(*stream.rdbuf());
-      // cereal::BinaryInputArchive iarchive(ss);
+      // int forki = 0;
       individual_t<F> transfer;
-      // iarchive(transfer);
-      boost::archive::binary_iarchive ia(stream);
-      // ia >> transfer;
-      ia &i &BOOST_SERIALIZATION_NVP(transfer);
-      std::cout << " Pushing a new gene in a parent..." << std::endl;
+      std::cout << "=Creating a listener #" << i << " =" << std::endl;
+      {
+        boost::asio::local::stream_protocol::stream_protocol::iostream stream;
+        acceptor.accept(*stream.rdbuf());
+        // cereal::BinaryInputArchive iarchive(ss);
+        // iarchive(transfer);
+        boost::archive::binary_iarchive ia(stream);
+        // ia >> transfer;
+        ia &i &BOOST_SERIALIZATION_NVP(transfer);
+      }
+      std::cout << "Pushing a new gene in a parent..." << std::endl;
       this->push_back(transfer);
-      ///auto indvector = *transfer.GetInput();
-      //for (int i = 0; i < indvector.size(); ++i)
-      //std::cout << indvector[i] << " ";
+      auto indvector = (*transfer).GetInput();
+      for (int i = 0; i < indvector.size(); ++i)
+        std::cout << indvector[i] << " ";
       std::cout << "--------------------------------------" << std::endl;
       std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
                 << std::endl;
