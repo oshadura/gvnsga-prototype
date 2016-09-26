@@ -82,24 +82,23 @@ private:
   friend class cereal::access;
   friend class boost::serialization::access;
 
-  /*
   template <class Archive>
   void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<TGenes<F>>(*this);
     ar &ind;
   }
 
-  template <class Archive> void serialize(Archive &ar) { ar(ind); }
-  */
-
 public:
   Population(int n) {
+
 #ifdef ENABLE_GEANTV
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
     pid_t fArrayDead[n];
     boost::filesystem::path endpoint_name =
         boost::filesystem::unique_path("/tmp/ga-%%%%-%%%%-%%%%-%%%%");
-    boost::asio::io_service io_service;
+    boost::asio::io_service io_service_;
     boost::asio::local::stream_protocol::endpoint ep(endpoint_name.native());
-    boost::asio::local::stream_protocol::acceptor acceptor(io_service, ep);
+    boost::asio::local::stream_protocol::acceptor acceptor(io_service_, ep);
     std::cout << "Endpoint was created..." << std::endl;
     for (int i = 0; i < n; ++i) {
       CPUManager cpumgr;
@@ -119,11 +118,11 @@ public:
 
       } else {
         // std::stringstream ss;
-        io_service.notify_fork(boost::asio::io_service::fork_prepare);
+        io_service_.notify_fork(boost::asio::io_service::fork_prepare);
         pid_t pid = fork();
         fArrayDead[i] = pid;
         if (pid == 0) {
-          io_service.notify_fork(boost::asio::io_service::fork_child);
+          //io_service_.notify_fork(boost::asio::io_service::fork_child);
           // Lets generate gene
           std::cout << "Generating individual in a child #" << i << std::endl;
           typename F::Input gene = F::GetInput().random();
@@ -142,15 +141,14 @@ public:
             boost::asio::local::stream_protocol::stream_protocol::iostream
             stream(ep);
             boost::archive::binary_oarchive oa(stream);
-            // oa << individual;
-            oa &i &BOOST_SERIALIZATION_NVP(individual);
+            oa << individual;
           }
+          io_service_.notify_fork(boost::asio::io_service::fork_child);
           wait(NULL);
           exit(EXIT_SUCCESS);
         } else if (pid < 0) {
           std::cout << "Error on fork" << std::endl;
         } else {
-          io_service.notify_fork(boost::asio::io_service::fork_parent);
           std::cout << "..." << std::endl;
         }
       }
@@ -166,8 +164,7 @@ public:
         // cereal::BinaryInputArchive iarchive(ss);
         // iarchive(transfer);
         boost::archive::binary_iarchive ia(stream);
-        // ia >> transfer;
-        ia &i &BOOST_SERIALIZATION_NVP(transfer);
+        ia >> transfer;
       }
       std::cout << "Pushing a new gene in a parent..." << std::endl;
       this->push_back(transfer);
@@ -179,10 +176,11 @@ public:
                 << std::endl;
       waitpid(fArrayDead[i], NULL, 0);
       std::cout << "PID: " << fArrayDead[i] << " has shut down.." << std::endl;
+      io_service_.notify_fork(boost::asio::io_service::fork_parent);
     }
     boost::filesystem::remove(endpoint_name);
     std::fill(fArrayDead, fArrayDead + n, 0);
-
+#endif // defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 #else
     CPUManager cpumgr;
     cpumgr.InitCPU();
@@ -215,17 +213,12 @@ public:
 
   template <class Archive> void save(Archive &ar) const {
     // ar(ind);
-    ar << BOOST_SERIALIZATION_NVP(ind);
+    ar << ind;
   }
 
   template <class Archive> void load(Archive &ar) {
     // ar(ind);
-    ar >> BOOST_SERIALIZATION_NVP(ind);
-  }
-
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int file_version) {
-    boost::serialization::split_member(ar, *this, file_version);
+    ar >> ind;
   }
 
   const typename F::Input &GetTGenes(int i) const {

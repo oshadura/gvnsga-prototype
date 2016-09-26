@@ -28,6 +28,17 @@ public:
   DTLZ1() : fNGenes(7), fNObjectives(3) {}
 
   virtual ~DTLZ1() {}
+/*
+private:
+  friend class boost::serialization::access;
+
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Functions<DTLZ1>>(*this);
+  }
+
+public:
+  */
 
   void SetNGenes(const int i) {
     fNGenes = i;

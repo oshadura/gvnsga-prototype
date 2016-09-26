@@ -30,7 +30,7 @@ public:
 
   GAAlgorithm(F problem) : problem(problem) {}
 
-  ~GAAlgorithm() {}
+  ~GAAlgorithm() = default;
 
   virtual PF<F> SolvePF() {
     Initialize();

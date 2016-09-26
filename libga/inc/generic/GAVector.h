@@ -10,7 +10,7 @@
  * prototype
  */
 //
- #pragma once
+#pragma once
 
 #ifndef __GAVECTOR__
 #define __GAVECTOR__
@@ -52,22 +52,22 @@ public:
   ~GAVector() {}
 
 private:
-
   std::vector<Type> type;
 
   friend class cereal::access;
 
-  //template <class Archive> void serialize(Archive &ar, TGenes<F> tg) { ar(type); }
+  // template <class Archive> void serialize(Archive &ar, TGenes<F> tg) {
+  // ar(type); }
 
   friend class boost::serialization::access;
-  
+
   template <class Archive>
   void serialize(Archive &ar, const unsigned int version) {
-    ar & BOOST_SERIALIZATION_NVP(type);
+    ar & boost::serialization::base_object<Type>(*this);
+    ar &type;
   }
 
 public:
-
   GAVector random() const {
     GAVector result;
     for (auto value : *this) {

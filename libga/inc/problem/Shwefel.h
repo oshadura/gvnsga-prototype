@@ -27,6 +27,18 @@ public:
 
   typedef std::vector<double> Output;
 
+/*
+private:
+  friend class boost::serialization::access;
+
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Functions<Shwefel>>(*this);
+  }
+  
+public:
+*/
+
   static Output Evaluate(const Input &individual) {
     std::vector<double> fFitness, fParameters;
     fFitness.reserve(individual.size());

@@ -25,6 +25,18 @@ public:
 
   typedef std::vector<double> Output;
 
+/*
+private:
+  friend class boost::serialization::access;
+
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar & boost::serialization::base_object<Functions<DTLZ7>>(*this);
+  }
+  
+public:
+  */
+
   static double pi() { return std::atan(1) * 4; }
 
   static Output Evaluate(const Input &individual) {

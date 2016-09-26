@@ -25,7 +25,14 @@ template <typename Derived> class Functions {
 public:
   int numOfEvaluations = 0;
 
+private:
   static int GetNObjectives() { return Derived::GetOutput().size(); }
+
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar &GetNObjectives;
+  }
+
 };
 }
 

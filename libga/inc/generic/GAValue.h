@@ -62,7 +62,7 @@ private:
 
   template <class Archive>
   void serialize(Archive &ar, const unsigned int version) {
-    ar & BOOST_SERIALIZATION_NVP(value);
+    ar &value;
   }
 
   virtual void SetGAValue(const Type &value) { GAValue::value = value; }

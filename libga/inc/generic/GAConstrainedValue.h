@@ -27,7 +27,7 @@ protected:
   Type fUp;
 
 public:
-  GAConstrainedValue() {}
+  GAConstrainedValue() = default;
   GAConstrainedValue(Type d, Type u) : fDown(d), fUp(u) {};
   GAConstrainedValue(Type v, Type d, Type u)
       : GAValue<Type>(v), fDown(d), fUp(u) {};
@@ -36,7 +36,6 @@ public:
   virtual void SetGAValue(const Type &value) {
     if (value < fDown || value > fUp)
       throw std::runtime_error("Boundary Exception.");
-    /*
     if (value < fDown) {
       std::cout << "Redefining value " << value << std::endl;
       this->value = fDown;
@@ -44,9 +43,8 @@ public:
       std::cout << "Redefining value " << value << std::endl;
       this->value = fUp;
     } else {
-    */
       this->value = value;
-    //}
+    }
   };
 
   Type GetDownLimit() const { return fDown; }
