@@ -28,9 +28,9 @@ protected:
 
 public:
   GAConstrainedValue() = default;
-  GAConstrainedValue(Type d, Type u) : fDown(d), fUp(u) {};
+  GAConstrainedValue(Type d, Type u) : fDown(d), fUp(u){};
   GAConstrainedValue(Type v, Type d, Type u)
-      : GAValue<Type>(v), fDown(d), fUp(u) {};
+      : GAValue<Type>(v), fDown(d), fUp(u){};
   ~GAConstrainedValue() {}
 
   virtual void SetGAValue(const Type &value) {

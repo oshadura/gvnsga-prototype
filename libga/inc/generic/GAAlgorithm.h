@@ -15,8 +15,8 @@
 #ifndef __GAALGORITHM__
 #define __GAALGORITHM__
 
-#include <iostream>
 #include "PF.h"
+#include <iostream>
 
 namespace geantvmoop {
 
@@ -36,7 +36,7 @@ public:
     Initialize();
     for (int i = 0; i < fMaxGeneration; ++i) {
       Evolution();
-      //Print(std::cout);
+      // Print(std::cout);
     }
     return GetParetoFront();
   }

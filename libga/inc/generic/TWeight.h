@@ -10,18 +10,18 @@
  * prototype
  */
 //
- #pragma once
+#pragma once
 
 #ifndef __TWEIGHTS__
 #define __TWEIGHTS__
 
-#include <vector>
+#include "tools/GASort.h"
+#include "tools/Random.h"
+#include <cmath>
 #include <initializer_list>
 #include <stdexcept>
-#include <cmath>
 #include <unordered_map>
-#include "tools/Random.h"
-#include "tools/GASort.h"
+#include <vector>
 
 namespace geantvmoop {
 
@@ -31,11 +31,12 @@ public:
   Weights(std::initializer_list<double> list) : std::vector<double>(list) {}
 
   ~Weights() {}
-  
+
   static std::vector<Weights> GetWeights(int n) {
     auto RandomWeight = []() {
       auto r = Random::GetInstance();
-      std::vector<double> v = {r.RandomDouble(), r.RandomDouble(), r.RandomDouble()};
+      std::vector<double> v = {r.RandomDouble(), r.RandomDouble(),
+                               r.RandomDouble()};
       double sum = 0;
       for (auto it = v.begin(); it != v.end(); ++it)
         sum += *it;

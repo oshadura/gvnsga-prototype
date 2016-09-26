@@ -21,19 +21,19 @@
 #include "instrumentation/CPUManager.h"
 
 #include <algorithm>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
 #include <initializer_list>
 #include <iostream>
 #include <list>
+#include <sstream>
 #include <stack>
 #include <unordered_map>
 #include <vector>
-#include <fstream>
-#include <cstring>
-#include <sstream>
-#include <cstdlib>
 
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include <cereal/access.hpp>
 #include <cereal/archives/binary.hpp>
@@ -41,22 +41,22 @@
 
 #include <boost/archive/archive_exception.hpp>
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
 
-#include <boost/serialization/nvp.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/vector.hpp>
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/optional.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
-#include <boost/serialization/optional.hpp>
 
 #include <boost/filesystem.hpp>
 
@@ -65,16 +65,16 @@
 
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F> > {
+template <typename F> class Population : public std::vector<individual_t<F>> {
 
 public:
-  Population(std::initializer_list<individual_t<F> > list)
-      : std::vector<individual_t<F> >(list) {}
+  Population(std::initializer_list<individual_t<F>> list)
+      : std::vector<individual_t<F>>(list) {}
 
-  Population() : std::vector<individual_t<F> >() {}
+  Population() : std::vector<individual_t<F>>() {}
 
-  Population(const std::vector<individual_t<F> > &individuals)
-      : std::vector<individual_t<F> >(individuals) {}
+  Population(const std::vector<individual_t<F>> &individuals)
+      : std::vector<individual_t<F>>(individuals) {}
 
 private:
   individual_t<F> ind;
@@ -84,7 +84,7 @@ private:
 
   template <class Archive>
   void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<TGenes<F>>(*this);
+    ar &boost::serialization::base_object<TGenes<F>>(*this);
     ar &ind;
   }
 
@@ -122,11 +122,11 @@ public:
         pid_t pid = fork();
         fArrayDead[i] = pid;
         if (pid == 0) {
-          //io_service_.notify_fork(boost::asio::io_service::fork_child);
+          // io_service_.notify_fork(boost::asio::io_service::fork_child);
           // Lets generate gene
           std::cout << "Generating individual in a child #" << i << std::endl;
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F> >(gene);
+          auto individual = std::make_shared<TGenes<F>>(gene);
           // cereal::BinaryOutputArchive oarchive(ss);
           // oarchive(individual);
           ////this->push_back(individual);
@@ -139,7 +139,7 @@ public:
             boost::asio::local::stream_protocol::stream_protocol::endpoint ep(
                 endpoint_name.native());
             boost::asio::local::stream_protocol::stream_protocol::iostream
-            stream(ep);
+                stream(ep);
             boost::archive::binary_oarchive oa(stream);
             oa << individual;
           }
@@ -198,7 +198,7 @@ public:
                 << sleep(50);
     } else {
       typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F> >(gene);
+      auto individual = std::make_shared<TGenes<F>>(gene);
       this->push_back(individual);
     }
 #endif
@@ -300,12 +300,14 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] > m[rhs];
+                });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] < m[rhs];
+                });
   }
 
   void SortObj(int objective, bool isDescending = false) {

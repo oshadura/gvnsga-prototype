@@ -10,15 +10,15 @@
  * prototype
  */
 //
- #pragma once
+#pragma once
 
 #ifndef __REFERENCEPOINT__
 #define __REFERENCEPOINT__
 
-#include <vector>
-#include <utility>
-#include <limits>
 #include <cmath>
+#include <limits>
+#include <utility>
+#include <vector>
 
 #include "generic/Population.h"
 #include "generic/TGenes.h"

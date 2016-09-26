@@ -10,7 +10,7 @@
  * prototype
  */
 //
- #pragma once
+#pragma once
 
 #ifndef __PF__
 #define __PF__
@@ -20,9 +20,9 @@
 
 namespace geantvmoop {
 
-template <typename F> class PF : public std::list<individual_t<F> > {
+template <typename F> class PF : public std::list<individual_t<F>> {
 private:
-  std::list<individual_t<F> > front;
+  std::list<individual_t<F>> front;
 
 public:
   Population<F> GetPopulation() const {
@@ -49,7 +49,7 @@ public:
   }
 
   static Population<F> ParetoFrontND(const Population<F> &pop) {
-    std::list<individual_t<F> > front;
+    std::list<individual_t<F>> front;
     if (pop.empty())
       return Population<F>();
     // function for adding an element to the front
@@ -79,7 +79,7 @@ public:
   friend std::ostream &operator<<(std::ostream &os, const PF<F> &pf) {
     for (auto i : pf)
       os << i << " ";
-    std::cout<<"\n";
+    std::cout << "\n";
     return os;
   }
 };

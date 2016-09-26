@@ -25,22 +25,22 @@
 
 #include <boost/archive/archive_exception.hpp>
 
+#include <boost/archive/basic_binary_iarchive.hpp>
+#include <boost/archive/basic_binary_oarchive.hpp>
 #include <boost/archive/basic_text_iarchive.hpp>
 #include <boost/archive/basic_text_oarchive.hpp>
 #include <boost/archive/basic_xml_iarchive.hpp>
 #include <boost/archive/basic_xml_oarchive.hpp>
-#include <boost/archive/basic_binary_iarchive.hpp>
-#include <boost/archive/basic_binary_oarchive.hpp>
 
-#include <boost/serialization/nvp.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/vector.hpp>
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/optional.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/string.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
-#include <boost/serialization/optional.hpp>
 
 namespace geantvmoop {
 
@@ -55,17 +55,15 @@ private:
   std::vector<Type> type;
 
   friend class cereal::access;
+  /*
+    friend class boost::serialization::access;
 
-  // template <class Archive> void serialize(Archive &ar, TGenes<F> tg) {
-  // ar(type); }
-
-  friend class boost::serialization::access;
-
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<Type>(*this);
-    ar &type;
-  }
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      ar &boost::serialization::base_object<Type>(*this);
+      ar &type;
+    }
+  */
 
 public:
   GAVector random() const {
