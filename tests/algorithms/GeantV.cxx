@@ -11,7 +11,7 @@ class Nsga2 : public GATest {
 public:
 };
 
-
+/*
 #ifdef ENABLE_GEANTV
 TEST_F(Nsga2, SolvingGeantVProblem) {
   geantvmoop::RunGeantV runc;
@@ -20,4 +20,5 @@ TEST_F(Nsga2, SolvingGeantVProblem) {
   nsga.SolvePF();
 }
 #endif
+*/
 

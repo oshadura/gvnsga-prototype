@@ -11,6 +11,7 @@ public:
   geantvmoop::PF<geantvmoop::DTLZ2> fFront;
 };
 
+/*
 TEST_F(Pareto, CheckPF) {
   auto fResult = geantvmoop::PF<geantvmoop::DTLZ2>::ParetoFrontND(pop);
   for (auto i : pop) {
@@ -18,3 +19,4 @@ TEST_F(Pareto, CheckPF) {
   }
   EXPECT_EQ(fResult, fFront.GetPopulation());
 }
+*/

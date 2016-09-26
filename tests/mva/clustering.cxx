@@ -21,13 +21,12 @@ public:
   //geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
+/*
 TEST_F(Clustering, SpectralClustering) {
   spcl.LoadData("data");
   spcl.Cluster();
 }
 
-
-/*
 TEST_F(Clustering, DlibSpectral) {
   // Here we declare that our samples will be 2 dimensional column vectors.
   // (Note that if you don't know the dimensionality of your vectors at
