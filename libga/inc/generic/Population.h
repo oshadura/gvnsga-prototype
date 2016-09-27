@@ -308,7 +308,7 @@ public:
       std::fill(fArrayDead, fArrayDead + n, 0);
     }
   }
-#else
+#elsif SIMPLE
 
   Population(int n) {
     CPUManager cpumgr;
