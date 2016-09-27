@@ -109,16 +109,14 @@ public:
 private:
   friend class cereal::access;
 
-  /*
-    friend class boost::serialization::access;
+  friend class boost::serialization::access;
 
-    template <class Archive>
-    void serialize(Archive &ar, const unsigned int version) {
-      ar &boost::serialization::base_object<GAVector<F>>(*this);
-      ar &output;
-      ar &input;
-    }
-  */
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar &boost::serialization::base_object<GAVector<F>>(*this);
+    ar &output;
+    ar &input;
+  }
 
 public:
   bool IsDominating(const TGenes &other) const {
@@ -161,7 +159,8 @@ public:
     // Forking a child process - should be in loop too
     cpid = fork();
     if (cpid > 0) {
-      std::cout << "Starting father process for TGenes::Evaluation process::" << std::endl;
+      std::cout << "Starting father process for TGenes::Evaluation process::"
+                << std::endl;
       fArray[0] = cpid;
       close(pipega[WRITE]);
       memset(&tmpoutput, 0, sizeof(tmpoutput));

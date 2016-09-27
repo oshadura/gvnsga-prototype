@@ -55,15 +55,14 @@ private:
   std::vector<Type> type;
 
   friend class cereal::access;
-  /*
-    friend class boost::serialization::access;
 
-    template <class Archive>
-    void serialize(Archive &ar, const unsigned int version) {
-      ar &boost::serialization::base_object<Type>(*this);
-      ar &type;
-    }
-  */
+  friend class boost::serialization::access;
+
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar &boost::serialization::base_object<Type>(*this);
+    ar &type;
+  }
 
 public:
   GAVector random() const {

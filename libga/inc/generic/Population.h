@@ -68,16 +68,16 @@
 
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F> > {
+template <typename F> class Population : public std::vector<individual_t<F>> {
 
 public:
-  Population(std::initializer_list<individual_t<F> > list)
-      : std::vector<individual_t<F> >(list) {}
+  Population(std::initializer_list<individual_t<F>> list)
+      : std::vector<individual_t<F>>(list) {}
 
-  Population() : std::vector<individual_t<F> >() {}
+  Population() : std::vector<individual_t<F>>() {}
 
-  Population(const std::vector<individual_t<F> > &individuals)
-      : std::vector<individual_t<F> >(individuals) {}
+  Population(const std::vector<individual_t<F>> &individuals)
+      : std::vector<individual_t<F>>(individuals) {}
 
 private:
   individual_t<F> ind;
@@ -94,7 +94,8 @@ private:
   */
 
 public:
-#ifdef ENABLE_SERIALIZATION
+#ifdef ENABLE_GEANTV
+  // ENABLE_SERIALIZATION
   //&&defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
   Population(int n) {
     pid_t fArrayDead[n];
@@ -128,7 +129,7 @@ public:
         if (pid == 0) {
           std::cout << "Generating individual in a child #" << i << std::endl;
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F> >(gene);
+          auto individual = std::make_shared<TGenes<F>>(gene);
           auto indvector = (*individual).GetInput();
           for (int i = 0; i < indvector.size(); ++i)
             std::cout << indvector[i] << " ";
@@ -170,7 +171,8 @@ public:
   }
 #endif
 
-#ifdef ENABLE_GEANTV
+#ifdef ENABLE_GEANTVVVV
+
   Population(int n) {
     int pipega[n][2];
     pid_t cpid;
@@ -201,7 +203,7 @@ public:
         ////////////////////////////=CHILD=//////////////////////
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F> >(gene);
+          auto individual = std::make_shared<TGenes<F>>(gene);
           auto indvector = (*individual).GetInput();
           auto fit = (*individual).GetOutput();
           // for (int i = 0; i < indvector.size(); ++i)
@@ -287,7 +289,7 @@ public:
           }
         }
         auto forkedindividual =
-            std::make_shared<TGenes<F> >(tmpinput, tmpoutput);
+            std::make_shared<TGenes<F>>(tmpinput, tmpoutput);
         auto indv = (*forkedindividual).GetInput();
         std::cout << "--------------------------------------" << std::endl;
 
@@ -325,7 +327,7 @@ public:
                 << sleep(50);
     } else {
       typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F> >(gene);
+      auto individual = std::make_shared<TGenes<F>>(gene);
       this->push_back(individual);
     }
   }
@@ -427,12 +429,14 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] > m[rhs];
+                });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] < m[rhs];
+                });
   }
 
   void SortObj(int objective, bool isDescending = false) {

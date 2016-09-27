@@ -54,14 +54,13 @@ public:
 
 private:
   friend class cereal::access;
-  /*
-    friend class boost::serialization::access;
 
-    template <class Archive>
-    void serialize(Archive &ar, const unsigned int version) {
-      ar &value;
-    }
-  */
+  friend class boost::serialization::access;
+
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar &value;
+  }
 
   virtual void SetGAValue(const Type &value) { GAValue::value = value; }
 };

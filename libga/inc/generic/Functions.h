@@ -47,14 +47,12 @@ public:
 private:
   static int GetNObjectives() { return Derived::GetOutput().size(); }
 
-  /*
-    friend class boost::serialization::access;
+  friend class boost::serialization::access;
 
-    template <class Archive>
-    void serialize(Archive &ar, const unsigned int version) {
-      ar &GetNObjectives;
-    }
-  */
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version) {
+    ar &GetNObjectives;
+  }
 };
 }
 
