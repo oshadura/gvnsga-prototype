@@ -80,6 +80,7 @@ private:
   individual_t<F> ind;
   // Cereal
   friend class cereal::access;
+  /*
   friend class boost::serialization::access;
 
   template <class Archive>
@@ -87,12 +88,13 @@ private:
     ar &boost::serialization::base_object<TGenes<F>>(*this);
     ar &ind;
   }
+  */
 
 public:
   Population(int n) {
 
-#ifdef ENABLE_GEANTV
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+#ifdef ENABLE_SERIALIZATION
+    //&&defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
     pid_t fArrayDead[n];
     boost::filesystem::path endpoint_name =
         boost::filesystem::unique_path("/tmp/ga-%%%%-%%%%-%%%%-%%%%");
@@ -122,29 +124,13 @@ public:
         pid_t pid = fork();
         fArrayDead[i] = pid;
         if (pid == 0) {
-          // io_service_.notify_fork(boost::asio::io_service::fork_child);
-          // Lets generate gene
           std::cout << "Generating individual in a child #" << i << std::endl;
           typename F::Input gene = F::GetInput().random();
           auto individual = std::make_shared<TGenes<F>>(gene);
-          // cereal::BinaryOutputArchive oarchive(ss);
-          // oarchive(individual);
-          ////this->push_back(individual);
           auto indvector = (*individual).GetInput();
           for (int i = 0; i < indvector.size(); ++i)
             std::cout << indvector[i] << " ";
           std::cout << std::endl;
-          std::cout << "Open a stream for a child..." << std::endl;
-          {
-            boost::asio::local::stream_protocol::stream_protocol::endpoint ep(
-                endpoint_name.native());
-            boost::asio::local::stream_protocol::stream_protocol::iostream
-                stream(ep);
-            boost::archive::binary_oarchive oa(stream);
-            oa << individual;
-          }
-          io_service_.notify_fork(boost::asio::io_service::fork_child);
-          wait(NULL);
           exit(EXIT_SUCCESS);
         } else if (pid < 0) {
           std::cout << "Error on fork" << std::endl;
@@ -153,7 +139,6 @@ public:
         }
       }
     }
-
     for (int i = 0; i < n; ++i) {
       // int forki = 0;
       individual_t<F> transfer;
@@ -180,7 +165,95 @@ public:
     }
     boost::filesystem::remove(endpoint_name);
     std::fill(fArrayDead, fArrayDead + n, 0);
-#endif // defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+
+#elseif ENABLE_GEANTV
+    size_t sizeofOutput = sizeof(output) + sizeof(double) * output.capacity();
+    int pipega[n + 1];
+    pid_t cpid;
+    ssize_t result;
+    pipe(pipega);
+    double fitness;
+    pid_t fArrayDead[n];
+    for (int i = 0; i < n; ++i) {
+      CPUManager cpumgr;
+      hwloc_topology_t topology;
+      double nbcores, ccores;
+      hwloc_topology_init(&topology); // initialization
+      hwloc_topology_load(topology);  // actual detection
+      nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
+      hwloc_topology_destroy(topology);
+      ccores = nbcores -
+               cpumgr.GetCurrentValueAllCPU() / 100 * nbcores; // just a test
+      std::cout << "Number of total free cores " << ccores << std::endl;
+      if (ccores < 1) {
+        std::cout << "Sleeping, because free CPU ratio  " << ccores
+                  << " is low.." << std::endl;
+        sleep(1);
+      } else {
+        pid_t pid = fork();
+        fArrayDead[i] = pid;
+        if (pid == 0) {
+          typename F::Input gene = F::GetInput().random();
+          auto individual = std::make_shared<TGenes<F>>(gene);
+          ////this->push_back(individual);
+          auto indvector = (*individual).GetInput();
+          for (int i = 0; i < indvector.size(); ++i)
+            std::cout << indvector[i] << " ";
+          std::cout << std::endl;
+          close(pipega[READ]);
+          for (auto it : output) {
+            write(pipega[WRITE], &it, sizeof(double));
+            // std::cout << "Vector part to be send: " << it << std::endl;
+          }
+          close(pipega[WRITE]); // close the read-end of the pipe
+          wait(NULL);
+          exit(EXIT_SUCCESS);
+        } else if (pid < 0) {
+          exit(EXIT_FAILURE);
+          std::cout << "Error on fork" << std::endl;
+        } else {
+          sstd::cout << "Starting father TGenes evaluation process::"
+                     << std::endl;
+          fArray[i] = cpid;
+          close(pipega[WRITE]);
+          // std::cout << "We are starting to read.." << std::endl;
+          memset(&tmpoutput, 0, sizeof(tmpoutput));
+          // for (int i = 0; i < output.size(); ++i) {
+          // read(pipega[READ], &fitness, sizeof(double));
+          while (read(pipega[READ], &fitness, sizeof(double)) > 0) {
+            for (int i = 0; i < tmpoutput.size(); ++i) {
+              tmpoutput.push_back(fitness);
+            }
+          }
+          tmpoutput.push_back(fitness);
+          // std::cout << "Parent read next value: " << fitness << std::endl;
+        }
+        output = tmpoutput;
+        // std::cout << "We are stoping to read.." << std::endl;
+        close(pipega[READ]);
+        for (int i = 0; i < fNumberChildren; ++i) {
+          // std::cout << "Waiting for PID: " << fArray[i] << " to finish.."
+          //          << std::endl;
+          waitpid(fArray[i], NULL, 0);
+          std::cout << "PID: " << fArray[i] << " has shut down.." << std::endl;
+        }
+      }
+    }
+    for (int i = 0; i < n; ++i) {
+      // int forki = 0;
+      individual_t<F> transfer;
+      this->push_back(transfer);
+      auto indvector = (*transfer).GetInput();
+      for (int i = 0; i < indvector.size(); ++i)
+        std::cout << indvector[i] << " ";
+      std::cout << "--------------------------------------" << std::endl;
+      std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
+                << std::endl;
+      waitpid(fArrayDead[i], NULL, 0);
+      std::cout << "PID: " << fArrayDead[i] << " has shut down.." << std::endl;
+    }
+    boost::filesystem::remove(endpoint_name);
+    std::fill(fArrayDead, fArrayDead + n, 0);
 #else
     CPUManager cpumgr;
     cpumgr.InitCPU();
