@@ -58,7 +58,7 @@ namespace geantvmoop {
 
 template <typename F> class TGenes;
 
-template <typename F> using individual_t = std::shared_ptr<TGenes<F> >;
+template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
 
 template <typename F> class TGenes {
 
