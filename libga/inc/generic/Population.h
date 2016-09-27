@@ -232,42 +232,44 @@ public:
         }
       }
       for (int i = 0; i < n; ++i) {
-        typename F::Input tmpinput;
-        typename F::Output tmpoutput;
-        fArrayDead[i] = cpid;
-        close(pipega[n][WRITE]);
-        std::cout << "We are starting to read on master job.." << std::endl;
-        memset(&tmpoutput, 0, sizeof(tmpoutput));
-        memset(&tmpinput, 0, sizeof(tmpinput));
-        while (read(pipega[n][READ], &readervalue, sizeof(double)) > 0) {
-          std::cout << "I am in a reader loop for " << n << std::endl;
-          for (int i = 0; i < tmpinput.size(); ++i) {
-            std::cout << "Individual part to be received: " << readervalue
-                      << std::endl;
-            tmpinput.push_back(readervalue);
+        if (fArrayDead[i] > 0) {
+          typename F::Input tmpinput;
+          typename F::Output tmpoutput;
+          fArrayDead[i] = cpid;
+          close(pipega[n][WRITE]);
+          std::cout << "We are starting to read on master job.." << std::endl;
+          memset(&tmpoutput, 0, sizeof(tmpoutput));
+          memset(&tmpinput, 0, sizeof(tmpinput));
+          while (read(pipega[n][READ], &readervalue, sizeof(double)) > 0) {
+            std::cout << "I am in a reader loop for " << n << std::endl;
+            for (int i = 0; i < tmpinput.size(); ++i) {
+              std::cout << "Individual part to be received: " << readervalue
+                        << std::endl;
+              tmpinput.push_back(readervalue);
+            }
+            for (int i = 0; i < tmpoutput.size(); ++i) {
+              std::cout << "Fitness part to be received: " << readervalue
+                        << std::endl;
+              tmpoutput.push_back(readervalue);
+            }
           }
-          for (int i = 0; i < tmpoutput.size(); ++i) {
-            std::cout << "Fitness part to be received: " << readervalue
-                      << std::endl;
-            tmpoutput.push_back(readervalue);
-          }
-        }
-        auto forkedindividual =
-            std::make_shared<TGenes<F>>(tmpinput, tmpoutput);
-        auto indv = (*forkedindividual).GetInput();
-        std::cout << "--------------------------------------" << std::endl;
+          auto forkedindividual =
+              std::make_shared<TGenes<F>>(tmpinput, tmpoutput);
+          auto indv = (*forkedindividual).GetInput();
+          std::cout << "--------------------------------------" << std::endl;
 
-        for (int i = 0; i < indv.size(); ++i)
-          std::cout << indv[i] << " ";
-        std::cout << "--------------------------------------" << std::endl;
-        this->push_back(forkedindividual);
-        // std::cout << "We are stoping to read.." << std::endl;
-        close(pipega[n][READ]);
-        std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
-                  << std::endl;
-        waitpid(fArrayDead[i], NULL, 0);
-        std::cout << "PID: " << fArrayDead[i] << " has shut down.."
-                  << std::endl;
+          for (int i = 0; i < indv.size(); ++i)
+            std::cout << indv[i] << " ";
+          std::cout << "--------------------------------------" << std::endl;
+          this->push_back(forkedindividual);
+          // std::cout << "We are stoping to read.." << std::endl;
+          close(pipega[n][READ]);
+          std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
+                    << std::endl;
+          waitpid(fArrayDead[i], NULL, 0);
+          std::cout << "PID: " << fArrayDead[i] << " has shut down.."
+                    << std::endl;
+        }
       }
       std::fill(fArrayDead, fArrayDead + n, 0);
     }
