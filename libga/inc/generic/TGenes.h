@@ -171,8 +171,8 @@ public:
         std::cout << "Parent read next value: " << fitness << std::endl;
       }
       output = tmpoutput;
-      std::cout << "Waiting for PID: " << fArray[0] << " to finish.."
-                << std::endl;
+      std::cout << "Waiting for PID of fucking evaluation: " << fArray[0]
+                << " to finish.." << std::endl;
       waitpid(fArray[0], NULL, 0);
       std::cout << "PID: " << fArray[0] << " has shut down.." << std::endl;
     } else if (cpid < 0) {
