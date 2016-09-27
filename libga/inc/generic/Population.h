@@ -150,6 +150,9 @@ public:
         boost::asio::local::stream_protocol::stream_protocol::iostream stream;
         boost::system::error_code ec;
         acceptor.accept(*stream.rdbuf(), ec);
+        catch (std::exception &e) {
+          std::cerr << e.what() << std::endl;
+        }
         // cereal::BinaryInputArchive iarchive(ss);
         // iarchive(transfer);
         boost::archive::binary_iarchive ia(stream);
