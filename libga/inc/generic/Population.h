@@ -148,7 +148,8 @@ public:
       std::cout << "=Creating a listener #" << i << " =" << std::endl;
       {
         boost::asio::local::stream_protocol::stream_protocol::iostream stream;
-        acceptor.accept(*stream.rdbuf());
+        boost::system::error_code ec;
+        acceptor.accept(*stream.rdbuf(), ec);
         // cereal::BinaryInputArchive iarchive(ss);
         // iarchive(transfer);
         boost::archive::binary_iarchive ia(stream);
