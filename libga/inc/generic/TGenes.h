@@ -161,10 +161,9 @@ public:
     // Forking a child process - should be in loop too
     cpid = fork();
     if (cpid > 0) {
-      std::cout << "Starting father TGenes evaluation process::" << std::endl;
+      std::cout << "Starting father process for TGenes::Evaluation process::" << std::endl;
       fArray[0] = cpid;
       close(pipega[WRITE]);
-      std::cout << "We are starting to read.." << std::endl;
       memset(&tmpoutput, 0, sizeof(tmpoutput));
       while (read(pipega[READ], &fitness, sizeof(double)) > 0) {
         tmpoutput.push_back(fitness);
@@ -190,7 +189,7 @@ public:
       wait(NULL);
       exit(EXIT_SUCCESS);
     }
-    std::cout << "We are back to master job after TGenes evaluation::"
+    std::cout << "We are back to master job after TGenes::Evaluation::"
               << std::endl;
     // Cleaning array from previos pids info
     fArray[0] = 0;

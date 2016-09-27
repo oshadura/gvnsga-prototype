@@ -12,8 +12,11 @@ TEST_F(Individual, GeneratingIndividual) {
   geantvmoop::TGenes<geantvmoop::DTLZ2> i;
 }
 
+
 /*
 TEST_F(Individual, GeneratingIndividualDifferent) {
+	        typename F::Input tmpinput;
+        typename F::Output tmpoutput;
   auto forkedindividual = std::make_shared<TGenes<F> >(tmpinput, tmpoutput);
   auto indv = (*forkedindividual).GetInput();
   std::cout << "--------------------------------------" << std::endl;

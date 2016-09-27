@@ -11,7 +11,7 @@ class Nsga2 : public GATest {
 public:
 };
 
-#ifdef ENABLE_GEANTV
+#ifdef ENABLE_GEANTVVVV
 TEST_F(Nsga2, SolvingGeantVProblem) {
   geantvmoop::RunGeantV runc;
   geantvmoop::GANSGA2<geantvmoop::RunGeantV> nsga(runc);

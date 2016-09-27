@@ -68,16 +68,16 @@
 
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F>> {
+template <typename F> class Population : public std::vector<individual_t<F> > {
 
 public:
-  Population(std::initializer_list<individual_t<F>> list)
-      : std::vector<individual_t<F>>(list) {}
+  Population(std::initializer_list<individual_t<F> > list)
+      : std::vector<individual_t<F> >(list) {}
 
-  Population() : std::vector<individual_t<F>>() {}
+  Population() : std::vector<individual_t<F> >() {}
 
-  Population(const std::vector<individual_t<F>> &individuals)
-      : std::vector<individual_t<F>>(individuals) {}
+  Population(const std::vector<individual_t<F> > &individuals)
+      : std::vector<individual_t<F> >(individuals) {}
 
 private:
   individual_t<F> ind;
@@ -128,7 +128,7 @@ public:
         if (pid == 0) {
           std::cout << "Generating individual in a child #" << i << std::endl;
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F>>(gene);
+          auto individual = std::make_shared<TGenes<F> >(gene);
           auto indvector = (*individual).GetInput();
           for (int i = 0; i < indvector.size(); ++i)
             std::cout << indvector[i] << " ";
@@ -175,7 +175,7 @@ public:
     int pipega[n][2];
     pid_t cpid;
     ssize_t result;
-    pipe(pipega[n][2]);
+    pipe(pipega[n]);
     double readervalue;
     pid_t fArrayDead[n];
     for (int i = 0; i < n; ++i) {
@@ -192,7 +192,7 @@ public:
       if (ccores < 1) {
         std::cout << "Sleeping, because free CPU ratio  " << ccores
                   << " is low.." << std::endl;
-        sleep(1);
+        sleep(10);
       } else {
         //////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////
@@ -201,7 +201,7 @@ public:
         ////////////////////////////=CHILD=//////////////////////
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F>>(gene);
+          auto individual = std::make_shared<TGenes<F> >(gene);
           auto indvector = (*individual).GetInput();
           auto fit = (*individual).GetOutput();
           // for (int i = 0; i < indvector.size(); ++i)
@@ -209,18 +209,18 @@ public:
           // std::cout << std::endl;
           close(pipega[n][READ]);
           for (auto it : indvector) {
-            lockf(pipega[n][WRITE], F_LOCK, 0);
+            // lockf(pipega[n][WRITE], F_LOCK, 0);
             write(pipega[n][WRITE], &it, sizeof(double));
-            lockf(pipega[n][WRITE], F_ULOCK, 0);
+            // lockf(pipega[n][WRITE], F_ULOCK, 0);
             std::cout << "Individual part to be send: " << it << std::endl;
           }
           for (auto iter : fit) {
-            lockf(pipega[n][WRITE], F_LOCK, 0);
+            // lockf(pipega[n][WRITE], F_LOCK, 0);
             write(pipega[n][WRITE], &iter, sizeof(double));
-            lockf(pipega[n][WRITE], F_ULOCK, 0);
+            // lockf(pipega[n][WRITE], F_ULOCK, 0);
             std::cout << "Fitness part to be send: " << iter << std::endl;
           }
-          close(pipega[n][WRITE]); // close the read-end of the pipe
+          close(pipega[WRITE]); // close the read-end of the pipe
           wait(NULL);
           exit(EXIT_SUCCESS);
         } else if (pid < 0) {
@@ -229,18 +229,15 @@ public:
           std::cout << "Error on fork" << std::endl;
         } else {
           ////////////////////////////=PARENT=////////////////////
-        }
-      }
-      for (int i = 0; i < n; ++i) {
-        if (fArrayDead[i] > 0) {
+          /*
           typename F::Input tmpinput;
           typename F::Output tmpoutput;
           fArrayDead[i] = cpid;
-          close(pipega[n][WRITE]);
+          close(pipega[WRITE]);
           std::cout << "We are starting to read on master job.." << std::endl;
           memset(&tmpoutput, 0, sizeof(tmpoutput));
           memset(&tmpinput, 0, sizeof(tmpinput));
-          while (read(pipega[n][READ], &readervalue, sizeof(double)) > 0) {
+          while (read(pipega[READ], &readervalue, sizeof(double)) > 0) {
             std::cout << "I am in a reader loop for " << n << std::endl;
             for (int i = 0; i < tmpinput.size(); ++i) {
               std::cout << "Individual part to be received: " << readervalue
@@ -254,7 +251,7 @@ public:
             }
           }
           auto forkedindividual =
-              std::make_shared<TGenes<F>>(tmpinput, tmpoutput);
+              std::make_shared<TGenes<F> >(tmpinput, tmpoutput);
           auto indv = (*forkedindividual).GetInput();
           std::cout << "--------------------------------------" << std::endl;
 
@@ -263,13 +260,48 @@ public:
           std::cout << "--------------------------------------" << std::endl;
           this->push_back(forkedindividual);
           // std::cout << "We are stoping to read.." << std::endl;
-          close(pipega[n][READ]);
-          std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
-                    << std::endl;
-          waitpid(fArrayDead[i], NULL, 0);
-          std::cout << "PID: " << fArrayDead[i] << " has shut down.."
-                    << std::endl;
+          close(pipega[READ]);
+        */
         }
+      }
+
+      for (int i = 0; i < n; ++i) {
+        typename F::Input tmpinput;
+        typename F::Output tmpoutput;
+        // fArrayDead[i] = cpid;
+        close(pipega[n][WRITE]);
+        std::cout << "We are starting to read on master job.." << std::endl;
+        memset(&tmpoutput, 0, sizeof(tmpoutput));
+        memset(&tmpinput, 0, sizeof(tmpinput));
+        while (read(pipega[n][READ], &readervalue, sizeof(double)) > 0) {
+          std::cout << "I am in a reader loop for " << n << std::endl;
+          for (int i = 0; i < tmpinput.size(); ++i) {
+            std::cout << "Individual part to be received: " << readervalue
+                      << std::endl;
+            tmpinput.push_back(readervalue);
+          }
+          for (int i = 0; i < tmpoutput.size(); ++i) {
+            std::cout << "Fitness part to be received: " << readervalue
+                      << std::endl;
+            tmpoutput.push_back(readervalue);
+          }
+        }
+        auto forkedindividual =
+            std::make_shared<TGenes<F> >(tmpinput, tmpoutput);
+        auto indv = (*forkedindividual).GetInput();
+        std::cout << "--------------------------------------" << std::endl;
+
+        for (int i = 0; i < indv.size(); ++i)
+          std::cout << indv[i] << " ";
+        std::cout << "--------------------------------------" << std::endl;
+        this->push_back(forkedindividual);
+        // std::cout << "We are stoping to read.." << std::endl;
+        close(pipega[n][READ]);
+        std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
+                  << std::endl;
+        waitpid(fArrayDead[i], NULL, 0);
+        std::cout << "PID: " << fArrayDead[i] << " has shut down.."
+                  << std::endl;
       }
       std::fill(fArrayDead, fArrayDead + n, 0);
     }
@@ -293,7 +325,7 @@ public:
                 << sleep(50);
     } else {
       typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F>>(gene);
+      auto individual = std::make_shared<TGenes<F> >(gene);
       this->push_back(individual);
     }
   }
@@ -395,14 +427,12 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] > m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] < m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
   }
 
   void SortObj(int objective, bool isDescending = false) {
