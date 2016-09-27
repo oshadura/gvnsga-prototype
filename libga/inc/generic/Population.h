@@ -58,6 +58,16 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
 
+#include <boost/interprocess/anonymous_shared_memory.hpp>
+#include <boost/interprocess/mapped_region.hpp>
+#include <boost/interprocess/sync/interprocess_mutex.hpp>
+#include <boost/interprocess/sync/interprocess_condition.hpp>
+#include <boost/interprocess/sync/scoped_lock.hpp>
+#include <boost/interprocess/anonymous_shared_memory.hpp>
+#include <boost/interprocess/mapped_region.hpp>
+#include <iostream>
+#include <cstring>
+
 #include <boost/filesystem.hpp>
 
 #include <boost/asio.hpp>
@@ -65,19 +75,18 @@
 
 #define READ 0
 #define WRITE 1
-
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F>> {
+template <typename F> class Population : public std::vector<individual_t<F> > {
 
 public:
-  Population(std::initializer_list<individual_t<F>> list)
-      : std::vector<individual_t<F>>(list) {}
+  Population(std::initializer_list<individual_t<F> > list)
+      : std::vector<individual_t<F> >(list) {}
 
-  Population() : std::vector<individual_t<F>>() {}
+  Population() : std::vector<individual_t<F> >() {}
 
-  Population(const std::vector<individual_t<F>> &individuals)
-      : std::vector<individual_t<F>>(individuals) {}
+  Population(const std::vector<individual_t<F> > &individuals)
+      : std::vector<individual_t<F> >(individuals) {}
 
 private:
   individual_t<F> ind;
@@ -94,8 +103,7 @@ private:
   */
 
 public:
-#ifdef ENABLE_GEANTV
-  // ENABLE_SERIALIZATION
+#ifdef ENABLE_SERIALIZATION
   //&&defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
   Population(int n) {
     pid_t fArrayDead[n];
@@ -129,7 +137,11 @@ public:
         if (pid == 0) {
           std::cout << "Generating individual in a child #" << i << std::endl;
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F>>(gene);
+          auto individual = std::make_shared<TGenes<F> >(gene);
+          boost::asio::local::stream_protocol::iostream stream(ep);
+          boost::archive::binary_oarchive oa(stream);
+          oa &i &BOOST_SERIALIZATION_NVP(individual);
+          ;
           auto indvector = (*individual).GetInput();
           for (int i = 0; i < indvector.size(); ++i)
             std::cout << indvector[i] << " ";
@@ -150,13 +162,8 @@ public:
         boost::asio::local::stream_protocol::stream_protocol::iostream stream;
         boost::system::error_code ec;
         acceptor.accept(*stream.rdbuf(), ec);
-        // catch (std::exception &e) {
-        //  std::cerr << e.what() << std::endl;
-        //}
-        // cereal::BinaryInputArchive iarchive(ss);
-        // iarchive(transfer);
         boost::archive::binary_iarchive ia(stream);
-        ia >> transfer;
+        ia &i &BOOST_SERIALIZATION_NVP(transfer);
       }
       std::cout << "Pushing a new gene in a parent..." << std::endl;
       this->push_back(transfer);
@@ -175,7 +182,7 @@ public:
   }
 #endif
 
-#ifdef ENABLE_GEANTVVVV
+#ifdef ENABLE_PIPE
 
   Population(int n) {
     int pipega[n][2];
@@ -207,7 +214,7 @@ public:
         ////////////////////////////=CHILD=//////////////////////
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F>>(gene);
+          auto individual = std::make_shared<TGenes<F> >(gene);
           auto indvector = (*individual).GetInput();
           auto fit = (*individual).GetOutput();
           // for (int i = 0; i < indvector.size(); ++i)
@@ -293,7 +300,7 @@ public:
           }
         }
         auto forkedindividual =
-            std::make_shared<TGenes<F>>(tmpinput, tmpoutput);
+            std::make_shared<TGenes<F> >(tmpinput, tmpoutput);
         auto indv = (*forkedindividual).GetInput();
         std::cout << "--------------------------------------" << std::endl;
 
@@ -312,7 +319,64 @@ public:
       std::fill(fArrayDead, fArrayDead + n, 0);
     }
   }
-#elsif SIMPLE
+
+#elif ENABLE_GEANTV
+
+  Population(int n) {
+    int pipega[n][2];
+    pid_t cpid;
+    ssize_t result;
+    pipe(pipega[n]);
+    double readervalue;
+    pid_t fArrayDead[n];
+    using namespace boost::interprocess;
+    mapped_region region(anonymous_shared_memory(n*100 /*sizeof(*this)*/));
+    void* const ptr = region.get_address();
+
+    for (int i = 0; i < n; ++i) {
+      CPUManager cpumgr;
+      hwloc_topology_t topology;
+      double nbcores, ccores;
+      hwloc_topology_init(&topology); // initialization
+      hwloc_topology_load(topology);  // actual detection
+      nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
+      hwloc_topology_destroy(topology);
+      ccores = nbcores -
+               cpumgr.GetCurrentValueAllCPU() / 100 * nbcores; // just a test
+      std::cout << "Number of total free cores " << ccores << std::endl;
+      if (ccores < 1) {
+        std::cout << "Sleeping, because free CPU ratio  " << ccores
+                  << " is low.." << std::endl;
+        sleep(10);
+      } else {
+        //////////////////////////////////////////////////////////
+        pid_t pid = fork();
+        fArrayDead[i] = pid;
+        if (pid == 0) {
+          typename F::Input gene = F::GetInput().random();
+          auto individual = std::make_shared<TGenes<F> >(gene);
+          this->push_back(individual);
+          wait(NULL);
+          exit(EXIT_SUCCESS);
+        } else if (pid < 0) {
+          exit(EXIT_FAILURE);
+          std::cout << "Error on fork" << std::endl;
+        } else {
+        }
+      }
+      for (int i = 0; i < n; ++i) {
+        std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
+                  << std::endl;
+        waitpid(fArrayDead[i], NULL, 0);
+        std::cout << "PID: " << fArrayDead[i] << " has shut down.."
+                  << std::endl;
+      }
+      std::fill(fArrayDead, fArrayDead + n, 0);
+    }
+    std::cout << (*this);
+  }
+
+#elif SIMPLE
 
   Population(int n) {
     CPUManager cpumgr;
@@ -331,7 +395,7 @@ public:
                 << sleep(50);
     } else {
       typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F>>(gene);
+      auto individual = std::make_shared<TGenes<F> >(gene);
       this->push_back(individual);
     }
   }
@@ -433,14 +497,12 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] > m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
-                  return m[lhs] < m[rhs];
-                });
+                [&m](const individual_t<F> &lhs,
+                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
   }
 
   void SortObj(int objective, bool isDescending = false) {
