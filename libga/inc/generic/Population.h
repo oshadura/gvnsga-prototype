@@ -66,6 +66,8 @@
 #include <boost/interprocess/sync/interprocess_mutex.hpp>
 #include <boost/interprocess/sync/scoped_lock.hpp>
 
+#include <boost/interprocess/offset_ptr.hpp>
+
 #include <boost/container/static_vector.hpp>
 
 #include <cstring>
@@ -358,7 +360,7 @@ public:
         fArrayDead[i] = pid;
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
-          // auto individual = std::make_shared<TGenes<F>>(gene);
+          auto individual = boost::interprocess::offset_ptr<TGenes<F>>(gene);
           auto individual = TGenes<F>(gene);
           auto indv = (*individual).GetInput();
           std::cout << "--------------------------------------" << std::endl;

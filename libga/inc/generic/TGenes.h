@@ -53,6 +53,8 @@
 
 #include <boost/container/static_vector.hpp>
 
+#include <boost/interprocess/offset_ptr.hpp>
+
 #define READ 0
 #define WRITE 1
 
@@ -62,7 +64,8 @@ template <typename F> class TGenes;
 
 // template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
 
-template <typename F> using individual_t = TGenes<F>;
+template <typename F>
+using individual_t = boost::interprocess::offset_ptr<TGenes<F>>;
 
 template <typename F> class TGenes {
 
