@@ -71,7 +71,7 @@ include_directories(${CEREAL_INCLUDE_DIR})
 #ExternalProject_Add(
 #    perf
 #    GIT_REPOSITORY git://git.code.sf.net/p/perfmon2/libpfm4 perfmon2-libpfm4
-#    GIT_TAG v4.7.1
+#    #GIT_TAG v4.7.1
 #    CONFIGURE_COMMAND <SOURCE_DIR>/configure
 #                        --prefix=<INSTALL_DIR>
 #    BUILD_IN_SOURCE 1
@@ -93,8 +93,8 @@ include_directories(${CEREAL_INCLUDE_DIR})
 #    papi
 #    GIT_REPOSITORY https://icl.cs.utk.edu/git/papi.git
 #    GIT_TAG papi-5-5-0-t
-#    CONFIGURE_COMMAND <SOURCE_DIR>/src/configure
-#                        --prefix=<INSTALL_DIR>
+#    CONFIGURE_COMMAND cd <SOURCE_DIR>/src && ./configure --prefix=<INSTALL_DIR>
+#    BUILD_COMMAND cd <SOURCE_DIR>/src && make -j4
 #    BUILD_IN_SOURCE 1
 #    LOG_DOWNLOAD ON
 #    LOG_BUILD ON)

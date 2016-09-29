@@ -21,7 +21,7 @@ TEST_F(Individual, GeneratingIndividual) {
 }
 
 TEST_F(Individual, GenerationPopulation) {
-  mapped_region region(anonymous_shared_memory(10000000000));
+  mapped_region region(anonymous_shared_memory(10000));
   geantvmoop::Population<geantvmoop::DTLZ2, 10> *pop = new (
       region.get_address()) geantvmoop::Population<geantvmoop::DTLZ2, 10>();
   //pop->InitSimplePopulation(*pop);
