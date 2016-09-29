@@ -23,9 +23,9 @@ namespace geantvmoop {
 class Shwefel : public Functions<Shwefel> {
 
 public:
-  typedef GAVector<GADouble> Input;
+  typedef GAVector<GADouble, 3> Input;
 
-  typedef std::vector<double> Output;
+  typedef boost::container::static_vector<double, 3> Output;
 
 /*
 private:
@@ -40,9 +40,8 @@ public:
 */
 
   static Output Evaluate(const Input &individual) {
-    std::vector<double> fFitness, fParameters;
-    fFitness.reserve(individual.size());
-    fParameters.reserve(individual.size());
+    boost::container::static_vector<double, 3> fFitness;
+    boost::container::static_vector<double, 3> fParameters;
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     auto it = fFitness.begin();
@@ -66,7 +65,7 @@ public:
     return value;
   }
 
-  static Output GetOutput() { return std::vector<double>(2); }
+  static Output GetOutput() { return boost::container::static_vector<double, 2>(); }
 };
 }
 

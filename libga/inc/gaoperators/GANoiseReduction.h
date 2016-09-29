@@ -22,8 +22,8 @@ namespace geantvmoop {
 template <typename Derived> class NoiseReduction {
 
 public:
-  template <typename F>
-  Population<F> NR(Population<F> &population) {
+  template <typename F, std::size_t SizePop>
+  Population<F, SizePop> NR(Population<F, SizePop> &population) {
     return static_cast<Derived *>(this)
         ->Derived::NoiseReductionImpl(population);
   }

@@ -7,8 +7,8 @@
 
 class Pareto : public GATest {
 public:
-  geantvmoop::Population<geantvmoop::DTLZ2> pop{5};
-  geantvmoop::PF<geantvmoop::DTLZ2> fFront;
+  geantvmoop::Population<geantvmoop::DTLZ2, 10> pop;
+  geantvmoop::PF<geantvmoop::DTLZ2,10> fFront;
 };
 
 /*

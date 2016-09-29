@@ -26,19 +26,19 @@ namespace geantvmoop {
 
 class GACD : public GAGenericIndicator<GACD, double> {
 
-  template <typename T> using Map = std::unordered_map<individual_t<T>, double>;
+template <typename T> using Map = std::unordered_map<individual_t<T>, double>;
 
 public:
-  template <typename T>
-  static Map<T> CalculateIndicatorImpl(const Population<T> &pop) {
+  template <typename T, std::size_t SizePop>
+  static Map<T> CalculateIndicatorImpl(const Population<T, SizePop> &pop) {
     std::vector<double> fMin;
     std::vector<double> fMax;
     BoundingValues(pop, fMin, fMax);
     return CalculateIndicatorImpl(pop, fMin, fMax);
   }
 
-  template <typename T>
-  static void BoundingValues(const Population<T> &pop,
+  template <typename T, std::size_t SizePop>
+  static void BoundingValues(const Population<T, SizePop> &pop,
                              std::vector<double> &fMin,
                              std::vector<double> &fMax) {
     for (unsigned int j = 0; j < T::GetOutput().size(); ++j) {
@@ -48,8 +48,8 @@ public:
     }
   }
 
-  template <typename T>
-  static Map<T> CalculateIndicatorImpl(const Population<T> &pop,
+  template <typename T, std::size_t SizePop>
+  static Map<T> CalculateIndicatorImpl(const Population<T, SizePop> &pop,
                                        std::vector<double> &fMin,
                                        std::vector<double> &fMax) {
     Map<T> fMap;

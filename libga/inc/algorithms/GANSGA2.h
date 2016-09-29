@@ -53,15 +53,15 @@
 
 namespace geantvmoop {
 
-template <typename F> class GANSGA2 : public GAAlgorithm<GANSGA2<F>, F> {
+template <typename F, std::size_t SizePop, std::size_t SizeGene> class GANSGA2 : public GAAlgorithm<GANSGA2<F,SizePop, SizeGene>, F> {
 
 private:
-  Population<F> population;
+  Population<F, SizePop> population;
   std::unordered_map<individual_t<F>, double> fIndCrowDist;
   std::unordered_map<individual_t<F>, int> fIndRank;
 
 public:
-  GANSGA2(F problem) : GAAlgorithm<GANSGA2<F>, F>(problem) {}
+  GANSGA2(F problem) : GAAlgorithm<GANSGA2<F,SizePop, SizeGene>, F>(problem) {}
   int fPopulationSize = 10;
   double PMut = 0.6;
   double PCross = 0.9;
@@ -69,7 +69,8 @@ public:
 
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
-    population = Population<F>{ fPopulationSize };
+    population = Population<F, SizePop>();
+    population.InitSharedMemPopulation(population);
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
     /*
@@ -81,13 +82,13 @@ public:
   void EvolutionImpl() {
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
     GATournamentSelection<GAComparator<F> > selector(cmp);
-    Population<F> matingPool =
+    Population<F, SizePop> matingPool =
         selector.MultipleSelection(population, fPopulationSize * 2);
     for (unsigned int j = 0; j < matingPool.size() - 1; j += 2) {
       // if (Random::GetInstance().RandomDouble() < PCross)
-      individual_t<F> offspring = GASBXCrossover::Crossover(matingPool[j], matingPool[j + 1]);
+      individual_t<F> offspring = GASBXCrossover::Crossover<F,SizeGene>(matingPool[j], matingPool[j + 1]);
       if (Random::GetInstance().RandomDouble() < PMut)
-        offspring = GAPolynomialMutation::Mutation(offspring, PMut);
+        offspring = GAPolynomialMutation::Mutation<F,SizeGene>(offspring, PMut);
         //offspring = GASimpleMutation::Mutation(offspring, PMut);
       population.push_back(offspring);
     }
@@ -95,7 +96,7 @@ public:
     fIndCrowDist = GACD::CalculateIndicator(population);
     GAComparator<F> comp(&fIndRank, &fIndCrowDist);
     std::sort(population.begin(), population.end(), comp);
-    HistogramManager<F>::GetInstance().HistoFill(
+    HistogramManager<F, SizePop>::GetInstance().HistoFill(
         population, "population_nsga2.root", fCurrentGeneration);
     std::cout << "---------------------------\n" << std::endl;
     for (int i = 0; i < population.size(); ++i) {
@@ -113,7 +114,7 @@ public:
       std::cout << MAGENTA << fIndCrowDist[ind] << RESET << std::endl;
     }
     std::cout << "---------------------------\n" << std::endl;
-    Population<F> next;
+    Population<F, SizePop> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
@@ -125,14 +126,13 @@ public:
   }
 
   void PrintImpl(std::ostream &os) {
-    // Print everything!
     auto last = population[population.size() - 1];
     os << "| Pareto front: " << fIndRank[last] << " | Crowding distance: ";
     os << fIndCrowDist[last] << std::endl;
   }
 
-  PF<F> GetParetoFrontImpl() {
-    PF<F> fFront;
+  PF<F, SizePop> GetParetoFrontImpl() {
+    PF<F,SizePop> fFront;
     for (unsigned int i = 0; i < population.size(); ++i)
       fFront.Add(population[i]);
     std::cout << fFront << std::endl;

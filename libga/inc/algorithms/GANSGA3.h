@@ -31,21 +31,21 @@
 
 namespace geantvmoop {
 
-template <typename F> class GANSGA3 : public GAAlgorithm<GANSGA3<F>, F> {
+template <typename F, std::size_t SizePop > class GANSGA3 : public GAAlgorithm<GANSGA3<F, SizePop>, F> {
 
 private:
-  Population<F> population;
+  Population<F, SizePop> population;
   std::vector<ReferencePoint> fReference;
 
 public:
-  GANSGA3(F problem) : GAAlgorithm<GANSGA3<F>, F>(problem) {}
+  GANSGA3(F problem) : GAAlgorithm<GANSGA3<F,SizePop>, F>(problem) {}
   int fPopulationSize = 100;
   double PMut = 0.2;
 
   void InitializeImpl() {
-    population = Population<F>{fPopulationSize};
+    population = Population<F, SizePop>();
     // more genertic..
-    GenerateRP(&fReference, 3, 4);
+    // GenerateRP(&fReference, 3, 4);
   }
 
   void EvolutionImpl() {
@@ -61,7 +61,7 @@ public:
       //population.push_back(offspring);
     //}
     //....
-    Population<F> next;
+    Population<F, SizePop> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     population = next;
@@ -82,16 +82,16 @@ public:
     std::cout << "---------------------------\n" << std::endl;
   }
 
-  PF<F> GetParetoFrontImpl() {
-    PF<F> fFront;
+  PF<F, SizePop> GetParetoFrontImpl() {
+    PF<F, SizePop> fFront;
     for (unsigned int i = 0; i < population.size(); ++i)
       fFront.Add(population[i]);
     return fFront;
   }
 
 private:
-  Population<F> pop;
-  PF<F> fFront;
+  Population<F, SizePop> pop;
+  PF<F, SizePop> fFront;
 };
 }
 

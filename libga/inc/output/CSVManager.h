@@ -42,8 +42,8 @@ private:
   ~CSVManager() {}
 
 public:
-  template <typename F>
-  void CSVOutput(std::string file, const Population<F> &population, std::unordered_map<individual_t<F>, int> fIndRank, std::unordered_map<individual_t<F>, double> fIndCrowDist) {
+  template <typename F, std::size_t SizePop>
+  void CSVOutput(std::string file, const Population<F, SizePop> &population, std::unordered_map<individual_t<F>, int> fIndRank, std::unordered_map<individual_t<F>, double> fIndCrowDist) {
     std::ofstream populationcvs;
     populationcvs.open(file.c_str(), std::fstream::app);
     // Suppose to be variadic...

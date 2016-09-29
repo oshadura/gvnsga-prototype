@@ -18,6 +18,8 @@
 #include "PF.h"
 #include <iostream>
 
+#include <boost/container/static_vector.hpp>
+
 namespace geantvmoop {
 
 template <typename Derived, typename F> class GAAlgorithm {
@@ -32,13 +34,13 @@ public:
 
   ~GAAlgorithm() = default;
 
-  virtual PF<F> SolvePF() {
+  void SolvePF() {
     Initialize();
     for (int i = 0; i < fMaxGeneration; ++i) {
       Evolution();
       // Print(std::cout);
     }
-    return GetParetoFront();
+    return static_cast<Derived *>(this)->GetParetoFrontImpl();
   }
 
   F GetProblem() const { return problem; }
@@ -53,9 +55,11 @@ public:
     return static_cast<Derived *>(this)->PrintImpl(os);
   }
 
-  PF<F> GetParetoFront() {
+  /*
+  PF<F, SizePop> GetParetoFront() {
     return static_cast<Derived *>(this)->GetParetoFrontImpl();
   }
+  */
 };
 }
 

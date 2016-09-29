@@ -40,14 +40,14 @@ private:
   }
 
 public:
-  template <typename F>
-  individual_t<F> UnarySelectionImpl(const Population<F> &population) {
+  template <typename F, std::size_t SizePop>
+  individual_t<F> UnarySelectionImpl(const Population<F, SizePop> &population) {
     return *(RandomSelection(population.begin(), population.end()));
   }
 
-  template <typename F>
-  Population<F> MultipleSelectionImpl(const Population<F> &population, int n) {
-    Population<F> result;
+  template <typename F, std::size_t SizePop>
+  Population<F, SizePop> MultipleSelectionImpl(const Population<F, SizePop> &population, int n) {
+    Population<F, SizePop> result;
     for (int i = 0; i < n; ++i) {
       result.push_back(UnarySelectionImpl(population));
     }

@@ -25,10 +25,10 @@
 
 namespace geantvmoop {
 
-template <typename F> class CMAES : public GAAlgorithm<CMAES<F>, F> {
+template <typename F> class CMAES : public GAAlgorithm<CMAES<F,SizePop>, F> {
 
 public:
-  CMAES(F problem) : GAAlgorithm<CMAES<F>, F>(problem) {}
+  CMAES(F problem) : GAAlgorithm<CMAES<F,SizePop>, F>(problem) {}
 
   void InitializeImpl() {
     int dim = 20; // problem dimensions.

@@ -17,6 +17,9 @@
 
 #include "GAConstrainedValue.h"
 #include "tools/Random.h"
+
+#include <boost/container/static_vector.hpp>
+
 #include <cstdlib>
 
 namespace geantvmoop {

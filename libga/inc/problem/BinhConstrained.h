@@ -21,17 +21,16 @@ namespace geantvmoop {
 class Binh : public Functions<Binh> {
 
 public:
-  typedef GAVector<GADouble> Input;
+  typedef GAVector<GADouble, 2> Input;
 
-  typedef std::vector<double> Output;
+  typedef boost::container::static_vector<double, 3> Output;
 
   // We need to add possibility to get constrained data generation,
   // here is: https://en.wikipedia.org/wiki/Test_functions_for_optimization
 
   static Output Evaluate(const Input &individual) {
-    std::vector<double> fFitness, fParameters;
-    fFitness.reserve(individual.size());
-    fParameters.reserve(individual.size());
+    boost::container::static_vector<double, 3> fFitness;
+    boost::container::static_vector<double, 3> fParameters;
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     auto it = fFitness.begin();
@@ -57,7 +56,7 @@ public:
     return value;
   }
 
-  static Output GetOutput() { return std::vector<double>(2); }
+  static Output GetOutput() { return boost::container::static_vector<double, 2>(); }
 };
 }
 

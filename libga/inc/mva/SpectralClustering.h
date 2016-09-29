@@ -88,7 +88,7 @@ public:
     }
   }
 
-  template <typename F> void UploadPopulation(Population<F> &pop) {
+  template <typename F,  std::size_t SizePop> void UploadPopulation(Population<F, SizePop> &pop) {
     for (std::size_t i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
       for (std::size_t j = 0; j < individual.size(); ++j) {
@@ -106,8 +106,8 @@ public:
     std::cout << X << sep;
   }
 
-  template <typename F>
-  void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
+  template <typename F,  std::size_t SizePop>
+  void UnloadPopulation(Population<F, SizePop> &newpop, MatrixXd &data) {
     // check if they are both the same size!
     if (data.cols() != newpop.size())
       return;
@@ -126,7 +126,7 @@ public:
       poplist.push_back(std::make_shared<geantvmoop::TGenes<F>>(newind));
       ind.clear();
     }
-    newpop = Population<F>(poplist);
+    newpop = Population<F, SizePop>(poplist);
   }
 
   int WriteData(const char *data, char sep) {

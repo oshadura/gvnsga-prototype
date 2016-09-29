@@ -15,6 +15,8 @@
 #ifndef __GACONSTRAINEDVALUE__
 #define __GACONSTRAINEDVALUE__
 
+#include <boost/container/static_vector.hpp>
+
 #include "GAValue.h"
 #include <stdexcept>
 

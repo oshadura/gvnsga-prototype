@@ -23,7 +23,7 @@ namespace geantvmoop {
 class GASimpleMutation : public GAMutation<GASimpleMutation> {
 
 public:
-  template <typename T> static void MutationImpl(T &in, double prob = -1) {
+  template <typename T, std::size_t SizeGene> static void MutationImpl(T &in, double prob = -1) {
     double lb = in[0].GetDownLimit();
     double ub = in[0].GetUpLimit();
     if (prob == -1)

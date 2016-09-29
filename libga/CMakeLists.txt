@@ -150,6 +150,7 @@ target_link_libraries(GA ${VC_LIBRARIES} ${ROOT_LIBRARIES} Hist RIO Tree Gui Tre
                          ${Boost_LIBRARY_DIRS}/libboost_iostreams.so
                          ${Boost_LIBRARY_DIRS}/libboost_system.so
                          ${Boost_LIBRARY_DIRS}/libboost_filesystem.so
-                         ${PerfMon_LIBRARY} ${MLPACK_LIBRARY})
+                         ${PerfMon_LIBRARY} ${MLPACK_LIBRARY}
+                         rt)
 set_target_properties(GA PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 install(TARGETS GA DESTINATION ${CMAKE_BINARY_DIR})

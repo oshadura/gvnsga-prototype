@@ -37,6 +37,8 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
 
+#include <boost/container/static_vector.hpp>
+
 namespace geantvmoop {
 
 template <typename Derived> class Functions {

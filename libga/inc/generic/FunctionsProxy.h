@@ -15,6 +15,8 @@
 #ifndef __FUNCTIONSPROXY__
 #define __FUNCTIONSPROXY__
 
+#include <boost/container/static_vector.hpp>
+
 /**
  * We need this class to convert LibCMAES::FitFunc into LibGA::Algorithms
  */

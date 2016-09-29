@@ -27,14 +27,14 @@
 
 namespace geantvmoop {
 
-template <typename F> class GAMOEAD : public GAAlgorithm<GAMOEAD<F>, F> {
+template <typename F, std::size_t SizePop> class GAMOEAD : public GAAlgorithm<GAMOEAD<F,SizePop>, F> {
 private:
   std::vector<Weights> fWeights;
   std::vector<std::vector<int>> fNearest;
   std::vector<double> fRefPoint;
-  Population<F> pop;
+  Population<F, SizePop> pop;
   std::vector<double> fFitness;
-  PF<F> fFront;
+  PF<F, SizePop> fFront;
   double PMut = 0.2;
   GASimpleSelection SimpleSelection;
   int fCounter = 0;
@@ -45,7 +45,7 @@ public:
   // T closest  weight vectors
   int T = 7;
 
-  GAMOEAD(F problem) : GAAlgorithm<GAMOEAD<F>, F>(problem) {}
+  GAMOEAD(F problem) : GAAlgorithm<GAMOEAD<F,SizePop>, F>(problem) {}
 
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
@@ -56,7 +56,7 @@ public:
       throw std::runtime_error("Please set T lower than population size!");
     for (auto w : fWeights)
       fNearest.push_back(w.GetNearestNeighbor(fWeights, T));
-    pop = Population<F>{fPopulationSize};
+    pop = Population<F, SizePop>();
     fRefPoint = GetRP(pop);
     fFitness = std::vector<double>(fPopulationSize,
                                    std::numeric_limits<double>::max());
@@ -70,7 +70,7 @@ public:
 
   void EvolutionImpl() {
     fCounter = 0;
-    HistogramManager<F>::GetInstance().HistoFill(pop, "population_moead.root",
+    HistogramManager<F, SizePop>::GetInstance().HistoFill(pop, "population_moead.root",
                                                  fCurrentGeneration);
     for (int i = 0; i < pop.size(); ++i) {
       auto a = pop[fNearest[i][RandomVectorIndex(fNearest[i])]];
@@ -99,7 +99,7 @@ public:
     os << "Generation counter: " << fCounter << std::endl;
   }
 
-  PF<F> GetParetoFrontImpl() { return fFront; }
+  PF<F, SizePop> GetParetoFrontImpl() { return fFront; }
 
   static void UpdateRP(std::vector<double> &ref, const individual_t<F> &ind) {
     int numOfObjectives = F::GetNObjectives();
@@ -109,7 +109,7 @@ public:
     }
   }
 
-  static std::vector<double> GetRP(const Population<F> &pop) {
+  static std::vector<double> GetRP(const Population<F, SizePop> &pop) {
     int numOfObjectives = F::GetNObjectives();
     std::vector<double> fRef(numOfObjectives);
     for (int i = 0; i < numOfObjectives; ++i) {

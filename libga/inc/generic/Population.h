@@ -1,4 +1,4 @@
-//===--- Population.h - LibGA ---------------------------------*- C++
+//===--- Population.h - LibGA -------------------------------------------*- C++
 //-*-===//
 //
 //                     LibGA Prototype
@@ -65,6 +65,9 @@
 #include <boost/interprocess/sync/scoped_lock.hpp>
 #include <boost/interprocess/anonymous_shared_memory.hpp>
 #include <boost/interprocess/mapped_region.hpp>
+
+#include <boost/container/static_vector.hpp>
+
 #include <iostream>
 #include <cstring>
 
@@ -77,22 +80,31 @@
 #define WRITE 1
 namespace geantvmoop {
 
-template <typename F> class Population : public std::vector<individual_t<F> > {
+template <typename F, std::size_t SizePop>
+class Population
+    : public boost::container::static_vector<individual_t<F>, SizePop> {
+  // template <typename F> class Population : public std::vector<individual_t<F>
+  // > {
 
 public:
   Population(std::initializer_list<individual_t<F> > list)
-      : std::vector<individual_t<F> >(list) {}
+      : boost::container::static_vector<individual_t<F>, SizePop>(list) {}
 
-  Population() : std::vector<individual_t<F> >() {}
+  Population() : boost::container::static_vector<individual_t<F>, SizePop>() {}
 
-  Population(const std::vector<individual_t<F> > &individuals)
-      : std::vector<individual_t<F> >(individuals) {}
+  Population(const boost::container::static_vector<individual_t<F>, SizePop> &
+                 individuals)
+      : boost::container::static_vector<individual_t<F>, SizePop>(individuals) {
+  }
 
 private:
   individual_t<F> ind;
-  // Cereal
-  friend class cereal::access;
+  boost::container::static_vector<individual_t<F>, SizePop> population;
+
   /*
+  // Cereal library (serialization)
+  friend class cereal::access;
+
   friend class boost::serialization::access;
 
   template <class Archive>
@@ -103,17 +115,16 @@ private:
   */
 
 public:
-#ifdef ENABLE_SERIALIZATION
-  //&&defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-  Population(int n) {
-    pid_t fArrayDead[n];
+  void InitSerilizationPopulation(
+      boost::container::static_vector<individual_t<F>, SizePop> &population) {
+    pid_t fArrayDead[SizePop];
     boost::filesystem::path endpoint_name =
         boost::filesystem::unique_path("/tmp/ga-%%%%-%%%%-%%%%-%%%%");
     boost::asio::io_service io_service_;
     boost::asio::local::stream_protocol::endpoint ep(endpoint_name.native());
     boost::asio::local::stream_protocol::acceptor acceptor(io_service_, ep);
     std::cout << "Endpoint was created..." << std::endl;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < SizePop; ++i) {
       CPUManager cpumgr;
       hwloc_topology_t topology;
       double nbcores, ccores;
@@ -154,7 +165,7 @@ public:
         }
       }
     }
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < SizePop; ++i) {
       // int forki = 0;
       individual_t<F> transfer;
       std::cout << "=Creating a listener #" << i << " =" << std::endl;
@@ -178,20 +189,18 @@ public:
       io_service_.notify_fork(boost::asio::io_service::fork_parent);
     }
     boost::filesystem::remove(endpoint_name);
-    std::fill(fArrayDead, fArrayDead + n, 0);
+    std::fill(fArrayDead, fArrayDead + SizePop, 0);
   }
-#endif
 
-#ifdef ENABLE_PIPE
-
-  Population(int n) {
-    int pipega[n][2];
+  void InitPipePopulation(
+      boost::container::static_vector<individual_t<F>, SizePop> &population) {
+    int pipega[SizePop][2];
     pid_t cpid;
     ssize_t result;
-    pipe(pipega[n]);
+    pipe(pipega[SizePop]);
     double readervalue;
-    pid_t fArrayDead[n];
-    for (int i = 0; i < n; ++i) {
+    pid_t fArrayDead[SizePop];
+    for (int i = 0; i < SizePop; ++i) {
       CPUManager cpumgr;
       hwloc_topology_t topology;
       double nbcores, ccores;
@@ -220,17 +229,17 @@ public:
           // for (int i = 0; i < indvector.size(); ++i)
           //  std::cout << indvector[i] << " ";
           // std::cout << std::endl;
-          close(pipega[n][READ]);
+          close(pipega[SizePop][READ]);
           for (auto it : indvector) {
-            // lockf(pipega[n][WRITE], F_LOCK, 0);
-            write(pipega[n][WRITE], &it, sizeof(double));
-            // lockf(pipega[n][WRITE], F_ULOCK, 0);
+            // lockf(pipega[SizePop][WRITE], F_LOCK, 0);
+            write(pipega[SizePop][WRITE], &it, sizeof(double));
+            // lockf(pipega[SizePop][WRITE], F_ULOCK, 0);
             std::cout << "Individual part to be send: " << it << std::endl;
           }
           for (auto iter : fit) {
-            // lockf(pipega[n][WRITE], F_LOCK, 0);
-            write(pipega[n][WRITE], &iter, sizeof(double));
-            // lockf(pipega[n][WRITE], F_ULOCK, 0);
+            // lockf(pipega[SizePop][WRITE], F_LOCK, 0);
+            write(pipega[SizePop][WRITE], &iter, sizeof(double));
+            // lockf(pipega[SizePop][WRITE], F_ULOCK, 0);
             std::cout << "Fitness part to be send: " << iter << std::endl;
           }
           close(pipega[WRITE]); // close the read-end of the pipe
@@ -251,7 +260,7 @@ public:
           memset(&tmpoutput, 0, sizeof(tmpoutput));
           memset(&tmpinput, 0, sizeof(tmpinput));
           while (read(pipega[READ], &readervalue, sizeof(double)) > 0) {
-            std::cout << "I am in a reader loop for " << n << std::endl;
+            std::cout << "I am in a reader loop for " <<SizePop<< std::endl;
             for (int i = 0; i < tmpinput.size(); ++i) {
               std::cout << "Individual part to be received: " << readervalue
                         << std::endl;
@@ -278,16 +287,16 @@ public:
         }
       }
 
-      for (int i = 0; i < n; ++i) {
+      for (int i = 0; i < SizePop; ++i) {
         typename F::Input tmpinput;
         typename F::Output tmpoutput;
         // fArrayDead[i] = cpid;
-        close(pipega[n][WRITE]);
+        close(pipega[SizePop][WRITE]);
         std::cout << "We are starting to read on master job.." << std::endl;
         memset(&tmpoutput, 0, sizeof(tmpoutput));
         memset(&tmpinput, 0, sizeof(tmpinput));
-        while (read(pipega[n][READ], &readervalue, sizeof(double)) > 0) {
-          std::cout << "I am in a reader loop for " << n << std::endl;
+        while (read(pipega[SizePop][READ], &readervalue, sizeof(double)) > 0) {
+          std::cout << "I am in a reader loop for " << SizePop << std::endl;
           for (int i = 0; i < tmpinput.size(); ++i) {
             std::cout << "Individual part to be received: " << readervalue
                       << std::endl;
@@ -309,31 +318,27 @@ public:
         std::cout << "--------------------------------------" << std::endl;
         this->push_back(forkedindividual);
         // std::cout << "We are stoping to read.." << std::endl;
-        close(pipega[n][READ]);
+        close(pipega[SizePop][READ]);
         std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
                   << std::endl;
         waitpid(fArrayDead[i], NULL, 0);
         std::cout << "PID: " << fArrayDead[i] << " has shut down.."
                   << std::endl;
       }
-      std::fill(fArrayDead, fArrayDead + n, 0);
+      std::fill(fArrayDead, fArrayDead + SizePop, 0);
     }
   }
 
-#elif ENABLE_GEANTV
-
-  Population(int n) {
-    int pipega[n][2];
+  void InitSharedMemPopulation(
+      boost::container::static_vector<individual_t<F>, SizePop> &population) {
+    int pipega[SizePop][2];
     pid_t cpid;
     ssize_t result;
-    pipe(pipega[n]);
+    pipe(pipega[SizePop]);
     double readervalue;
-    pid_t fArrayDead[n];
+    pid_t fArrayDead[SizePop];
     using namespace boost::interprocess;
-    mapped_region region(anonymous_shared_memory(n*100 /*sizeof(*this)*/));
-    void* const ptr = region.get_address();
-
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < SizePop; ++i) {
       CPUManager cpumgr;
       hwloc_topology_t topology;
       double nbcores, ccores;
@@ -355,58 +360,66 @@ public:
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
           auto individual = std::make_shared<TGenes<F> >(gene);
-          this->push_back(individual);
+          auto indv = (*individual).GetInput();
+          std::cout << "--------------------------------------" << std::endl;
+          for (int i = 0; i < indv.size(); ++i)
+            std::cout << indv[i] << " ";
+          std::cout << "--------------------------------------" << std::endl;
+          population.push_back(individual);
           wait(NULL);
           exit(EXIT_SUCCESS);
         } else if (pid < 0) {
           exit(EXIT_FAILURE);
           std::cout << "Error on fork" << std::endl;
         } else {
+          sleep(50);
         }
       }
-      for (int i = 0; i < n; ++i) {
+      for (int i = 0; i < SizePop; ++i) {
         std::cout << "Waiting for PID: " << fArrayDead[i] << " to finish.."
                   << std::endl;
         waitpid(fArrayDead[i], NULL, 0);
         std::cout << "PID: " << fArrayDead[i] << " has shut down.."
                   << std::endl;
       }
-      std::fill(fArrayDead, fArrayDead + n, 0);
+      std::fill(fArrayDead, fArrayDead + SizePop, 0);
     }
-    std::cout << (*this);
+    // std::cout << population;
   }
 
-#elif SIMPLE
-
-  Population(int n) {
-    CPUManager cpumgr;
-    cpumgr.InitCPU();
-    hwloc_topology_t topology;
-    double nbcores, ccores;
-    hwloc_topology_init(&topology); // initialization
-    hwloc_topology_load(topology);  // actual detection
-    nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
-    hwloc_topology_destroy(topology);
-    ccores =
-        nbcores - cpumgr.GetCurrentValueCPU() / 100 * nbcores; // just a test
-    std::cout << " Number of total free cores " << ccores << std::endl;
-    if (ccores < 0.3) {
-      std::cout << "Sleeping, because free CPU ratio  " << ccores << " is low.."
-                << sleep(50);
-    } else {
-      typename F::Input gene = F::GetInput().random();
-      auto individual = std::make_shared<TGenes<F> >(gene);
-      this->push_back(individual);
+  void InitSimplePopulation(
+      boost::container::static_vector<individual_t<F>, SizePop> &population) {
+    for (int i = 0; i < SizePop; ++i) {
+      CPUManager cpumgr;
+      cpumgr.InitCPU();
+      hwloc_topology_t topology;
+      double nbcores, ccores;
+      hwloc_topology_init(&topology); // initialization
+      hwloc_topology_load(topology);  // actual detection
+      nbcores = hwloc_get_nbobjs_by_type(topology, HWLOC_OBJ_PU);
+      hwloc_topology_destroy(topology);
+      ccores =
+          nbcores - cpumgr.GetCurrentValueCPU() / 100 * nbcores; // just a test
+      std::cout << " Number of total free cores " << ccores << std::endl;
+      if (ccores < 0.3) {
+        std::cout << "Sleeping, because free CPU ratio  " << ccores
+                  << " is low.." << sleep(50);
+      } else {
+        typename F::Input gene = F::GetInput().random();
+        auto individual = std::make_shared<TGenes<F> >(gene);
+        population.push_back(individual);
+      }
+      // std::cout << &&population;
     }
   }
-
-#endif
 
   ~Population() {}
-  // Stupid clang
-  //#if defined __clang__
-  //  void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
-  //#endif
+
+  /*
+  #if defined __clang__
+   void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
+  #endif
+  */
 
   template <class Archive> void save(Archive &ar) const {
     // ar(ind);
@@ -463,22 +476,22 @@ public:
     return a;
   }
 
-  void Remove(const Population<F> &pop) {
+  void Remove(const Population<F, SizePop> &pop) {
     for (auto entry : pop) {
       this->erase(std::remove(this->begin(), this->end(), entry), this->end());
     }
   }
 
-  template <typename T>
-  void SortVector(const std::vector<T> &v, bool isDescending = false) {
+  template <typename T, std::size_t SizeGene>
+  void SortVector(const boost::container::static_vector<T, SizeGene> &v, bool isDescending = false) {
     std::unordered_map<individual_t<F>, T> m;
     for (int i = 0; i < this->size(); ++i)
       m[(*this)[i]] = v[i];
     SortMap(m, isDescending);
   }
 
-  template <typename T>
-  std::vector<int> SortIndex(const std::vector<T> &v,
+  template <typename T, std::size_t SizeGene>
+  std::vector<int> SortIndex(const boost::container::static_vector<T, SizeGene> &v,
                              bool isDescending = false) const {
     std::vector<int> index = GetIndex();
     if (isDescending) {
@@ -516,7 +529,8 @@ public:
     return index;
   }
 
-  friend std::ostream &operator<<(std::ostream &s, const Population<F> &pop) {
+  friend std::ostream &operator<<(std::ostream &s,
+                                  const Population<F, SizePop> &pop) {
     std::cout << "---------------------------\n";
     std::cout << "Size of population: " << pop.size() << std::endl;
     std::cout << "---------------------------\n" << std::endl;

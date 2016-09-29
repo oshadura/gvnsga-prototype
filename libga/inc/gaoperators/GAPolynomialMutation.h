@@ -33,13 +33,13 @@ namespace geantvmoop {
 class GAPolynomialMutation : public GAMutation<GAPolynomialMutation> {
 
 public:
-  template <typename T> static void MutationImpl(T &ind, double prob = -1) {
+  template <typename T, std::size_t SizeGene> static void MutationImpl(T &ind, double prob = -1) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> rand(0, 1);
     double fRnd, fDelta1, fDelta2, fMutPow, fDelta, fValue;
     double y, xy;
-    GAVector<GADouble> fOffspring = static_cast<T>(ind);
+    GAVector<GADouble, SizeGene> fOffspring = static_cast<T>(ind);
     // Here we taking random 1 element..
     double lb = ind[0].GetDownLimit();
     double ub = ind[0].GetUpLimit();

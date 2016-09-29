@@ -21,28 +21,27 @@ namespace geantvmoop {
 class DTLZ7 : public Functions<DTLZ7> {
 
 public:
-  typedef GAVector<GADouble> Input;
+  typedef GAVector<GADouble, 12> Input;
 
-  typedef std::vector<double> Output;
+  typedef boost::container::static_vector<double, 3> Output;
 
-/*
-private:
-  friend class boost::serialization::access;
+  /*
+  private:
+    friend class boost::serialization::access;
 
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<Functions<DTLZ7>>(*this);
-  }
-  
-public:
-  */
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      ar & boost::serialization::base_object<Functions<DTLZ7>>(*this);
+    }
+
+  public:
+    */
 
   static double pi() { return std::atan(1) * 4; }
 
   static Output Evaluate(const Input &individual) {
-    std::vector<double> fFitness, fParameters;
-    fFitness.reserve(individual.size());
-    fParameters.reserve(individual.size());
+    boost::container::static_vector<double, 3> fFitness;
+    boost::container::static_vector<double, 12> fParameters;
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     int n = 11;
@@ -82,7 +81,7 @@ public:
     return value;
   }
 
-  static Output GetOutput() { return std::vector<double>(3); }
+  static Output GetOutput() { return boost::container::static_vector<double, 3>(); }
 };
 }
 

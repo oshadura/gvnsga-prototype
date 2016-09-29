@@ -23,26 +23,25 @@ namespace geantvmoop {
 class Fonseca : public Functions<Fonseca> {
 
 public:
-  typedef GAVector<GADouble> Input;
+  typedef GAVector<GADouble, 2> Input;
 
-  typedef std::vector<double> Output;
+  typedef boost::container::static_vector<double, 3> Output;
 
-/*
-private:
-  friend class boost::serialization::access;
+  /*
+  private:
+    friend class boost::serialization::access;
 
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<Functions<Fonseca>>(*this);
-  }
-  
-public:
-*/
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      ar & boost::serialization::base_object<Functions<Fonseca>>(*this);
+    }
+
+  public:
+  */
 
   static Output Evaluate(const Input &individual) {
-    std::vector<double> fFitness, fParameters;
-    fFitness.reserve(individual.size());
-    fParameters.reserve(individual.size());
+    boost::container::static_vector<double, 3> fFitness;
+    boost::container::static_vector<double, 2> fParameters;
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     const double d = 1. / std::sqrt(static_cast<double>(fParameters.size()));
@@ -72,7 +71,7 @@ public:
     return value;
   }
 
-  static Output GetOutput() { return std::vector<double>(2); }
+  static Output GetOutput() { return boost::container::static_vector<double, 3>(); }
 };
 }
 

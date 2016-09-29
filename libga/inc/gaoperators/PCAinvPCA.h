@@ -35,39 +35,39 @@ public:
   // Need to change it in templated way..
 
   /*
-  template <typename F>
-  Population<F> NoiseReductionImpl(Population<F> &population) {
-    Population<F> result;
+  template <typename F, SizePop>
+  Population<F, SizePop> NoiseReductionImpl(Population<F, SizePop> &population) {
+    Population<F, SizePop> result;
     LPCA lpca;
     result = lpca.MVA(population);
     return result;
   }
-    template <typename F>
-    Population<F> NoiseReductionImpl(Population<F> &population) {
-      Population<F> result;
+    template <typename F, SizePop>
+    Population<F, SizePop> NoiseReductionImpl(Population<F, SizePop> &population) {
+      Population<F, SizePop> result;
       RobustPCA robustpca;
       result = robustpca.MVA(population);
       return result;
     }
 
-        template <typename F>
-    Population<F> NoiseReductionImpl(Population<F> &population) {
-      Population<F> result;
+        template <typename F, SizePop>
+    Population<F, SizePop> NoiseReductionImpl(Population<F, SizePop> &population) {
+      Population<F, SizePop> result;
       RobustTrickPCA robustpca;
       result = robustpca.MVA(population);
       return result;
     }
-    template <typename F>
-    Population<F> NoiseReductionImpl(Population<F> &population) {
-      Population<F> result;
+    template <typename F, SizePop>
+    Population<F, SizePop> NoiseReductionImpl(Population<F, SizePop> &population) {
+      Population<F, SizePop> result;
       UncenteredLPCA ulpca;
       result = ulpca.MVA(population);
       return result;
     }
     */
-  template <typename F>
-  Population<F> NoiseReductionImpl(Population<F> &population) {
-    Population<F> result;
+  template <typename F,  std::size_t SizePop>
+  Population<F, SizePop> NoiseReductionImpl(Population<F, SizePop> &population) {
+    Population<F, SizePop> result;
     UncenteredTrickLPCA ulpca;
     result = ulpca.MVA(population);
     return result;
@@ -75,8 +75,8 @@ public:
  /*
    // Debug purposes...
   template <typename F>
-  Population<F> NoiseReductionImpl(Population<F> &population) {
-    Population<F> result;
+  Population<F, SizePop> NoiseReductionImpl(Population<F, SizePop> &population) {
+    Population<F, SizePop> result;
     SVDRepresentation svd;
     result = svd.MVA(population);
     return result;

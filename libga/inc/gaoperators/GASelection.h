@@ -21,13 +21,13 @@ namespace geantvmoop {
 
 template <typename Derived> class GASelection {
 public:
-  template <typename F>
-  individual_t<F> UnarySelection(const Population<F> &population) {
+  template <typename F, std::size_t SizePop>
+  individual_t<F> UnarySelection(const Population<F, SizePop> &population) {
     return static_cast<Derived *>(this)->UnarySelectionImpl(population);
   }
 
-  template <typename F>
-  Population<F> MultipleSelection(const Population<F> &population, int n) {
+  template <typename F, std::size_t SizePop>
+  Population<F, SizePop> MultipleSelection(const Population<F, SizePop> &population, int n) {
     return static_cast<Derived *>(this)->MultipleSelectionImpl(population, n);
   }
 };

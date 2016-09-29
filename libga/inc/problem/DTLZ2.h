@@ -23,9 +23,9 @@ namespace geantvmoop {
 class DTLZ2 : public Functions<DTLZ2> {
 
 public:
-  typedef GAVector<GADouble> Input;
+  typedef GAVector<GADouble, 12> Input;
 
-  typedef std::vector<double> Output;
+  typedef boost::container::static_vector<double, 3> Output;
 
 /*
 private:
@@ -42,9 +42,10 @@ public:
   static double pi() { return std::atan(1) * 4; }
 
   static Output Evaluate(const Input &individual) {
-    std::vector<double> fFitness, fParameters;
-    fFitness.reserve(individual.size());
-    fParameters.reserve(individual.size());
+    boost::container::static_vector<double, 3> fFitness;
+    fFitness.reserve(3);
+    boost::container::static_vector<double, 12> fParameters;
+    fParameters.reserve(12);
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     /*
@@ -87,7 +88,7 @@ public:
                      parameter[2] * x[1] * x[1] - parameter[3] * x[2] * x[2]);
   }
 
-  static Output GetOutput() { return std::vector<double>(3); }
+  static Output GetOutput() { return boost::container::static_vector<double, 3>(3); }
 };
 }
 

@@ -82,8 +82,8 @@ void ReferencePoint::GenerateRP(std::vector<ReferencePoint> *fRP, size_t fSize,
   }
 }
 
-void ReferencePoint::AssociateRP(std::vector<ReferencePoint> *fRP,
-                                 const Population<Double_t> &pop,
+template <typename F,  std::size_t SizePop> void ReferencePoint::AssociateRP(std::vector<ReferencePoint> *fRP,
+                                 const Population<F, SizePop> &pop,
                                  std::vector<std::vector<Int_t>> &fFront) {
   std::vector<ReferencePoint> &fRPCopy = *fRP;
   for (int t = 0; t < fFront.size(); ++t) {
@@ -422,7 +422,7 @@ int SelectClusterMember(const CReferencePoint &rp)
 // Check Algorithms 1-4 in the original paper.
 // ----------------------------------------------------------------------
 void EnvironmentalSelection(CPopulation *pnext, CPopulation *pcur,
-vector<CReferencePoint> rps, size_t PopSize)
+vector<CReferencePoint> rps, size_t SizePop)
 {
         CPopulation &cur = *pcur, &next = *pnext;
         next.clear();
@@ -433,7 +433,7 @@ vector<CReferencePoint> rps, size_t PopSize)
         // ---------- Steps 5-7 in Algorithm 1 ----------
         vector<size_t> considered; // St
         size_t last = 0, next_size = 0;
-        while (next_size < PopSize)
+        while (next_size < SizePop)
         {
                 next_size += fronts[last].size();
                 last += 1;
@@ -450,7 +450,7 @@ individuals
         }
 
         // ---------- Steps 9-10 in Algorithm 1 ----------
-        if (next.size() == PopSize) return;
+        if (next.size() == SizePop) return;
 
 
         // ---------- Step 14 / Algorithm 2 ----------
@@ -468,7 +468,7 @@ individuals
         Associate(&rps, cur, fronts);
 
         // ---------- Step 17 / Algorithm 4 ----------
-        while (next.size() < PopSize)
+        while (next.size() < SizePop)
         {
                 size_t min_rp = FindNicheReferencePoint(rps);
 

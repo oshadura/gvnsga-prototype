@@ -42,17 +42,19 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
 
+#include <boost/container/static_vector.hpp>
+
 namespace geantvmoop {
 
-template <typename Type> class GAVector : public std::vector<Type> {
+template <typename Type, std::size_t SizeGene> class GAVector : public boost::container::static_vector<Type, SizeGene> {
 
 public:
-  GAVector() : std::vector<Type>() {}
-  GAVector(int n, const Type &val) : std::vector<Type>(n, val) {}
+  GAVector() : boost::container::static_vector<Type, SizeGene>() {}
+  GAVector(int n, const Type &val) : boost::container::static_vector<Type, SizeGene>(n, val) {}
   ~GAVector() {}
 
 private:
-  std::vector<Type> type;
+  boost::container::static_vector<Type, SizeGene> type;
 
   friend class cereal::access;
 

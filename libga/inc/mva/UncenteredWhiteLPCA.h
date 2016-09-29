@@ -49,8 +49,8 @@ public:
 
   MatrixXd &GetX() { return X; }
 
-  template <typename F> Population<F> MVAImpl(Population<F> &pop) {
-    Population<F> result;
+  template <typename F,  std::size_t SizePop> Population<F, SizePop> MVAImpl(Population<F, SizePop> &pop) {
+    Population<F, SizePop> result;
     UploadPopulation(pop);
     RunUncenteredWhiteLPCAWithReductionOfComponents();
     UnloadPopulation(result, X);
@@ -84,7 +84,7 @@ public:
     }
   }
 
-  template <typename F> void UploadPopulation(Population<F> &pop) {
+  template <typename F,  std::size_t SizePop> void UploadPopulation(Population<F, SizePop> &pop) {
     for (int i = 0; i < pop.size(); ++i) {
       auto individual = pop.GetTGenes(i);
       for (int j = 0; j < individual.size(); ++j) {
@@ -102,8 +102,8 @@ public:
     std::cout << X << sep;
   }
 
-  template <typename F>
-  void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
+  template <typename F,  std::size_t SizePop>
+  void UnloadPopulation(Population<F, SizePop> &newpop, MatrixXd &data) {
     typename F::Input ind;
     std::vector<individual_t<F> > poplist;
     std::string sep = "\n----------------------------------------\n";
@@ -118,7 +118,7 @@ public:
       poplist.push_back(std::make_shared<geantvmoop::TGenes<F> >(newind));
       ind.clear();
     }
-    newpop = Population<F>(poplist);
+    newpop = Population<F, SizePop>(poplist);
   }
 
   void RunUncenteredWhiteLPCA() {

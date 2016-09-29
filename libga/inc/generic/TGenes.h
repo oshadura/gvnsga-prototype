@@ -1,4 +1,4 @@
-//===--- TGenes.h - LibGA ---------------------------------*- C++
+//===--- TGenes.h - LibGA ------------------------------------------------*- C++
 //-*-===//
 //
 //                     LibGA Prototype
@@ -50,6 +50,8 @@
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
+
+#include <boost/container/static_vector.hpp>
 
 #define READ 0
 #define WRITE 1
@@ -146,8 +148,7 @@ public:
   void Evaluate() {
 #ifdef EVOLUTION
     output = GASequentualEvaluator::Evaluate();
-#endif
-#ifdef ENABLE_GEANTV
+#elif ENABLE_GEANTV
     size_t sizeofOutput = sizeof(output) + sizeof(double) * output.capacity();
     const int fNumberChildren = 1;
     int pipega[2];

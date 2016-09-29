@@ -25,9 +25,9 @@ namespace geantvmoop {
 template <typename Derived, typename T> class GAGenericIndicator {
 
 public:
-  template <typename F>
+  template <typename F, std::size_t SizePop>
   std::unordered_map<individual_t<F>, T> static CalculateIndicator(
-      const Population<F> &population) {
+      const Population<F, SizePop> &population) {
     return Derived::CalculateIndicatorImpl(population);
   }
 };

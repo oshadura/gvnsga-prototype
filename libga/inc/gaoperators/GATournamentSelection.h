@@ -30,16 +30,16 @@ private:
 public:
   GATournamentSelection(const GAComparator &comp) : comp(comp) {}
 
-  template <typename F>
-  individual_t<F> UnarySelectionImpl(const Population<F> &population) {
+  template <typename F, std::size_t SizePop>
+  individual_t<F> UnarySelectionImpl(const Population<F, SizePop> &population) {
     throw std::runtime_error("BinaryTournamentSelection does not allow to "
                              "select only single individuals!");
   }
 
-  template <typename F>
-  Population<F> MultipleSelectionImpl(const Population<F> &population, unsigned int n) {
-    Population<F> result;
-    Population<F> pool;
+  template <typename F, std::size_t SizePop>
+  Population<F, SizePop> MultipleSelectionImpl(const Population<F, SizePop> &population, unsigned int n) {
+    Population<F, SizePop> result;
+    Population<F, SizePop> pool;
     while (result.size() < n) {
       auto index = population.GetIndex();
       std::random_shuffle(index.begin(), index.end());

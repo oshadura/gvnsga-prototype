@@ -25,9 +25,9 @@ namespace geantvmoop {
 class GASBXCrossover : public GACrossover<GASBXCrossover> {
 
 public:
-  template <typename T> static T CrossoverImpl(const T &a, const T &b) {
-    GAVector<GADouble> fOffspring1 = static_cast<T>(a);
-    GAVector<GADouble> fOffspring2 = static_cast<T>(b);
+  template <typename T, std::size_t SizeGene> static T CrossoverImpl(const T &a, const T &b) {
+    GAVector<GADouble, SizeGene> fOffspring1 = static_cast<T>(a);
+    GAVector<GADouble, SizeGene> fOffspring2 = static_cast<T>(b);
     for (unsigned int i = 0; i < fOffspring1.size(); ++i) {
       GASBXCrossover::GeneticCrossover(fOffspring1[i], fOffspring2[i], 0.5);
     }

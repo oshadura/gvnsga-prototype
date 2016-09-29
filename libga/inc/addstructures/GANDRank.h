@@ -82,16 +82,16 @@ public:
   }
   */
 
-  template <typename F>
+  template <typename F, std::size_t SizePop>
   static std::unordered_map<individual_t<F>, int>
-  CalculateIndicatorImpl(Population<F> pop, int fBest = -1) {
+  CalculateIndicatorImpl(Population<F, SizePop> pop, int fBest = -1) {
     if (fBest == -1)
       fBest = pop.size();
     std::unordered_map<individual_t<F>, int> fMap;
     int AssignedRank = 0;
     int fObserved = 0;
     while (!pop.empty() && (fObserved < fBest)) {
-      auto fFront = PF<F>::ParetoFrontND(pop);
+      auto fFront = PF<F, SizePop>::ParetoFrontND(pop);
       pop.Remove(fFront);
       for (individual_t<F> entry : fFront) {
         fMap[entry] = AssignedRank;

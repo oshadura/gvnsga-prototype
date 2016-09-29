@@ -68,10 +68,7 @@
 
 using namespace geantvmoop;
 
-template <typename F> class HistogramManager : public TObject {
-
-private:
-  F problem;
+template <typename F, std::size_t SizePop> class HistogramManager : public TObject {
 
 public:
   static HistogramManager &GetInstance() {
@@ -101,7 +98,7 @@ public:
     return ScattComb;
   }
 
-  bool HistoFill(Population<F> &pop, char const *hfile, int generation) {
+ bool  HistoFill(Population<F, SizePop> &pop, char const *hfile, int generation) {
     std::cout << "Building output statistics for generation " << generation
               << std::endl;
     char namepop[20], namefitn[20], /* namefile[10],*/ namefolder[20],

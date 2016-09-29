@@ -56,9 +56,9 @@ namespace geantvmoop {
 class RunGeantV : public Functions<RunGeantV> {
 
 public:
-  typedef GAVector<GADouble> Input;
+  typedef GAVector<GADouble, 6> Input;
 
-  typedef std::vector<double> Output;
+  typedef boost::container::static_vector<double, 5> Output;
 
 /*
 private:
@@ -73,9 +73,8 @@ public:
 */
 
   static Output Evaluate(const Input &individual) {
-    // Converting values
-    std::vector<double> fFitness;
-    std::vector<double> fParameters;
+    boost::container::static_vector<double, 5> fFitness;
+    boost::container::static_vector<double, 6> fParameters;
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
 #ifdef ENABLE_PERF
@@ -199,9 +198,9 @@ public:
     return vector;
   }
 #ifdef ENABLE_PERF
-  static Output GetOutput() { return std::vector<double>(2); }
+  static Output GetOutput() { return boost::container::static_vector<double, 2>(); }
 #else
-  static Output GetOutput() { return std::vector<double>(4); }
+  static Output GetOutput() { return boost::container::static_vector<double, 4>(); }
 #endif
 
   // ROOT Fitting to true Pareto front

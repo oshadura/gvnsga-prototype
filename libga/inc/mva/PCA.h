@@ -9,7 +9,7 @@ namespace geantvmoop {
 
 template <typename Derived> class PCA {
 public:
-  template <typename F> Population<F> MVA(Population<F> &population) {
+  template <typename F, std::size_t SizePop> Population<F, SizePop> MVA(Population<F, SizePop> &population) {
     return static_cast<Derived *>(this)->Derived::MVAImpl(population);
   }
 };

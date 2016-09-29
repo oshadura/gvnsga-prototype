@@ -23,6 +23,8 @@
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 
+#include <boost/container/static_vector.hpp>
+
 #include "TObject.h"
 
 namespace geantvmoop {
@@ -43,8 +45,8 @@ public:
                              size_t fLeft, size_t fTotal, size_t fElement);
   void GenerateRP(std::vector<ReferencePoint> *fRP, size_t fSize,
                   const std::vector<std::size_t> &p);
-  void AssociateRP(std::vector<ReferencePoint> *fRP,
-                   const Population<Double_t> &pop,
+  template <typename F,  std::size_t SizePop> void AssociateRP(std::vector<ReferencePoint> *fRP,
+                   const Population<F, SizePop> &pop,
                    std::vector<std::vector<Int_t>> &fFront);
   Double_t PerpedicularDistance(const std::vector<double> &fDirection,
                                 const std::vector<double> &fPoint);

@@ -21,9 +21,9 @@ namespace geantvmoop {
 class Kursawe : public Functions<Kursawe> {
 
 public:
-  typedef GAVector<GADouble> Input;
+  typedef GAVector<GADouble, 2> Input;
 
-  typedef std::vector<double> Output;
+  typedef boost::container::static_vector<double, 3> Output;
 
 /*
 private:
@@ -38,28 +38,26 @@ public:
 */
 
   static Output Evaluate(const Input &individual) {
-    std::vector<double> fFitness, fParameters, fFit;
-    fFitness.reserve(individual.size());
-    fFit.reserve(individual.size());
-    fParameters.reserve(individual.size());
+    boost::container::static_vector<double, 3> fFitness;
+    boost::container::static_vector<double, 2> fParameters;
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     double aux, xi, xj;
-    fFit[0] = 0.0;
+    fFitness[0] = 0.0;
     for (std::size_t var = 0; var < individual.size() - 1; var++) {
       xi = fParameters[var] * fParameters[var];
       xj = fParameters[var + 1] * fParameters[var + 1];
       aux = (-0.2) * sqrt(xi + xj);
-      fFit[0] += (-10.0) * exp(aux);
+      fFitness[0] += (-10.0) * exp(aux);
     }
-    fFit[1] = 0.0;
+    fFitness[1] = 0.0;
     for (std::size_t var = 0; var < individual.size(); var++) {
-      fFit[1] += pow(fabs(fParameters[var]), 0.8) +
+      fFitness[1] += pow(fabs(fParameters[var]), 0.8) +
                  5.0 * sin(pow(fParameters[var], 3.0));
     }
     auto it = fFitness.begin();
-    fFitness.insert(it, fFit[0]);
-    fFitness.insert(it + 1, fFit[2]);
+    fFitness.insert(it, fFitness[0]);
+    fFitness.insert(it + 1, fFitness[2]);
     return fFitness;
   }
 
@@ -77,7 +75,7 @@ public:
     return value;
   }
 
-  static Output GetOutput() { return std::vector<double>(2); }
+  static Output GetOutput() { return boost::container::static_vector<double, 3>(); }
 };
 }
 
