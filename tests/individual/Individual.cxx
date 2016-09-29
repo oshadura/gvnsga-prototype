@@ -20,6 +20,7 @@ TEST_F(Individual, GeneratingIndividual) {
   geantvmoop::TGenes<geantvmoop::DTLZ2> i;
 }
 
+/*
 TEST_F(Individual, GenerationPopulation) {
   mapped_region region(anonymous_shared_memory(10000));
   geantvmoop::Population<geantvmoop::DTLZ2, 10> *pop = new (
@@ -28,3 +29,4 @@ TEST_F(Individual, GenerationPopulation) {
   pop->InitSharedMemPopulation(*pop);
   std::cout << (*pop);
 }
+*/
