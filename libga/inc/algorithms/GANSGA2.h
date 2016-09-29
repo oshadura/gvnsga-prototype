@@ -70,7 +70,7 @@ public:
   void InitializeImpl() {
     fCurrentGeneration = 1; // initializing generation
     population = Population<F, SizePop>();
-    population.InitSharedMemPopulation(population);
+    population.InitSimplePopulation(population);
     fIndCrowDist = GACD::CalculateIndicator(population);
     fIndRank = GANDRank::CalculateIndicator(population);
     /*
