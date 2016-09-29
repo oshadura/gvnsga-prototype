@@ -59,17 +59,17 @@
 #include <boost/serialization/version.hpp>
 
 #include <boost/interprocess/anonymous_shared_memory.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-#include <boost/interprocess/sync/interprocess_mutex.hpp>
-#include <boost/interprocess/sync/interprocess_condition.hpp>
-#include <boost/interprocess/sync/scoped_lock.hpp>
 #include <boost/interprocess/anonymous_shared_memory.hpp>
 #include <boost/interprocess/mapped_region.hpp>
+#include <boost/interprocess/mapped_region.hpp>
+#include <boost/interprocess/sync/interprocess_condition.hpp>
+#include <boost/interprocess/sync/interprocess_mutex.hpp>
+#include <boost/interprocess/sync/scoped_lock.hpp>
 
 #include <boost/container/static_vector.hpp>
 
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 #include <boost/filesystem.hpp>
 
@@ -87,13 +87,13 @@ class Population
   // > {
 
 public:
-  Population(std::initializer_list<individual_t<F> > list)
+  Population(std::initializer_list<individual_t<F>> list)
       : boost::container::static_vector<individual_t<F>, SizePop>(list) {}
 
   Population() : boost::container::static_vector<individual_t<F>, SizePop>() {}
 
-  Population(const boost::container::static_vector<individual_t<F>, SizePop> &
-                 individuals)
+  Population(const boost::container::static_vector<individual_t<F>, SizePop>
+                 &individuals)
       : boost::container::static_vector<individual_t<F>, SizePop>(individuals) {
   }
 
@@ -148,11 +148,10 @@ public:
         if (pid == 0) {
           std::cout << "Generating individual in a child #" << i << std::endl;
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F> >(gene);
+          auto individual = std::make_shared<TGenes<F>>(gene);
           boost::asio::local::stream_protocol::iostream stream(ep);
           boost::archive::binary_oarchive oa(stream);
           oa &i &BOOST_SERIALIZATION_NVP(individual);
-          ;
           auto indvector = (*individual).GetInput();
           for (int i = 0; i < indvector.size(); ++i)
             std::cout << indvector[i] << " ";
@@ -223,7 +222,7 @@ public:
         ////////////////////////////=CHILD=//////////////////////
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F> >(gene);
+          auto individual = std::make_shared<TGenes<F>>(gene);
           auto indvector = (*individual).GetInput();
           auto fit = (*individual).GetOutput();
           // for (int i = 0; i < indvector.size(); ++i)
@@ -309,7 +308,7 @@ public:
           }
         }
         auto forkedindividual =
-            std::make_shared<TGenes<F> >(tmpinput, tmpoutput);
+            std::make_shared<TGenes<F>>(tmpinput, tmpoutput);
         auto indv = (*forkedindividual).GetInput();
         std::cout << "--------------------------------------" << std::endl;
 
@@ -359,7 +358,8 @@ public:
         fArrayDead[i] = pid;
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
-          auto individual = std::make_shared<TGenes<F> >(gene);
+          // auto individual = std::make_shared<TGenes<F>>(gene);
+          auto individual = TGenes<F>(gene);
           auto indv = (*individual).GetInput();
           std::cout << "--------------------------------------" << std::endl;
           for (int i = 0; i < indv.size(); ++i)
@@ -406,7 +406,7 @@ public:
                   << " is low.." << sleep(50);
       } else {
         typename F::Input gene = F::GetInput().random();
-        auto individual = std::make_shared<TGenes<F> >(gene);
+        auto individual = std::make_shared<TGenes<F>>(gene);
         population.push_back(individual);
       }
       // std::cout << &&population;
@@ -483,7 +483,8 @@ public:
   }
 
   template <typename T, std::size_t SizeGene>
-  void SortVector(const boost::container::static_vector<T, SizeGene> &v, bool isDescending = false) {
+  void SortVector(const boost::container::static_vector<T, SizeGene> &v,
+                  bool isDescending = false) {
     std::unordered_map<individual_t<F>, T> m;
     for (int i = 0; i < this->size(); ++i)
       m[(*this)[i]] = v[i];
@@ -491,8 +492,9 @@ public:
   }
 
   template <typename T, std::size_t SizeGene>
-  std::vector<int> SortIndex(const boost::container::static_vector<T, SizeGene> &v,
-                             bool isDescending = false) const {
+  std::vector<int>
+  SortIndex(const boost::container::static_vector<T, SizeGene> &v,
+            bool isDescending = false) const {
     std::vector<int> index = GetIndex();
     if (isDescending) {
       std::sort(
@@ -510,12 +512,14 @@ public:
                bool isDescending = false) {
     if (isDescending) {
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] > m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] > m[rhs];
+                });
     } else
       std::sort(this->begin(), this->end(),
-                [&m](const individual_t<F> &lhs,
-                     const individual_t<F> &rhs) { return m[lhs] < m[rhs]; });
+                [&m](const individual_t<F> &lhs, const individual_t<F> &rhs) {
+                  return m[lhs] < m[rhs];
+                });
   }
 
   void SortObj(int objective, bool isDescending = false) {
