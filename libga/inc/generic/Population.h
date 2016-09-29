@@ -361,7 +361,7 @@ public:
         if (pid == 0) {
           typename F::Input gene = F::GetInput().random();
           auto individual = boost::interprocess::offset_ptr<TGenes<F>>(gene);
-          auto individual = TGenes<F>(gene);
+          // auto individual = TGenes<F>(gene);
           auto indv = (*individual).GetInput();
           std::cout << "--------------------------------------" << std::endl;
           for (int i = 0; i < indv.size(); ++i)
