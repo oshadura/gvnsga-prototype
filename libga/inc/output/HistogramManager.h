@@ -140,8 +140,8 @@ public:
     PopDist->SetMarkerColor(kBlue);
     PopDist->SetMarkerSize(.6); //
                                 /////// Population 3D Histogram
-    TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, -2000, 5000, 20, -2000, -5000, 20,
-                         -2000, 1000000000000);
+    TH3F *h3a = new TH3F(name3dhist, "3D Population",20, -2000, 250000, 20, -2000, 250000, 20, 
+                         -2000, 50000);
     // TH3F *h3a = new TH3F(name3dhist, "3D Population", 20, -30, 5, 20, -30, 5,
     //                     20, -30, 5);
     h3a->SetFillColor(kYellow); // Fill fill color to yellow
@@ -151,8 +151,8 @@ public:
     h3a->SetMarkerSize(.6); //
                             ////////////////////////////////
                             /////// Population 3 DHistogram
-    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -2000, 5000, 20, -2000, 5000, 20,
-                         -2000, -5000);
+    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -2000, 250000, 20, -2000, 250000, 20,
+                         -2000, 250000);
     // TH3F *h3y =
     //    new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -30, 5, 20, -30, 5, 20, -30, 5);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
@@ -182,7 +182,7 @@ public:
     ////////////////////////////////
     // DTLZ b.
     TF3 *FitLand =
-        new TF3(nameFitLand, F::TruePF, -2000, 5000, -2000, 5000, -2000, 5000, 3);
+        new TF3(nameFitLand, F::TruePF, -2000, 250000, -2000, 250000, -2000, 250000, 3);
     // TF3 *FitLand = new TF3(nameFitLand, F::TruePF, -30, 5, -30, 5, -30, 5,
     // 3);
 
@@ -200,7 +200,7 @@ public:
     //////// Fitness distribution
     // DTLZ b.
     TH1F *PopFitnessDist = new TH1F(
-        namefitn, "Population fitness distribution ", pop.size(), -2000., 5000.);
+        namefitn, "Population fitness distribution ", pop.size(), -2000., 250000.);
     // TH1F *PopFitnessDist = new TH1F(namefitn, "Population fitness
     // distribution",
     //                                pop.size(), -30., 5.);
@@ -280,7 +280,7 @@ public:
           // DTLZ b.
           myhisty = new TH2F(TString::Format(namescatter),
                              "Scatter plot of different TGenes", pop.size(), -2000,
-                             5000., pop.size(), -2000, 5000.);
+                             250000., pop.size(), -2000, 250000.);
           // Kursawe b.
           // myhisty = new TH2F(TString::Format(namescatter),
           //                   "Scatter plot of different TGenes", pop.size(),
