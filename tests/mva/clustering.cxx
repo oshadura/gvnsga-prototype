@@ -21,7 +21,7 @@ public:
   //geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
 
-/*
+
 TEST_F(Clustering, SpectralClustering) {
   spcl.LoadData("data");
   spcl.Cluster();
@@ -149,7 +149,7 @@ TEST_F(Clustering, DlibSpectral) {
   // these
   // numbers would go up.  However, 8 is all we need to correctly cluster this
   // dataset.
-  /*
+
   std::cout << "num dictionary vectors for center 0: "
        << test.get_kcentroid(0).dictionary_size() << std::endl;
   std::cout << "num dictionary vectors for center 1: "
@@ -167,4 +167,4 @@ TEST_F(Clustering, DlibSpectral) {
       spectral_cluster(kernel_type(0.1), samples, 3);
   //std::cout << mat(assignments);
 }
-*/
+

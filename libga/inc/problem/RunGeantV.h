@@ -75,6 +75,8 @@ public:
   static Output Evaluate(const Input &individual) {
     boost::container::static_vector<double, 5> fFitness;
     boost::container::static_vector<double, 6> fParameters;
+    fFitness.reserve(5);
+    fParameters.reserve(6);
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
 #ifdef ENABLE_PERF
@@ -198,9 +200,9 @@ public:
     return vector;
   }
 #ifdef ENABLE_PERF
-  static Output GetOutput() { return boost::container::static_vector<double, 2>(); }
+  static Output GetOutput() { return boost::container::static_vector<double, 2>(2); }
 #else
-  static Output GetOutput() { return boost::container::static_vector<double, 4>(); }
+  static Output GetOutput() { return boost::container::static_vector<double, 4>(4); }
 #endif
 
   // ROOT Fitting to true Pareto front

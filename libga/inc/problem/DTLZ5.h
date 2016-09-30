@@ -42,6 +42,8 @@ public:
   static Output Evaluate(const Input &individual) {
     boost::container::static_vector<double, 3> fFitness;
     boost::container::static_vector<double, 7> fParameters;
+    fFitness.reserve(3);
+    fParameters.reserve(7);
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
     int n = 7;
@@ -84,7 +86,7 @@ public:
     return value;
   }
 
-  static Output GetOutput() { return boost::container::static_vector<double, 3>(); }
+  static Output GetOutput() { return boost::container::static_vector<double, 3>(3); }
 };
 }
 

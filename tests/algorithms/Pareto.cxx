@@ -11,12 +11,12 @@ public:
   geantvmoop::PF<geantvmoop::DTLZ2, 10> fFront;
 };
 
-/*
+
 TEST_F(Pareto, CheckPF) {
-  auto fResult = geantvmoop::PF<geantvmoop::DTLZ2>::ParetoFrontND(pop);
+  auto fResult = geantvmoop::PF<geantvmoop::DTLZ2,10>::ParetoFrontND(pop);
   for (auto i : pop) {
     fFront.Add(i);
   }
   EXPECT_EQ(fResult, fFront.GetPopulation());
 }
-*/
+

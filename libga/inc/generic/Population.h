@@ -119,6 +119,7 @@ private:
 public:
   void InitSerilizationPopulation(
       boost::container::static_vector<individual_t<F>, SizePop> &population) {
+    population.reserve(SizePop);
     pid_t fArrayDead[SizePop];
     boost::filesystem::path endpoint_name =
         boost::filesystem::unique_path("/tmp/ga-%%%%-%%%%-%%%%-%%%%");
@@ -195,6 +196,7 @@ public:
 
   void InitPipePopulation(
       boost::container::static_vector<individual_t<F>, SizePop> &population) {
+    population.reserve(SizePop);
     int pipega[SizePop][2];
     pid_t cpid;
     ssize_t result;
@@ -332,6 +334,7 @@ public:
 
   void InitSharedMemPopulation(
       boost::container::static_vector<individual_t<F>, SizePop> &population) {
+    population.reserve(SizePop);
     int pipega[SizePop][2];
     pid_t cpid;
     ssize_t result;
@@ -392,6 +395,7 @@ public:
 
   void InitSimplePopulation(
       boost::container::static_vector<individual_t<F>, SizePop> &population) {
+    population.reserve(SizePop);
     for (int i = 0; i < SizePop; ++i) {
       CPUManager cpumgr;
       cpumgr.InitCPU();
