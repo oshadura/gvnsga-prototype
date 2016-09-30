@@ -190,8 +190,14 @@ public:
     fFitness.push_back(timer.Elapsed());
     fFitness.push_back(-(prop->fNprimaries.load()));
 #ifdef ENABLE_PERF
-    fFitness.push_back(perfcontrol.GetNInstructions());
-    fFitness.push_back(perfcontrol.GetBranchMisses());
+    fFitness.push_back(perfcontrol.GetNICS());
+    fFitness.push_back(perfcontrol.GetNCS());
+    fFitness.push_back(perfcontrol.GetNC());
+    fFitness.push_back(perfcontrol.GetNI());
+    fFitness.push_back(perfcontrol.GetNBM());
+    fFitness.push_back(perfcontrol.GetNDC());
+    fFitness.push_back(perfcontrol.GetNIC());
+    fFitness.push_back(perfcontrol.GetNB());
     perfcontrol.printSummary();
 #endif
     delete prop;
@@ -205,13 +211,13 @@ public:
   static Input GetInput() {
     Input vector;
     for (int i = 0; i < 6; ++i)
-      vector.push_back(GADouble(1, 20));
+      vector.push_back(GADouble(1, 12));
     return vector;
   }
 #ifndef ENABLE_PERF
   static Output GetOutput() { return std::vector<double>(2); }
 #else
-  static Output GetOutput() { return std::vector<double>(4); }
+  static Output GetOutput() { return std::vector<double>(10); }
 #endif
 
   // ROOT Fitting to true Pareto front

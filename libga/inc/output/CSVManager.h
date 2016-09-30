@@ -48,7 +48,7 @@ public:
     populationcvs.open(file.c_str(), std::fstream::app);
     // Suppose to be variadic...
     populationcvs << "Gene1, Gene2, Gene3, Gene4, Gene5, Gene6, Gene7, "
-                     "Fitness1, Fitness2, Fitness3,Fitness4, Rank, CrowdingDistance\n";
+                     "Fitness1, Fitness2, Fitness3, Fitness4, Fitness5, Fitness6, Fitness7, Fitness8, Fitness9, Fitness10, Rank, CrowdingDistance\n";
     // CVS format for R ananlysis..
     for (std::size_t i = 0; i < population.size(); ++i) {
       for (std::size_t j = 0; j < population.GetTGenes(i).size(); ++j) {
