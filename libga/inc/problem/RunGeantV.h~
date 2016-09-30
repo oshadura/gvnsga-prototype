@@ -195,10 +195,6 @@ public:
     perfcontrol.printSummary();
 #endif
     delete prop;
-   std::cout << "Vector output for evaluation function: ";
-   for (auto i: fFitness)
-      std::cout << i << ' ';
-    std::cout << ' ' << std::endl;
     return fFitness;
   }
 

@@ -175,7 +175,7 @@ public:
   }
 #endif
 
-#ifdef ENABLE_GEANTVVV
+#ifdef ENABLE_GEANTV
 
   Population(int n) {
     int pipega[n][2];
@@ -312,7 +312,7 @@ public:
       std::fill(fArrayDead, fArrayDead + n, 0);
     }
   }
-#else
+#elif SIMPLE
 
   Population(int n) {
    for (int i = 0; i < n; ++i) {

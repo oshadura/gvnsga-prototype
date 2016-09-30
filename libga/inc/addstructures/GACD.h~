@@ -55,7 +55,7 @@ public:
     Map<T> fMap;
     for (auto it = pop.begin(); it != pop.end(); ++it)
       fMap[*it] = 0;
-    unsigned int numOfObjectives = pop[1]->GetOutput().size();
+    unsigned int numOfObjectives = pop[0]->GetOutput().size();
     //Debug purposes...
     std::cout << "Number of objectives " << numOfObjectives << std::endl;
     std::cout << "fMin " << fMin.size() << std::endl;

@@ -188,7 +188,8 @@ public:
       wait(NULL);
       exit(EXIT_SUCCESS);
     }
-    std::cout << "We are back to master job after TGenes::Evaluation"<<std::endl;
+    std::cout << "We are back to master job after TGenes::Evaluation::"
+              << std::endl;The boundary size and objective size does not match
     // Cleaning array from previos pids info
     fArray[0] = 0;
 #else
