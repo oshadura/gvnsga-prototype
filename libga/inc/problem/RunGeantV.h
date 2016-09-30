@@ -61,17 +61,17 @@ public:
 
   typedef std::vector<double> Output;
 
-/*
-private:
-  friend class boost::serialization::access;
+  /*
+  private:
+    friend class boost::serialization::access;
 
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<Functions<RunGeantV>>(*this);
-  }
-  
-public:
-*/
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      ar & boost::serialization::base_object<Functions<RunGeantV>>(*this);
+    }
+
+  public:
+  */
 
   static Output Evaluate(const Input &individual) {
     // Converting values
@@ -195,8 +195,8 @@ public:
     perfcontrol.printSummary();
 #endif
     delete prop;
-   std::cout << "Vector output for evaluation function: ";
-   for (auto i: fFitness)
+    std::cout << "Vector output for evaluation function: ";
+    for (auto i : fFitness)
       std::cout << i << ' ';
     std::cout << ' ' << std::endl;
     return fFitness;
@@ -208,7 +208,7 @@ public:
       vector.push_back(GADouble(1, 20));
     return vector;
   }
-#ifdef ENABLE_PERF
+#ifndef ENABLE_PERF
   static Output GetOutput() { return std::vector<double>(2); }
 #else
   static Output GetOutput() { return std::vector<double>(4); }

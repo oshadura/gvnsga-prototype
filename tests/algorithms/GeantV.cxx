@@ -15,7 +15,7 @@ public:
 TEST_F(Nsga2, SolvingGeantVProblem) {
   geantvmoop::RunGeantV runc;
   geantvmoop::GANSGA2<geantvmoop::RunGeantV> nsga(runc);
-  nsga.fPopulationSize = 100;
+  nsga.fPopulationSize = 5;
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }

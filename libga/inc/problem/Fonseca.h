@@ -27,17 +27,17 @@ public:
 
   typedef std::vector<double> Output;
 
-/*
-private:
-  friend class boost::serialization::access;
+  /*
+  private:
+    friend class boost::serialization::access;
 
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<Functions<Fonseca>>(*this);
-  }
-  
-public:
-*/
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      ar & boost::serialization::base_object<Functions<Fonseca>>(*this);
+    }
+
+  public:
+  */
 
   static Output Evaluate(const Input &individual) {
     std::vector<double> fFitness, fParameters;
@@ -54,6 +54,10 @@ public:
     auto it = fFitness.begin();
     fFitness.insert(it, 1 - std::exp(-sum1));
     fFitness.insert(it, 1 - std::exp(-sum2));
+    std::cout << "Vector output for evaluation function: ";
+    for (auto i : fFitness)
+      std::cout << i << ' ';
+    std::cout << ' ' << std::endl;
     return fFitness;
   }
 

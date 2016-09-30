@@ -36,7 +36,6 @@ public:
     Initialize();
     for (int i = 0; i < fMaxGeneration; ++i) {
       Evolution();
-      // Print(std::cout);
     }
     return GetParetoFront();
   }

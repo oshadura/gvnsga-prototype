@@ -7,9 +7,8 @@
 class HistoOutput : public GATest {
 public:
   geantvmoop::DTLZ2 dtlz2;
-  geantvmoop::Population<geantvmoop::DTLZ2> pop{5};
+  geantvmoop::Population<geantvmoop::DTLZ2> pop;
 };
-
 /*
 TEST_F(HistoOutput, SimpleHistoOutputofPopulation) {
 	std::cout << pop;

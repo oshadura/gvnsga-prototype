@@ -28,17 +28,17 @@ public:
   DTLZ1() : fNGenes(7), fNObjectives(3) {}
 
   virtual ~DTLZ1() {}
-/*
-private:
-  friend class boost::serialization::access;
+  /*
+  private:
+    friend class boost::serialization::access;
 
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<Functions<DTLZ1>>(*this);
-  }
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      ar & boost::serialization::base_object<Functions<DTLZ1>>(*this);
+    }
 
-public:
-  */
+  public:
+    */
 
   void SetNGenes(const int i) {
     fNGenes = i;
@@ -62,10 +62,14 @@ public:
 
   static Output Evaluate(const Input &individual) {
     std::vector<double> fFitness, fParameters;
-    fFitness.reserve(individual.size());
+    fFitness.reserve(3);
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
+    std::cout << "Vector input for evaluation function: ";
+    for (auto i : fParameters)
+      std::cout << i << ' ';
+    std::cout << ' ' << std::endl;
     int n = 7;
     int m = 3;
     int k = n - m + 1; // 5
@@ -83,8 +87,8 @@ public:
       auto it = fFitness.begin();
       fFitness.insert(it + i, f);
     }
-   std::cout << "Vector output for evaluation function: ";
-   for (auto i: fFitness)
+    std::cout << "Vector output for evaluation function: ";
+    for (auto i : fFitness)
       std::cout << i << ' ';
     std::cout << ' ' << std::endl;
     return fFitness;

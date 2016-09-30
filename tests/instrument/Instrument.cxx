@@ -26,7 +26,6 @@ public:
   int i, j;
 };
 
-/*
 #ifdef ENABLE_PAPI
 
 TEST_F(Instrument, CheckingPapi) {
@@ -100,5 +99,3 @@ TEST_F(Instrument, CheckCPU) {
 std::cout << " Number of total free cores " << ccores << std::endl;
 }
 
-
-*/

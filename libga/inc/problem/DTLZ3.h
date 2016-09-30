@@ -25,17 +25,17 @@ public:
 
   typedef std::vector<double> Output;
 
-/*
-private:
-  friend class boost::serialization::access;
+  /*
+  private:
+    friend class boost::serialization::access;
 
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<Functions<DTLZ3>>(*this);
-  }
-  
-public:
-  */
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      ar & boost::serialization::base_object<Functions<DTLZ3>>(*this);
+    }
+
+  public:
+    */
 
   static double pi() { return std::atan(1) * 4; }
 
@@ -62,6 +62,10 @@ public:
       auto it = fFitness.begin();
       fFitness.insert(it + i, f);
     }
+    std::cout << "Vector output for evaluation function: ";
+    for (auto i : fFitness)
+      std::cout << i << ' ';
+    std::cout << ' ' << std::endl;
     return fFitness;
   }
 

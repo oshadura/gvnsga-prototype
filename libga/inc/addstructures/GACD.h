@@ -45,6 +45,14 @@ public:
       auto v = pop.GetObjective(j);
       fMin.push_back(*std::min_element(v.begin(), v.end()));
       fMax.push_back(*std::max_element(v.begin(), v.end()));
+      std::cout << "Vector Min for evaluation function: ";
+      for (auto i : fMin)
+        std::cout << i << ' ';
+      std::cout << ' ' << std::endl;
+      std::cout << "Vector Max for evaluation function: ";
+      for (auto i : fMax)
+        std::cout << i << ' ';
+      std::cout << ' ' << std::endl;
     }
   }
 
@@ -56,7 +64,7 @@ public:
     for (auto it = pop.begin(); it != pop.end(); ++it)
       fMap[*it] = 0;
     unsigned int numOfObjectives = pop[1]->GetOutput().size();
-    //Debug purposes...
+    // Debug purposes...
     std::cout << "Number of objectives " << numOfObjectives << std::endl;
     std::cout << "fMin " << fMin.size() << std::endl;
     std::cout << "fMax " << fMin.size() << std::endl;

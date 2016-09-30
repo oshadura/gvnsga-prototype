@@ -78,13 +78,13 @@ TEST_F(AllPCA, LoadingDataLPCAByHands) {
  Xtest = lpca.GetX().transpose();
  ASSERT_EQ(Xtest, test);
 }
-*/
+
 
 ////////////////////// Methods ///////////////////////////////
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
 
-/*
+
 TEST_F(AllPCA, RunLPCA) {
   lpca.LoadData("data");
   lpca.RunLPCA();
@@ -161,7 +161,7 @@ TEST_F(AllPCA, RunUncenteredTrickLPCAReductionofComponents) {
   twlpca.RunUncenteredTrickLPCAWithReductionOfComponents();
   twlpca.WriteTransformed("outputtlpcatransform");
 }
-/*
+
 // Too slow for bigdata set...
 TEST_F(AllPCA, RunKPCA) {
   kpca.LoadData("data");

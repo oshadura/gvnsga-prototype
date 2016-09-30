@@ -25,17 +25,17 @@ public:
 
   typedef std::vector<double> Output;
 
-/*
-private:
-  friend class boost::serialization::access;
+  /*
+  private:
+    friend class boost::serialization::access;
 
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version) {
-    ar & boost::serialization::base_object<Functions<UFC9>>(*this);
-  }
-  
-public:
-*/
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      ar & boost::serialization::base_object<Functions<UFC9>>(*this);
+    }
+
+  public:
+  */
 
   static double pi() { return std::atan(1) * 4; }
 
@@ -77,6 +77,10 @@ public:
                      2.0 * sum2 / (double)count2));
     fFitness.insert(it + 2,
                     (1.0 - fParameters[1] + 2.0 * sum3 / (double)count3));
+    std::cout << "Vector output for evaluation function: ";
+    for (auto i : fFitness)
+      std::cout << i << ' ';
+    std::cout << ' ' << std::endl;
     return fFitness;
   }
 
