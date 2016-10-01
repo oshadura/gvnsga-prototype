@@ -39,6 +39,7 @@ TEST_F(Instrument, CheckingPapi) {
   }
   papi.stopPapi();
   papi.printPapiResults();
+  papi.resetPapi();
 }
 
 #endif

@@ -211,7 +211,7 @@ public:
   static Input GetInput() {
     Input vector;
     for (int i = 0; i < 6; ++i)
-      vector.push_back(GADouble(1, 12));
+      vector.push_back(GADouble(1,10));
     return vector;
   }
 #ifndef ENABLE_PERF

@@ -35,15 +35,18 @@ public:
 
   virtual void SetGAValue(const Type &value) {
     if (value < fDown || value > fUp)
-      throw std::runtime_error("Boundary Exception.");
+      //throw std::runtime_error("Boundary Exception.");
+      std::cout << "Boundary problem" << std::endl;
     if (value < fDown) {
       std::cout << "Redefining value " << value << std::endl;
-      this->value = fDown;
+      //this->value = fDown;
+      this->value = 1;
     } else if (value > fUp) {
       std::cout << "Redefining value " << value << std::endl;
       this->value = fUp;
     } else {
-      this->value = value;
+      //this->value = value;
+      this->value = 10;
     }
   };
 

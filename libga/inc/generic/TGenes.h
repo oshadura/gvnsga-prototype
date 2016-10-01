@@ -58,7 +58,7 @@ namespace geantvmoop {
 
 template <typename F> class TGenes;
 
-template <typename F> using individual_t = std::shared_ptr<TGenes<F>>;
+template <typename F> using individual_t = std::shared_ptr<TGenes<F> >;
 
 template <typename F> class TGenes {
 
@@ -170,7 +170,17 @@ public:
       output = tmpoutput;
       std::cout << "Waiting for PID of fucking evaluation: " << fArray[0]
                 << " to finish.." << std::endl;
+
+      int status = 0;
+      pid_t wait_pid = waitpid(-1, &status, WNOHANG);
+      if (wait_pid == -1) {
+        perror("waitpid:");
+      } else {
+        printf("child get signal is %d\n", status & 0xFF);
+        printf("child exit coid is %d\n", status >> 8);
+      }
       waitpid(fArray[0], NULL, 0);
+      // waitpid(fArray[0], NULL, 0);
       std::cout << "PID: " << fArray[0] << " has shut down.." << std::endl;
     } else if (cpid < 0) {
       std::cerr << "Fork for evaluation was failed." << std::endl;
@@ -187,9 +197,11 @@ public:
       wait(NULL);
       exit(EXIT_SUCCESS);
     }
-    std::cout << "We are back to master job after TGenes::Evaluation"<<std::endl;
+    std::cout << "We are back to master job after TGenes::Evaluation"
+              << std::endl;
     // Cleaning array from previos pids info
     fArray[0] = 0;
+
 #else
     output = F::Evaluate(input);
 #endif

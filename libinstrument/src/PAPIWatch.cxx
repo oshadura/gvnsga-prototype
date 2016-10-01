@@ -1,5 +1,5 @@
 #ifdef ENABLE_PAPI
-#include "PAPIWatch.h"
+#nclude "PAPIWatch.h"
 #include <cstdlib>
 #include <iostream>
 #include <papi.h>
@@ -23,6 +23,7 @@ void PAPIWatch::handleError(int retval) {
 }
 
 void PAPIWatch::initPapi() {
+  retval = PAPI_NULL;
   int retval = PAPI_library_init(PAPI_VER_CURRENT);
 
   if (retval != PAPI_VER_CURRENT && retval < 0) {

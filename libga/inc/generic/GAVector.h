@@ -68,7 +68,8 @@ public:
   GAVector random() const {
     GAVector result;
     for (auto value : *this) {
-      result.push_back(value.random());
+      auto check = value.random();
+      result.push_back(check);
     }
     return result;
   }
