@@ -23,6 +23,7 @@
 #include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
 #include "instrumentation/GeantVFitness.h"
+#include "instrumentation/CPUManager.h"
 #include "output/HistogramManager.h"
 #include "output/HistogramManager.h"
 #include <boost/math/constants/constants.hpp>
@@ -36,6 +37,7 @@
 
 #include "Rtypes.h"
 #include "TGeoManager.h"
+#include "Memory.h"
 
 #include "CMSApplication.h"
 #include "ExN03Application.h"
@@ -85,6 +87,8 @@ public:
     PFMWatch perfcontrol;
     perfcontrol.Start();
 #endif
+    CPUManager cpumgr;
+    cpumgr.InitCPU();
     vecgeom::Stopwatch timer;
     timer.Start();
     const char *geomfile = "ExN03.root";
@@ -188,16 +192,19 @@ public:
     timer.Stop();
 #endif
     fFitness.push_back(timer.Elapsed());
-    fFitness.push_back(-(prop->fNprimaries.load()));
+    fFitness.push_back(-(prop->fNprimaries.load()/timer.Elapsed()));
 #ifdef ENABLE_PERF
-    fFitness.push_back(perfcontrol.GetNICS());
-    fFitness.push_back(perfcontrol.GetNCS());
-    fFitness.push_back(perfcontrol.GetNC());
-    fFitness.push_back(perfcontrol.GetNI());
-    fFitness.push_back(perfcontrol.GetNBM());
-    fFitness.push_back(perfcontrol.GetNDC());
-    fFitness.push_back(perfcontrol.GetNIC());
-    fFitness.push_back(perfcontrol.GetNB());
+    size_t peakSize = getPeakRSS();
+    //fFitness.push_back(perfcontrol.GetNICS());
+    //fFitness.push_back(perfcontrol.GetNCS());
+    //fFitness.push_back(perfcontrol.GetNC());
+    //fFitness.push_back(perfcontrol.GetNI());
+    //fFitness.push_back(perfcontrol.GetNBM());
+    //fFitness.push_back(perfcontrol.GetNDC());
+    //fFitness.push_back(perfcontrol.GetNIC());
+    //fFitness.push_back(perfcontrol.GetNB());
+    fFitness.push_back(peakSize);
+    fFitness.push_back(cpumgr.GetCurrentValueCPU());
     perfcontrol.printSummary();
 #endif
     delete prop;
@@ -211,13 +218,13 @@ public:
   static Input GetInput() {
     Input vector;
     for (int i = 0; i < 6; ++i)
-      vector.push_back(GADouble(1, 12));
+      vector.push_back(GADouble(3, 12));
     return vector;
   }
 #ifndef ENABLE_PERF
   static Output GetOutput() { return std::vector<double>(2); }
 #else
-  static Output GetOutput() { return std::vector<double>(10); }
+  static Output GetOutput() { return std::vector<double>(4); }
 #endif
 
   // ROOT Fitting to true Pareto front

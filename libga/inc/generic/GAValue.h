@@ -46,7 +46,7 @@ protected:
   Type value;
 
 public:
-  GAValue() : value(0) {}
+  GAValue() : value(1) {}
   GAValue(Type value) : value(value) {}
   ~GAValue() {}
 

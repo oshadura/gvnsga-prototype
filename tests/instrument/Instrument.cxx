@@ -2,16 +2,14 @@
 #include "PAPIWatch.h"
 #include "PFMWatch.h"
 #include "instrumentation/CPUManager.h"
-#include "Memory.h"
+//#include "Memory.h"
 #include "generic/Functions.h"
 #include "generic/Population.h"
 #include "generic/TGenes.h"
 #include "problem/DTLZ2.h"
-// Externals pap-wrap from third-externals
-#ifdef ENABLE_PAPI
 #include "PapiCollectors.h"
 #include "papi_wrap.h"
-#endif
+
 
 #include <iostream>
 #include <chrono>
@@ -19,16 +17,14 @@
 
 class Instrument : public GATest {
 public:
-#ifdef ENABLE_PAPI
-  PAPIWatch papi;
-#endif
   PFMWatch pfw;
   int i, j;
 };
 
-#ifdef ENABLE_PAPI
-
+/*
 TEST_F(Instrument, CheckingPapi) {
+  PAPIWatch papi;
+  papi.initPapi();
   papi.setPapiEvents();
   papi.startPapi();
   static int x[4000][4000];
@@ -41,8 +37,6 @@ TEST_F(Instrument, CheckingPapi) {
   papi.printPapiResults();
 }
 
-#endif
-
 TEST_F(Instrument, CheckingPerf) {
   pfw.Start();
   static int x[4000][4000];
@@ -54,8 +48,6 @@ TEST_F(Instrument, CheckingPerf) {
   pfw.Stop();
   pfw.printSummary();
 }
-
-#ifdef ENABLE_PAPI
 
 TEST_F(Instrument, CheckingPapiWrap) {
   int handle = pw_new_collector("PapiTestOnPopulation");
@@ -70,8 +62,6 @@ TEST_F(Instrument, CheckingPapiWrap) {
   pw_print();
   pw_print_table();
 }
-
-#endif
 
 TEST_F(Instrument, CheckMemory) {
   size_t currentSize = getCurrentRSS();
@@ -98,4 +88,4 @@ TEST_F(Instrument, CheckCPU) {
   ccores = nbcores - cpumgr.GetCurrentValueCPU() / 100 * nbcores; // just a test
 std::cout << " Number of total free cores " << ccores << std::endl;
 }
-
+*/

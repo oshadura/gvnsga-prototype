@@ -155,6 +155,7 @@ public:
     ssize_t result;
     pipe(pipega);
     double fitness;
+    int pstatus;
     // Forking a child process - should be in loop too
     cpid = fork();
     if (cpid > 0) {
@@ -170,6 +171,11 @@ public:
       output = tmpoutput;
       std::cout << "Waiting for PID of fucking evaluation: " << fArray[0]
                 << " to finish.." << std::endl;
+      pid_t wpid = waitpid(cpid, &pstatus, WNOHANG);
+      if (WIFEXITED(pstatus)) {
+         std::cout << "child with pid = " << wpid << " "
+	   << "exited normally with pstatus = "  << WEXITSTATUS(pstatus) << std::endl;
+      }
       waitpid(fArray[0], NULL, 0);
       std::cout << "PID: " << fArray[0] << " has shut down.." << std::endl;
     } else if (cpid < 0) {
@@ -188,7 +194,6 @@ public:
       exit(EXIT_SUCCESS);
     }
     std::cout << "We are back to master job after TGenes::Evaluation"<<std::endl;
-    // Cleaning array from previos pids info
     fArray[0] = 0;
 #else
     output = F::Evaluate(input);

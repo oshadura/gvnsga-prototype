@@ -39,7 +39,7 @@ endif()
 option(ENABLE_PAPI "Adding PAPI benchmarking support" ON)
 find_package(PAPI QUIET)
 if(ENABLE_PAPI)
-  set(INSTR_COMPILATION_FLAGS "${INSTR_COMPILATION_FLAGS} -DPAPI")
+  set(INSTR_COMPILATION_FLAGS "${INSTR_COMPILATION_FLAGS} -DENABLE_PAPI")
 endif()
 #----------------------------------------------------------------------------
 option(ENABLE_PERF "Adding Perfmon benchmarking support" ON)

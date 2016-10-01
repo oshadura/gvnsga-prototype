@@ -79,6 +79,7 @@ if(APPLE)
           pfm
           lapack
           hwloc
+          papi
 # STUPID TEST
 #          /home/geant/Install/perfmon/lib/libpfm.so
           )
@@ -109,6 +110,7 @@ elseif(UNIX)
           pfm
           lapack
           hwloc
+          papi
 # STUPID TEST
 #          /home/geant/Install/perfmon/lib/libpfm.so
           ${CMAKE_BINARY_DIR}/third_party/papi-wrap/src/papi-wrap-build/lib/libpapi_wrap.a

@@ -1,4 +1,4 @@
-#ifdef ENABLE_PAPI
+//#ifdef ENABLE_PAPI
 #include "PAPIWatch.h"
 #include <cstdlib>
 #include <iostream>
@@ -17,24 +17,18 @@ PAPIWatch::PAPIWatch() {
 
 PAPIWatch::~PAPIWatch() { return; }
 
-void PAPIWatch::handleError(int retval) {
+/*void PAPIWatch::handleError(int retval) {
   printf("PAPI error %d: %s\n", retval, PAPI_strerror(retval));
   exit(1);
 }
-
+*/
 void PAPIWatch::initPapi() {
+  //int retval = PAPI_NULL;
   int retval = PAPI_library_init(PAPI_VER_CURRENT);
-
-  if (retval != PAPI_VER_CURRENT && retval < 0) {
-    printf("PAPI library version mismatch!\n");
-    exit(1);
-  }
-  if (retval < 0)
-    handleError(retval);
-
-  std::cout << "PAPI Version Number: MAJOR: " << PAPI_VERSION_MAJOR(retval)
-            << " MINOR: " << PAPI_VERSION_MINOR(retval)
-            << " REVISION: " << PAPI_VERSION_REVISION(retval) << "\n";
+    if (retval != PAPI_VER_CURRENT) {
+          fprintf(stderr, "PAPI library init error!\n");
+          //exit(1);
+    }
 }
 
 void PAPIWatch::startPapi() {
@@ -489,7 +483,7 @@ void PAPIWatch::setPapiEvents() {
     strcat(header,
            "L3_ICA;"); // [78	] 	Level 3 instruction cache accesses
   ret = PAPI_add_event(EventSet, PAPI_L1_ICR);
-  if (ret != PAPI_OK)
+ if (ret != PAPI_OK)
     cout << "ERRO: PAPI_L1_ICR" << endl;
   else
     strcat(header, "L1_ICR;"); // [79	] 	Level 1 instruction cache reads
@@ -983,4 +977,4 @@ void PAPIWatch::removeAndDestoyPapi() {
     std::cout << "FAIL destroy" << endl;
 }
 
-#endif
+//#endif
