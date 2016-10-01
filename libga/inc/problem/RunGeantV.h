@@ -37,7 +37,7 @@
 
 #include "Rtypes.h"
 #include "TGeoManager.h"
-#include "Memory.h"
+//#include "Memory.h"
 
 #include "CMSApplication.h"
 #include "ExN03Application.h"
@@ -194,7 +194,7 @@ public:
     fFitness.push_back(timer.Elapsed());
     fFitness.push_back(-(prop->fNprimaries.load()/timer.Elapsed()));
 #ifdef ENABLE_PERF
-    size_t peakSize = getPeakRSS();
+    ////size_t peakSize = getPeakRSS();
     //fFitness.push_back(perfcontrol.GetNICS());
     //fFitness.push_back(perfcontrol.GetNCS());
     //fFitness.push_back(perfcontrol.GetNC());
@@ -203,7 +203,7 @@ public:
     //fFitness.push_back(perfcontrol.GetNDC());
     //fFitness.push_back(perfcontrol.GetNIC());
     //fFitness.push_back(perfcontrol.GetNB());
-    fFitness.push_back(peakSize);
+    ////fFitness.push_back(peakSize);
     fFitness.push_back(cpumgr.GetCurrentValueCPU());
     perfcontrol.printSummary();
 #endif

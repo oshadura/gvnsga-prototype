@@ -91,11 +91,11 @@ public:
     cpumgr.InitCPU();
     vecgeom::Stopwatch timer;
     timer.Start();
-    
-    std::string cms_geometry_filename("cms2015.root");
-    std::string xsec_filename("xsec_FTFP_BERT_G496p02_1mev.root");
-    std::string fstate_filename("fstate_FTFP_BERT_G496p02_1mev.root");
-    std::string hepmc_event_filename("pp14TeVminbias.root");
+    static bool monitor = false, score = false, debug = false;
+    const char *cms_geometry_filename("cms2015.root");
+    const char  *xsec_filename("xsec_FTFP_BERT_G496p02_1mev.root");
+    const char *fstate_filename("fstate_FTFP_BERT_G496p02_1mev.root");
+    std::string  hepmc_event_filename("pp14TeVminbias.root");
     bool performance = true;
     bool coprocessor = COPROCESSOR_REQUEST;
     int nthreads = fParameters[0];
@@ -104,7 +104,7 @@ public:
     printf("Debugging Run.C: all events value = %d\n", ntotal);
     int nbuffered = fParameters[2];
     printf("Debugging Run.C: buffered particles value = %d\n", nbuffered);
-    TGeoManager::Import(geomfile);
+    TGeoManager::Import(cms_geometry_filename);
     TaskBroker *broker = nullptr;
     if (coprocessor) {
 #ifdef GEANTCUDA_REPLACE
@@ -127,15 +127,15 @@ public:
     if (broker)
       prop->SetTaskBroker(broker);
     // Monitor different features
-    prop->SetNminThreshold(5 * nthreads);
-    prop->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonMemory, false & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonBasketsPerVol,
+    wmanager->SetNminThreshold(5 * nthreads);
+    wmanager->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
+    wmanager->SetMonitored(GeantPropagator::kMonMemory, false & (!performance));
+    wmanager->SetMonitored(GeantPropagator::kMonBasketsPerVol,
                        false & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonVectors, false & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonConcurrency,
+    wmanager->SetMonitored(GeantPropagator::kMonVectors, false & (!performance));
+    wmanager->SetMonitored(GeantPropagator::kMonConcurrency,
                        false & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonTracksPerEvent,
+    wmanager->SetMonitored(GeantPropagator::kMonTracksPerEvent,
                        false & (!performance));
     bool graphics = (prop->GetMonFeatures()) ? true : false;
     prop->fUseMonitoring = graphics;
@@ -150,16 +150,17 @@ public:
     printf("Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
     // This is now the most important parameter for memory considerations
     prop->fMaxPerBasket = 256; // Maximum vector size (tunable)
-    propagator->fMaxRes = max_memory;
-    if (performance) propagator->fMaxRes = 0;
+    int max_memory = 4000;
+    prop->fMaxRes = max_memory;
+    if (performance) prop->fMaxRes = 0;
     prop->fEmin = 0.001;       // [3 KeV] energy cut
     prop->fEmax = 0.01; // [30MeV] used for now to select particle gun energy
     // Create the tab. phys process.
-    propagator->LoadGeometry(cms_geometry_filename);
+    prop->LoadGeometry(cms_geometry_filename);
     std::cout
         << "-=======================TTabPhysProcess=======================-"
         << std::endl;
-    prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
+    prop->fProcess = new TTabPhysProcess("tab_phys", xsec_filename, fstate_filename);
     // for vector physics -OFF now
     // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
     // nthreads);
@@ -167,7 +168,7 @@ public:
               << std::endl;
     //prop->fPrimaryGenerator =
     //    new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
-    propagator->fPrimaryGenerator = new HepMCGenerator(hepmc_event_filename);
+    prop->fPrimaryGenerator = new HepMCGenerator(hepmc_event_filename);
     // Number of steps for learning phase (tunable [0, 1e6])
     // if set to 0 disable learning phase
     prop->fLearnSteps = fParameters[5];
@@ -177,8 +178,8 @@ public:
     std::cout
         << "-=======================ExN03Application=======================-"
         << std::endl;
-    propagator->fFillTree = false;
-    propagator->fTreeSizeWriteThreshold = 100000;
+    prop->fFillTree = false;
+    prop->fTreeSizeWriteThreshold = 100000;
     //prop->fApplication = new ExN03Application();
     CMSApplication *CMSApp = new CMSApplication();
     if (score) {
@@ -186,7 +187,7 @@ public:
     } else {
      CMSApp->SetScoreType(CMSApplication::kNoScore);
     }
-    propagator->fApplication = CMSApp;
+    prop->fApplication = CMSApp;
     // Activate I/O
     prop->fFillTree = false;
     // Activate old version of single thread serialization/reading
@@ -202,7 +203,7 @@ public:
       prop->fUseStdScoring = false;
     // Monitor the application
     prop->fUseAppMonitoring = false;
-    prop->PropagatorGeom(geomfile, nthreads, graphics);
+    prop->PropagatorGeom(cms_geometry_filename, nthreads, graphics);
 #ifdef ENABLE_PERF
     perfcontrol.Stop();
     timer.Stop();

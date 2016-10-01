@@ -13,7 +13,7 @@ public:
 
 #ifdef ENABLE_GEANTV
 TEST_F(Nsga2, SolvingGeantVCMSProblem) {
-  geantvmoop::RunGeantV runc;
+  geantvmoop::CMSGeantV runc;
   geantvmoop::GANSGA2<geantvmoop::CMSGeantV> nsga(runc);
   nsga.fPopulationSize = 10;
   nsga.fMaxGeneration = 100;
