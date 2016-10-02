@@ -202,7 +202,7 @@ public:
     if (performance)
       prop->fUseStdScoring = false;
     // Monitor the application
-    prop->fUseAppMonitoring = false;
+    //prop->fUseAppMonitoring = false;
     prop->PropagatorGeom(cms_geometry_filename, nthreads, graphics);
 #ifdef ENABLE_PERF
     perfcontrol.Stop();
