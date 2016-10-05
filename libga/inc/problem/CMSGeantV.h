@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __RUNGEANTV__
-#define __RUNGEANTV__
+#ifndef __CMSGEANTV__
+#define __CMSGEANTV__
 
 #include <algorithm> // std::copy
 #include <cmath>
@@ -23,6 +23,7 @@
 #include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
 #include "instrumentation/GeantVFitness.h"
+#include "instrumentation/CPUManager.h"
 #include "output/HistogramManager.h"
 #include "output/HistogramManager.h"
 #include <boost/math/constants/constants.hpp>
@@ -36,6 +37,7 @@
 
 #include "Rtypes.h"
 #include "TGeoManager.h"
+//#include "Memory.h"
 
 #include "CMSApplication.h"
 #include "ExN03Application.h"
@@ -54,7 +56,7 @@
 
 namespace geantvmoop {
 
-class RunGeantV : public Functions<RunGeantV> {
+class CMSGeantV : public Functions<CMSGeantV> {
 
 public:
   typedef GAVector<GADouble> Input;
@@ -85,11 +87,15 @@ public:
     PFMWatch perfcontrol;
     perfcontrol.Start();
 #endif
+    CPUManager cpumgr;
+    cpumgr.InitCPU();
     vecgeom::Stopwatch timer;
     timer.Start();
-    const char *geomfile = "ExN03.root";
-    const char *xsec = "xsec_FTFP_BERT.root";
-    const char *fstate = "fstate_FTFP_BERT.root";
+    static bool monitor = false, score = false, debug = false;
+    const char *cms_geometry_filename("cms2015.root");
+    const char  *xsec_filename("xsec_FTFP_BERT_G496p02_1mev.root");
+    const char *fstate_filename("fstate_FTFP_BERT_G496p02_1mev.root");
+    std::string  hepmc_event_filename("pp14TeVminbias.root");
     bool performance = true;
     bool coprocessor = COPROCESSOR_REQUEST;
     int nthreads = fParameters[0];
@@ -98,7 +104,7 @@ public:
     printf("Debugging Run.C: all events value = %d\n", ntotal);
     int nbuffered = fParameters[2];
     printf("Debugging Run.C: buffered particles value = %d\n", nbuffered);
-    TGeoManager::Import(geomfile);
+    TGeoManager::Import(cms_geometry_filename);
     TaskBroker *broker = nullptr;
     if (coprocessor) {
 #ifdef GEANTCUDA_REPLACE
@@ -112,23 +118,24 @@ public:
              "enabled\n";
 #endif
     }
+    WorkloadManager *wmanager = WorkloadManager::Instance(ntotal);
     std::cout
         << "-=======================GeantPropagator=======================-"
         << std::endl;
     GeantPropagator *prop =
-        GeantPropagator::Instance(ntotal, nbuffered, nthreads);
+        GeantPropagator::Instance(nbuffered, nthreads);
     if (broker)
       prop->SetTaskBroker(broker);
     // Monitor different features
-    prop->SetNminThreshold(5 * nthreads);
-    prop->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonMemory, false & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonBasketsPerVol,
+    wmanager->SetNminThreshold(5 * nthreads);
+    wmanager->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
+    wmanager->SetMonitored(GeantPropagator::kMonMemory, false & (!performance));
+    wmanager->SetMonitored(GeantPropagator::kMonBasketsPerVol,
                        false & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonVectors, false & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonConcurrency,
+    wmanager->SetMonitored(GeantPropagator::kMonVectors, false & (!performance));
+    wmanager->SetMonitored(GeantPropagator::kMonConcurrency,
                        false & (!performance));
-    prop->SetMonitored(GeantPropagator::kMonTracksPerEvent,
+    wmanager->SetMonitored(GeantPropagator::kMonTracksPerEvent,
                        false & (!performance));
     bool graphics = (prop->GetMonFeatures()) ? true : false;
     prop->fUseMonitoring = graphics;
@@ -136,27 +143,32 @@ public:
     // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
     // If set to 0 takes the default value of 0.01
     prop->fPriorityThr = fParameters[3]/100;
-    printf("Debugging Run.C: priority value = %f\n", prop->fPriorityThr);
+    printf("Debugging RunCMS.C: priority value = %f\n", prop->fPriorityThr);
     // Initial vector size, this is no longer an important model parameter,
     // because is gets dynamically modified to accomodate the track flow
     prop->fNperBasket = 64;
-    printf("Debugging Run.C: vector value = %d\n", prop->fNperBasket);
+    printf("Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
     // This is now the most important parameter for memory considerations
     prop->fMaxPerBasket = fParameters[4]*32; // Maximum vector size (tunable)
-    prop->fEmin = 3.E-6;       // [3 KeV] energy cut
-    prop->fEmax = 0.03; // [30MeV] used for now to select particle gun energy
+    int max_memory = 4000;
+    prop->fMaxRes = max_memory;
+    if (performance) prop->fMaxRes = 0;
+    prop->fEmin = 0.001;       // [3 KeV] energy cut
+    prop->fEmax = 0.01; // [30MeV] used for now to select particle gun energy
     // Create the tab. phys process.
+    prop->LoadGeometry(cms_geometry_filename);
     std::cout
         << "-=======================TTabPhysProcess=======================-"
         << std::endl;
-    prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
+    prop->fProcess = new TTabPhysProcess("tab_phys", xsec_filename, fstate_filename);
     // for vector physics -OFF now
     // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
     // nthreads);
     std::cout << "-=======================GunGenerator=======================-"
               << std::endl;
-    prop->fPrimaryGenerator =
-        new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
+    //prop->fPrimaryGenerator =
+    //    new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
+    prop->fPrimaryGenerator = new HepMCGenerator(hepmc_event_filename);
     // Number of steps for learning phase (tunable [0, 1e6])
     // if set to 0 disable learning phase
     prop->fLearnSteps = fParameters[5]*10000;
@@ -166,7 +178,16 @@ public:
     std::cout
         << "-=======================ExN03Application=======================-"
         << std::endl;
-    prop->fApplication = new ExN03Application();
+    prop->fFillTree = false;
+    prop->fTreeSizeWriteThreshold = 100000;
+    //prop->fApplication = new ExN03Application();
+    CMSApplication *CMSApp = new CMSApplication();
+    if (score) {
+      CMSApp->SetScoreType(CMSApplication::kScore);
+    } else {
+     CMSApp->SetScoreType(CMSApplication::kNoScore);
+    }
+    prop->fApplication = CMSApp;
     // Activate I/O
     prop->fFillTree = false;
     // Activate old version of single thread serialization/reading
@@ -181,8 +202,8 @@ public:
     if (performance)
       prop->fUseStdScoring = false;
     // Monitor the application
-    prop->fUseAppMonitoring = false;
-    prop->PropagatorGeom(geomfile, nthreads, graphics);
+    //prop->fUseAppMonitoring = false;
+    prop->PropagatorGeom(cms_geometry_filename, nthreads, graphics);
 #ifdef ENABLE_PERF
     perfcontrol.Stop();
     timer.Stop();
@@ -190,6 +211,7 @@ public:
     fFitness.push_back(timer.Elapsed());
     fFitness.push_back(-(prop->fNprimaries.load()/timer.Elapsed()));
 #ifdef ENABLE_PERF
+    //size_t peakSize = getPeakRSS();
     fFitness.push_back(perfcontrol.GetNICS());
     fFitness.push_back(perfcontrol.GetNCS());
     fFitness.push_back(perfcontrol.GetNC());
@@ -198,27 +220,28 @@ public:
     fFitness.push_back(perfcontrol.GetNDC());
     fFitness.push_back(perfcontrol.GetNIC());
     fFitness.push_back(perfcontrol.GetNB());
+    //fFitness.push_back(peakSize);
+    fFitness.push_back(cpumgr.GetCurrentValueCPU());
     perfcontrol.printSummary();
 #endif
-    //TGeoManager::CloseGeometry();
-    delete prop;
     std::cout << "Vector output for evaluation function: ";
     for (auto i : fFitness)
       std::cout << i << ' ';
     std::cout << ' ' << std::endl;
     return fFitness;
+    delete prop;
   }
 
   static Input GetInput() {
     Input vector;
     for (int i = 0; i < 6; ++i)
-      vector.push_back(GADouble(1,10));
+      vector.push_back(GADouble(3, 12));
     return vector;
   }
 #ifndef ENABLE_PERF
   static Output GetOutput() { return std::vector<double>(2); }
 #else
-  static Output GetOutput() { return std::vector<double>(10); }
+  static Output GetOutput() { return std::vector<double>(4); }
 #endif
 
   // ROOT Fitting to true Pareto front
@@ -232,3 +255,4 @@ public:
 
 #endif
 #endif
+

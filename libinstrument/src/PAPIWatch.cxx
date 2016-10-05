@@ -1,5 +1,5 @@
 #ifdef ENABLE_PAPI
-#nclude "PAPIWatch.h"
+#include "PAPIWatch.h"
 #include <cstdlib>
 #include <iostream>
 #include <papi.h>

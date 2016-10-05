@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __RUNGEANTV__
-#define __RUNGEANTV__
+#ifndef __FASTSIMGEANTV__
+#define __FASTSIMGEANTV__
 
 #include <algorithm> // std::copy
 #include <cmath>
@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector> // std::vector
 
-#ifdef ENABLE_GEANTV
+#ifdef ENABLE_GEANTVVV
 
 #include "algorithms/GANSGA2.h"
 #include "generic/Functions.h"
@@ -23,6 +23,7 @@
 #include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
 #include "instrumentation/GeantVFitness.h"
+#include "instrumentation/CPUManager.h"
 #include "output/HistogramManager.h"
 #include "output/HistogramManager.h"
 #include <boost/math/constants/constants.hpp>
@@ -36,8 +37,11 @@
 
 #include "Rtypes.h"
 #include "TGeoManager.h"
+#include "Memory.h"
 
 #include "CMSApplication.h"
+#include "inc/FastSimProcess.h"
+#include "FastSimApplication.h"
 #include "ExN03Application.h"
 #include "GeantPropagator.h"
 #include "GeantVApplication.h"
@@ -54,7 +58,7 @@
 
 namespace geantvmoop {
 
-class RunGeantV : public Functions<RunGeantV> {
+class FastSimGeantV : public Functions<FastSimGeantV> {
 
 public:
   typedef GAVector<GADouble> Input;
@@ -85,40 +89,38 @@ public:
     PFMWatch perfcontrol;
     perfcontrol.Start();
 #endif
+    CPUManager cpumgr;
+    cpumgr.InitCPU();
     vecgeom::Stopwatch timer;
     timer.Start();
-    const char *geomfile = "ExN03.root";
-    const char *xsec = "xsec_FTFP_BERT.root";
-    const char *fstate = "fstate_FTFP_BERT.root";
+    static bool monitor = false, score = false, debug = false;
+    const char *geomfile("Par02FullDetector.root");
     bool performance = true;
     bool coprocessor = COPROCESSOR_REQUEST;
     int nthreads = fParameters[0];
-    printf("Debugging Run.C: thread value = %d\n", nthreads);
-    int ntotal = fParameters[1];
-    printf("Debugging Run.C: all events value = %d\n", ntotal);
-    int nbuffered = fParameters[2];
-    printf("Debugging Run.C: buffered particles value = %d\n", nbuffered);
+    int ntotal = fParameters[1]; // Number of events to be transported
+    int nbuffered = fParameters[2]; // Number of buffered events (tunable [1,ntotal])
     TGeoManager::Import(geomfile);
+
     TaskBroker *broker = nullptr;
     if (coprocessor) {
 #ifdef GEANTCUDA_REPLACE
       CoprocessorBroker *gpuBroker = new CoprocessorBroker();
       gpuBroker->CudaSetup(32, 128, 1);
       broker = gpuBroker;
+
       nthreads += gpuBroker->GetNstream() + 1;
 #else
-      std::cerr
-          << "Error: Coprocessor processing requested but support was not "
-             "enabled\n";
+      std::cerr << "Error: Coprocessor processing requested but support was "
+                   "not enabled\n";
 #endif
     }
-    std::cout
-        << "-=======================GeantPropagator=======================-"
-        << std::endl;
     GeantPropagator *prop =
         GeantPropagator::Instance(ntotal, nbuffered, nthreads);
+
     if (broker)
       prop->SetTaskBroker(broker);
+
     // Monitor different features
     prop->SetNminThreshold(5 * nthreads);
     prop->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
@@ -132,52 +134,67 @@ public:
                        false & (!performance));
     bool graphics = (prop->GetMonFeatures()) ? true : false;
     prop->fUseMonitoring = graphics;
-    prop->fNaverage = 500; // Average number of tracks per event
+    prop->fNaverage = fParameters[3]; // Average number of tracks per event
+
     // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
     // If set to 0 takes the default value of 0.01
-    prop->fPriorityThr = fParameters[3]/100;
-    printf("Debugging Run.C: priority value = %f\n", prop->fPriorityThr);
+    prop->fPriorityThr = fParameters[4]/100;
+
     // Initial vector size, this is no longer an important model parameter,
     // because is gets dynamically modified to accomodate the track flow
-    prop->fNperBasket = 64;
-    printf("Debugging Run.C: vector value = %d\n", prop->fNperBasket);
+    prop->fNperBasket = 16; // Initial vector size (tunable)
+
     // This is now the most important parameter for memory considerations
-    prop->fMaxPerBasket = fParameters[4]*32; // Maximum vector size (tunable)
-    prop->fEmin = 3.E-6;       // [3 KeV] energy cut
-    prop->fEmax = 0.03; // [30MeV] used for now to select particle gun energy
-    // Create the tab. phys process.
-    std::cout
-        << "-=======================TTabPhysProcess=======================-"
-        << std::endl;
-    prop->fProcess = new TTabPhysProcess("tab_phys", xsec, fstate);
+    prop->fMaxPerBasket = fParameters[5]*32; // Maximum vector size (tunable)
+
+    prop->fEmin = 1.E-3; // [1 MeV] energy cut
+    prop->fEmax = 50.0;  // Particle gun energy in GeV
+
+    prop->fBmag = 1.0; // Magnetic field in Tesla units
+
+    // Create the fast-sim process.
+    prop->fProcess = new FastSimProcess;
+
     // for vector physics -OFF now
     // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
     // nthreads);
-    std::cout << "-=======================GunGenerator=======================-"
-              << std::endl;
-    prop->fPrimaryGenerator =
-        new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
+
+    prop->fPrimaryGenerator = new GunGenerator(
+        prop->fNaverage, 11, prop->fEmax, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0); // e-
+    // prop->fPrimaryGenerator = new GunGenerator( prop->fNaverage, 22,
+    // prop->fEmax, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );  //gamma
+    // prop->fPrimaryGenerator = new GunGenerator( prop->fNaverage, 13,
+    // prop->fEmax, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );  //mu-
+    // prop->fPrimaryGenerator = new GunGenerator( prop->fNaverage, 13,
+    // prop->fEmax, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 );  //mu- along x
+    // prop->fPrimaryGenerator = new GunGenerator( prop->fNaverage, 13,
+    // prop->fEmax, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 );  //mu- along z
+    // prop->fPrimaryGenerator = new GunGenerator( prop->fNaverage, 211,
+    // prop->fEmax, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );  //pi+
+    // prop->fPrimaryGenerator = new GunGenerator( prop->fNaverage, 111,
+    // prop->fEmax, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );  //pi0
+
     // Number of steps for learning phase (tunable [0, 1e6])
     // if set to 0 disable learning phase
-    prop->fLearnSteps = fParameters[5]*10000;
-    printf("Debugging Run.C: learning steps value = %d\n", prop->fLearnSteps);
+    prop->fLearnSteps = 0;
     if (performance)
       prop->fLearnSteps = 0;
-    std::cout
-        << "-=======================ExN03Application=======================-"
-        << std::endl;
-    prop->fApplication = new ExN03Application();
+
+    prop->fApplication = new FastSimApplication; // It does the analysis
+
     // Activate I/O
     prop->fFillTree = false;
     // Activate old version of single thread serialization/reading
-    // prop->fConcurrentWrite = false;
+    prop->fConcurrentWrite = false;
+
     // Activate debugging using -DBUG_HUNT=ON in your cmake build
     prop->fDebugEvt = 0;
     prop->fDebugTrk = 0;
     prop->fDebugStp = 0;
     prop->fDebugRep = 10;
+
     // Activate standard scoring
-    prop->fUseStdScoring = true;
+    prop->fUseStdScoring = false;
     if (performance)
       prop->fUseStdScoring = false;
     // Monitor the application
@@ -188,8 +205,9 @@ public:
     timer.Stop();
 #endif
     fFitness.push_back(timer.Elapsed());
-    fFitness.push_back(-(prop->fNprimaries.load()/timer.Elapsed()));
+    fFitness.push_back(-(prop->fNprimaries.load() / timer.Elapsed()));
 #ifdef ENABLE_PERF
+    size_t peakSize = getPeakRSS();
     fFitness.push_back(perfcontrol.GetNICS());
     fFitness.push_back(perfcontrol.GetNCS());
     fFitness.push_back(perfcontrol.GetNC());
@@ -198,9 +216,10 @@ public:
     fFitness.push_back(perfcontrol.GetNDC());
     fFitness.push_back(perfcontrol.GetNIC());
     fFitness.push_back(perfcontrol.GetNB());
+    fFitness.push_back(peakSize);
+    fFitness.push_back(cpumgr.GetCurrentValueCPU());
     perfcontrol.printSummary();
 #endif
-    //TGeoManager::CloseGeometry();
     delete prop;
     std::cout << "Vector output for evaluation function: ";
     for (auto i : fFitness)
@@ -212,13 +231,13 @@ public:
   static Input GetInput() {
     Input vector;
     for (int i = 0; i < 6; ++i)
-      vector.push_back(GADouble(1,10));
+      vector.push_back(GADouble(3, 12));
     return vector;
   }
 #ifndef ENABLE_PERF
   static Output GetOutput() { return std::vector<double>(2); }
 #else
-  static Output GetOutput() { return std::vector<double>(10); }
+  static Output GetOutput() { return std::vector<double>(12); }
 #endif
 
   // ROOT Fitting to true Pareto front

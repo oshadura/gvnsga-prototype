@@ -2,7 +2,7 @@
 #include "PAPIWatch.h"
 #include "PFMWatch.h"
 #include "instrumentation/CPUManager.h"
-#include "Memory.h"
+//#include "Memory.h"
 #include "generic/Functions.h"
 #include "generic/Population.h"
 #include "generic/TGenes.h"
@@ -17,6 +17,7 @@
 #include <chrono>
 #include <thread>
 
+/*
 class Instrument : public GATest {
 public:
 #ifdef ENABLE_PAPI
@@ -100,3 +101,4 @@ TEST_F(Instrument, CheckCPU) {
 std::cout << " Number of total free cores " << ccores << std::endl;
 }
 
+*/

@@ -21,6 +21,14 @@
 
 #include <hwloc.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include "hpc/GAEvaluate.h"
 #include "hpc/GASequentualEvaluator.h"
@@ -155,8 +163,20 @@ public:
     ssize_t result;
     pipe(pipega);
     double fitness;
+    sigset_t mask;
+    sigset_t orig_mask;
+    struct timespec timeout;
+    sigemptyset(&mask);
+    sigaddset(&mask, SIGCHLD);
+
+    if (sigprocmask(SIG_BLOCK, &mask, &orig_mask) < 0) {
+      perror("sigprocmask");
+      return 1;
+    }
     // Forking a child process - should be in loop too
     cpid = fork();
+    timeout.tv_sec = 5;
+    timeout.tv_nsec = 0;
     if (cpid > 0) {
       std::cout << "Starting father process for TGenes::Evaluation process::"
                 << std::endl;
@@ -171,7 +191,7 @@ public:
       std::cout << "Waiting for PID of fucking evaluation: " << fArray[0]
                 << " to finish.." << std::endl;
 
-      int status = 0;
+      /*int status = 0;
       pid_t wait_pid = waitpid(-1, &status, WNOHANG);
       if (wait_pid == -1) {
         perror("waitpid:");
@@ -179,6 +199,28 @@ public:
         printf("child get signal is %d\n", status & 0xFF);
         printf("child exit coid is %d\n", status >> 8);
       }
+      */
+      do {
+        if (sigtimedwait(&mask, NULL, &timeout) < 0) {
+          if (errno == EINTR) {
+            /* Interrupted by a signal other than SIGCHLD. */
+            continue;
+          } else if (errno == EAGAIN) {
+            printf("Timeout, killing child\n");
+            kill(fArray[0], SIGKILL);
+          } else {
+            perror("sigtimedwait");
+            return 1;
+          }
+        }
+
+        break;
+      } while (1);
+
+      //if (waitpid(pid, NULL, 0) < 0) {
+      //  perror("waitpid");
+      //  return 1;
+      //}
       waitpid(fArray[0], NULL, 0);
       // waitpid(fArray[0], NULL, 0);
       std::cout << "PID: " << fArray[0] << " has shut down.." << std::endl;
