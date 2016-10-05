@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __PROBLEMDTLZ5__
-#define __PROBLEMDTLZ5__
+#ifndef __PROBLEMDTLZ1__
+#define __PROBLEMDTLZ1__
 
 #include "generic/TGenes.h"
 #include "generic/Population.h"
@@ -18,57 +18,75 @@
 
 namespace geantvmoop {
 
-class DTLZ5 : public Functions<DTLZ5> {
+class DTLZ1 : public Functions<DTLZ1> {
 
 public:
   typedef GAVector<GADouble> Input;
 
   typedef std::vector<double> Output;
 
+  DTLZ1() : fNGenes(7), fNObjectives(3) {}
+
+  virtual ~DTLZ1() {}
   /*
   private:
     friend class boost::serialization::access;
 
     template <class Archive>
     void serialize(Archive &ar, const unsigned int version) {
-      ar & boost::serialization::base_object<Functions<DTLZ5>>(*this);
+      ar & boost::serialization::base_object<Functions<DTLZ1>>(*this);
     }
 
   public:
-  */
+    */
 
+  void SetNGenes(const int i) {
+    fNGenes = i;
+  };
+
+  void SetNObjectives(const int i) {
+    fNObjectives = i;
+  };
+
+  int GetNGenes() const {
+    return fNGenes;
+  };
+
+  //  int GetNObjectives() const { return fNObjectives; };
+
+private:
+  int fNGenes, fNObjectives;
+
+public:
   static double pi() { return std::atan(1) * 4; }
 
   static Output Evaluate(const Input &individual) {
     std::vector<double> fFitness, fParameters;
-    fFitness.reserve(individual.size());
+    fFitness.reserve(3);
     fParameters.reserve(individual.size());
     for (auto parameter : individual)
       fParameters.push_back(parameter.GetGAValue());
+    std::cout << "Vector input for evaluation function: ";
+    for (auto i : fParameters)
+      std::cout << i << ' ';
+    std::cout << ' ' << std::endl;
     int n = 7;
     int m = 3;
-    Int_t k = n - m + 1; // 5
-    Double_t g = 0.0;
-    std::vector<double> phi(m);
-    for (std::size_t i = n - k + 1; i <= n; ++i) {
-      g += std::pow(fParameters[i - 1] - 0.5, 2);
-    }
-    double t = pi() / (4 * (1 + g));
-    phi[0] = fParameters[0] * pi() / 2;
-    for (std::size_t i = 2; i <= m - 1; ++i) {
-      phi[i - 1] = t * (1 + 2 * g * fParameters[i - 1]);
-    }
-    for (std::size_t i = 1; i <= m; ++i) {
-      double f = 1 + g;
-      for (std::size_t j = m - i; j >= 1; --j) {
-        f *= std::cos(phi[j - 1]);
-      }
-      if (i > 1) {
-        f *= std::sin(phi[m - i + 1] - 1);
-      }
-      //auto it = fFitness.begin();
-      //fFitness.insert(it + i - 1, f);
-      fFitness.push_back(f);
+    int k = n - m + 1; // 5
+    double g = k;
+    for (std::size_t w = n - k; w < sizeof(n); w++)
+      g += pow(fParameters[w] - 0.5, 2) -
+           std::cos(20.0 * pi() * (fParameters[w] - 0.5));
+    g *= 100;
+    for (std::size_t i = 0; i < m; i++) {
+      double f = 0.5 * (1.0 + g);
+      for (std::size_t j = 0; j < m - i - 1; ++j)
+        f *= fParameters[j];
+      if (i > 0)
+        f *= 1 - fParameters[m - i - 1];
+      auto it = fFitness.begin();
+      std::cout << "Pushing F"<<std::endl;
+      fFitness.insert(it + i, f);
     }
     std::cout << "Vector output for evaluation function: ";
     for (auto i : fFitness)
@@ -84,9 +102,9 @@ public:
     return vector;
   }
 
+  // ROOT Fitting to true Pareto front
   static Double_t TruePF(Double_t *x, Double_t *parameter) {
-    Double_t value = std::sqrt(parameter[0] - parameter[1] * x[0] * x[0] -
-                               parameter[2] * x[1] * x[1]);
+    Double_t value = parameter[0] * x[0] + parameter[1] * x[1] - parameter[2];
     return value;
   }
 

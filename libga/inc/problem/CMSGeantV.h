@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector> // std::vector
 
-#ifdef ENABLE_GEANTV
+#ifdef ENABLE_GEANTVVV
 
 #include "algorithms/GANSGA2.h"
 #include "generic/Functions.h"
@@ -37,7 +37,7 @@
 
 #include "Rtypes.h"
 #include "TGeoManager.h"
-#include "Memory.h"
+//#include "Memory.h"
 
 #include "CMSApplication.h"
 #include "ExN03Application.h"
@@ -49,10 +49,13 @@
 #include "TaskBroker.h"
 #include "WorkloadManager.h"
 #include "base/Stopwatch.h"
+#include "GeantRunManager.h"
 
 #ifndef COPROCESSOR_REQUEST
 #define COPROCESSOR_REQUEST false
 #endif
+
+using namespace Geant;
 
 namespace geantvmoop {
 
@@ -92,126 +95,132 @@ public:
     vecgeom::Stopwatch timer;
     timer.Start();
     static bool monitor = false, score = false, debug = false;
-    const char *cms_geometry_filename("cms2015.root");
-    const char  *xsec_filename("xsec_FTFP_BERT_G496p02_1mev.root");
-    const char *fstate_filename("fstate_FTFP_BERT_G496p02_1mev.root");
+    const char *cms("cms2015.root");
+    const char  *xsec("xsec_FTFP_BERT_G496p02_1mev.root");
+    const char *fstate("fstate_FTFP_BERT_G496p02_1mev.root");
     std::string  hepmc_event_filename("pp14TeVminbias.root");
     bool performance = true;
     bool coprocessor = COPROCESSOR_REQUEST;
-    int nthreads = fParameters[0];
-    printf("Debugging Run.C: thread value = %d\n", nthreads);
-    int ntotal = fParameters[1];
-    printf("Debugging Run.C: all events value = %d\n", ntotal);
-    int nbuffered = fParameters[2];
-    printf("Debugging Run.C: buffered particles value = %d\n", nbuffered);
-    TGeoManager::Import(cms_geometry_filename);
-    TaskBroker *broker = nullptr;
-    if (coprocessor) {
-#ifdef GEANTCUDA_REPLACE
-      CoprocessorBroker *gpuBroker = new CoprocessorBroker();
-      gpuBroker->CudaSetup(32, 128, 1);
-      broker = gpuBroker;
-      nthreads += gpuBroker->GetNstream() + 1;
+    int n_threads = fParameters[0];
+   #ifdef USE_ROOT
+  TGeoManager::Import(cms);
 #else
-      std::cerr
-          << "Error: Coprocessor processing requested but support was not "
-             "enabled\n";
+
 #endif
-    }
-    WorkloadManager *wmanager = WorkloadManager::Instance(ntotal);
-    std::cout
-        << "-=======================GeantPropagator=======================-"
-        << std::endl;
-    GeantPropagator *prop =
-        GeantPropagator::Instance(nbuffered, nthreads);
-    if (broker)
-      prop->SetTaskBroker(broker);
-    // Monitor different features
-    wmanager->SetNminThreshold(5 * nthreads);
-    wmanager->SetMonitored(GeantPropagator::kMonQueue, true & (!performance));
-    wmanager->SetMonitored(GeantPropagator::kMonMemory, false & (!performance));
-    wmanager->SetMonitored(GeantPropagator::kMonBasketsPerVol,
-                       false & (!performance));
-    wmanager->SetMonitored(GeantPropagator::kMonVectors, false & (!performance));
-    wmanager->SetMonitored(GeantPropagator::kMonConcurrency,
-                       false & (!performance));
-    wmanager->SetMonitored(GeantPropagator::kMonTracksPerEvent,
-                       false & (!performance));
-    bool graphics = (prop->GetMonFeatures()) ? true : false;
-    prop->fUseMonitoring = graphics;
-    prop->fNaverage = 500; // Average number of tracks per event
-    // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
-    // If set to 0 takes the default value of 0.01
-    prop->fPriorityThr = fParameters[3];
-    printf("Debugging RunCMS.C: priority value = %f\n", prop->fPriorityThr);
-    // Initial vector size, this is no longer an important model parameter,
-    // because is gets dynamically modified to accomodate the track flow
-    prop->fNperBasket = fParameters[4];
-    printf("Debugging RunCMS.C: vector value = %d\n", prop->fNperBasket);
-    // This is now the most important parameter for memory considerations
-    prop->fMaxPerBasket = 256; // Maximum vector size (tunable)
-    int max_memory = 4000;
-    prop->fMaxRes = max_memory;
-    if (performance) prop->fMaxRes = 0;
-    prop->fEmin = 0.001;       // [3 KeV] energy cut
-    prop->fEmax = 0.01; // [30MeV] used for now to select particle gun energy
-    // Create the tab. phys process.
-    prop->LoadGeometry(cms_geometry_filename);
-    std::cout
-        << "-=======================TTabPhysProcess=======================-"
-        << std::endl;
-    prop->fProcess = new TTabPhysProcess("tab_phys", xsec_filename, fstate_filename);
-    // for vector physics -OFF now
-    // prop->fVectorPhysicsProcess = new GVectorPhysicsProcess(prop->fEmin,
-    // nthreads);
-    std::cout << "-=======================GunGenerator=======================-"
-              << std::endl;
-    //prop->fPrimaryGenerator =
-    //    new GunGenerator(prop->fNaverage, 11, prop->fEmax, -8, 0, 0, 1, 0, 0);
-    prop->fPrimaryGenerator = new HepMCGenerator(hepmc_event_filename);
-    // Number of steps for learning phase (tunable [0, 1e6])
-    // if set to 0 disable learning phase
-    prop->fLearnSteps = fParameters[5];
-    printf("Debugging Run.C: learning steps value = %d\n", prop->fLearnSteps);
-    if (performance)
-      prop->fLearnSteps = 0;
-    std::cout
-        << "-=======================ExN03Application=======================-"
-        << std::endl;
-    prop->fFillTree = false;
-    prop->fTreeSizeWriteThreshold = 100000;
-    //prop->fApplication = new ExN03Application();
-    CMSApplication *CMSApp = new CMSApplication();
-    if (score) {
-      CMSApp->SetScoreType(CMSApplication::kScore);
-    } else {
-     CMSApp->SetScoreType(CMSApplication::kNoScore);
-    }
-    prop->fApplication = CMSApp;
-    // Activate I/O
-    prop->fFillTree = false;
-    // Activate old version of single thread serialization/reading
-    // prop->fConcurrentWrite = false;
-    // Activate debugging using -DBUG_HUNT=ON in your cmake build
-    prop->fDebugEvt = 0;
-    prop->fDebugTrk = 0;
-    prop->fDebugStp = 0;
-    prop->fDebugRep = 10;
-    // Activate standard scoring
-    prop->fUseStdScoring = true;
-    if (performance)
-      prop->fUseStdScoring = false;
-    // Monitor the application
-    //prop->fUseAppMonitoring = false;
-    prop->PropagatorGeom(cms_geometry_filename, nthreads, graphics);
-#ifdef ENABLE_PERF
-    perfcontrol.Stop();
-    timer.Stop();
+
+  TaskBroker *broker = nullptr;
+  if (coprocessor) {
+#ifdef GEANTCUDA_REPLACE
+    CoprocessorBroker *gpuBroker = new CoprocessorBroker();
+    gpuBroker->CudaSetup(32,128,1);
+    broker = gpuBroker;
+    nthreads += gpuBroker->GetNstream()+1;
+#else
+    std::cerr << "Error: Coprocessor processing requested but support was not enabled\n";
 #endif
+  }
+
+  GeantConfig* config=new GeantConfig();
+  
+  config->fNtotal = fParameters[0];
+  config->fNbuff = fParameters[1];
+  // Default value is 1. (0.1 Tesla)
+  config->fBmag = 40.; // 4 Tesla
+
+  // Enable use of RK integration in field for charged particles
+  config->fUseRungeKutta = false;
+  // prop->fEpsilonRK = 0.001;  // Revised / reduced accuracy - vs. 0.0003 default
+
+  config->fNminThreshold=5 * n_threads;
+  config->fUseMonitoring = false;
+  config->fNaverage = 500;
+
+  config->SetMonitored(GeantConfig::kMonQueue, monitor);
+  config->SetMonitored(GeantConfig::kMonMemory, monitor);
+  config->SetMonitored(GeantConfig::kMonBasketsPerVol, monitor);
+  config->SetMonitored(GeantConfig::kMonVectors, monitor);
+  config->SetMonitored(GeantConfig::kMonConcurrency, monitor);
+  config->SetMonitored(GeantConfig::kMonTracksPerEvent, monitor);
+  // Threshold for prioritizing events (tunable [0, 1], normally <0.1)
+  // If set to 0 takes the default value of 0.01
+  config->fPriorityThr = fParameters[2]/100;
+
+  // Initial vector size, this is no longer an important model parameter,
+  // because is gets dynamically modified to accomodate the track flow
+  config->fNperBasket = fParameters[3]*32; // Initial vector size
+
+  // This is now the most important parameter for memory considerations
+  config->fMaxPerBasket = fParameters[4]*32;
+
+  // Maximum user memory limit [MB]
+  config->fMaxRes = 4000;
+  if (config) config->fMaxRes = 0;
+  config->fEmin = 0.001; // [1 MeV] energy cut
+  config->fEmax = 0.01;  // 10 MeV
+  if (debug) {
+    config->fUseDebug = true;
+    config->fDebugTrk = 1;
+    //propagator->fDebugEvt = 0;
+    //propagator->fDebugStp = 0;
+    //propagator->fDebugRep = 10;
+  }
+  config->fUseMonitoring = false;
+
+  // Set threshold for tracks to be reused in the same volume
+  config->fNminReuse = fParameters[5]*10000;
+
+  // Activate standard scoring   
+  config->fUseStdScoring = true;
+  if (performance) config->fUseStdScoring = false;
+  config->fLearnSteps = fParameters[6]*1000;
+  if (performance) config->fLearnSteps = 0;
+
+  // Activate I/O
+  config->fFillTree = false;
+  config->fTreeSizeWriteThreshold = 100000;
+  // Activate old version of single thread serialization/reading
+  //   config->fConcurrentWrite = false;
+
+  // Create run manager
+  GeantRunManager *runMgr = new GeantRunManager(1, n_threads, config);
+  if (broker) runMgr->SetCoprocessorBroker(broker);
+  // Create the tab. phys process.
+  runMgr->SetPhysicsProcess( new TTabPhysProcess("tab_phys", xsec, fstate));
+
+#ifdef USE_VECGEOM_NAVIGATOR
+#ifdef USE_ROOT
+//  runMgr->LoadVecGeomGeometry();
+#else
+//  runMgr->LoadGeometry(cms_geometry_filename.c_str());
+#endif
+#endif
+
+  if (hepmc_event_filename.empty()) {
+    runMgr->SetPrimaryGenerator( new GunGenerator(config->fNaverage, 11, config->fEmax, -8, 0, 0, 1, 0, 0) );
+  } else {
+    // propagator->fPrimaryGenerator->SetEtaRange(-2.,2.);
+    // propagator->fPrimaryGenerator->SetMomRange(0.,0.5);
+    // propagator->fPrimaryGenerator = new HepMCGenerator("pp14TeVminbias.hepmc3");
+    runMgr->SetPrimaryGenerator( new HepMCGenerator(hepmc_event_filename) );
+  }
+
+  CMSApplication *CMSApp = new CMSApplication(runMgr);
+  runMgr->SetUserApplication( CMSApp );
+  if (score) {
+    CMSApp->SetScoreType(CMSApplication::kScore);
+  } else {
+    CMSApp->SetScoreType(CMSApplication::kNoScore);
+  }
+#ifdef GEANT_TBB
+  if (tbbmode)
+    runMgr->SetTaskMgr( new TaskMgrTBB() );
+#endif
+
+  runMgr->RunSimulation();
     fFitness.push_back(timer.Elapsed());
-    fFitness.push_back(-(prop->fNprimaries.load()/timer.Elapsed()));
+    //fFitness.push_back(-(runMgr->fNprimaries.load()/timer.Elapsed()));
 #ifdef ENABLE_PERF
-    size_t peakSize = getPeakRSS();
+    ////size_t peakSize = getPeakRSS();
     //fFitness.push_back(perfcontrol.GetNICS());
     //fFitness.push_back(perfcontrol.GetNCS());
     //fFitness.push_back(perfcontrol.GetNC());
@@ -220,11 +229,11 @@ public:
     //fFitness.push_back(perfcontrol.GetNDC());
     //fFitness.push_back(perfcontrol.GetNIC());
     //fFitness.push_back(perfcontrol.GetNB());
-    fFitness.push_back(peakSize);
-    fFitness.push_back(cpumgr.GetCurrentValueCPU());
+    ////fFitness.push_back(peakSize);
+    //fFitness.push_back(cpumgr.GetCurrentValueCPU());
     perfcontrol.printSummary();
 #endif
-    delete prop;
+    //delete runMgr;
     std::cout << "Vector output for evaluation function: ";
     for (auto i : fFitness)
       std::cout << i << ' ';
@@ -234,14 +243,14 @@ public:
 
   static Input GetInput() {
     Input vector;
-    for (int i = 0; i < 6; ++i)
+    for (int i = 0; i < 7; ++i)
       vector.push_back(GADouble(3, 12));
     return vector;
   }
 #ifndef ENABLE_PERF
   static Output GetOutput() { return std::vector<double>(2); }
 #else
-  static Output GetOutput() { return std::vector<double>(4); }
+  static Output GetOutput() { return std::vector<double>(3); }
 #endif
 
   // ROOT Fitting to true Pareto front

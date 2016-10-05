@@ -5,19 +5,18 @@
 #include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
 #include "output/HistogramManager.h"
-#include "problem/CMSGeantV.h"
+#include "problem/RunGeantV.h"
 
 class Nsga2 : public GATest {
 public:
 };
 
-#ifdef ENABLE_GEANTVVV
-TEST_F(Nsga2, SolvingGeantVCMSProblem) {
-  geantvmoop::CMSGeantV runc;
-  geantvmoop::GANSGA2<geantvmoop::CMSGeantV> nsga(runc);
-  nsga.fPopulationSize = 100;
+#ifdef ENABLE_GEANTV
+TEST_F(Nsga2, SolvingGeantVProblem) {
+  geantvmoop::RunGeantV runc;
+  geantvmoop::GANSGA2<geantvmoop::RunGeantV> nsga(runc);
+  nsga.fPopulationSize = 50;
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
 #endif
-

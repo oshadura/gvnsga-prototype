@@ -379,7 +379,10 @@ public:
   typename F::Output GetObjective(int objective) const {
     typename F::Output v;
     for (unsigned int j = 0; j < this->size(); ++j)
-      v.push_back(GetObjectiveValue(j, objective));
+      if (GetObjectiveValue(j, objective) > 0)
+        v.push_back(GetObjectiveValue(j, objective));
+      else
+        v.push_back(0);
     return v;
   }
 

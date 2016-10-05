@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector> // std::vector
 
-#ifdef ENABLE_GEANTVVV
+#ifdef ENABLE_GEANTV
 
 #include "algorithms/GANSGA2.h"
 #include "generic/Functions.h"
