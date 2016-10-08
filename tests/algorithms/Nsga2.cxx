@@ -21,24 +21,23 @@ public:
 TEST_F(Nsga2, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2<geantvmoop::DTLZ1> nsga(dtlz1);
-  nsga.fPopulationSize = 100;
-  nsga.fMaxGeneration = 500;
+  nsga.fPopulationSize = 1000;
+  nsga.fMaxGeneration = 50;
   nsga.SolvePF();
 }
-*/
+
 
 TEST_F(Nsga2, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
   geantvmoop::GANSGA2<geantvmoop::DTLZ2> nsga(dtlz2);
-  nsga.fPopulationSize = 100;
+  nsga.fPopulationSize = 1000;
   nsga.fMaxGeneration = 500;
   nsga.SolvePF();
 }
-/*
 TEST_F(Nsga2, SolvingDTLZ3Problem) {
   geantvmoop::DTLZ3 dtlz3;
   geantvmoop::GANSGA2<geantvmoop::DTLZ3> nsga(dtlz3);
-  nsga.fPopulationSize = 100;
+  nsga.fPopulationSize = 1000;
   nsga.fMaxGeneration = 500;
   nsga.SolvePF();
 }
@@ -46,10 +45,11 @@ TEST_F(Nsga2, SolvingDTLZ3Problem) {
 TEST_F(Nsga2, SolvingDTLZ4Problem) {
   geantvmoop::DTLZ4 dtlz4;
   geantvmoop::GANSGA2<geantvmoop::DTLZ4> nsga(dtlz4);
-  nsga.fPopulationSize = 100;
+  nsga.fPopulationSize = 1000;
   nsga.fMaxGeneration = 500;
   nsga.SolvePF();
 }
+
 
 TEST_F(Nsga2, SolvingDTLZ5Problem) {
   geantvmoop::DTLZ5 dtlz5;
@@ -62,7 +62,7 @@ TEST_F(Nsga2, SolvingDTLZ5Problem) {
 TEST_F(Nsga2, SolvingDTLZ6Problem) {
   geantvmoop::DTLZ6 dtlz6;
   geantvmoop::GANSGA2<geantvmoop::DTLZ6> nsga(dtlz6);
-  nsga.fPopulationSize = 100;
+  nsga.fPopulationSize = 500;
   nsga.fMaxGeneration = 500;
   nsga.SolvePF();
 }

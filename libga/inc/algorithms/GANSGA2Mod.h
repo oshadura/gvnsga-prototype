@@ -99,7 +99,7 @@ public:
     }
     std::cout << "Moving to next generation " << fCurrentGeneration
               << std::endl;
-    CSVManager::GetInstance().CSVOutput("output.nsgalpca", population);
+    CSVManager::GetInstance().CSVOutput("output.nsgalpca", population, fIndRank, fIndCrowDist);
     ++fCurrentGeneration;
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "---------------------------\n" << std::endl;

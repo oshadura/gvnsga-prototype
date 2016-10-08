@@ -78,7 +78,7 @@ public:
       }
       reader.close();
       Xtrick = X;
-      X = X.rightCols(X.cols() - 2); // was 2
+      X = X.rightCols(X.cols() - 1); // was 2
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
     }

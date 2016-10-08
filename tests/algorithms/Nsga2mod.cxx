@@ -21,11 +21,10 @@ public:
 TEST_F(Nsga2Mod, SolvingDTLZ1Problem) {
   geantvmoop::DTLZ1 dtlz1;
   geantvmoop::GANSGA2Mod<geantvmoop::DTLZ1> nsga2mod(dtlz1);
-  nsga2mod.fPopulationSize = 100;
-  nsga2mod.fMaxGeneration = 100;
+  nsga2mod.fPopulationSize = 500;
+  nsga2mod.fMaxGeneration = 300;
   nsga2mod.SolvePF();
 }
-
 
 TEST_F(Nsga2Mod, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
