@@ -24,6 +24,7 @@
 #include "mva/RobustTrickPCA.h"
 #include "mva/UncenteredLPCA.h"
 #include "mva/UncenteredTrickLPCA.h"
+#include "mva/UncenteredTrickSVD.h"
 #include "mva/SVDRepresentation.h"
 
 namespace geantvmoop {
@@ -64,11 +65,19 @@ public:
       result = ulpca.MVA(population);
       return result;
     }
-    */
+
   template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {
     Population<F> result;
     UncenteredTrickLPCA ulpca;
+    result = ulpca.MVA(population);
+    return result;
+  }
+*/
+  template <typename F>
+  Population<F> NoiseReductionImpl(Population<F> &population) {
+    Population<F> result;
+    UncenteredTrickSVD ulpca;
     result = ulpca.MVA(population);
     return result;
   }
