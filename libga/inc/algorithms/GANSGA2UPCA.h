@@ -118,8 +118,8 @@ public:
     fIndCrowDist = GACD::CalculateIndicator(population);
     GAComparator<F> comp(&fIndRank, &fIndCrowDist);
     std::sort(population.begin(), population.end(), comp);
-    HistogramManager<F>::GetInstance().HistoFill(
-        population, "population_nsga2_upcas.root", fCurrentGeneration);
+    //HistogramManager<F>::GetInstance().HistoFill(
+    //    population, "population_nsga2_upcas.root", fCurrentGeneration);
     Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
@@ -133,8 +133,12 @@ public:
       fIndCrowDist = GACD::CalculateIndicator(population);
       GAComparator<F> comp(&fIndRank, &fIndCrowDist);
       std::sort(population.begin(), population.end(), comp);
+      HistogramManager<F>::GetInstance().HistoFill(
+        population, "population_nsga2_upcas.root", fCurrentGeneration);
     } else {
       population = next;
+      HistogramManager<F>::GetInstance().HistoFill(
+        next, "population_nsga2_upcas.root", fCurrentGeneration);
     }
     std::cout << "-----------------------------------------------\n"
               << std::endl;
