@@ -20,7 +20,7 @@ TEST_F(Nsga2, SolvingGeantVProblem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-#endif
+
 
 TEST_F(Nsga2, SolvingGeantVProblemUPCA) {
   geantvmoop::RunGeantV runc;
@@ -29,3 +29,5 @@ TEST_F(Nsga2, SolvingGeantVProblemUPCA) {
   nsgaupca.fMaxGeneration = 100;
   nsgaupca.SolvePF();
 }
+
+#endif
