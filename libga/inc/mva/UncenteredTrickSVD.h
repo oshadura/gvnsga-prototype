@@ -226,6 +226,7 @@ public:
       fEigenValues.push_back(
           std::make_pair(s(i), rvec.col(i)));
     }
+    
     // Sorting Eigen pairs [eigenvalue, eigenvector]
     std::sort(
         fEigenValues.begin(), fEigenValues.end(),
@@ -240,6 +241,7 @@ public:
       s(i) = fEigenValues[i].first;
       rvec.col(i) = fEigenValues[i].second;
     }
+    
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     //Transformed = X * eigenvectors;
@@ -252,15 +254,19 @@ public:
       totalvar = totalvar + (s(i) / s.sum());
       ++i;
     }
+    auto rveccut = rvec; 
+    rveccut.conservativeResize(rveccut.rows(), i);
+    MatrixXd scut = s.asDiagonal(); 
+    scut.conservativeResize(scut.rows(), i);
+    scut.conservativeResize(scut.cols(), i);
     //Print();
+    std::cout << "Right vectors matrix cutted: \n" << rveccut << std::endl;
+    std::cout << "Singular values: \n" << scut << std::endl;  
+    MatrixXd eig = s.asDiagonal(); 
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "REVERSE SVD: " << std::endl;
-    for(unsigned int j = 0; j < X.rows(); i++){
-     for(unsigned int i = 0; j < X.cols(); j++){ 
-       MatrixXd eig = s.asDiagonal();
-       Xtrick += std::sqrt(X.rows())*(std::sqrt(s(i))*rvec.col(i)*eig.row(i));
-       
-     }
+    while(i){ 
+      Xtrick += std::sqrt(X.rows())*std::sqrt(s(i))*lvec.col(i)*rvec.transpose().row(i); 
     }
     //eigenvectors.conservativeResize(eigenvectors.rows(), i);
     //Transformed.conservativeResize(Transformed.rows(), i);
