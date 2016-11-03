@@ -494,7 +494,8 @@ public:
     //          << NewDataMatrixTransposed << std::endl;
     // X = NewDataMatrixTransposed .array().abs();
     // std::cout << "Done." << std::endl;
-    X = YIt.array().abs() + X1new;
+    X = YIt.array().abs();
+    X = X + X1new;
     std::cout << "New matrix after all transformations:\n" << X << std::endl;
   }
 
