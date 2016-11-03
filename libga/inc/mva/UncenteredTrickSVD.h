@@ -396,7 +396,7 @@ public:
     // std::cout << "Singular values: \n" << scut << std::endl;
     MatrixXd eig = s.asDiagonal();
     std::cout << "---------------------------\n" << std::endl;
-    int f = 1;
+    int f = 2;
     MatrixXd Xnew, Y;
     Xnew.conservativeResize(Xnew.rows(), X.rows());
     Xnew.conservativeResize(Xnew.cols(), X.cols());
