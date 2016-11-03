@@ -3,14 +3,14 @@
 #ifndef __PROBLEMDTLZ1__
 #define __PROBLEMDTLZ1__
 
-#include "generic/TGenes.h"
-#include "generic/Population.h"
-#include "generic/Functions.h"
-#include "generic/GAVector.h"
-#include "generic/GADouble.h"
-#include "output/HistogramManager.h"
 #include "algorithms/GANSGA2.h"
+#include "generic/Functions.h"
+#include "generic/GADouble.h"
+#include "generic/GAVector.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
+#include "output/HistogramManager.h"
 #include <boost/math/constants/constants.hpp>
 
 #include <cmath>
@@ -40,17 +40,11 @@ public:
   public:
     */
 
-  void SetNGenes(const int i) {
-    fNGenes = i;
-  };
+  void SetNGenes(const int i) { fNGenes = i; };
 
-  void SetNObjectives(const int i) {
-    fNObjectives = i;
-  };
+  void SetNObjectives(const int i) { fNObjectives = i; };
 
-  int GetNGenes() const {
-    return fNGenes;
-  };
+  int GetNGenes() const { return fNGenes; };
 
   //  int GetNObjectives() const { return fNObjectives; };
 
@@ -74,7 +68,7 @@ public:
     int m = 3;
     int k = n - m + 1; // 5
     double g = k;
-    for (std::size_t w = n - k; w < n; w++)
+    for (std::size_t w = /*n - k*/ m; w <= n; w++)
       g += pow(fParameters[w] - 0.5, 2) -
            std::cos(20.0 * pi() * (fParameters[w] - 0.5));
     g *= 100;

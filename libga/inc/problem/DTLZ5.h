@@ -3,14 +3,14 @@
 #ifndef __PROBLEMDTLZ5__
 #define __PROBLEMDTLZ5__
 
-#include "generic/TGenes.h"
-#include "generic/Population.h"
-#include "generic/Functions.h"
-#include "generic/GAVector.h"
-#include "generic/GADouble.h"
-#include "output/HistogramManager.h"
 #include "algorithms/GANSGA2.h"
+#include "generic/Functions.h"
+#include "generic/GADouble.h"
+#include "generic/GAVector.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
+#include "output/HistogramManager.h"
 #include <boost/math/constants/constants.hpp>
 
 #include <cmath>
@@ -66,8 +66,8 @@ public:
       if (i > 1) {
         f *= std::sin(phi[m - i + 1] - 1);
       }
-      //auto it = fFitness.begin();
-      //fFitness.insert(it + i - 1, f);
+      // auto it = fFitness.begin();
+      // fFitness.insert(it + i - 1, f);
       fFitness.push_back(f);
     }
     std::cout << "Vector output for evaluation function: ";

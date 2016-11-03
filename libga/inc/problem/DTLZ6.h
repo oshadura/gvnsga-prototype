@@ -3,14 +3,14 @@
 #ifndef __PROBLEMDTLZ6__
 #define __PROBLEMDTLZ6__
 
-#include "generic/TGenes.h"
-#include "generic/Population.h"
-#include "generic/Functions.h"
-#include "generic/GAVector.h"
-#include "generic/GADouble.h"
-#include "output/HistogramManager.h"
 #include "algorithms/GANSGA2.h"
+#include "generic/Functions.h"
+#include "generic/GADouble.h"
+#include "generic/GAVector.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
+#include "output/HistogramManager.h"
 #include <boost/math/constants/constants.hpp>
 
 #include <cmath>

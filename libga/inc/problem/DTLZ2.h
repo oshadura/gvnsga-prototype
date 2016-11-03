@@ -3,14 +3,14 @@
 #ifndef __PROBLEMDTLZ2__
 #define __PROBLEMDTLZ2__
 
-#include "generic/TGenes.h"
-#include "generic/Population.h"
-#include "generic/Functions.h"
-#include "generic/GAVector.h"
-#include "generic/GADouble.h"
-#include "output/HistogramManager.h"
 #include "algorithms/GANSGA2.h"
+#include "generic/Functions.h"
+#include "generic/GADouble.h"
+#include "generic/GAVector.h"
+#include "generic/Population.h"
+#include "generic/TGenes.h"
 #include "instrumentation/GeantVFitness.h"
+#include "output/HistogramManager.h"
 #include <boost/math/constants/constants.hpp>
 
 #include "TMath.h"
@@ -57,7 +57,7 @@ public:
     int m = 3;
     int k = n - m + 1; // 10
     double g = 0.0;
-    for (std::size_t i = n - k; i < n; ++i) {
+    for (std::size_t i = /*n - k*/ m; i <= n; ++i) {
       g += std::pow(fParameters[i] - 0.5, 2);
     }
     for (int i = 0; i < m; ++i) {
