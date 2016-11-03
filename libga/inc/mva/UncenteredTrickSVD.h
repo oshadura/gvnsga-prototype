@@ -203,10 +203,10 @@ public:
     Xsimple.conservativeResize(Xsimple.rows(), X.rows());
     Xsimple.conservativeResize(Xsimple.cols(), X.cols());
     while (j != X.rows()) {
-      Xnew +=
+      Xsimple +=
           /*std::sqrt(X.rows())*/ s(j) * lvec.col(j) * rvec.transpose().row(j);
       j++;
-      std::cout << "Print matrix: \n" << Xnew << std::endl;
+      std::cout << "Print matrix: \n" << Xsimple << std::endl;
     }
     // Transformed = X * eigenvectors;
     // Checkout if we are right
@@ -406,7 +406,7 @@ public:
       Xnew =
           /*std::sqrt(X.rows())*/ s(f) * lvec.col(f) * rvec.transpose().row(f);
       Y += Xnew;
-      j++;
+      f++;
       std::cout << "Iteration:\n " << f << std::endl;
       std::cout << "Matrix:\n " << Xnew << std::endl;
     }
@@ -426,7 +426,7 @@ public:
         << std::endl
         << svdnew.matrixV() << std::endl;
     std::vector<std::pair<double, VectorXd>> fEigenValuesnew;
-    double c = 0.0;
+    double cnew = 0.0;
     for (unsigned int i = 0; i < rvecnew.cols(); i++) {
       if (normalise) {
         double norm = rvecnew.col(i).norm();
@@ -452,7 +452,7 @@ public:
     // variance based selection (< 95 %)
     while (totalvar <= 0.95) {
       snew(i) = fEigenValuesnew[i].first;
-      c += snew(i);
+      cnew += snew(i);
       // cumulative(i) = c;
       rvecnew.col(i) = fEigenValuesnew[i].second;
       totalvar = totalvar + (snew(i) / snew.sum());
