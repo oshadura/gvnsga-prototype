@@ -397,9 +397,11 @@ public:
     MatrixXd eig = s.asDiagonal();
     std::cout << "---------------------------\n" << std::endl;
     int f = 1;
-    MatrixXd Xnew, Y;
+    MatrixXd Xnew, X1new, Y;
     Xnew.conservativeResize(Xnew.rows(), X.rows());
     Xnew.conservativeResize(Xnew.cols(), X.cols());
+    X1new.conservativeResize(X1new.rows(), X.rows());
+    X1new.conservativeResize(X1new.cols(), X.cols());
     Y.conservativeResize(Y.rows(), X.rows());
     Y.conservativeResize(Y.cols(), X.cols());
     while (f != X.cols()) {
@@ -410,6 +412,7 @@ public:
       std::cout << "Iteration:\n " << f << std::endl;
       std::cout << "Matrix:\n " << Xnew << std::endl;
     }
+    X1new = s(0) * lvec.col(0) * rvec.transpose().row(0);
     std::cout << "REVERSE SVD: " << std::endl;
     JacobiSVD<MatrixXd> svdnew(Y, ComputeThinU | ComputeThinV);
     auto snew = svdnew.singularValues();
@@ -491,7 +494,7 @@ public:
     //          << NewDataMatrixTransposed << std::endl;
     // X = NewDataMatrixTransposed .array().abs();
     // std::cout << "Done." << std::endl;
-    X = YIt.array().abs();
+    X = YIt.array().abs() + X1new;
     std::cout << "New matrix after all transformations:\n" << X << std::endl;
   }
 
