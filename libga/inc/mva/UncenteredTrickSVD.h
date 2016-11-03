@@ -404,10 +404,10 @@ public:
     Y.conservativeResize(Y.cols(), X.cols());
     while (f != X.cols()) {
       Xnew =
-          /*std::sqrt(X.rows())*/ s(j) * lvec.col(j) * rvec.transpose().row(j);
+          /*std::sqrt(X.rows())*/ s(f) * lvec.col(f) * rvec.transpose().row(f);
       Y += Xnew;
       j++;
-      std::cout << "Iteration:\n " << j << std::endl;
+      std::cout << "Iteration:\n " << f << std::endl;
       std::cout << "Matrix:\n " << Xnew << std::endl;
     }
     std::cout << "REVERSE SVD: " << std::endl;
