@@ -188,7 +188,7 @@ public:
         std::cout << "Parent read next value: " << fitness << std::endl;
       }
       output = tmpoutput;
-      std::cout << "Waiting for PID of fucking evaluation: " << fArray[0]
+      std::cout << "Waiting for PID of evaluation: " << fArray[0]
                 << " to finish.." << std::endl;
 
       /*int status = 0;

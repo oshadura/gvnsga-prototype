@@ -68,17 +68,20 @@ public:
         while (std::getline(tmp, token, sep)) {
           if (X.rows() < row + 1) {
             X.conservativeResize(row + 1, X.cols());
+            Xtrick.conservativeResize(row + 1, Xtrick.cols());
           }
           if (X.cols() < col + 1) {
             X.conservativeResize(X.rows(), col + 1);
+            Xtrick.conservativeResize(X.rows(), col + 1);
           }
           X(row, col) = std::atof(token.c_str());
+          Xtrick(row, col) = std::atof(token.c_str());
           col++;
         }
         row++;
       }
       reader.close();
-      Xtrick = X;
+      //Xtrick = X;
       X = X.rightCols(X.cols()); // was 2
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
@@ -105,23 +108,23 @@ public:
         X(i, j) = gene.GetGAValue();
       }
     }
-    Xtrick = X;
+    //Xtrick = X;
     X = X.rightCols(X.cols()); // was 2
     std::string sep = "\n----------------------------------------\n";
-    MatrixXd Y = Xtrick;
-    JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
-    std::cout << "Its singular values are:" << std::endl << svd.singularValues() << std::endl;
-    std::cout << "Its left singular vectors are the columns of the thin U matrix:"
-         << std::endl << svd.matrixU() << std::endl;
-    std::cout << "Its right singular vectors are the columns of the thin V matrix:"
-         << std::endl << svd.matrixV() << std::endl;
+    //MatrixXd Y = Xtrick;
+    //JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
+    //std::cout << "Its singular values are:" << std::endl << svd.singularValues() << std::endl;
+    //std::cout << "Its left singular vectors are the columns of the thin U matrix:"
+    //     << std::endl << svd.matrixU() << std::endl;
+    //std::cout << "Its right singular vectors are the columns of the thin V matrix:"
+    //     << std::endl << svd.matrixV() << std::endl;
   }
 
   template <typename F>
   void UnloadPopulation(Population<F> &newpop, MatrixXd &data) {
     typename F::Input ind;
     MatrixXd population;
-    population.conservativeResize(Xtrick.rows(), Xtrick.cols());
+    population.conservativeResize(X.rows(), X.cols());
     std::cout << data << "\n";
     //std::cout << Xtrick.leftCols(2) << "\n"; // was 2
     //population << Xtrick.leftCols(2), data; // was 2
@@ -143,8 +146,8 @@ public:
     newpop = Population<F>(poplist);
   }
 
-  void RunUncenteredTrickSVD() {
-    JacobiSVD<MatrixXd> svd(X, ComputeFullU | ComputeFullV);
+  void RunUncenteredSVD() {
+    JacobiSVD<MatrixXd> svd(X, ComputeThinU | ComputeThinV);
     auto s = svd.singularValues();
     std::cout << "Its singular values are:" << std::endl << svd.singularValues() << std::endl;
     auto lvec = svd.matrixU();
@@ -187,13 +190,22 @@ public:
       cumulative(i) = c;
       eigenvectors.col(i) = fEigenValues[i].second;
     }
-    Transformed = X * eigenvectors;
+    int j = 0;
+    MatrixXd Xnew;
+    while(j != X.rows()){
+      Xnew += /*std::sqrt(X.rows())*/s(j)*lvec.col(j)*rvec.transpose().row(j);
+      j++;
+      std::cout << "Print matrix: \n" << Xnew << std::endl; 
+    } 
+    //Transformed = X * eigenvectors;
     // Checkout if we are right
-    MatrixXd NewDataMatrix, NewDataMatrixTransposed;
-    NewDataMatrix = eigenvectors * Transformed.transpose();
-    NewDataMatrixTransposed = NewDataMatrix.transpose();
-    std::cout << "Check::Transformed back data matrix:\n"
-              << NewDataMatrixTransposed << std::endl;  
+    //MatrixXd NewDataMatrix, NewDataMatrixTransposed;
+    //NewDataMatrix = eigenvectors * Transformed.transpose();
+    //NewDataMatrixTransposed = NewDataMatrix.transpose();
+    //std::cout << "Check::Transformed back data matrix:\n"
+    //          << NewDataMatrixTransposed << std::endl;
+    X = Xnew;
+    std::cout << "Print final matrix\n" << X << std::endl;  
 }
 
   void RunUncenteredTrickSVDWithReductionOfComponents() {
@@ -222,6 +234,7 @@ public:
       if (normalise) {
         double norm = rvec.col(i).norm();
         rvec.col(i) /= norm;
+      std::cout << "Vectors are normalised." << std::endl;
       }
       fEigenValues.push_back(
           std::make_pair(s(i), rvec.col(i)));
@@ -240,8 +253,7 @@ public:
     for (unsigned int i = 0; i < rvec.cols(); i++) {
       s(i) = fEigenValues[i].first;
       rvec.col(i) = fEigenValues[i].second;
-    }
-    
+    } 
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     //Transformed = X * eigenvectors;
@@ -254,19 +266,29 @@ public:
       totalvar = totalvar + (s(i) / s.sum());
       ++i;
     }
-    auto rveccut = rvec; 
-    rveccut.conservativeResize(rveccut.rows(), i);
-    MatrixXd scut = s.asDiagonal(); 
-    scut.conservativeResize(scut.rows(), i);
-    scut.conservativeResize(scut.cols(), i);
+    //auto rveccut = rvec; 
+    //rveccut.conservativeResize(rveccut.rows(), i);
+    //MatrixXd scut = s.asDiagonal(); 
+    //scut.conservativeResize(scut.rows(), i);
+    //scut.conservativeResize(scut.cols(), i);
     //Print();
-    std::cout << "Right vectors matrix cutted: \n" << rveccut << std::endl;
-    std::cout << "Singular values: \n" << scut << std::endl;  
+    //std::cout << "Right vectors matrix cutted: \n" << rveccut << std::endl;
+    //std::cout << "Singular values: \n" << scut << std::endl;  
     MatrixXd eig = s.asDiagonal(); 
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "REVERSE SVD: " << std::endl;
-    while(i){ 
-      Xtrick += std::sqrt(X.rows())*std::sqrt(s(i))*lvec.col(i)*rvec.transpose().row(i); 
+    int j = 0;
+    MatrixXd Xnew, Y;
+    Xnew.conservativeResize(Xnew.rows(), X.rows());
+    Xnew.conservativeResize(Xnew.cols(), X.cols());
+    Y.conservativeResize(Y.rows(), X.rows());
+    Y.conservativeResize(Y.cols(), X.cols());
+    while(j != i){ 
+      Xnew = /*std::sqrt(X.rows())*/s(j)*lvec.col(j)*rvec.transpose().row(j);
+      Y += Xnew;
+      j++;
+      std::cout << "Iteration:\n " << j << std::endl;
+      std::cout << "Matrix:\n " << Xnew << std::endl;
     }
     //eigenvectors.conservativeResize(eigenvectors.rows(), i);
     //Transformed.conservativeResize(Transformed.rows(), i);
@@ -283,7 +305,8 @@ public:
     //          << NewDataMatrixTransposed << std::endl;
     //X = NewDataMatrixTransposed .array().abs();
     //std::cout << "Done." << std::endl;
-    X = Xtrick;
+    X = Y.array().abs();
+   std::cout << "New matrix:\n" << X << std::endl;
   }
   
 /*

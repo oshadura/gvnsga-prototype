@@ -8,6 +8,7 @@
 #include "mva/UncenteredLPCA.h"
 #include "mva/UncenteredTrickLPCA.h"
 #include "mva/UncenteredWhiteLPCA.h"
+#include "mva/UncenteredTrickSVD.h"
 #include "output/CSVManager.h"
 #include "problem/DTLZ1.h"
 #include "gtest/gtest.h"
@@ -24,6 +25,7 @@ public:
   geantvmoop::UncenteredLPCA ulpca;
   geantvmoop::UncenteredWhiteLPCA uwlpca;
   geantvmoop::UncenteredTrickLPCA twlpca;
+  geantvmoop::UncenteredTrickSVD svdpca;
   // Pointless allocation during tests
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
@@ -116,20 +118,26 @@ TEST_F(AllPCA, RunLPCAWhiteReductionofComponentsNoScale) {
   lpcawhite.RunLPCAWhiteWithReductionOfComponentsNoScale();
   lpcawhite.WriteTransformed("outputlpcawtransformnoscale");
 }
-
+TEST_F(AllPCA, RunUncenteredSVD) {
+  svdpca.LoadData("datatest");
+  //svdpca.RunUncenteredSVD();
+  svdpca.RunUncenteredTrickSVDWithReductionOfComponents();
+  //svdpca.WriteTransformed("outputsvdpca");
+}
 TEST_F(AllPCA, RunUncenteredLPCA) {
-  ulpca.LoadData("data");
+  ulpca.LoadData("datatest");
   ulpca.RunUncenteredLPCA();
   ulpca.Print();
   ulpca.WriteTransformed("outputulpca");
 }
-*/
+
 TEST_F(AllPCA, RunUncenteredLPCAReductionofComponents) {
   ulpca.LoadData("data");
   ulpca.RunUncenteredLPCAWithReductionOfComponents();
   ulpca.WriteTransformed("outputulpcatransform");
 }
-/*
+
+
 TEST_F(AllPCA, RunUncenteredLPCAScale) {
   ulpca.LoadData("data");
   ulpca.RunUncenteredLPCAWithReductionOfComponentsScale();
