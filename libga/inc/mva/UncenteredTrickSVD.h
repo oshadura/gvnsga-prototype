@@ -51,7 +51,7 @@ public:
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {
     Population<F> result;
     UploadPopulation(pop);
-    RunUncenteredTrickSVDWithReductionOfComponents();
+    RunUncenteredTrickSVDWithReductionOfComponentsIteration();
     UnloadPopulation(result, X);
     return result;
   }
