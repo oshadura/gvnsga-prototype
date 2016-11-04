@@ -50,8 +50,8 @@ public:
     int k = n - m + 1; // 5
     double g = k;
     for (std::size_t i = /*n - k*/ m; i <= n; i++)
-      g += pow(fParameters[i] - 0.5, 2) -
-           std::cos(20.0 * pi() * (fParameters[i] - 0.5));
+      g += (k + pow(fParameters[i] - 0.5, 2) -
+            std::cos(20.0 * pi() * (fParameters[i] - 0.5)));
     g *= 100;
     for (std::size_t i = 0; i < m; i++) {
       double f = 1.0 + g;
