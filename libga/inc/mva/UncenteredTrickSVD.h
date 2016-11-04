@@ -51,7 +51,7 @@ public:
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {
     Population<F> result;
     UploadPopulation(pop);
-    RunUncenteredTrickSVDWithReductionOfComponentsIteration();
+    RunUncenteredTrickSVDWithReductionOfComponents();
     UnloadPopulation(result, X);
     return result;
   }
@@ -273,7 +273,7 @@ public:
     std::cout << "Printing original information after PCA" << std::endl;
     // Transformed = X * eigenvectors;
     // Varince based selection (< 95 %)
-    while (totalvar <= 0.95) {
+    while (totalvar <= 0.85) {
       s(i) = fEigenValues[i].first;
       c += s(i);
       // cumulative(i) = c;
@@ -398,12 +398,12 @@ public:
     std::cout << "---------------------------\n" << std::endl;
     int f = 1;
     MatrixXd Xnew, X1new, Y;
-    Xnew.conservativeResize(Xnew.rows(), X.rows());
-    Xnew.conservativeResize(Xnew.cols(), X.cols());
-    X1new.conservativeResize(X1new.rows(), X.rows());
-    X1new.conservativeResize(X1new.cols(), X.cols());
-    Y.conservativeResize(Y.rows(), X.rows());
-    Y.conservativeResize(Y.cols(), X.cols());
+    Xnew.conservativeResize(X.rows(), X.rows());
+    //Xnew.conservativeResize(Xnew.cols(), X.cols());
+    X1new.conservativeResize(X.rows(), X.rows());
+    //X1new.conservativeResize(X1new.cols(), X.cols());
+    Y.conservativeResize(X.rows(), X.rows());
+    //Y.conservativeResize(Y.cols(), X.cols());
     while (f != X.cols()) {
       Xnew =
           /*std::sqrt(X.rows())*/ s(f) * lvec.col(f) * rvec.transpose().row(f);

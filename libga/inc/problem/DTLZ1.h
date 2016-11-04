@@ -69,8 +69,8 @@ public:
     int k = n - m + 1; // 5
     double g = k;
     for (std::size_t w = /*n - k*/ m; w <= n; w++)
-      g += pow(fParameters[w] - 0.5, 2) -
-           std::cos(20.0 * pi() * (fParameters[w] - 0.5));
+      g += (k + pow(fParameters[w] - 0.5, 2) -
+           std::cos(20.0 * pi() * (fParameters[w] - 0.5)));
     g *= 100;
     for (std::size_t i = 0; i < m; i++) {
       double f = 0.5 * (1.0 + g);

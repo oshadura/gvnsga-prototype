@@ -70,6 +70,7 @@ TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
   nsga.fMaxGeneration = 200;
   nsga.SolvePF();
 }
+*/
 TEST_F(Nsga2upca, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ2> nsga(dtlz2);
@@ -77,7 +78,7 @@ TEST_F(Nsga2upca, SolvingDTLZ2Problem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-*/
+/*
 TEST_F(Nsga2upca, SolvingDTLZ3Problem) {
   //feenableexcept(FE_INVALID | FE_OVERFLOW);
   geantvmoop::DTLZ3 dtlz3;
@@ -86,7 +87,7 @@ TEST_F(Nsga2upca, SolvingDTLZ3Problem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-/*
+
 TEST_F(Nsga2upca, SolvingDTLZ4Problem) {
   geantvmoop::DTLZ4 dtlz4;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ4> nsga(dtlz4);
