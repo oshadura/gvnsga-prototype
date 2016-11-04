@@ -57,7 +57,7 @@ public:
           xy = 1.0 - fDelta1;
           fValue =
               2.0 * fRnd + (1.0 - 2.0 * fRnd) * (pow(xy, (etamutation + 1.0)));
-          fDelta = pow(fValue, fMutPow) - 1.0;
+          fDelta = pow(std::abs(fValue), fMutPow) - 1.0;
         } else {
           xy = 1.0 - fDelta2;
           fValue = 2.0 * (1.0 - fRnd) +

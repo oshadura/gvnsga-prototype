@@ -58,8 +58,8 @@ public:
     } else {
       bl = bu;
     }
-    double p_bl = 1 - 1 / (2 * std::pow(bl, distributionIndex + 1));
-    double p_bu = 1 - 1 / (2 * std::pow(bu, distributionIndex + 1));
+    double p_bl = 1 - 1 / (2 * std::pow(std::abs(bl), distributionIndex + 1));
+    double p_bu = 1 - 1 / (2 * std::pow(std::abs(bu), distributionIndex + 1));
     double u = Random::GetInstance().RandomDouble();
     // prevent out-of-bounds values if PRNG draws the value 1.0
     if (u == 1.0) {
