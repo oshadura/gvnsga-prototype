@@ -39,6 +39,8 @@ public:
     double x0 = a.GetGAValue();
     double x1 = b.GetGAValue();
     double dx = fabs(x1 - x0);
+    if(std::isnan(dx))
+      dx = 0.000001;
     double lb = a.GetDownLimit();
     double ub = b.GetUpLimit();
     double bl;
@@ -68,12 +70,13 @@ public:
     double b0;
     double b1;
     if (u0 <= 0.5) {
-      b0 = std::pow(2 * u0, 1 / (distributionIndex + 1));
+      
+      b0 = std::pow(2 * std::abs(u0), 1 / (distributionIndex + 1));
     } else {
       b0 = std::pow(0.5 / (1 - u0), 1 / (distributionIndex + 1));
     }
     if (u1 <= 0.5) {
-      b1 = std::pow(2 * u1, 1 / (distributionIndex + 1));
+      b1 = std::pow(2 * std::abs(u1), 1 / (distributionIndex + 1));
     } else {
       b1 = std::pow(0.5 / (1 - u1), 1 / (distributionIndex + 1));
     }

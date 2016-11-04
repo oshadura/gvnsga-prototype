@@ -18,11 +18,15 @@
 
 #include "PCA.h"
 
+#include <fenv.h>
+
 // Uncentered version!
 
 namespace geantvmoop {
 
 using namespace Eigen;
+
+//feenableexcept(FE_INVALID | FE_OVERFLOW);
 
 class UncenteredTrickLPCA : public PCA<UncenteredTrickLPCA> {
 

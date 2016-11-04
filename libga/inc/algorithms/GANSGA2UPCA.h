@@ -125,7 +125,7 @@ public:
       next.push_back(population[l]);
     std::cout << "--------------TRANFORMATION IS GOING-------------\n"
               << std::endl;
-    if (fCurrentGeneration > 5 /*&& fCurrentGeneration % 5 == 0*/) {
+    if (fCurrentGeneration > 7 /*&& fCurrentGeneration % 5 == 0*/) {
       PCAinvPCA cleanupoperator;
       population = cleanupoperator.NR(next);
       // Modification to avoid 0 equal ranks and crowding distance

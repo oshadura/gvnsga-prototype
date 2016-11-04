@@ -245,7 +245,11 @@ public:
         }
         myhistx->GetXaxis()->SetTitle(x1str);
         myhistx->GetYaxis()->SetTitle(x2str);
-        myhistx->Fill(x1, x2);
+        if(std::isnan(x1) || std::isnan(x2)){
+          std::cout << "Skiping HistoFill"<< std::endl;  
+        }else{
+          myhistx->Fill(x1, x2);
+        } 
         ///////////////////////////////
         // Previous generation
         /*
@@ -320,10 +324,10 @@ public:
       auto X2 = pop.GetGeneValue(i, 1);
       auto X3 = pop.GetGeneValue(i, 2);
       h3x->Fill(X1, X2, X3);
-      predictor[i] =
-          F::TruePF(genearray, parameterspredictor) + random.Gaus(0, error);
+      //predictor[i] =
+      //    F::TruePF(genearray, parameterspredictor) + random.Gaus(0, error);
       // add the 3d-data coordinate, the predictor value  and its errors
-      data.Add(function, predictor[i], error);
+      //data.Add(function, predictor[i], error);
     }
     PopDist->Draw();
     PopDist->Write();
@@ -335,7 +339,7 @@ public:
     PopFitnessDist->Write();
     ////////////////////
     h3a->Draw("surf3");
-    h3a->Fit(FitLand);
+    //h3a->Fit(FitLand);
     /*
     TVirtualFitter *fit = TVirtualFitter::GetFitter();
     fit->PrintResults(2, 0.);
