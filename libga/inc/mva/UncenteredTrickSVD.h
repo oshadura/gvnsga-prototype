@@ -51,7 +51,8 @@ public:
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {
     Population<F> result;
     UploadPopulation(pop);
-    RunUncenteredTrickSVDWithReductionOfComponents();
+    //RunUncenteredTrickSVDWithReductionOfComponents();
+    RunUncenteredTrickSVD_95Eigen();
     UnloadPopulation(result, X);
     return result;
   }
@@ -341,7 +342,7 @@ public:
         << "Its right singular vectors are the columns of the thin V matrix:"
         << std::endl
         << svd.matrixV() << std::endl;
-    double totalvar = 0;
+    double totalvar, totalvarY, totalvarYnew = 0;
     int i = 0;
     std::vector<std::pair<double, VectorXd>> fEigenValues;
     double c = 0.0;
@@ -370,7 +371,7 @@ public:
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     // variance based selection (< 95 %)
-    while (totalvar <= 0.85) {
+    while (totalvar <= 0.95) {
       s(i) = fEigenValues[i].first;
       c += s(i);
       // cumulative(i) = c;
@@ -382,38 +383,171 @@ public:
     std::cout << "---------------------------\n" << std::endl;
     std::cout << "REVERSE SVD: " << std::endl;
     int j = 0;
-    MatrixXd Y, rvecreduc, red, ZeroMatrix;
-    // Xnew.conservativeResize(X.rows(), X.cols());
-    Y.conservativeResize(Y.rows(), X.rows());
-    Y.conservativeResize(Y.cols(), X.cols());
-    rvecreduc.conservativeResize(rvecreduc.rows(), rvec.rows());
-    rvecreduc.conservativeResize(rvecreduc.cols(), rvec.cols());
+    MatrixXd Y, Ynew, Vecnew, rvecreduc, rvecreducSmall, red, redSmall, ZeroMatrixSmall, ZeroMatrixBig;
+    // New matrix
+    Y.conservativeResize(X.rows(), X.cols());
+    Ynew.conservativeResize(X.rows(), X.cols());
+    // Cutted matrix
+    Vecnew.conservativeResize(rvec.rows(), rvec.cols() - i);
+    Vecnew = rvec.rightCols(rvec.cols() - i); 
+    // Reduction matrixes
+    rvecreduc.conservativeResize(rvec.rows(), rvec.cols());
+    rvecreducSmall.conservativeResize(rvec.rows(), rvec.cols());
     red = rvec;
-    red.conservativeResize(red.rows(), rvec.rows());
-    red.conservativeResize(red.cols(), i);
-    ZeroMatrix.conservativeResize(ZeroMatrix.rows(), rvec.cols() - i);
-    ZeroMatrix.conservativeResize(ZeroMatrix.cols(), rvec.rows());
-    ZeroMatrix.fill(0);
-    rvecreduc << red, ZeroMatrix;
-    // eigenvectors.conservativeResize(eigenvectors.rows(), i);
-    // Transformed.conservativeResize(Transformed.rows(), i);
-    // TransformedCentered.conservativeResize(Transformed.rows(), i);
-    // std::cout << "Reduced eigenvectors:\n" << eigenvectors << std::endl;
-    // std::cout << "Reduced tranformed matrix \n" << Transformed << std::endl;
-    // std::cout << "Total number of components to be used in transformed
-    // matrix: "
-    //          << i << std::endl;
-    ////Transformed matrix
-    // MatrixXd NewDataMatrix, NewDataMatrixTransposed;
-    // NewDataMatrix = eigenvectors * Transformed.transpose();
-    // NewDataMatrixTransposed = NewDataMatrix.transpose();
-    // std::cout << "Transformed data matrix:\n"
-    //          << NewDataMatrixTransposed << std::endl;
-    // X = NewDataMatrixTransposed .array().abs();
-    // std::cout << "Done." << std::endl;
+    red.conservativeResize(red.rows(), i);
+    // Reduction matrixes
+    redSmall = rvec;
+    redSmall = rvec.rightCols(rvec.cols() - i);
+    // Zero matrixies 
+    ZeroMatrixSmall.conservativeResize(rvec.rows(), rvec.cols() - i);
+    ZeroMatrixSmall.fill(0);
+    ZeroMatrixBig.conservativeResize(rvec.rows(), i);
+    ZeroMatrixBig.fill(0);
+    rvecreduc << red, ZeroMatrixSmall;
+    rvecreducSmall << ZeroMatrixBig, Vecnew;
+    std::cout << "Printing main matrix..." << std::endl;
     Y = X * rvecreduc * rvecreduc.transpose();
     // X = Y.array().abs();
-    X = Y;
+    ////////////////////////////////////////////////////
+
+    std::cout << "REVERSE SVD: " << std::endl;
+    JacobiSVD<MatrixXd> svdY(Y, ComputeThinU | ComputeThinV);
+    auto snewY = svdY.singularValues();
+    std::cout << "Its singular values are:" << std::endl
+              << svdY.singularValues() << std::endl;
+    auto lvecnewY = svdY.matrixU();
+    std::cout
+        << "Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdY.matrixU() << std::endl;
+    auto rvecnewY = svdY.matrixV();
+    std::cout
+        << "Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdY.matrixV() << std::endl;
+    std::vector<std::pair<double, VectorXd>> fEigenValuesnewY;
+    double cnewY = 0.0;
+    int iy;
+    for (int iy = 0; iy < rvecnewY.cols(); iy++) {
+      if (normalise) {
+        double norm = rvecnewY.col(iy).norm();
+        rvecnewY.col(iy) /= norm;
+        std::cout << "Vectors are normalised." << std::endl;
+      }
+      fEigenValuesnewY.push_back(std::make_pair(snewY(iy), rvecnewY.col(iy)));
+    }
+    // Sorting Eigen pairs [eigenvalue, eigenvector]
+    std::sort(
+        fEigenValuesnewY.begin(), fEigenValuesnewY.end(),
+        [](std::pair<double, VectorXd> &a, std::pair<double, VectorXd> &b) {
+          if (a.first > b.first)
+            return true;
+          if (a.first == b.first)
+            return a.first > b.first;
+          return false;
+        });
+    for (int iy = 0; iy < rvecnewY.cols(); iy++) {
+      snewY(iy) = fEigenValuesnewY[iy].first;
+      rvecnewY.col(iy) = fEigenValuesnewY[iy].second;
+    }
+    // variance based selection (< 95 %)
+    while (totalvarY <= 0.95) {
+      snewY(iy) = fEigenValuesnewY[iy].first;
+      cnewY += snewY(iy);
+      // cumulative(iy) = c;
+      rvecnewY.col(iy) = fEigenValuesnewY[iy].second;
+      totalvarY = totalvarY + (snewY(iy) / snewY.sum());
+      ++iy;
+    }
+    MatrixXd eignewY = snewY.asDiagonal();
+    std::cout << "---------------------------\n" << std::endl;
+    int jY = 0;
+    MatrixXd XnewItY, YItY;
+    XnewItY.conservativeResize(XnewItY.rows(), X.rows());
+    XnewItY.conservativeResize(XnewItY.cols(), X.cols());
+    YItY.conservativeResize(YItY.rows(), X.rows());
+    YItY.conservativeResize(YItY.cols(), X.cols());
+    while (jY != iy) {
+      XnewItY =
+          /*std::sqrt(X.rows())*/ snewY(jY) * lvecnewY.col(jY) *
+          rvecnewY.transpose().row(jY);
+      YItY += XnewItY;
+      jY++;
+      std::cout << "Iteration:\n " << jY << std::endl;
+      std::cout << "Matrix:\n " << XnewItY << std::endl;
+    }
+    ////////////////////////////////////////////////////
+    std::cout << "Printing side matrix..." << std::endl;
+    Ynew = X * rvecreducSmall*rvecreducSmall.transpose();
+    ////////////////////////////////////////////////////
+    std::cout << "REVERSE SVD Ynew: " << std::endl;
+    JacobiSVD<MatrixXd> svdYnew(Ynew, ComputeThinU | ComputeThinV);
+    auto snewYnew = svdYnew.singularValues();
+    std::cout << "Its singular values are:" << std::endl
+              << svdYnew.singularValues() << std::endl;
+    auto lvecnewYnew = svdYnew.matrixU();
+    std::cout
+        << "Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdYnew.matrixU() << std::endl;
+    auto rvecnewYnew = svdYnew.matrixV();
+    std::cout
+        << "Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdYnew.matrixV() << std::endl;
+    std::vector<std::pair<double, VectorXd>> fEigenValuesnewYnew;
+    double cnewYnew = 0.0;
+    int it;
+    for (int it = 0; it < rvecnewYnew.cols(); it++) {
+      if (normalise) {
+        double normYnew = rvecnewYnew.col(it).norm();
+        rvecnewYnew.col(it) /= normYnew;
+        std::cout << "Vectors are normalised." << std::endl;
+      }
+      fEigenValuesnewYnew.push_back(std::make_pair(snewYnew(i), rvecnewYnew.col(i)));
+    }
+    // Sorting Eigen pairs [eigenvalue, eigenvector]
+    std::sort(
+        fEigenValuesnewYnew.begin(), fEigenValuesnewYnew.end(),
+        [](std::pair<double, VectorXd> &a, std::pair<double, VectorXd> &b) {
+          if (a.first > b.first)
+            return true;
+          if (a.first == b.first)
+            return a.first > b.first;
+          return false;
+        });
+    for (unsigned int it = 0; it < rvecnewYnew.cols(); it++) {
+      snewYnew(it) = fEigenValuesnewYnew[it].first;
+      rvecnewYnew.col(it) = fEigenValuesnewYnew[it].second;
+    }
+    // variance based selection (< 95 %)
+    while (totalvarYnew <= 0.95) {
+      snewYnew(it) = fEigenValuesnewYnew[it].first;
+      cnewYnew += snewYnew(it);
+      // cumulative(i) = c;
+      rvecnewYnew.col(it) = fEigenValuesnewYnew[it].second;
+      totalvarYnew = totalvarYnew + (snewYnew(it) / snewYnew.sum());
+      ++it;
+    }
+    MatrixXd eignewYnew = snewYnew.asDiagonal();
+    std::cout << "---------------------------\n" << std::endl;
+    int jynew = 0;
+    MatrixXd XnewItYnew, YItYnew;
+    XnewItYnew.conservativeResize(XnewItYnew.rows(), X.rows());
+    XnewItYnew.conservativeResize(XnewItYnew.cols(), X.cols());
+    YItYnew.conservativeResize(YItYnew.rows(), X.rows());
+    YItYnew.conservativeResize(YItYnew.cols(), X.cols());
+    while (jynew != it) {
+      XnewItYnew =
+          /*std::sqrt(X.rows())*/ snewYnew(jynew) * lvecnewYnew.col(jynew) *
+          rvecnewYnew.transpose().row(jynew);
+      YItYnew += XnewItYnew;
+      jynew++;
+      std::cout << "Iteration:\n " << jynew << std::endl;
+      std::cout << "Matrix:\n " << XnewItYnew << std::endl;
+    }
+    // Colecting matrix together
+    X = Y + Ynew;
     std::cout << "New matrix:\n" << X << std::endl;
   }
 
