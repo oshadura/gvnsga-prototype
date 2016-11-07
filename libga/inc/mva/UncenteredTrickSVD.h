@@ -391,9 +391,9 @@ public:
     red = rvec;
     red.conservativeResize(red.rows(), rvec.rows());
     red.conservativeResize(red.cols(), i);
-    ZeroMatrix.conservativeResize(Zero.rows(), rvec.cols() - i);
-    ZeroMatrix.conservativeResize(Zero.cols(), rvec.rows());
-    ZeroMatrix::Zero();
+    ZeroMatrix.conservativeResize(ZeroMatrix.rows(), rvec.cols() - i);
+    ZeroMatrix.conservativeResize(ZeroMatrix.cols(), rvec.rows());
+    ZeroMatrix.fill(0);
     rvecreduc << red, ZeroMatrix;
     // eigenvectors.conservativeResize(eigenvectors.rows(), i);
     // Transformed.conservativeResize(Transformed.rows(), i);
