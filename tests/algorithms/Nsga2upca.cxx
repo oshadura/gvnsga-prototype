@@ -57,20 +57,19 @@ TEST_F(Nsga2upca, SolvingShwefelProblem) {
 TEST_F(Nsga2upca, SolvingDTLZ7Problem) {
   geantvmoop::UFC9 dtlz7;
   geantvmoop::GANSGA2UPCA<geantvmoop::UFC9> nsga(dtlz7);
+  nsga.fPopulationSize = 1000;
+  nsga.fMaxGeneration = 100;
+  nsga.SolvePF();
+}
+
+TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
+  geantvmoop::DTLZ1 dtlz1;
+  geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ1> nsga(dtlz1);
   nsga.fPopulationSize = 200;
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
 
-
-TEST_F(Nsga2upca, SolvingDTLZ1Problem) {
-  geantvmoop::DTLZ1 dtlz1;
-  geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ1> nsga(dtlz1);
-  nsga.fPopulationSize = 100;
-  nsga.fMaxGeneration = 200;
-  nsga.SolvePF();
-}
-*/
 TEST_F(Nsga2upca, SolvingDTLZ2Problem) {
   geantvmoop::DTLZ2 dtlz2;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ2> nsga(dtlz2);
@@ -78,7 +77,7 @@ TEST_F(Nsga2upca, SolvingDTLZ2Problem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-/*
+
 TEST_F(Nsga2upca, SolvingDTLZ3Problem) {
   //feenableexcept(FE_INVALID | FE_OVERFLOW);
   geantvmoop::DTLZ3 dtlz3;
@@ -87,7 +86,7 @@ TEST_F(Nsga2upca, SolvingDTLZ3Problem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-
+*/
 TEST_F(Nsga2upca, SolvingDTLZ4Problem) {
   geantvmoop::DTLZ4 dtlz4;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ4> nsga(dtlz4);
@@ -95,7 +94,7 @@ TEST_F(Nsga2upca, SolvingDTLZ4Problem) {
   nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-
+/*
 TEST_F(Nsga2upca, SolvingDTLZ5Problem) {
   geantvmoop::DTLZ5 dtlz5;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ5> nsga(dtlz5);

@@ -245,11 +245,11 @@ public:
         }
         myhistx->GetXaxis()->SetTitle(x1str);
         myhistx->GetYaxis()->SetTitle(x2str);
-        if(std::isnan(x1) || std::isnan(x2)){
-          std::cout << "Skiping HistoFill"<< std::endl;  
-        }else{
+        //if(std::isnan(x1) || std::isnan(x2)){
+        //  std::cout << "Skiping HistoFill"<< std::endl;  
+        //}else{
           myhistx->Fill(x1, x2);
-        } 
+        //} 
         ///////////////////////////////
         // Previous generation
         /*
@@ -299,7 +299,7 @@ public:
         myhisty->GetXaxis()->SetTitle(y1str);
         myhisty->GetYaxis()->SetTitle(y2str);
         myhisty->Fill(y1, y2);
-        // HYList.Draw("surf3");
+        HYList.Draw("surf3");
       }
       // Distribution plots
       for (std::size_t j = 0; j < pop.GetTGenes(0).size(); ++j) {
@@ -324,10 +324,10 @@ public:
       auto X2 = pop.GetGeneValue(i, 1);
       auto X3 = pop.GetGeneValue(i, 2);
       h3x->Fill(X1, X2, X3);
-      //predictor[i] =
-      //    F::TruePF(genearray, parameterspredictor) + random.Gaus(0, error);
+      predictor[i] =
+          F::TruePF(genearray, parameterspredictor) + random.Gaus(0, error);
       // add the 3d-data coordinate, the predictor value  and its errors
-      //data.Add(function, predictor[i], error);
+      data.Add(function, predictor[i], error);
     }
     PopDist->Draw();
     PopDist->Write();
@@ -340,14 +340,12 @@ public:
     ////////////////////
     h3a->Draw("surf3");
     //h3a->Fit(FitLand);
-    /*
-    TVirtualFitter *fit = TVirtualFitter::GetFitter();
-    fit->PrintResults(2, 0.);
-    TMatrixD *covMatrix =
-        new TMatrixD(pop.GetTGenes(0).size(), pop.GetTGenes(0).size(),
-    fit->GetCovarianceMatrix());
-    covMatrix->Print();
-    */
+    //TVirtualFitter *fit = TVirtualFitter::GetFitter();
+    //fit->PrintResults(2, 0.);
+    //TMatrixD *covMatrix =
+    //    new TMatrixD(pop.GetTGenes(0).size(), pop.GetTGenes(0).size(),
+    //fit->GetCovarianceMatrix());
+    //covMatrix->Print();
     h3a->Write();
     ///////////////////
     h3x->Draw();
@@ -365,8 +363,8 @@ public:
       FitLand->SetFitResult(res);
       // test fit p-value (chi2 probability)
       double prob = res.Prob();
-      // FitLand->Draw();
-      // FitLand->Write();
+      FitLand->Draw();
+      FitLand->Write();
       if (prob < 1.E-2)
         Error("HistoFill", "Bad data fit - fit p-value is %f", prob);
       else

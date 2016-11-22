@@ -46,11 +46,10 @@ TEST_F(Nsga2, SolvingDTLZ3Problem) {
 TEST_F(Nsga2, SolvingDTLZ4Problem) {
   geantvmoop::DTLZ4 dtlz4;
   geantvmoop::GANSGA2<geantvmoop::DTLZ4> nsga(dtlz4);
-  nsga.fPopulationSize = 1000;
-  nsga.fMaxGeneration = 500;
+  nsga.fPopulationSize = 200;
+  nsga.fMaxGeneration = 100;
   nsga.SolvePF();
 }
-
 
 TEST_F(Nsga2, SolvingDTLZ5Problem) {
   geantvmoop::DTLZ5 dtlz5;

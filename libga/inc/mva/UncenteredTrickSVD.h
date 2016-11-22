@@ -51,9 +51,9 @@ public:
   template <typename F> Population<F> MVAImpl(Population<F> &pop) {
     Population<F> result;
     UploadPopulation(pop);
-    //RunUncenteredTrickSVDWithReductionOfComponents();
+    RunUncenteredTrickSVDWithReductionOfComponents();
     RunUncenteredTrickSVD_95Eigen();
-    UnloadPopulation(result, X);
+    //UnloadPopulation(result, X);
     return result;
   }
 
@@ -79,7 +79,7 @@ public:
           Xtrick(row, col) = std::atof(token.c_str());
           col++;
         }
-        row++;
+       row++;
       }
       reader.close();
       // Xtrick = X;
@@ -371,7 +371,7 @@ public:
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     // variance based selection (< 95 %)
-    while (totalvar <= 0.95) {
+    while (totalvar <= 0.80) {
       s(i) = fEigenValues[i].first;
       c += s(i);
       // cumulative(i) = c;
@@ -427,7 +427,7 @@ public:
         << svdY.matrixV() << std::endl;
     std::vector<std::pair<double, VectorXd>> fEigenValuesnewY;
     double cnewY = 0.0;
-    int iy;
+    int iy = 0;
     for (int iy = 0; iy < rvecnewY.cols(); iy++) {
       if (normalise) {
         double norm = rvecnewY.col(iy).norm();
@@ -451,7 +451,9 @@ public:
       rvecnewY.col(iy) = fEigenValuesnewY[iy].second;
     }
     // variance based selection (< 95 %)
-    while (totalvarY <= 0.95) {
+    std::cout << iy << std::endl;
+    std::cout << snewY <<std::endl;
+    while (totalvarY <= 0.1) {
       snewY(iy) = fEigenValuesnewY[iy].first;
       cnewY += snewY(iy);
       // cumulative(iy) = c;
@@ -497,7 +499,7 @@ public:
         << svdYnew.matrixV() << std::endl;
     std::vector<std::pair<double, VectorXd>> fEigenValuesnewYnew;
     double cnewYnew = 0.0;
-    int it;
+    int it = 0;
     for (int it = 0; it < rvecnewYnew.cols(); it++) {
       if (normalise) {
         double normYnew = rvecnewYnew.col(it).norm();
@@ -521,7 +523,7 @@ public:
       rvecnewYnew.col(it) = fEigenValuesnewYnew[it].second;
     }
     // variance based selection (< 95 %)
-    while (totalvarYnew <= 0.95) {
+    while (totalvarYnew <= 0.50) {
       snewYnew(it) = fEigenValuesnewYnew[it].first;
       cnewYnew += snewYnew(it);
       // cumulative(i) = c;

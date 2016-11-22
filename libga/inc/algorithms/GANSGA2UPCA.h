@@ -94,6 +94,9 @@ public:
   }
 
   void EvolutionImpl() {
+    Population<F> next, pcapop;
+    PCAinvPCA cleanupoperator;
+    pcapop = cleanupoperator.NR(population);
     GAComparator<F> cmp(&fIndRank, &fIndCrowDist);
     GATournamentSelection<GAComparator<F>> selector(cmp);
     Population<F> matingPool =
@@ -114,32 +117,34 @@ public:
       // }
       // std::cout << std::endl;
     }
+    for (unsigned int j = 0; j < pcapop.size(); ++j) {
+        population.push_back(pcapop[j]);
+    }
     fIndRank = GANDRank::CalculateIndicator(population);
     fIndCrowDist = GACD::CalculateIndicator(population);
     GAComparator<F> comp(&fIndRank, &fIndCrowDist);
     std::sort(population.begin(), population.end(), comp);
     //HistogramManager<F>::GetInstance().HistoFill(
     //    population, "population_nsga2_upcas.root", fCurrentGeneration);
-    Population<F> next;
     for (int l = 0; l < fPopulationSize; ++l)
       next.push_back(population[l]);
     std::cout << "--------------TRANFORMATION IS GOING-------------\n"
               << std::endl;
-    if (fCurrentGeneration > 0 /*&& fCurrentGeneration % 5 == 0*/) {
-      PCAinvPCA cleanupoperator;
-      population = cleanupoperator.NR(next);
+    //if (fCurrentGeneration > 5 /*&& fCurrentGeneration % 5 == 0*/) {
+    //  PCAinvPCA cleanupoperator;
+    //  population = cleanupoperator.NR(next);
       // Modification to avoid 0 equal ranks and crowding distance
-      fIndRank = GANDRank::CalculateIndicator(population);
-      fIndCrowDist = GACD::CalculateIndicator(population);
-      GAComparator<F> comp(&fIndRank, &fIndCrowDist);
-      std::sort(population.begin(), population.end(), comp);
-      HistogramManager<F>::GetInstance().HistoFill(
-        population, "population_nsga2_upcas.root", fCurrentGeneration);
-    } else {
+    //  fIndRank = GANDRank::CalculateIndicator(population);
+    //  fIndCrowDist = GACD::CalculateIndicator(population);
+    //  GAComparator<F> comp(&fIndRank, &fIndCrowDist);
+    //  std::sort(population.begin(), population.end(), comp);
+    //  HistogramManager<F>::GetInstance().HistoFill(
+    //    population, "population_nsga2_upcas.root", fCurrentGeneration);
+    // } else {
       population = next;
       HistogramManager<F>::GetInstance().HistoFill(
-        next, "population_nsga2_upcas.root", fCurrentGeneration);
-    }
+        next, "population_nsga2_upcas_update.root", fCurrentGeneration);
+    //}
     std::cout << "-----------------------------------------------\n"
               << std::endl;
     std::cout << "---------------After transformation------------\n"
