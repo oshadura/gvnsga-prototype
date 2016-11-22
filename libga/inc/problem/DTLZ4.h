@@ -47,7 +47,7 @@ public:
     int alpha = 100;
     int n = 12;
     int m = 3;
-    int k = n - m + 1; // 5
+    int k = n - m + 1; // 10
     double g = 0.0;
     for (std::size_t i = /* n - k*/ m; i <= n; ++i) {
       g += std::pow(fParameters[i] - 0.5, 2);

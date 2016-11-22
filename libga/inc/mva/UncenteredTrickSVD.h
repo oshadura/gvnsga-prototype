@@ -453,7 +453,7 @@ public:
     // variance based selection (< 95 %)
     std::cout << iy << std::endl;
     std::cout << snewY <<std::endl;
-    while (totalvarY <= 0.1) {
+    while (totalvarY <= 0.80) {
       snewY(iy) = fEigenValuesnewY[iy].first;
       cnewY += snewY(iy);
       // cumulative(iy) = c;
