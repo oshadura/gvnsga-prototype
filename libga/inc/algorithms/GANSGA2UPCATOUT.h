@@ -1,4 +1,4 @@
-//===--- GANSGA2UPCA.h - LibGA ----------------------------------------------*-
+//===--- GANSGA2UPCATOUT.h - LibGA ----------------------------------------------*-
 // C++
 //-*-===//
 //
@@ -13,8 +13,8 @@
 //===----------------------------------------------------------------------===//
 #pragma once
 
-#ifndef MOO_NSGAIIUPCA_H
-#define MOO_NSGAIIUPCA_H
+#ifndef MOO_NSGAIIUPCATOUT_H
+#define MOO_NSGAIIUPCATOUT_H
 
 #define RESET "\033[0m"
 #define BLACK "\033[30m"              /* Black */
@@ -56,7 +56,7 @@
 namespace geantvmoop {
 
 template <typename F>
-class GANSGA2UPCA : public GAAlgorithm<GANSGA2UPCA<F>, F> {
+class GANSGA2UPCATOUT : public GAAlgorithm<GANSGA2UPCATOUT<F>, F> {
 
 private:
   Population<F> population;
@@ -64,7 +64,7 @@ private:
   std::unordered_map<individual_t<F>, int> fIndRank;
 
 public:
-  GANSGA2UPCA(F problem) : GAAlgorithm<GANSGA2UPCA<F>, F>(problem) {}
+  GANSGA2UPCATOUT(F problem) : GAAlgorithm<GANSGA2UPCATOUT<F>, F>(problem) {}
   int fPopulationSize = 10;
   double PMut = 0.6;
   double PCross = 0.9;
