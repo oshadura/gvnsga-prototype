@@ -704,72 +704,7 @@ public:
     std::cout << "Printing side matrix..." << std::endl;
     Ynew = X * rvecreducSmall*rvecreducSmall.transpose();
     ////////////////////////////////////////////////////
-    std::cout << "REVERSE SVD Ynew: " << std::endl;
-    JacobiSVD<MatrixXd> svdYnew(Ynew, ComputeThinU | ComputeThinV);
-    auto snewYnew = svdYnew.singularValues();
-    std::cout << "Its singular values are:" << std::endl
-              << svdYnew.singularValues() << std::endl;
-    auto lvecnewYnew = svdYnew.matrixU();
-    std::cout
-        << "Its left singular vectors are the columns of the thin U matrix:"
-        << std::endl
-        << svdYnew.matrixU() << std::endl;
-    auto rvecnewYnew = svdYnew.matrixV();
-    std::cout
-        << "Its right singular vectors are the columns of the thin V matrix:"
-        << std::endl
-        << svdYnew.matrixV() << std::endl;
-    std::vector<std::pair<double, VectorXd>> fEigenValuesnewYnew;
-    double cnewYnew = 0.0;
-    int it = 0;
-    for (int it = 0; it < rvecnewYnew.cols(); it++) {
-      if (normalise) {
-        double normYnew = rvecnewYnew.col(it).norm();
-        rvecnewYnew.col(it) /= normYnew;
-        std::cout << "Vectors are normalised." << std::endl;
-      }
-      fEigenValuesnewYnew.push_back(std::make_pair(snewYnew(i), rvecnewYnew.col(i)));
-    }
-    // Sorting Eigen pairs [eigenvalue, eigenvector]
-    std::sort(
-        fEigenValuesnewYnew.begin(), fEigenValuesnewYnew.end(),
-        [](std::pair<double, VectorXd> &a, std::pair<double, VectorXd> &b) {
-          if (a.first > b.first)
-            return true;
-          if (a.first == b.first)
-            return a.first > b.first;
-          return false;
-        });
-    for (unsigned int it = 0; it < rvecnewYnew.cols(); it++) {
-      snewYnew(it) = fEigenValuesnewYnew[it].first;
-      rvecnewYnew.col(it) = fEigenValuesnewYnew[it].second;
-    }
-    // variance based selection (< 95 %)
-    while (totalvarYnew <= 0.95) {
-      snewYnew(it) = fEigenValuesnewYnew[it].first;
-      cnewYnew += snewYnew(it);
-      // cumulative(i) = c;
-      rvecnewYnew.col(it) = fEigenValuesnewYnew[it].second;
-      totalvarYnew = totalvarYnew + (snewYnew(it) / snewYnew.sum());
-      ++it;
-    }
-    MatrixXd eignewYnew = snewYnew.asDiagonal();
-    std::cout << "---------------------------\n" << std::endl;
-    int jynew = 0;
-    MatrixXd XnewItYnew, YItYnew;
-    XnewItYnew.conservativeResize(XnewItYnew.rows(), X.rows());
-    XnewItYnew.conservativeResize(XnewItYnew.cols(), X.cols());
-    YItYnew.conservativeResize(YItYnew.rows(), X.rows());
-    YItYnew.conservativeResize(YItYnew.cols(), X.cols());
-    while (jynew != it) {
-      XnewItYnew =
-          /*std::sqrt(X.rows())*/ snewYnew(jynew) * lvecnewYnew.col(jynew) *
-          rvecnewYnew.transpose().row(jynew);
-      YItYnew += XnewItYnew;
-      jynew++;
-      std::cout << "Iteration:\n " << jynew << std::endl;
-      std::cout << "Matrix:\n " << XnewItYnew << std::endl;
-    }
+    
     // Colecting matrix together
     X = Y + Ynew;
     std::cout << "New matrix:\n" << X << std::endl;
