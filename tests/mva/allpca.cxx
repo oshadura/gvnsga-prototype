@@ -31,10 +31,44 @@ public:
 };
 
 
-TEST_F(AllPCA, PCAConvertPopulationtoX) {
-  lpca.UploadPopulation(pop);
-  ASSERT_EQ(lpca.GetX().rows(), pop.size());
-  ASSERT_EQ(lpca.GetX().cols(), 7);
+
+
+TEST_F(AllPCA, SVD) {
+  lpca.LoadData("data");
+  MatrixXd X = lpca.GetX();
+  std::cout << "Print X\n"<< X << std::endl;
+  MatrixXd T = (X.adjoint() * X);
+  std::cout << "Print T\n" << T << std::endl;
+  JacobiSVD<MatrixXd> svdX(lpca.GetX(), ComputeThinU | ComputeThinV);
+    auto sX = svdX.singularValues();
+    std::cout << "X Its singular values are:" << std::endl
+              << svdX.singularValues() << std::endl;
+    auto lvecX = svdX.matrixU();
+    std::cout
+        << "X Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdX.matrixU() << std::endl;
+    auto rvecX = svdX.matrixV();
+    std::cout
+        << "X Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdX.matrixV() << std::endl;
+    ///////////////////////////////////////////////////////////////////////////////
+    //Checking again...
+    ///////////////////////////////////////////////////////////////////////////////
+    MatrixXd diag = sX.asDiagonal();
+    MatrixXd recheck = lvecX*diag*rvecX;
+    MatrixXd recheckGramm = rvecX*diag*diag*rvecX.transpose();
+    MatrixXd UGramm = lvecX.adjoint()*lvecX;
+    MatrixXd Ssquare = diag*diag;
+    MatrixXd check = lvecX.adjoint()*X*X.adjoint()*lvecX;
+    std::cout << "Ssquare\n" << Ssquare << std::endl;
+    std::cout << "Right check formula\n" << check << std::endl;
+    std::cout << "Gramm matrix\n " << recheckGramm << std::endl;
+    std::cout << "UtransposeU\n" << UGramm << std::endl;
+    MatrixXd  diff = recheck - lpca.GetX();
+    std::cout << "diff:\n" << diff << "\n";
+    std::cout << "Print this thing: X = USV*:\n" << recheck << std::endl; 
 }
 
 /*
