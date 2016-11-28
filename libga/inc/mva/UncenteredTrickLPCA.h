@@ -196,6 +196,28 @@ public:
     int i = 0;
     C = (X.adjoint() * X) / double(X.rows());
     EigenSolver<MatrixXd> edecomp(C);
+    JacobiSVD<MatrixXd> svdX(X, ComputeThinU | ComputeThinV);
+    auto sX = svdX.singularValues();
+    std::cout << "X Its singular values are:" << std::endl
+              << svdX.singularValues() << std::endl;
+    auto lvecX = svdX.matrixU();
+    std::cout
+        << "X Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdX.matrixU() << std::endl;
+    auto rvecX = svdX.matrixV();
+    std::cout
+        << "X Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdX.matrixV() << std::endl;
+    ///////////////////////////////////////////////////////////////////////////////
+    //Checking again...
+    ///////////////////////////////////////////////////////////////////////////////
+    MatrixXd diag = sX.asDiagonal();
+    MatrixXd recheck = lvecX*diag*rvecX.transpose();
+    MatrixXd  diff = recheck - X;
+    std::cout << "diff:\n" << diff.array().abs().sum() << "\n";
+    std::cout << "Print this thing: X = USV* :" << recheck << std::endl;     
     // Eigen values
     eigenvalues = edecomp.eigenvalues().real();
     // Eigen vectors
@@ -228,6 +250,7 @@ public:
     }
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
+    Print();
     Transformed = X * eigenvectors;
     // Varince based selection (< 95 %)
     while (totalvar <= 0.95) {
@@ -252,9 +275,11 @@ public:
     MatrixXd NewDataMatrix, NewDataMatrixTransposed;
     NewDataMatrix = eigenvectors * Transformed.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();
-    std::cout << "Transformed data matrix:\n"
-              << NewDataMatrixTransposed << std::endl;
-    X = NewDataMatrixTransposed /*.array().abs()*/;
+    // Commented due new modos 27.11
+    //std::cout << "Transformed data matrix:\n"
+    //          << NewDataMatrixTransposed << std::endl;
+    //X = NewDataMatrixTransposed /*.array().abs()*/;
+    X = Transformed;
     std::cout << "Done." << std::endl;
   }
 
@@ -263,7 +288,7 @@ public:
 #ifdef DEBUG
     std::cout << "Mean of columns:\n" << colmean << std::endl;
 #endif
-    std::cout << "Covariance matrix:\n" << C << std::endl;
+    std::cout << "Matrix T:\n" << C << std::endl;
     std::cout << "Eigenvalues:\n" << eigenvalues << std::endl;
     std::cout << "Eigenvectors:\n" << eigenvectors << std::endl;
     std::cout << "Sorted eigenvalues:\n " << std::endl;
