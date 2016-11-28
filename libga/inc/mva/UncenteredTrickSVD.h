@@ -911,7 +911,7 @@ public:
     // SVD transformation (hardcodded for two eigenvalues)
     //////////////////////////////////////////////////////////////////////////////
     MatrixXd TransformedU = X*rvec;
-    MatrixXd Xreduced = X - s(1)*TransformedU.col(1)*rvec.transpose().row(1) - s(2)*TransformedU.col(2)*rvec.transpose().row(2);
+    MatrixXd Xreduced = X - s(1)*lvec.col(1)*rvec.transpose().row(1) - s(2)*lvec.col(2)*rvec.transpose().row(2);
     //////////////////////////////////////////////////////////////////////////////
     JacobiSVD<MatrixXd> svdredX(Xreduced, ComputeThinU | ComputeThinV);
     auto sred = svdredX.singularValues();
@@ -988,7 +988,7 @@ public:
       std::cout << "Iteration:\n " << j << std::endl;
       std::cout << "Matrix:\n " << Xnew << std::endl;
     }
-    Y = Y + /*std::sqrt(X.rows())*/s(1)*TransformedU.col(1)*rvec.transpose().row(1) + /*std::sqrt(X.rows())*/s(2)*TransformedU.col(2)*rvec.transpose().row(2);
+    Y = Y + /*std::sqrt(X.rows())*/s(1)*lvec.col(1)*rvec.transpose().row(1) + /*std::sqrt(X.rows())*/s(2)*lvec.col(2)*rvec.transpose().row(2);
     X = Y.array().abs();
     std::cout << "New matrix:\n" << X << std::endl;
   }
