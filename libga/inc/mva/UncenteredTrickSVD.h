@@ -18,8 +18,6 @@
 
 #include "PCA.h"
 
-// Uncentered version!
-
 namespace geantvmoop {
 
 using namespace Eigen;
@@ -53,8 +51,9 @@ public:
     UploadPopulation(pop);
     //RunUncenteredTrickSVDDiff();
     //RunUncenteredTrickSVDWithReductionOfComponents();
-    RunUncenteredTrickSVD_95Eigen();
-    //UnloadPopulation(result, X);
+    //RunUncenteredTrickSVD_95Eigen();
+    RunUncenteredTrickSVDCutApproach();
+    UnloadPopulation(result, X);
     return result;
   }
 
@@ -83,7 +82,7 @@ public:
        row++;
       }
       reader.close();
-      // Xtrick = X;
+      Xtrick = X;
       X = X.rightCols(X.cols()); // was 2
     } else {
       std::cout << "Failed to read file..." << data << std::endl;
@@ -110,19 +109,18 @@ public:
         X(i, j) = gene.GetGAValue();
       }
     }
-    // Xtrick = X;
+    //Xtrick = X;
     X = X.rightCols(X.cols()); // was 2
     std::string sep = "\n----------------------------------------\n";
-    // MatrixXd Y = Xtrick;
-    // JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
-    // std::cout << "Its singular values are:" << std::endl <<
-    // svd.singularValues() << std::endl;
-    // std::cout << "Its left singular vectors are the columns of the thin U
-    // matrix:"
-    //     << std::endl << svd.matrixU() << std::endl;
-    // std::cout << "Its right singular vectors are the columns of the thin V
-    // matrix:"
-    //     << std::endl << svd.matrixV() << std::endl;
+    //MatrixXd Y = Xtrick;
+    /*
+    JacobiSVD<MatrixXd> svd(X, ComputeThinU | ComputeThinV);
+    std::cout << "Its singular values are:" << std::endl << svd.singularValues() << std::endl;
+    std::cout << "Its left singular vectors are the columns of the thin U matrix:"
+         << std::endl << svd.matrixU() << std::endl;
+    std::cout << "Its right singular vectors are the columns of the thin V matrix:"
+         << std::endl << svd.matrixV() << std::endl;
+    */
   }
 
   template <typename F>
@@ -131,8 +129,8 @@ public:
     MatrixXd population;
     population.conservativeResize(X.rows(), X.cols());
     std::cout << data << "\n";
-    // std::cout << Xtrick.leftCols(2) << "\n"; // was 2
-    // population << Xtrick.leftCols(2), data; // was 2
+    //std::cout << Xtrick.leftCols(2) << "\n"; // was 2
+    //population << Xtrick.leftCols(2), data; // was 2
     population << data;
     std::cout << "Finally..\n" << population << std::endl;
     std::vector<individual_t<F>> poplist;
@@ -882,6 +880,117 @@ public:
     X = YIt.array().abs();
     X = X + X1new;
     std::cout << "New matrix after all transformations:\n" << X << std::endl;
+  }
+
+    void RunUncenteredTrickSVDCutApproach() {
+    double totalvar = 0;
+    int i = 0;
+    JacobiSVD<MatrixXd> svdX(X, ComputeThinU | ComputeThinV);
+    auto s = svdX.singularValues();
+    std::cout << "X Its singular values are:" << std::endl
+              << svdX.singularValues() << std::endl;
+    auto lvec = svdX.matrixU();
+    std::cout
+        << "X Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdX.matrixU() << std::endl;
+    auto rvec = svdX.matrixV();
+    std::cout
+        << "X Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdX.matrixV() << std::endl;
+    ///////////////////////////////////////////////////////////////////////////////
+    //Checking again...
+    ///////////////////////////////////////////////////////////////////////////////
+    MatrixXd diag = s.asDiagonal();
+    MatrixXd recheck = lvec*diag*rvec.transpose();
+    MatrixXd  diff = recheck - X;
+    std::cout << "diff:\n" << diff.array().abs().sum() << "\n";
+    std::cout << "Print this thing: X = USV* :" << recheck << std::endl;
+    /////////////////////////////////////////////////////////////////////////////// 
+    // SVD transformation (hardcodded for two eigenvalues)
+    //////////////////////////////////////////////////////////////////////////////
+    MatrixXd TransformedU = X*rvec;
+    MatrixXd Xreduced = X - /*std::sqrt(X.rows())*/s(1)*lvec.col(1)*rvec.transpose().row(1) - /*std::sqrt(X.rows())*/s(2)*lvec.col(2)*rvec.transpose().row(2);
+    //////////////////////////////////////////////////////////////////////////////
+    JacobiSVD<MatrixXd> svdredX(Xreduced, ComputeThinU | ComputeThinV);
+    auto sred = svdredX.singularValues();
+    std::cout << "Xreduced.. Its singular values are:" << std::endl
+              << svdredX.singularValues() << std::endl;
+    auto lvecred = svdredX.matrixU();
+    std::cout
+        << "Xreduced.. Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdredX.matrixU() << std::endl;
+    auto rvecred = svdredX.matrixV();
+    std::cout
+        << "Xreduced.. Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdredX.matrixV() << std::endl;
+    std::vector<std::pair<double, VectorXd>> fEigenValues;
+    double c = 0.0;
+    for (unsigned int i = 0; i < rvecred.cols(); i++) {
+      if (normalise) {
+        double norm = rvecred.col(i).norm();
+        rvecred.col(i) /= norm;
+        std::cout << "Vectors are normalised." << std::endl;
+      }
+      fEigenValues.push_back(std::make_pair(sred(i), rvecred.col(i)));
+    }
+    // Sorting Eigen pairs [eigenvalue, eigenvector]
+    std::sort(
+        fEigenValues.begin(), fEigenValues.end(),
+        [](std::pair<double, VectorXd> &a, std::pair<double, VectorXd> &b) {
+          if (a.first > b.first)
+            return true;
+          if (a.first == b.first)
+            return a.first > b.first;
+          return false;
+        });
+    for (unsigned int i = 0; i < rvecred.cols(); i++) {
+      sred(i) = fEigenValues[i].first;
+      rvecred.col(i) = fEigenValues[i].second;
+    }
+    // Printing current state information before  PC cutoff
+    std::cout << "Printing original information after PCA" << std::endl;
+    // Transformed = X * eigenvectors;
+    // Varince based selection (< 95 %)
+    while (totalvar <= 0.85) {
+      sred(i) = fEigenValues[i].first;
+      c += sred(i);
+      // cumulative(i) = c;
+      rvecred.col(i) = fEigenValues[i].second;
+      totalvar = totalvar + (sred(i) / sred.sum());
+      ++i;
+    }
+    // auto rveccut = rvec;
+    // rveccut.conservativeResize(rveccut.rows(), i);
+    // MatrixXd scut = s.asDiagonal();
+    // scut.conservativeResize(scut.rows(), i);
+    // scut.conservativeResize(scut.cols(), i);
+    // Print();
+    // std::cout << "Right vectors matrix cutted: \n" << rveccut << std::endl;
+    // std::cout << "Singular values: \n" << scut << std::endl;
+    MatrixXd eig = sred.asDiagonal();
+    std::cout << "---------------------------\n" << std::endl;
+    std::cout << "REVERSE SVD: " << std::endl;
+    int j = 0;
+    MatrixXd Xnew, Y;
+    Xnew.conservativeResize(Xnew.rows(), X.rows());
+    Xnew.conservativeResize(Xnew.cols(), X.cols());
+    Y.conservativeResize(Y.rows(), X.rows());
+    Y.conservativeResize(Y.cols(), X.cols());
+    while (j != i) {
+      Xnew =
+          /*std::sqrt(X.rows())*/sred(j)*lvecred.col(j)*rvecred.transpose().row(j);
+      Y += Xnew;
+      j++;
+      std::cout << "Iteration:\n " << j << std::endl;
+      std::cout << "Matrix:\n " << Xnew << std::endl;
+    }
+    Y = Y + /*std::sqrt(X.rows())*/s(1)*lvec.col(1)*rvec.transpose().row(1) + /*std::sqrt(X.rows())*/s(2)*lvec.col(2)*rvec.transpose().row(2);
+    X = Y.array().abs();
+    std::cout << "New matrix:\n" << X << std::endl;
   }
 
   /*

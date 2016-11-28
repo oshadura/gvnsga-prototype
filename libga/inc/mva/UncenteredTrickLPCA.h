@@ -276,10 +276,10 @@ public:
     NewDataMatrix = eigenvectors * Transformed.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();
     // Commented due new modos 27.11
-    //std::cout << "Transformed data matrix:\n"
-    //          << NewDataMatrixTransposed << std::endl;
-    //X = NewDataMatrixTransposed /*.array().abs()*/;
-    X = Transformed;
+    std::cout << "Transformed data matrix:\n"
+              << NewDataMatrixTransposed << std::endl;
+    X = NewDataMatrixTransposed /*.array().abs()*/;
+    //X = Transformed;
     std::cout << "Done." << std::endl;
   }
 
