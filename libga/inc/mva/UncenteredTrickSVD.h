@@ -52,7 +52,7 @@ public:
     //RunUncenteredTrickSVDDiff();
     //RunUncenteredTrickSVDWithReductionOfComponents();
     //RunUncenteredTrickSVD_95Eigen();
-    //;RunUncenteredTrickSVDCutApproach();
+    //RunUncenteredTrickSVDCutApproach();
     RunUncenteredTrickSVD2();
     UnloadPopulation(result, X);
     return result;
