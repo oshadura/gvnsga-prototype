@@ -57,7 +57,7 @@ TEST_F(AllPCA, SVD) {
     //Checking again...
     ///////////////////////////////////////////////////////////////////////////////
     MatrixXd diag = sX.asDiagonal();
-    MatrixXd recheck = lvecX*diag*rvecX;
+    MatrixXd recheck = lvecX*diag*rvecX.transpose();
     MatrixXd recheckGramm = rvecX*diag*diag*rvecX.transpose();
     MatrixXd UGramm = lvecX.adjoint()*lvecX;
     MatrixXd Ssquare = diag*diag;

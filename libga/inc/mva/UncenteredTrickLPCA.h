@@ -214,7 +214,7 @@ public:
     //Checking again...
     ///////////////////////////////////////////////////////////////////////////////
     MatrixXd diag = sX.asDiagonal();
-    MatrixXd recheck = lvecX*diag*rvecX;
+    MatrixXd recheck = lvecX*diag*rvecX.transpose();
     MatrixXd  diff = recheck - X;
     std::cout << "diff:\n" << diff.array().abs().sum() << "\n";
     std::cout << "Print this thing: X = USV* :" << recheck << std::endl;     
