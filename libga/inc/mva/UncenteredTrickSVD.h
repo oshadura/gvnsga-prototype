@@ -52,7 +52,8 @@ public:
     //RunUncenteredTrickSVDDiff();
     //RunUncenteredTrickSVDWithReductionOfComponents();
     //RunUncenteredTrickSVD_95Eigen();
-    RunUncenteredTrickSVDCutApproach();
+    //;RunUncenteredTrickSVDCutApproach();
+    RunUncenteredTrickSVD2();
     UnloadPopulation(result, X);
     return result;
   }
@@ -989,6 +990,40 @@ public:
       std::cout << "Matrix:\n " << Xnew << std::endl;
     }
     Y = Y + /*std::sqrt(X.rows())*/s(1)*lvec.col(1)*rvec.transpose().row(1) + /*std::sqrt(X.rows())*/s(2)*lvec.col(2)*rvec.transpose().row(2);
+    X = Y.array().abs();
+    std::cout << "New matrix:\n" << X << std::endl;
+  }
+
+void RunUncenteredTrickSVD2() {
+    double totalvar = 0;
+    int i = 0;
+    JacobiSVD<MatrixXd> svdX(X, ComputeThinU | ComputeThinV);
+    auto s = svdX.singularValues();
+    std::cout << "X Its singular values are:" << std::endl
+              << svdX.singularValues() << std::endl;
+    auto lvec = svdX.matrixU();
+    std::cout
+        << "X Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdX.matrixU() << std::endl;
+    auto rvec = svdX.matrixV();
+    std::cout
+        << "X Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdX.matrixV() << std::endl;
+    ///////////////////////////////////////////////////////////////////////////////
+    //Checking again...
+    ///////////////////////////////////////////////////////////////////////////////
+    MatrixXd diag = s.asDiagonal();
+    MatrixXd recheck = lvec*diag*rvec.transpose();
+    MatrixXd  diff = recheck - X;
+    std::cout << "diff:\n" << diff.array().abs().sum() << "\n";
+    std::cout << "Print this thing: X = USV* :" << recheck << std::endl;
+    /////////////////////////////////////////////////////////////////////////////// 
+    // SVD transformation (hardcodded for two eigenvalues)
+    //////////////////////////////////////////////////////////////////////////////
+    MatrixXd TransformedU = X*rvec;
+    MatrixXd Y =  s(1)*lvec.col(1)*rvec.transpose().row(1) - s(2)*lvec.col(2)*rvec.transpose().row(2);
     X = Y.array().abs();
     std::cout << "New matrix:\n" << X << std::endl;
   }
