@@ -35,6 +35,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <Eigen/Dense>
+#include <Eigen/Eigenvalues>
+
 #include <cereal/access.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/memory.hpp>
@@ -67,6 +70,8 @@
 #define WRITE 1
 
 namespace geantvmoop {
+
+using namespace Eigen;
 
 template <typename F> class Population : public std::vector<individual_t<F>> {
 
@@ -171,7 +176,7 @@ public:
       io_service_.notify_fork(boost::asio::io_service::fork_parent);
     }
     boost::filesystem::remove(endpoint_name);
-    std::fill(fArrayDead, fArrayDead + n, 0);
+    std::fill(fArrayDead, fArrayDead + n, 0);  
   }
 #endif
 
@@ -345,6 +350,24 @@ public:
   //#if defined __clang__
   //  void push_back(individual_t<F> ind) const { (*this).push_back(ind); }
   //#endif
+ 
+  MatrixXd UploadPopulation(Population<F> &pop) {
+    MatrixXd D;
+    for (std::size_t i = 0; i < pop.size(); ++i) {
+      auto individual = pop.GetTGenes(i);
+      for (std::size_t j = 0; j < individual.size(); ++j) {
+        auto gene = individual[j];
+        if (D.rows() < (int)i + 1) {
+          D.conservativeResize(i + 1, D.cols());
+        }
+        if (D.cols() < (int)j + 1) {
+          D.conservativeResize(D.rows(), j + 1);
+        }
+        D(i, j) = gene.GetGAValue();
+      }
+    }
+   return D;
+   }
 
   template <class Archive> void save(Archive &ar) const {
     // ar(ind);

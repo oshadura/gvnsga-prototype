@@ -151,8 +151,8 @@ public:
     h3a->SetMarkerSize(.6); //
                             ////////////////////////////////
                             /////// Population 3 DHistogram
-    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, 0, 1, 20, 0, 1, 20,
-                         0, 1);
+    TH3F *h3y = new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -0.5, 2, 20, -0.5, 2, 20,
+                         -0.5, 2);
     // TH3F *h3y =
     //    new TH3F(name3dhisty, "Y1/Y2/Y3", 20, -30, 5, 20, -30, 5, 20, -30, 5);
     h3y->SetFillColor(kYellow); // Fill fill color to yellow
@@ -162,7 +162,7 @@ public:
     h3y->SetMarkerSize(.6); //
                             ////////////////////////////////
                             /////// Population 3 DHistogram
-    TH3F *h3x = new TH3F(name3dhistx, "X1/X2/X3", 20, 0, 1, 20, 0, 1, 20, 0, 1);
+    TH3F *h3x = new TH3F(name3dhistx, "X1/X2/X3", 20, 0, 1.5, 20, 0, 1.5, 20, 0, 1.5);
     // TH3F *h3x =
     //    new TH3F(name3dhistx, "X1/X2/X3", 20, -5, 5, 20, -5, 5, 20, -5, 5);
     h3x->SetFillColor(kYellow); // Fill fill color to yellow

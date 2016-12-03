@@ -80,6 +80,7 @@ public:
   TGenes() = default;
 
   TGenes(const typename F::Input &i, bool fEvaluated = true) : input(i) {
+/*
     if (fEvaluated) {
       CPUManager cpumgr;
       cpumgr.InitCPU();
@@ -98,12 +99,13 @@ public:
       if (ccores < 0.3) {
         sleep(50);
       } else {
+*/
         Evaluate();
-      }
+//      }
 #ifdef EVOLUTION
       GASimpleEvaluator::GAEvaluate();
 #endif
-    }
+//    }
   }
 
   TGenes(const typename F::Input &i, const typename F::Output &o)
@@ -178,18 +180,18 @@ public:
     timeout.tv_sec = 5;
     timeout.tv_nsec = 0;
     if (cpid > 0) {
-      std::cout << "Starting father process for TGenes::Evaluation process::"
-                << std::endl;
+      //std::cout << "Starting father process for TGenes::Evaluation process::"
+      //          << std::endl;
       fArray[0] = cpid;
       close(pipega[WRITE]);
       memset(&tmpoutput, 0, sizeof(tmpoutput));
       while (read(pipega[READ], &fitness, sizeof(double)) > 0) {
         tmpoutput.push_back(fitness);
-        std::cout << "Parent read next value: " << fitness << std::endl;
+        //std::cout << "Parent read next value: " << fitness << std::endl;
       }
       output = tmpoutput;
-      std::cout << "Waiting for PID of evaluation: " << fArray[0]
-                << " to finish.." << std::endl;
+      //std::cout << "Waiting for PID of evaluation: " << fArray[0]
+      //          << " to finish.." << std::endl;
 
       /*int status = 0;
       pid_t wait_pid = waitpid(-1, &status, WNOHANG);
@@ -223,24 +225,24 @@ public:
       //}
       waitpid(fArray[0], NULL, 0);
       // waitpid(fArray[0], NULL, 0);
-      std::cout << "PID: " << fArray[0] << " has shut down.." << std::endl;
+      //std::cout << "PID: " << fArray[0] << " has shut down.." << std::endl;
     } else if (cpid < 0) {
       std::cerr << "Fork for evaluation was failed." << std::endl;
       exit(EXIT_FAILURE);
     } else {
-      std::cout << "Starting child.." << std::endl;
+      //std::cout << "Starting child.." << std::endl;
       output = F::Evaluate(input);
       close(pipega[READ]);
       for (auto it : output) {
         write(pipega[WRITE], &it, sizeof(double));
-        std::cout << "Vector part to be send: " << it << std::endl;
+       // std::cout << "Vector part to be send: " << it << std::endl;
       }
       close(pipega[WRITE]); // close the read-end of the pipe
       wait(NULL);
       exit(EXIT_SUCCESS);
     }
-    std::cout << "We are back to master job after TGenes::Evaluation"
-              << std::endl;
+    //std::cout << "We are back to master job after TGenes::Evaluation"
+    //          << std::endl;
     // Cleaning array from previos pids info
     fArray[0] = 0;
 

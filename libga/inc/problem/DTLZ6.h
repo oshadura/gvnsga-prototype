@@ -72,10 +72,10 @@ public:
       auto it = fFitness.begin();
       fFitness.insert(it + i - 1, f);
     }
-    std::cout << "Vector output for evaluation function: ";
-    for (auto i : fFitness)
-      std::cout << i << ' ';
-    std::cout << ' ' << std::endl;
+//    std::cout << "Vector output for evaluation function: ";
+//    for (auto i : fFitness)
+//      std::cout << i << ' ';
+//    std::cout << ' ' << std::endl;
     return fFitness;
   }
 
