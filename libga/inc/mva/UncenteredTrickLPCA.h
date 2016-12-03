@@ -113,12 +113,15 @@ public:
     X = X.rightCols(X.cols() - 2); // was 2
     std::string sep = "\n----------------------------------------\n";
     MatrixXd Y = Xtrick;
-    JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
-    std::cout << "Its singular values are:" << std::endl << svd.singularValues() << std::endl;
-    std::cout << "Its left singular vectors are the columns of the thin U matrix:"
-         << std::endl << svd.matrixU() << std::endl;
-    std::cout << "Its right singular vectors are the columns of the thin V matrix:"
-         << std::endl << svd.matrixV() << std::endl;
+    //JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
+    //std::cout << "Its singular values are:" << std::endl << svd.singularValues() << std::endl;
+    //std::cout << "Its left singular vectors are the columns of the thin U matrix:"
+    //     << std::endl << svd.matrixU() << std::endl;
+    //std::cout << "Its right singular vectors are the columns of the thin V matrix:"
+    //     << std::endl << svd.matrixV() << std::endl;
+    FullPivLU<MatrixXd> lu_decomp(Y);
+    auto rank = lu_decomp.rank();
+    std::cout << "Rank of matrix before PCA " << rank << std::endl; 
   }
 
   template <typename F>
@@ -129,6 +132,9 @@ public:
     std::cout << data << "\n";
     std::cout << Xtrick.leftCols(2) << "\n"; // was 2
     population << Xtrick.leftCols(2), data; // was 2
+    FullPivLU<MatrixXd> lu_decomp(population);
+    auto rank = lu_decomp.rank();
+    std::cout << "Rank of matrix after PCA - final matrix size of MxN: " << rank << std::endl;
     std::cout << "Finally..\n" << population << std::endl;
     std::vector<individual_t<F>> poplist;
     std::string sep = "\n----------------------------------------\n";
