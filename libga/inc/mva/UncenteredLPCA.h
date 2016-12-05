@@ -207,7 +207,7 @@ public:
               });
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
-    Transformed = X * eigenvectors;
+    //Transformed = X * eigenvectors;
     // Varince based selection (< 85 %)
     while (totalvar <= 0.95) {
       eigenvalues(i) = fEigenValues[i].first;
@@ -228,6 +228,12 @@ public:
     std::cout << "Total number of components to be used in transformed matrix: "
               << i << std::endl;
     // Transformed matrix
+    //
+    //
+    // Changes before SSCI2016
+    //
+    //
+    Transformed = X * eigenvectors;
     MatrixXd NewDataMatrix, NewDataMatrixTransposed;
     NewDataMatrix = eigenvectors * Transformed.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();

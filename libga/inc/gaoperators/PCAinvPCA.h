@@ -33,9 +33,8 @@ class PCAinvPCA : public NoiseReduction<PCAinvPCA> {
 
 public:
 
+/*
   // Need to change it in templated way..
-
-  /*
   template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {
     Population<F> result;
@@ -43,6 +42,7 @@ public:
     result = lpca.MVA(population);
     return result;
   }
+
     template <typename F>
     Population<F> NoiseReductionImpl(Population<F> &population) {
       Population<F> result;
@@ -73,6 +73,7 @@ public:
     result = ulpca.MVA(population);
     return result;
   }
+
 */
   template <typename F>
   Population<F> NoiseReductionImpl(Population<F> &population) {

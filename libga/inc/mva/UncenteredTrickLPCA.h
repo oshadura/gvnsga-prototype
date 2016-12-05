@@ -200,7 +200,7 @@ public:
   void RunUncenteredTrickLPCAWithReductionOfComponents() {
     double totalvar = 0;
     int i = 0;
-    C = (X.adjoint() * X) / double(X.rows());
+    C = (X.adjoint() * X) /*/ double(X.rows())*/;
     EigenSolver<MatrixXd> edecomp(C);
     JacobiSVD<MatrixXd> svdX(X, ComputeThinU | ComputeThinV);
     auto sX = svdX.singularValues();
@@ -257,7 +257,12 @@ public:
     // Printing current state information before  PC cutoff
     std::cout << "Printing original information after PCA" << std::endl;
     Print();
-    Transformed = X * eigenvectors;
+    ///////////////////////////////////////////////////////////////////
+    //
+    //Case before SSCI2016 ;( wrong space to be worked out...
+    //
+    //////////////////////////////////////////////////////////////////
+    //Transformed = X * eigenvectors;
     // Varince based selection (< 95 %)
     while (totalvar <= 0.95) {
       eigenvalues(i) = fEigenValues[i].first;
@@ -279,6 +284,12 @@ public:
               << i << std::endl;
     // Transformed matrix
     MatrixXd NewDataMatrix, NewDataMatrixTransposed;
+    //////////////////////////////////////////////////////////////////
+    //
+    // Case after SSCI
+    //
+    /////////////////////////////////////////////////////////////////
+    Transformed = X * eigenvectors;
     NewDataMatrix = eigenvectors * Transformed.transpose();
     NewDataMatrixTransposed = NewDataMatrix.transpose();
     // Commented due new modos 27.11

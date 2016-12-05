@@ -25,7 +25,7 @@ public:
   geantvmoop::UncenteredLPCA ulpca;
   geantvmoop::UncenteredWhiteLPCA uwlpca;
   geantvmoop::UncenteredTrickLPCA twlpca;
-  geantvmoop::UncenteredTrickSVD svdpca;
+  geantvmoop::UncenteredTrickSVD svdpca, svdpca1;
   // Pointless allocation during tests
   geantvmoop::Population<geantvmoop::DTLZ1> pop{5};
 };
@@ -69,6 +69,204 @@ TEST_F(AllPCA, SVD) {
     MatrixXd  diff = recheck - lpca.GetX();
     std::cout << "diff:\n" << diff << "\n";
     std::cout << "Print this thing: X = USV*:\n" << recheck << std::endl; 
+}
+
+
+
+TEST_F(AllPCA, SVDEquality) {
+  svdpca.LoadData("data");
+  MatrixXd X = svdpca.GetX();
+  svdpca1.LoadDataCut("data");
+  MatrixXd Z = svdpca1.GetX();
+  MatrixXd ZeroMatrix,Y;
+  ZeroMatrix.conservativeResize(X.rows(), X.cols() - Z.cols());
+  ZeroMatrix.fill(0);
+  Y.conservativeResize(X.rows(), X.cols());
+  Y << ZeroMatrix, Z;
+  std::cout << "Print X1\n"<< Z << std::endl;
+  MatrixXd T = (Z.adjoint() * Z);
+  std::cout << "Print T1\n" << T << std::endl;
+  std::cout << "Print X2\n"<< Y << std::endl;
+  MatrixXd T1 = (Y.adjoint() * Y);
+  std::cout << "Print T2\n" << T1 << std::endl;
+  JacobiSVD<MatrixXd> svdX(Y, ComputeThinU | ComputeThinV);
+    auto sX = svdX.singularValues();
+    std::cout << "X1 Its singular values are:" << std::endl
+              << svdX.singularValues() << std::endl;
+    auto lvecX = svdX.matrixU();
+    std::cout
+        << "X1 Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdX.matrixU() << std::endl;
+    auto rvecX = svdX.matrixV();
+    std::cout
+        << "X1 Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdX.matrixV() << std::endl;
+    JacobiSVD<MatrixXd> svdZ(Z, ComputeThinU | ComputeThinV);
+    auto sZ = svdZ.singularValues();
+    std::cout << "X2 Its singular values are:" << std::endl
+              << svdZ.singularValues() << std::endl;
+    auto lvecZ = svdZ.matrixU();
+    std::cout
+        << "X2 Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdZ.matrixU() << std::endl;
+    auto rvecZ = svdZ.matrixV();
+    std::cout
+        << "X2 Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdZ.matrixV() << std::endl;
+    //MatrixXd svd1, svd2;
+    ///////////////////////////////////////////////////////////////////////////////
+    //Checking again...
+    ///////////////////////////////////////////////////////////////////////////////
+    MatrixXd diagX = sX.asDiagonal();
+    MatrixXd diagZ = sZ.asDiagonal();
+    MatrixXd svd1 = lvecX*diagX*rvecX.transpose();
+    MatrixXd svd2 = lvecZ*diagZ*rvecZ.transpose();
+    MatrixXd  diff = svd1 - Y;
+    MatrixXd diff1 = svd2 -Z;
+    std::cout << "diff1:\n" << diff << "\n";
+    std::cout << "Print this thing: X1 = USV*:\n" << svd1 << std::endl;
+    std::cout << "diff2:\n" << diff1 << "\n";
+    std::cout << "Print this thing: X1 = USV*:\n" << svd2 << std::endl;
+}
+
+TEST_F(AllPCA, SVDEqualityCase1) {
+  svdpca.LoadData("data");
+  MatrixXd X = svdpca.GetX();
+  X.conservativeResize(X.rows(), 2);
+  svdpca1.LoadDataCut("data");
+  MatrixXd Z = svdpca1.GetX();
+  MatrixXd ZeroMatrix, ZeroMatrixBig, Y1, Y2 ,Y3 ,Y4;
+  ZeroMatrix.conservativeResize(X.rows(), 2);
+  ZeroMatrix.fill(0);
+  ZeroMatrixBig.conservativeResize(X.rows(), svdpca.GetX().cols() - 2);
+  ZeroMatrixBig.fill(0);
+  Y1.conservativeResize(X.rows(), svdpca.GetX().cols());
+  Y2.conservativeResize(X.rows(), svdpca.GetX().cols());
+  Y3.conservativeResize(X.rows(), svdpca.GetX().cols());
+  Y4.conservativeResize(X.rows(), svdpca.GetX().cols());
+  Y1 << X, ZeroMatrixBig;
+  Y2 << ZeroMatrix, Z; 
+  std::cout << "Print X1\n"<< Y1 << std::endl;
+  MatrixXd T = (Y1.adjoint() * Y1);
+  std::cout << "Print T1\n" << T << std::endl;
+  std::cout << "Print X2\n"<< Y2 << std::endl;
+  MatrixXd T1 = (Y2.adjoint() * Y2);
+  std::cout << "Print T2\n" << T1 << std::endl;
+  JacobiSVD<MatrixXd> svdX(Y1, ComputeThinU | ComputeThinV);
+    auto sX = svdX.singularValues();
+    std::cout << "X1 Its singular values are:" << std::endl
+              << svdX.singularValues() << std::endl;
+    auto lvecX = svdX.matrixU();
+    std::cout
+        << "X1 Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdX.matrixU() << std::endl;
+    auto rvecX = svdX.matrixV();
+    std::cout
+        << "X1 Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdX.matrixV() << std::endl;
+    JacobiSVD<MatrixXd> svdZ(Y2, ComputeThinU | ComputeThinV);
+    auto sZ = svdZ.singularValues();
+    std::cout << "X2 Its singular values are:" << std::endl
+              << svdZ.singularValues() << std::endl;
+    auto lvecZ = svdZ.matrixU();
+    std::cout
+        << "X2 Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdZ.matrixU() << std::endl;
+    auto rvecZ = svdZ.matrixV();
+    std::cout
+        << "X2 Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdZ.matrixV() << std::endl;
+    //MatrixXd svd1, svd2;
+    ///////////////////////////////////////////////////////////////////////////////
+    //Checking again...
+    ///////////////////////////////////////////////////////////////////////////////
+    MatrixXd diagX = sX.asDiagonal();
+    MatrixXd diagZ = sZ.asDiagonal();
+    MatrixXd svd1 = lvecX*diagX*rvecX.transpose();
+    MatrixXd svd2 = lvecZ*diagZ*rvecZ.transpose();
+    MatrixXd  diff = svd1 - svdpca.GetX();
+    MatrixXd diff1 = svd2 - svdpca.GetX();
+    std::cout << "diff1:\n" << diff << "\n";
+    std::cout << "Print this thing: X1 = USV*:\n" << svd1 << std::endl;
+    std::cout << "diff2:\n" << diff1 << "\n";
+    std::cout << "Print this thing: X1 = USV*:\n" << svd2 << std::endl;
+    std::cout << "+++++++++++++++++++++++++++++++++"<<std::endl;
+}
+
+TEST_F(AllPCA, SVDEqualityCase) {
+  svdpca.LoadData("data");
+  MatrixXd X = svdpca.GetX();
+  MatrixXd part34 = X.block(0,2,X.rows(),2);
+  std::cout << part34 << std::endl;
+  MatrixXd part12 = X.block(0,0,X.rows(),2);
+  std::cout << part12 << std::endl;
+  MatrixXd part4n = X.rightCols(X.cols() - 4);
+  MatrixXd ZeroMatrix, ZeroMatrixBig, Y1, Y2;
+  ZeroMatrix.conservativeResize(X.rows(), 2);
+  ZeroMatrix.fill(0);
+  ZeroMatrixBig.conservativeResize(X.rows(), svdpca.GetX().cols() - 2);
+  ZeroMatrixBig.fill(0);
+  Y1.conservativeResize(X.rows(), svdpca.GetX().cols());
+  Y2.conservativeResize(X.rows(), svdpca.GetX().cols());
+  Y1 << part34, ZeroMatrixBig;
+  Y2 << ZeroMatrix, part12, part4n; 
+  std::cout << "Print X1\n"<< Y1 << std::endl;
+  MatrixXd T = (Y1.adjoint() * Y1);
+  std::cout << "Print T1\n" << T << std::endl;
+  std::cout << "Print X2\n"<< Y2 << std::endl;
+  MatrixXd T1 = (Y2.adjoint() * Y2);
+  std::cout << "Print T2\n" << T1 << std::endl;
+  JacobiSVD<MatrixXd> svdX(Y1, ComputeThinU | ComputeThinV);
+    auto sX = svdX.singularValues();
+    std::cout << "X1 Its singular values are:" << std::endl
+              << svdX.singularValues() << std::endl;
+    auto lvecX = svdX.matrixU();
+    std::cout
+        << "X1 Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdX.matrixU() << std::endl;
+    auto rvecX = svdX.matrixV();
+    std::cout
+        << "X1 Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdX.matrixV() << std::endl;
+    JacobiSVD<MatrixXd> svdZ(Y2, ComputeThinU | ComputeThinV);
+    auto sZ = svdZ.singularValues();
+    std::cout << "X2 Its singular values are:" << std::endl
+              << svdZ.singularValues() << std::endl;
+    auto lvecZ = svdZ.matrixU();
+    std::cout
+        << "X2 Its left singular vectors are the columns of the thin U matrix:"
+        << std::endl
+        << svdZ.matrixU() << std::endl;
+    auto rvecZ = svdZ.matrixV();
+    std::cout
+        << "X2 Its right singular vectors are the columns of the thin V matrix:"
+        << std::endl
+        << svdZ.matrixV() << std::endl;
+    //MatrixXd svd1, svd2;
+    ///////////////////////////////////////////////////////////////////////////////
+    //Checking again...
+    ///////////////////////////////////////////////////////////////////////////////
+    MatrixXd diagX = sX.asDiagonal();
+    MatrixXd diagZ = sZ.asDiagonal();
+    MatrixXd svd1 = lvecX*diagX*rvecX.transpose();
+    MatrixXd svd2 = lvecZ*diagZ*rvecZ.transpose();
+    MatrixXd  diff = svd1 - svdpca.GetX();
+    MatrixXd diff1 = svd2 - svdpca.GetX();
+    std::cout << "diff1:\n" << diff << "\n";
+    std::cout << "Print this thing: X1 = USV*:\n" << svd1 << std::endl;
+    std::cout << "diff2:\n" << diff1 << "\n";
+    std::cout << "Print this thing: X1 = USV*:\n" << svd2 << std::endl;
+    std::cout << "+++++++++++++++++++++++++++++++++"<<std::endl;
 }
 
 /*
