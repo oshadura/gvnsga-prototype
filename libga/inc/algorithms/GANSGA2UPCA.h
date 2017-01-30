@@ -148,7 +148,7 @@ public:
       next.push_back(population[l]);
     population = next;
     HistogramManager<F>::GetInstance().HistoFill(
-       population, "population_nsga2_upcas_testvalidation.root", fCurrentGeneration);
+       population, "population_nsga2_upcas_gv.root", fCurrentGeneration);
     std::cout << "-----------------------------------------------\n"
               << std::endl;
     std::cout << "---------------After transformation------------\n"

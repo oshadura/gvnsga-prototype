@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector> // std::vector
 
-#ifdef ENABLE_GEANTVVV
+#ifdef ENABLE_GEANTV
 
 #include "algorithms/GANSGA2.h"
 #include "generic/Functions.h"
@@ -174,10 +174,11 @@ public:
   config->fNminReuse = fParameters[6]*10000;
   int n_propagators;
   // Create run manager
-  if(nthreads == fParameters[7])
-   n_propagators = fParameters[7] + 1;
-  else
-   n_propagators = fParameters[7];
+  if(nthreads < fParameters[7]){
+  	n_propagators = fParameters[7] - nthreads;
+	std::cout << "Redefining values for npropagators " << n_propagators << std::endl;
+  }else{
+	n_propagators = fParameters[7];}
   GeantRunManager *runMgr = new GeantRunManager(n_propagators, nthreads, config);
   if (broker) runMgr->SetCoprocessorBroker(broker);
   // Create the tab. phys process.
@@ -203,8 +204,17 @@ public:
     perfcontrol.Stop();
     timer.Stop();
 #endif
-    fFitness.push_back(timer.Elapsed());
-    fFitness.push_back(-(runMgr->GetNprimaries()/timer.Elapsed()));
+    double check = std::numeric_limits<double>::max();
+    double timerelps = timer.Elapsed();
+    if(&timerelps == NULL){
+	fFitness.push_back(check);
+    }else{
+	fFitness.push_back(timerelps);}
+    double prt = timer.Elapsed()/runMgr->GetNprimaries();
+    if(&prt == NULL){
+    	fFitness.push_back(check);
+    }else{
+	fFitness.push_back(prt);}
 #ifdef ENABLE_PERF
     size_t peakSize = getPeakRSS();
     //fFitness.push_back(perfcontrol.GetNICS());
@@ -215,9 +225,16 @@ public:
     //fFitness.push_back(perfcontrol.GetNDC());
     //fFitness.push_back(perfcontrol.GetNIC());
     //fFitness.push_back(perfcontrol.GetNB());
-    fFitness.push_back(peakSize);
-    fFitness.push_back(cpumgr.GetCurrentValueCPU());
-    perfcontrol.printSummary();
+    if(&peakSize == NULL){
+        fFitness.push_back(check);
+    }else{
+        fFitness.push_back(static_cast<double>(peakSize)/1000);}
+    double cpu = cpumgr.GetCurrentValueCPU();
+    if(&cpu == NULL){
+        fFitness.push_back(check);
+    }else{
+        fFitness.push_back((cpu/60));}
+    //perfcontrol.printSummary();
 #endif
     //delete runMgr;
     std::cout << "Vector output for evaluation function: ";
@@ -236,7 +253,7 @@ public:
 #ifndef ENABLE_PERF
   static Output GetOutput() { return std::vector<double>(2); }
 #else
-  static Output GetOutput() { return std::vector<double>(3); }
+  static Output GetOutput() { return std::vector<double>(4); }
 #endif
 
   // ROOT Fitting to true Pareto front

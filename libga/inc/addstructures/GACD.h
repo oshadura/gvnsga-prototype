@@ -71,6 +71,7 @@ public:
     if (fMin.size() != numOfObjectives || fMax.size() != numOfObjectives)
       throw std::runtime_error(
           "The boundary size and objective size does not match!");
+    //   std::cout<<"It is an error in evaluation of functions, but lets see.."<< std::endl;   
     for (unsigned int i = 0; i < numOfObjectives; ++i) {
       auto obj = pop.GetObjective(i);
       auto index = pop.SortIndex(obj);

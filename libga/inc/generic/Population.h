@@ -31,6 +31,7 @@
 #include <stack>
 #include <unordered_map>
 #include <vector>
+#include <limits>
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -338,7 +339,13 @@ public:
     } else {
       typename F::Input gene = F::GetInput().random();
       auto individual = std::make_shared<TGenes<F>>(gene);
+      auto checkind = individual.get()->GetOutput();
+      if(&checkind[0] == NULL){
+        typename F::Input genecopy = F::GetInput().random();
+      	individual = std::make_shared<TGenes<F>>(genecopy);
+      }
       this->push_back(individual);
+      std::cout << "New individual was pushed in Population!" << std::endl;
     }
    }
   }
@@ -410,7 +417,11 @@ public:
   }
 
   double GetObjectiveValue(int index, int objective) const {
-    return (*this)[index]->GetOutput()[objective];
+     if((*this)[index] == NULL){
+	return std::numeric_limits<double>::max();
+     } else{
+     	return (*this)[index]->GetOutput()[objective];
+     }
   }
 
   bool IsNonDominated(const individual_t<F> &ind) const {

@@ -232,6 +232,10 @@ public:
     } else {
       //std::cout << "Starting child.." << std::endl;
       output = F::Evaluate(input);
+      std::cout << "======================================================================================================" << std::endl;
+//	if(&output == NULL){
+//		std::cout << "Redefining broken value!" << std::endl;
+//		output = F::Evaluate(input);}
       close(pipega[READ]);
       for (auto it : output) {
         write(pipega[WRITE], &it, sizeof(double));
@@ -248,6 +252,9 @@ public:
 
 #else
     output = F::Evaluate(input);
+    std::cout << "Evaluation of TGene object is done!!!" << std::endl;
+    if(&output == NULL)
+      output = F::Evaluate(input);
 #endif
   }
   const typename F::Input &GetInput() const { return input; }

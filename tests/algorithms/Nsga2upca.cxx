@@ -105,7 +105,7 @@ TEST_F(Nsga2upca, SolvingDTLZ5Problem) {
   nsga.SolvePF();
 }
 
-*/
+
 TEST_F(Nsga2upca, SolvingDTLZ6Problem) {
   geantvmoop::DTLZ6 dtlz6;
   geantvmoop::GANSGA2UPCA<geantvmoop::DTLZ6> nsga(dtlz6);
@@ -114,5 +114,5 @@ TEST_F(Nsga2upca, SolvingDTLZ6Problem) {
   nsga.SolvePF();
 }
 
-
+*/
 

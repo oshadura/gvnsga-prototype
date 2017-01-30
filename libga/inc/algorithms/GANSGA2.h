@@ -118,7 +118,7 @@ public:
       next.push_back(population[l]);
     population = next;
     HistogramManager<F>::GetInstance().HistoFill(
-        population, "population_nsga2.root", fCurrentGeneration);
+        population, "population_nsga2_gv.root", fCurrentGeneration);
     // std::cout << population << std::endl;
     CSVManager::GetInstance().CSVOutput("output.nsga", population, fIndRank, fIndCrowDist);
     ++fCurrentGeneration;
