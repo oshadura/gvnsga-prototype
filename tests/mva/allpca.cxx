@@ -71,7 +71,6 @@ TEST_F(AllPCA, SVD) {
     std::cout << "Print this thing: X = USV*:\n" << recheck << std::endl; 
 }
 
-/*
 TEST_F(AllPCA, LoadPopulationFromCSV) {
   // geantvmoop::Population<geantvmoop::DTLZ1> population;
   // geantvmoop::CSVManager::GetInstance().LoadCSV("datasimple", population);
@@ -115,7 +114,6 @@ TEST_F(AllPCA, LoadingDataLPCAByHands) {
  Xtest = lpca.GetX().transpose();
  ASSERT_EQ(Xtest, test);
 }
-
 
 ////////////////////// Methods ///////////////////////////////
 //////////////////////////////////////////////////////////////
@@ -219,4 +217,3 @@ TEST_F(AllPCA, RunRobustPCA){
   robustpca.Print();
   //robustpca.WriteTransformed("outputrobustpca");
 }
-*/

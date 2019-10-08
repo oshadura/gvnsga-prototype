@@ -22,6 +22,7 @@ PAPIWatch::~PAPIWatch() { return; }
   exit(1);
 }
 */
+
 void PAPIWatch::initPapi() {
   //int retval = PAPI_NULL;
   int retval = PAPI_library_init(PAPI_VER_CURRENT);

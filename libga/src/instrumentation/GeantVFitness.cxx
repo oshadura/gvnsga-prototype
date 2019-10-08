@@ -11,12 +11,13 @@
 /*
 ClassImp(GeantVFitness)
 
-    struct CompairMemResident {
+struct CompairMemResident {
 
   bool operator()(ProcInfo_t lhs, ProcInfo_t rhs) {
     return lhs.fMemResident < rhs.fMemResident;
   }
 };
+
 struct CompairMemVirtual {
   bool operator()(ProcInfo_t lhs, ProcInfo_t rhs) {
     return lhs.fMemVirtual < rhs.fMemVirtual;
@@ -88,5 +89,4 @@ Double_t GeantVFitness::LogMemoryFitness(std::string file) {
 }
 
 void GeantVFitness::LogTimeFitness() {}
-
 */
